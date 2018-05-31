@@ -1,0 +1,15 @@
+phases:
+- phase: Build GettingStarted.sln
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build GettingStarted.sln
+    inputs:
+      projects: '.\getting-started\GettingStarted.sln'
+- phase: Build GitHubLabeler.sln
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build GettingStarted.sln
+    inputs:
+      projects: '.\github-labeler\GitHubLabeler.sln'
