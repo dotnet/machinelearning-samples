@@ -10,6 +10,6 @@ phases:
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build GettingStarted
+    displayName: Build GitHubLabeler
     inputs:
       projects: '.\github-labeler\GitHubLabeler.sln'
