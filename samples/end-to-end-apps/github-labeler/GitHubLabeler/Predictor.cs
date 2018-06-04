@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.ML;
+using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
 
@@ -21,7 +22,7 @@ namespace GitHubLabeler
         {
             var pipeline = new LearningPipeline();
 
-            pipeline.Add(new TextLoader<GitHubIssue>(DataPath, useHeader: true));
+            pipeline.Add(new TextLoader(DataPath).CreateFrom<GitHubIssue>());
 
             pipeline.Add(new Dictionarizer(("Area", "Label")));
 
