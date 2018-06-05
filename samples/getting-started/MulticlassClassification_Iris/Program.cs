@@ -9,7 +9,7 @@ using Microsoft.ML.Transforms;
 
 namespace MulticlassClassification_Iris
 {
-    public static partial class Program
+    public static class Program
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         private static string TrainDataPath => Path.Combine(AppPath, "datasets", "iris-train.txt");
@@ -26,19 +26,19 @@ namespace MulticlassClassification_Iris
 
             // STEP 3: Make a prediction
             Console.WriteLine();
-            var prediction = model.Predict(TestIrisData.Iris1);
+            var prediction = model.Predict(TestIrisData.Setosa);
             Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {prediction.Score[0]:0.####}");
             Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
             Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
             Console.WriteLine();
             
-            prediction = model.Predict(TestIrisData.Iris2);
+            prediction = model.Predict(TestIrisData.Virginica);
             Console.WriteLine($"Actual: virginica.  Predicted probability: setosa:      {prediction.Score[0]:0.####}");
             Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
             Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
             Console.WriteLine();
 
-            prediction = model.Predict(TestIrisData.Iris3);
+            prediction = model.Predict(TestIrisData.Versicolor);
             Console.WriteLine($"Actual: versicolor. Predicted probability: setosa:      {prediction.Score[0]:0.####}");
             Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
             Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
@@ -56,7 +56,7 @@ namespace MulticlassClassification_Iris
                 new TextLoader(TrainDataPath).CreateFrom<IrisData>(),
                 
                 // Transforms
-                // When ML model starts training, it looks for two columns: Label and Features.
+                // When supervised ML model starts training, it looks for two columns: Label and Features.
                 // Label:   values that should be predicted. If you have a field named Label in your data type,
                 //              like in this example, no extra actions required.
                 //          If you don’t have it, copy the column you want to predict with ColumnCopier transform:
