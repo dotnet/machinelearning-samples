@@ -81,17 +81,17 @@ If you are not satisfied with the quality of the model, there is a variety of wa
 After the model is trained, we can use `Predict()` API to predict a probability that this flower belongs to each iris type. 
 
 ```CSharp
- var prediction = model.Predict(TestIrisData.Setosa1);
+ var prediction = model.Predict(TestIrisData.Iris1);
 
  Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {prediction.Score[0]:0.####}");
  Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
  Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
 ```
-Where `TestIrisData.Setosa1` stores the information about an iris flower we'd like to predict the type for.
+Where `TestIrisData.Iris1` stores the information about the flower we'd like to predict the type for.
 ```CSharp
 internal class TestIrisData
 {
-    internal static readonly IrisData Setosa1 = new IrisData()
+    internal static readonly IrisData Iris1 = new IrisData()
     {
         SepalLength = 3.3f,
         SepalWidth = 1.6f,

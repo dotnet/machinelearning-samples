@@ -41,7 +41,7 @@ namespace Regression_TaxiFarePrediction
                 new TextLoader(TrainDataPath).CreateFrom<TaxiTrip>(separator:','),
                 
                 // Transforms
-                // When supervised ML model starts training, it looks for two columns: Label and Features.
+                // When ML model starts training, it looks for two columns: Label and Features.
                 // Label:   values that should be predicted. If you have a field named Label in your data type,
                 //              no extra actions required.
                 //          If you don't have it, like in this example, copy the column you want to predict with
