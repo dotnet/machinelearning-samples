@@ -1,5 +1,5 @@
 # Taxi Fare Prediction
-In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as regression.
+In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
 ## Problem
 This problem is centered around predicting the fare of a taxi trip in New York City. At first glance, it may seem to depend simply on the distance traveled. However, taxi vendors in New York charge varying amounts for other factors such as additional passengers, paying with a credit card instead of cash and so on. This prediction can be used in application for taxi providers to give users and drivers an estimate on ride fares.
@@ -15,12 +15,12 @@ To solve this problem, we will build an ML model that takes as inputs:
 and predicts the fare of the ride.
 
 ## ML task - Regression
-The described problem is an example of ML task called **regression**. The generalized problem is to predict some continuous value for given parameters, for example:
+The generalized problem of **regression** is to predict some continuous value for given parameters, for example:
 * predict a house prise based on number of rooms, location, year built, etc.
 * predict a car fuel consumption based on fuel type and car parameters.
 * predict a time estimate for fixing an issue based on issue attributes.
 
-The common feature for all those examples is that the parameter we want to predict can take any numeric value in certain range. In other words, this value is represented by `Integer` or `Float`/`Double`, not by `Enum` or `Boolean` types.
+The common feature for all those examples is that the parameter we want to predict can take any numeric value in certain range. In other words, this value is represented by `integer` or `float`/`double`, not by `enum` or `boolean` types.
 
 ## Solution
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict taxi fares.
@@ -29,7 +29,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 ### 1. Build model
 
-Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoader`), transforming the data so it can be used effectively by ML algorithm (with `ColumnCopier`,`CategoricalOneHotVectorizer`,`ColumnConcatenator`), and choosing a learning algorithm (`FastTreeRegressor`). All those steps are stored in `LearningPipeline`:
+Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnCopier`,`CategoricalOneHotVectorizer`,`ColumnConcatenator`), and choosing a learning algorithm (`FastTreeRegressor`). All of those steps are stored in a `LearningPipeline`:
 ```CSharp
 // LearningPipeline holds all steps of the learning process: data, transforms, learners.
 var pipeline = new LearningPipeline
@@ -64,7 +64,7 @@ var pipeline = new LearningPipeline
     };
 ```
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known fare values) to tune the parameters of the model. It is implemented in `Train()` API, to perform training we just call the method and provide the types for our data object `TaxiTrip` and  prediction object `TaxiTripFarePrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known fare values) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide the types for our data object `TaxiTrip` and  prediction object `TaxiTripFarePrediction`.
 ```CSharp
 var model = pipeline.Train<TaxiTrip, TaxiTripFarePrediction>();
 ```
@@ -76,14 +76,14 @@ We need this step to conclude how accurate our model operates on new data. To do
     var evaluator = new RegressionEvaluator();        
     var metrics = evaluator.Evaluate(model, testData);
 ```
->*To learn more on how to understand the metrics, check out Machine Learning glossary in [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
+>*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
-If you are not satisfied with the quality of the model, there is a variety of ways to improve it, which will be covered in *examples* category.
+If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
 
 >*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size for performance purposes. You can use the original datasets to significantly improve the quality (Original datasets are referenced in datasets [README](../../../datasets/README.md)).*
 
 ### 4. Consume model
-After the model is trained, we can use `Predict()` API to predict a fare amount for specified trip. 
+After the model is trained, we can use the `Predict()` API to predict the fare amount for specified trip. 
 
 ```CSharp
 var prediction = model.Predict(TestTaxiTrips.Trip1);

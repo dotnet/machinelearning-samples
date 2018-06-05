@@ -1,8 +1,8 @@
 # Iris Classification
-In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as multiclass classification.
+In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
 ## Problem
-This problem is centered around predicting the type of iris flower (setosa, versicolor, or virginica) based on the flower's parameters such as petal length, petal width, etc.
+This problem is centered around predicting the type of an iris flower (setosa, versicolor, or virginica) based on the flower's parameters such as petal length, petal width, etc.
 
 To solve this problem, we will build an ML model that takes as inputs 4 parameters: 
 * petal length
@@ -17,14 +17,15 @@ and predicts which iris type the flower belongs to:
 
 To be precise, the model will return probabilities for the flower to belong to each type.
 
-## ML task - Multiclass Classification
-The described problem is an example of ML task called **multiclass classification**. The generalized problem is to classify items into one of three or more classes. (Classifying items into one of the two classes is called **binary classification**).
+## ML task - Multiclass classification
+The generalized problem of **multiclass classification** is to classify items into one of three or more classes. (Classifying items into one of the two classes is called **binary classification**).
+
 Some other examples of multiclass classification are:
 * handwriting digit recognition: predict which of 10 digits (0-9) an image contains.
 * issues labeling: predict which category (UI, back end, documentation) an issue belongs to.
 * disease stage prediction based on patient's test results.
 
-The common feature for all those examples is that the parameter we want to predict can take one of a few (more that two) values. In other words, this value is represented by `Enum`, not by `Integer`, `Float`/`Double` or `Boolean` types.
+The common feature for all those examples is that the parameter we want to predict can take one of a few (more that two) values. In other words, this value is represented by `enum`, not by `integer`, `float`/`double` or `boolean` types.
 
 ## Solution
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict an iris type.
@@ -33,7 +34,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-train.txt` with `TextLoader`), transforming the data so it can be used effectively by ML algorithm (with `ColumnConcatenator`), and choosing a learning algorithm (`StochasticDualCoordinateAscentClassifier`). All those steps are stored in `LearningPipeline`:
+Building a model includes: uploading data (`iris-train.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnConcatenator`), and choosing a learning algorithm (`StochasticDualCoordinateAscentClassifier`). All of those steps are stored in a `LearningPipeline`:
 ```CSharp
 // LearningPipeline holds all steps of the learning process: data, transforms, learners.
 var pipeline = new LearningPipeline
@@ -62,7 +63,7 @@ var pipeline = new LearningPipeline
 }    
 ```
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known iris types) to tune the parameters of the model. It is implemented in `Train()` API, to perform training we just call the method and provide our data object  `IrisData` and  prediction object `IrisPrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known iris types) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide our data object  `IrisData` and  prediction object `IrisPrediction`.
 ```CSharp
 var model = pipeline.Train<IrisData, IrisPrediction>();
 ```
@@ -74,11 +75,11 @@ We need this step to conclude how accurate our model operates on new data. To do
     var metrics = evaluator.Evaluate(model, testData);
     var evaluator = new ClassificationEvaluator {OutputTopKAcc = 3};
 ```
->*To learn more on how to understand the metrics, check out Machine Learning glossary in [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
+>*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
-If you are not satisfied with the quality of the model, there is a variety of ways to improve it, which will be covered in *examples* category.
+If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
 ### 4. Consume model
-After the model is trained, we can use `Predict()` API to predict a probability that this flower belongs to each iris type. 
+After the model is trained, we can use the `Predict()` API to predict the probability that this flower belongs to each iris type. 
 
 ```CSharp
  var prediction = model.Predict(TestIrisData.Iris1);
