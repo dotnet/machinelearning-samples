@@ -330,3 +330,4 @@ ASALocalRun/
 *.binlog
 # Ignore external test datasets.
 /test/data/external/
+**/.paket/load/**

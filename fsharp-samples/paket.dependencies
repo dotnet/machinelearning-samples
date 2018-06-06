@@ -1,0 +1,4 @@
+source https://www.nuget.org/api/v2
+generate_load_scripts: true
+storage: none
+nuget Microsoft.ML
