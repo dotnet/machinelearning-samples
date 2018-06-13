@@ -22,6 +22,12 @@ The datasets are provided under the original terms that Microsoft received such 
 
 > Original source: https://en.wikipedia.org/wiki/Iris_flower_data_set#Use_of_the_data_set.
 
+### Titanic
+
+> Redistributing the dataset "titanic-train.csv" and "titanic-test.csv" with attribution:
+
+> Original source: https://github.com/brinkar/real-world-machine-learning/blob/master/data/titanic.csv
+
 ### Corefx Issues
 
 > Issues downloaded from public repository https://github.com/dotnet/corefx.

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticlassClassification_Ir
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clustering_Iris", "Clustering_Iris\Clustering_Iris.csproj", "{F7E57F21-1CD6-4808-98F3-6D367672D4A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryClasification_TitanicSurvivalPrediction", "BinaryClasification_TitanicSurvivalPrediction\BinaryClasification_TitanicSurvivalPrediction.csproj", "{57176155-A25E-478E-9370-C1650962E32B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F7E57F21-1CD6-4808-98F3-6D367672D4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7E57F21-1CD6-4808-98F3-6D367672D4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7E57F21-1CD6-4808-98F3-6D367672D4A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57176155-A25E-478E-9370-C1650962E32B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57176155-A25E-478E-9370-C1650962E32B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57176155-A25E-478E-9370-C1650962E32B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57176155-A25E-478E-9370-C1650962E32B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
