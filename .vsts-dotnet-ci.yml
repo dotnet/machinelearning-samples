@@ -12,7 +12,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build BinaryClasification_Titanic
     inputs:
-      projects: '.\samples\example\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
+      projects: '.\samples\examples\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
 - phase: GitHubLabeler
   queue: Hosted VS2017
   steps:
