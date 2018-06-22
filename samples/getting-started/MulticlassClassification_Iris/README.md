@@ -72,8 +72,8 @@ We need this step to conclude how accurate our model operates on new data. To do
 ```CSharp
     var testData = new TextLoader(TestDataPath).CreateFrom<IrisData>();
 
-    var metrics = evaluator.Evaluate(model, testData);
     var evaluator = new ClassificationEvaluator {OutputTopKAcc = 3};
+    var metrics = evaluator.Evaluate(model, testData);
 ```
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
