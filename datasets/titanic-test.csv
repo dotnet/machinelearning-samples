@@ -130,7 +130,6 @@ PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked
 878,0,3,"Petroff, Mr. Nedelio",male,19,0,0,349212,7.8958,,S
 879,0,3,"Laleff, Mr. Kristo",male,,0,0,349217,7.8958,,S
 880,1,1,"Potter, Mrs. Thomas Jr (Lily Alexenia Wilson)",female,56,0,1,11767,83.1583,C50,C
-881,1,2,"Shelley, Mrs. William (Imanita Parrish Hall)",female,25,0,1,230433,26,,S
 882,0,3,"Markun, Mr. Johann",male,33,0,0,349257,7.8958,,S
 883,0,3,"Dahlberg, Miss. Gerda Ulrika",female,22,0,0,7552,10.5167,,S
 884,0,2,"Banfield, Mr. Frederick James",male,28,0,0,C.A./SOTON 34068,10.5,,S

@@ -5,17 +5,17 @@ namespace BinaryClasification_TitanicSurvivalPrediction
     internal class TestTitanicData
     {
         internal static readonly TitanicData Passenger = new TitanicData()
-            {
-                Pclass = 3f,
-                Name = "Braund, Mr. Owen Harris",
-                Sex = "male",
-                Age = 31,
-                SibSp = 0,
-                Parch = 0,
-                Ticket = "335097",
-                Fare = "7.75",
-                Cabin = "",
-                Embarked = "Q"
-            };
+        {
+            Pclass = 2,
+            Name = "Shelley, Mrs. William (Imanita Parrish Hall)",
+            Sex = "female",
+            Age = 25,
+            SibSp = 0,
+            Parch = 1,
+            Ticket = "230433",
+            Fare = "26",
+            Cabin = "",
+            Embarked = "S"
+        };
     }
 }
