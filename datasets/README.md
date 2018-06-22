@@ -26,7 +26,9 @@ The datasets are provided under the original terms that Microsoft received such 
 
 > Redistributing the dataset "titanic-train.csv" and "titanic-test.csv" with attribution:
 
-> Original source: https://github.com/brinkar/real-world-machine-learning/blob/master/data/titanic.csv
+Data obtained from http://biostat.mc.vanderbilt.edu/DataSets
+
+Original source: http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic.html
 
 ### Corefx Issues
 
