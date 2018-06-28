@@ -28,7 +28,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
 
             // STEP 3: Make a prediction
             var prediction = model.Predict(TestTitanicData.Passenger);
-            Console.WriteLine($"Did this passenger survive? {(prediction.Survived ? "Yes" : "No")}");
+            Console.WriteLine($"Did this passenger survive?   Actual: Yes   Predicted: {(prediction.Survived ? "Yes" : "No")}");
 
             Console.ReadLine();
         }
