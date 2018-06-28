@@ -22,7 +22,7 @@ namespace GitHubLabeler
         {
             var pipeline = new LearningPipeline();
 
-            pipeline.Add(new TextLoader(DataPath).CreateFrom<GitHubIssue>());
+            pipeline.Add(new TextLoader(DataPath).CreateFrom<GitHubIssue>(useHeader: true));
 
             pipeline.Add(new Dictionarizer(("Area", "Label")));
 
