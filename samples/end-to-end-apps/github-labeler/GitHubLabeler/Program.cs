@@ -16,11 +16,11 @@ namespace GitHubLabeler
         private static async Task Label()
         {
             var token = ConfigurationManager.AppSettings["GitHubToken"];
-            var userName = ConfigurationManager.AppSettings["GitHubUserName"];
+            var repoOwner = ConfigurationManager.AppSettings["GitHubRepoOwner"];
             var repoName = ConfigurationManager.AppSettings["GitHubRepoName"];
 
             if (string.IsNullOrEmpty(token) ||
-                string.IsNullOrEmpty(userName) ||
+                string.IsNullOrEmpty(repoOwner) ||
                 string.IsNullOrEmpty(repoName))
             {
                 Console.Error.WriteLine();
@@ -29,7 +29,7 @@ namespace GitHubLabeler
                 return;
             }
 
-            var labeler = new Labeler(userName, repoName, token);
+            var labeler = new Labeler(repoOwner, repoName, token);
 
             await labeler.LabelAllNewIssues();
 
