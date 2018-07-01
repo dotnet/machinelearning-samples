@@ -4,20 +4,27 @@ This is a simple prototype application to demonstrate how to use [ML.NET](https:
 ## Overview
 GitHubLabeler is a .NET Core console application that:
 * trains ML model on your labeled GitHub issues to teach the model what label should be assigned for a new issue. (As an example, you can use `corefx-issues-train.tsv` file that contains issues from public [corefx](https://github.com/dotnet/corefx) repository)
-* labeles a new issue. The application will get all unlabeled open issues from specified in `App.config` GitHub repository and label them using the trained ML model created on the step above.  
+* labeles a new issue. The application will get all unlabeled open issues from the GitHub repository specified at the `appsettings.json` file and label them using the trained ML model created on the step above.  
 
 This ML model is using multi-class classification algorithm and text capabilities (`TextFeaturizer`) of [ML.NET](https://www.nuget.org/packages/Microsoft.ML/).
 
-## Enter you data
-1. **Provide your GitHub data** in `App.config`:
+## Enter you GitHub configuration data
+1. **Provide your GitHub data** in the `appsettings.json` file:
 
-    To allow the app to label issues in your GitHub repository you need to provide the folloving data.
+    To allow the app to label issues in your GitHub repository you need to provide the folloving data into the appsettings.json file.
     ```csharp
-        <add key="GitHubToken" value="" />
-        <add key="GitHubUserName" value="" />
-        <add key="GitHubRepoName" value="" />
+        {
+          "GitHubToken": "",
+          "GitHubRepoOwner": "",
+          "GitHubRepoName": ""
+        }
     ```
     Your user account (`GitHubToken`) should have write rights to the repository (`GitHubRepoName`).
+
+    Check out here [how to create a Github Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
+
+    `GitHubRepoOwner` can be a GitHub user ID (i.e. "MyUser") or it can also be a GitHub Organization (i.e. "dotnet")
+
 2. **Provide training file**
 
     a.  You can use existing `corefx_issues.tsv` data file for experimenting  with the program. In this case the predicted labels will be chosen among labels from [corefx](https://github.com/dotnet/corefx) repository. No changes required.
