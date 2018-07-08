@@ -47,8 +47,9 @@ namespace BikeSharingDemand
             var stohasticDualCorordinateAscentMetrics = modelEvaluator.Evaluate(stohasticDualCorordinateAscentModel, testDataLocation);
             PrintMetrics("Stochastic Dual Coordinate Ascent", stohasticDualCorordinateAscentMetrics);
 
-            VisualizeTenPredictionsForTheModel(fastTreeModel, testDataLocation);
-
+            VisualizeTenPredictionsForTheModel(fastTreeTweedieModel, testDataLocation);
+            fastTreeTweedieModel.WriteAsync(@".\Model.zip");
+            
             Console.ReadLine();
         }
 

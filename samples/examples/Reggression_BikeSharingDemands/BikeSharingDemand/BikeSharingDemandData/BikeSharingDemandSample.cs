@@ -15,6 +15,6 @@ namespace BikeSharingDemand.BikeSharingDemandData
         [Column("10")] public float NormalizedTemperature;
         [Column("11")] public float Humidity;
         [Column("12")] public float Windspeed;
-        [Column("15")] public float Count;
+        [Column("16")] public float Count;
     }
 }
