@@ -6,7 +6,7 @@ In this introductory sample, you'll see how to use [ML.NET](https://www.microsof
 
 This problem is centered around predicting if a passenger aboard the Titanic survived or not. We will use the data provided in the repo: [Real-World Machine Learning](https://github.com/brinkar/real-world-machine-learning/blob/master/data/titanic.csv) in which each passenger has been assigned a label:
 
-* 0 - did not survived
+* 0 - did not survive
 * 1 - survived
 
 Using those datasets we will build a model that will analyze a string and predict if a passenger survived.
