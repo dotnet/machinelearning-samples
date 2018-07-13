@@ -5,7 +5,7 @@ This end-to-end sample app highlights the usage of ML.NET API by showing the fol
 
 1. How to train, build and generate ML models 
    - Implemented as a [console app](src\eShopForecastModelsTrainer) using .NET Core.
-2. How to predict the next month of Sales Forecasts by using the pre-trained ML model 
+2. How to predict the next month of Sales Forecasts by using the trained ML model 
    - Implemented as a single, monolithic [web app](src\eShopDashboard) using [ASP.NET Core Razor](https://docs.microsoft.com/aspnet/core/tutorials/razor-pages/). 
 
 The app is also using a SQL Server database for regular product catalog and orders info, as many typical web apps using SQL Server. In this case, since it is an example, it is, by default, using a localdb SQL database so there's no need to setup a real SQL Server. The localdb database will be created, along with with sample populated data, the first time you run the web app.
@@ -23,7 +23,7 @@ Learn how to set it up in Visual Studio plus further explanations on the code:
 - [Setting up eShopDashboard in Visual Studio and running the web app](docs/Setting-up-eShopDashboard-in-Visual-Studio-and-running-it.md)
 
 - [Create and Train your ML models](docs/Create-and-train-the-models-%5BOptional%5D.md) 
-   - This step is optional as the web app is already configured to use a pre-trained model. But you can create your own model and swap the pre-trained model with your own. 
+   - This step is optional as the web app is already configured to use a pre-trained model. But you can create your own trained model and swap the pre-trained model with your own. 
 
 - [Walkthrough on the implemented ML.NET code](docs/ML.NET-Code-Walkthrough.md)
 
