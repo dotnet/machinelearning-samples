@@ -43,9 +43,9 @@ namespace BikeSharingDemand
             var additiveMetrics = modelEvaluator.Evaluate(additiveModel, testDataLocation);
             PrintMetrics("Generalized Additive Model", additiveMetrics);
 
-            var stohasticDualCorordinateAscentModel = new ModelBuilder(trainingDataLocation, new StochasticDualCoordinateAscentRegressor()).BuildAndTrain();
-            var stohasticDualCorordinateAscentMetrics = modelEvaluator.Evaluate(stohasticDualCorordinateAscentModel, testDataLocation);
-            PrintMetrics("Stochastic Dual Coordinate Ascent", stohasticDualCorordinateAscentMetrics);
+            var stochasticDualCorordinateAscentModel = new ModelBuilder(trainingDataLocation, new StochasticDualCoordinateAscentRegressor()).BuildAndTrain();
+            var stochasticDualCorordinateAscentMetrics = modelEvaluator.Evaluate(stochasticDualCorordinateAscentModel, testDataLocation);
+            PrintMetrics("Stochastic Dual Coordinate Ascent", stochasticDualCorordinateAscentMetrics);
 
             VisualizeTenPredictionsForTheModel(fastTreeTweedieModel, testDataLocation);
             fastTreeTweedieModel.WriteAsync(@".\Model.zip");
