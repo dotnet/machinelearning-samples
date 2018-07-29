@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "BinaryClassification_SentimentAnalysis", "BinaryClassification_SentimentAnalysis\BinaryClassification_SentimentAnalysis.vbproj", "{464AB29D-B7B2-40DC-8D16-5E019B7B175D}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Clustering_Iris", "Clustering_Iris\Clustering_Iris.vbproj", "{77B1FD02-E7FB-41C5-9248-46C458706415}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Regression_TaxiFarePrediction", "Regression_TaxiFarePrediction\Regression_TaxiFarePrediction.vbproj", "{E58F6C3A-222E-4EE3-AC32-82953C7F78EE}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "MulticlassClassification_Iris", "MulticlassClassification_Iris\MulticlassClassification_Iris.vbproj", "{29A438EA-D658-422C-8D8D-D60FD4770DD0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{464AB29D-B7B2-40DC-8D16-5E019B7B175D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{464AB29D-B7B2-40DC-8D16-5E019B7B175D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{464AB29D-B7B2-40DC-8D16-5E019B7B175D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{464AB29D-B7B2-40DC-8D16-5E019B7B175D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77B1FD02-E7FB-41C5-9248-46C458706415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B1FD02-E7FB-41C5-9248-46C458706415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77B1FD02-E7FB-41C5-9248-46C458706415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77B1FD02-E7FB-41C5-9248-46C458706415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58F6C3A-222E-4EE3-AC32-82953C7F78EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58F6C3A-222E-4EE3-AC32-82953C7F78EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58F6C3A-222E-4EE3-AC32-82953C7F78EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58F6C3A-222E-4EE3-AC32-82953C7F78EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A438EA-D658-422C-8D8D-D60FD4770DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A438EA-D658-422C-8D8D-D60FD4770DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A438EA-D658-422C-8D8D-D60FD4770DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A438EA-D658-422C-8D8D-D60FD4770DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B84E804C-06CA-45C8-9B9F-8F69CA930535}
+	EndGlobalSection
+EndGlobal
