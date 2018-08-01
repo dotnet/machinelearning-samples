@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="0.2.0" />
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" /> 
   </ItemGroup>
 
   <ItemGroup>
