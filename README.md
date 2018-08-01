@@ -5,9 +5,10 @@
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers.
 
 ML.NET samples are divided in three categories:
-* **Getting started** - basic "hello world" samples for each ML task.
+* **Getting started (C#)** - basic "hello world" samples for each ML task, in C#
+* **Getting started (F#)** - basic "hello world" samples for each ML task, in F#
 * **Examples** -  examples of how you can use various ML.NET components (learners, transforms, ...).
-* **End-to-end apps** - real world examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
+* **End-to-end  (C#)** - real world examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
 
 All samples in this repo are using the latest released  [Microsoft.ML](https://www.nuget.org/packages/Microsoft.ML/) NuGet package. If you would like to see the examples referencing the source code, check out [scenario tests](https://github.com/dotnet/machinelearning/tree/master/test/Microsoft.ML.Tests/Scenarios) in [ML.NET repository](https://github.com/dotnet/machinelearning).
 
