@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+    <Folder Include="datasets\" />
+    <None Include="..\..\..\..\datasets\sentiment-imdb-train.txt" Link="datasets\sentiment-imdb-train.txt" />
+    <None Include="..\..\..\..\datasets\sentiment-yelp-test.txt" Link="datasets\sentiment-yelp-test.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+</Project>
