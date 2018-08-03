@@ -49,7 +49,7 @@ namespace Regression_TaxiFarePrediction
             {
                 // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
                 // all the column names and their types.
-                new TextLoader(TrainDataPath).CreateFrom<TaxiTrip>(separator:','),
+                new TextLoader(TrainDataPath).CreateFrom<TaxiTrip>(useHeader: true,separator:','),
                 
                 // Transforms
                 // When ML model starts training, it looks for two columns: Label and Features.
