@@ -7,6 +7,14 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\GettingStarted.sln'
 
+- phase: FSharpGettingStarted
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build F# GettingStarted
+    inputs:
+      projects: '.\samples\fsharp\getting-started\GettingStarted.sln'
+
 - phase: BinaryClasification_Titanic
   queue: Hosted VS2017
   steps:
