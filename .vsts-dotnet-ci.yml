@@ -13,7 +13,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build BinaryClasification_Titanic
     inputs:
-      projects: '.\samples\examples\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
+      projects: '.\samples\csharp\examples\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
 
 - phase: GitHubLabeler
   queue: Hosted VS2017
@@ -21,4 +21,4 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build GitHubLabeler
     inputs:
-      projects: '.\samples\end-to-end-apps\github-labeler\GitHubLabeler.sln'
+      projects: '.\samples\csharp\end-to-end-apps\github-labeler\GitHubLabeler.sln'
