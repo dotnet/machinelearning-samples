@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\..\..\datasets\iris-test.txt" Link="datasets\iris-test.txt">
+    <Content Include="..\..\..\..\datasets\sentiment-imdb-train.txt" Link="datasets\sentiment-imdb-train.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\datasets\iris-train.txt" Link="datasets\iris-train.txt">
+    <Content Include="..\..\..\..\datasets\sentiment-yelp-test.txt" Link="datasets\sentiment-yelp-test.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
