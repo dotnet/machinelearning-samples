@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\..\..\..\datasets\titanic-train.csv" Link="datasets\titanic-train.csv">
+    <Content Include="..\..\..\..\..\datasets\titanic-train.csv" Link="datasets\titanic-train.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\..\datasets\titanic-test.csv" Link="datasets\titanic-test.csv">
+    <Content Include="..\..\..\..\..\datasets\titanic-test.csv" Link="datasets\titanic-test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
