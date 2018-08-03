@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\datasets\corefx-issues-train.tsv" Link="datasets\corefx-issues-train.tsv">
+    <None Include="..\..\..\..\..\datasets\corefx-issues-train.tsv" Link="datasets\corefx-issues-train.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
