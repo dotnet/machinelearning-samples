@@ -10,6 +10,8 @@ ML.NET samples are divided in three categories:
 * **Examples** -  examples of how you can use various ML.NET components (learners, transforms, ...).
 * **End-to-end  (C#)** - real world examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
 
+There are also a growing number of F# examples available in the samples folder.
+
 All samples in this repo are using the latest released  [Microsoft.ML](https://www.nuget.org/packages/Microsoft.ML/) NuGet package. If you would like to see the examples referencing the source code, check out [scenario tests](https://github.com/dotnet/machinelearning/tree/master/test/Microsoft.ML.Tests/Scenarios) in [ML.NET repository](https://github.com/dotnet/machinelearning).
 
 ## Learn more
