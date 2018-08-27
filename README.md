@@ -12,6 +12,9 @@ ML.NET samples are divided in three categories:
 
 All samples in this repo are using the latest released  [Microsoft.ML](https://www.nuget.org/packages/Microsoft.ML/) NuGet package. If you would like to see the examples referencing the source code, check out [scenario tests](https://github.com/dotnet/machinelearning/tree/master/test/Microsoft.ML.Tests/Scenarios) in [ML.NET repository](https://github.com/dotnet/machinelearning).
 
+For VB.NET samples, check this external repo supported by the community (Kudos for Nukepayload2):
+https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic
+
 ## Learn more
 
 See [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) for detailed information on tutorials, ML basics, etc.
