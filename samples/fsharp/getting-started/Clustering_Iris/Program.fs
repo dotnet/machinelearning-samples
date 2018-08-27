@@ -14,26 +14,26 @@ let ModelPath = Path.Combine(AppPath, "IrisClustersModel.zip")
 
 type IrisData() = 
     [<Column("0")>]
-    member val Label = 0.0 with get,set
+    member val Label: float32 = 0.0f with get,set
 
     [<Column("1")>]
-    member val SepalLength = 0.0 with get, set
+    member val SepalLength: float32 = 0.0f with get, set
 
     [<Column("2")>]
-    member val SepalWidth = 0.0 with get, set
+    member val SepalWidth: float32 = 0.0f with get, set
 
     [<Column("3")>]
-    member val PetalLength = 0.0 with get, set
+    member val PetalLength: float32 = 0.0f with get, set
 
     [<Column("4")>]
-    member val PetalWidth = 0.0 with get, set
+    member val PetalWidth: float32 = 0.0f with get, set
 
 type ClusterPrediction() = 
     [<ColumnName("PredictedLabel")>]
-    member val SelectedClusterId = 0 with get, set
+    member val SelectedClusterId: uint32 = 0u with get, set
 
     [<ColumnName("Score")>]
-    member val  Distance : float[] = null with get, set
+    member val Distance: float32[] = null with get, set
 
 let Train() =
     // LearningPipeline holds all steps of the learning process: data, transforms, learners.
@@ -61,12 +61,12 @@ let Train() =
     model
 
 module TestIrisData = 
-    let Setosa1 = IrisData(SepalLength = 5.1, SepalWidth = 3.3, PetalLength = 1.6, PetalWidth = 0.2)
-    let Setosa2 = IrisData(SepalLength = 0.2, SepalWidth = 5.1, PetalLength = 3.5, PetalWidth = 1.4)
-    let Virginica1 = IrisData(SepalLength = 6.4, SepalWidth = 3.1, PetalLength = 5.5, PetalWidth = 2.2)
-    let Virginica2 = IrisData(SepalLength = 2.5, SepalWidth = 6.3, PetalLength = 3.3, PetalWidth = 6.0)
-    let Versicolor1 = IrisData(SepalLength = 6.4, SepalWidth = 3.1, PetalLength = 4.5, PetalWidth = 1.5)
-    let Versicolor2 = IrisData(SepalLength = 7.0, SepalWidth = 3.2, PetalLength = 4.7, PetalWidth = 1.4)
+    let Setosa1 = IrisData(SepalLength = 5.1f, SepalWidth = 3.3f, PetalLength = 1.6f, PetalWidth = 0.2f)
+    let Setosa2 = IrisData(SepalLength = 0.2f, SepalWidth = 5.1f, PetalLength = 3.5f, PetalWidth = 1.4f)
+    let Virginica1 = IrisData(SepalLength = 6.4f, SepalWidth = 3.1f, PetalLength = 5.5f, PetalWidth = 2.2f)
+    let Virginica2 = IrisData(SepalLength = 2.5f, SepalWidth = 6.3f, PetalLength = 3.3f, PetalWidth = 6.0f)
+    let Versicolor1 = IrisData(SepalLength = 6.4f, SepalWidth = 3.1f, PetalLength = 4.5f, PetalWidth = 1.5f)
+    let Versicolor2 = IrisData(SepalLength = 7.0f, SepalWidth = 3.2f, PetalLength = 4.7f, PetalWidth = 1.4f)
 
 // STEP 1: Create a model
 let model = Train()

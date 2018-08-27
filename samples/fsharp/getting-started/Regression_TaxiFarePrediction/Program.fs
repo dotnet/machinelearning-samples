@@ -20,39 +20,39 @@ let ModelPath= Path.Combine(AppPath, "TaxiFareModel.zip")
 
 type TaxiTrip() =
     [<Column("0")>]
-    member val VendorId = "" with get, set
+    member val VendorId: string = "" with get, set
 
     [<Column("1")>]
-    member val RateCode = "" with get, set
+    member val RateCode: string = "" with get, set
     
     [<Column("2")>]
-    member val PassengerCount = 0.0 with get, set
+    member val PassengerCount: float32 = 0.0f with get, set
     
     [<Column("3")>]
-    member val TripTime = 0.0 with get, set
+    member val TripTime: float32 = 0.0f with get, set
     
     [<Column("4")>]
-    member val TripDistance = 0.0 with get, set
+    member val TripDistance: float32 = 0.0f with get, set
     
     [<Column("5")>]
-    member val PaymentType = "" with get, set
+    member val PaymentType: string = "" with get, set
     
     [<Column("6")>]
-    member val FareAmount = 0.0 with get,set
+    member val FareAmount: float32 = 0.0f with get,set
 
 type TaxiTripFarePrediction() =
     [<ColumnName("Score")>]
-    member val FareAmount = 0.0 with get, set
+    member val FareAmount: float32 = 0.0f with get, set
 
 module TestTaxiTrips =
     let Trip1 = 
        TaxiTrip(
             VendorId = "VTS",
             RateCode = "1",
-            PassengerCount = 1.0,
-            TripDistance = 10.33,
+            PassengerCount = 1.0f,
+            TripDistance = 10.33f,
             PaymentType = "CSH",
-            FareAmount = 0.0 // predict it. actual = 29.5
+            FareAmount = 0.0f // predict it. actual = 29.5
        )
 
 
@@ -126,11 +126,11 @@ let GetDataFromCsv(dataLocation: string, numMaxRecords: int) =
             TaxiTrip(
                 VendorId = x.[0],
                 RateCode = x.[1],
-                PassengerCount = Double.Parse(x.[2]),
-                TripTime = Double.Parse(x.[3]),
-                TripDistance = Double.Parse(x.[4]),
+                PassengerCount = Single.Parse(x.[2]),
+                TripTime = Single.Parse(x.[3]),
+                TripDistance = Single.Parse(x.[4]),
                 PaymentType = x.[5],
-                FareAmount = Double.Parse(x.[6]) 
+                FareAmount = Single.Parse(x.[6])
             )
         )
         .Take(numMaxRecords)
@@ -196,14 +196,14 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
     for i in 0 .. testData.Count-1 do 
         let farePrediction = model.Predict(testData.[i])
 
-        let x = [| testData.[i].FareAmount |]
-        let y = [| farePrediction.FareAmount |]
+        let x = [| float testData.[i].FareAmount |]
+        let y = [| float farePrediction.FareAmount |]
 
         //Paint a dot
         pl.poin(x, y, code)
 
-        xTotal <- xTotal + x.[0]
-        yTotal <- yTotal + y.[0]
+        xTotal <- xTotal + float x.[0]
+        yTotal <- yTotal + float y.[0]
 
         let multi = x.[0] * y.[0]
         xyMultiTotal <-  xyMultiTotal + multi
@@ -221,10 +221,10 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
     // Regression Line calculation explanation:
     // https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/more-on-regression/v/regression-line-example
 
-    let minY = yTotal / double totalNumber
-    let minX = xTotal / double totalNumber
-    let minXY = xyMultiTotal / double totalNumber
-    let minXsquare = xSquareTotal / double totalNumber
+    let minY = yTotal / float totalNumber
+    let minX = xTotal / float totalNumber
+    let minXY = xyMultiTotal / float totalNumber
+    let minXsquare = xSquareTotal / float totalNumber
 
     let m = ((minX * minY) - minXY) / ((minX * minX) - minXsquare)
 

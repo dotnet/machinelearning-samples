@@ -16,24 +16,24 @@ let ModelPath= Path.Combine(AppPath, "IrisModel.zip")
 
 type IrisData() = 
     [<Column("0")>]
-    member val Label = 0.0 with get,set
+    member val Label: float32 = 0.0f with get,set
 
     [<Column("1")>]
-    member val SepalLength = 0.0 with get, set
+    member val SepalLength: float32 = 0.0f with get, set
 
     [<Column("2")>]
-    member val SepalWidth = 0.0 with get, set
+    member val SepalWidth: float32 = 0.0f with get, set
 
     [<Column("3")>]
-    member val PetalLength = 0.0 with get, set
+    member val PetalLength: float32 = 0.0f with get, set
 
     [<Column("4")>]
-    member val PetalWidth = 0.0 with get, set
+    member val PetalWidth: float32 = 0.0f with get, set
 
 type IrisPrediction() = 
 
     [<ColumnName("Score")>]
-    member val  Score : float[] = null with get, set
+    member val Score: float32[] = null with get, set
 
 
 let TrainAsync() =
@@ -74,9 +74,9 @@ let TrainAsync() =
     model
 
 module TestIrisData = 
-    let Iris1 = IrisData(SepalLength = 5.1, SepalWidth = 3.3, PetalLength = 1.6, PetalWidth= 0.2)
-    let Iris2 = IrisData(SepalLength = 6.4, SepalWidth = 3.1, PetalLength = 5.5, PetalWidth = 2.2)
-    let Iris3 = IrisData(SepalLength = 4.4, SepalWidth = 3.1, PetalLength = 2.5, PetalWidth = 1.2)
+    let Iris1 = IrisData(SepalLength = 5.1f, SepalWidth = 3.3f, PetalLength = 1.6f, PetalWidth= 0.2f)
+    let Iris2 = IrisData(SepalLength = 6.4f, SepalWidth = 3.1f, PetalLength = 5.5f, PetalWidth = 2.2f)
+    let Iris3 = IrisData(SepalLength = 4.4f, SepalWidth = 3.1f, PetalLength = 2.5f, PetalWidth = 1.2f)
 
 let Evaluate(model : PredictionModel<IrisData, IrisPrediction>) =
     // To evaluate how good the model predicts values, the model is ran against new set
