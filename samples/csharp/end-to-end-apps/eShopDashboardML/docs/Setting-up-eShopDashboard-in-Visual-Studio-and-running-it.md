@@ -16,7 +16,7 @@ If you want to use daily-drops or non major versions, you can also use the this 
 <Project>
 
   <PropertyGroup>
-    <MicrosoftMLVersion>0.3.0</MicrosoftMLVersion>
+    <MicrosoftMLVersion>0.5.0</MicrosoftMLVersion>
   </PropertyGroup>
 
 </Project>
