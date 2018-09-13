@@ -9,21 +9,35 @@ open Microsoft.ML.Runtime.Api
 open Microsoft.ML.Trainers
 open Microsoft.ML.Transforms
 
-type SentimentData() =
-    [<Column("0")>]
-    member val SentimentText: string = "" with get, set
+[<CLIMutable>]
+type SentimentData =
+    { [<Column("0")>]
+      SentimentText: string
+      [<Column("1", name="Label")>]
+      Sentiment: float32 }
 
-    [<Column("1", name="Label")>]
-    member val Sentiment: float32 = 0.0f with get, set
+[<CLIMutable>]
+type SentimentPrediction =
+    { [<ColumnName("PredictedLabel")>]
+      Sentiment: bool }
 
-type SentimentPrediction() =
-    [<ColumnName("PredictedLabel")>]
-    member val Sentiment: bool = false with get, set
+
+//type SentimentData() =
+//    [<Column("0")>]
+//    member val SentimentText: string = "" with get, set
+
+//    [<Column("1", name="Label")>]
+//    member val Sentiment: float32 = 0.0f with get, set
+
+//type SentimentPrediction() =
+//    [<ColumnName("PredictedLabel")>]
+//    member val Sentiment: bool = false with get, set
+
 
 let sentiments = 
-   [| SentimentData(SentimentText = "Contoso's 11 is a wonderful experience", Sentiment = 1.0f)
-      SentimentData(SentimentText = "The acting in this movie is very bad", Sentiment = 0.0f)
-      SentimentData(SentimentText = "Joe versus the Volcano Coffee Company is a great film.", Sentiment = 1.0f) |]
+   [| { SentimentText = "Contoso's 11 is a wonderful experience"; Sentiment = 1.0f }
+      { SentimentText = "The acting in this movie is very bad"; Sentiment = 0.0f }
+      { SentimentText = "Joe versus the Volcano Coffee Company is a great film."; Sentiment = 1.0f } |]
 
 let AppPath = Path.Combine(__SOURCE_DIRECTORY__, "../../../..")
 let TrainDataPath = Path.Combine(AppPath, "datasets", "sentiment-imdb-train.txt")
