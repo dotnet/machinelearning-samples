@@ -25,20 +25,24 @@ namespace TensorFlowMLNETInceptionv3ModelScoring
             try
             {
                 var modelBuilder = new ModelTrainer(
-                   ModelHelpers.GetAssetsPath("data", "tags.tsv"),
-                   ModelHelpers.GetAssetsPath("images"),
-                   ModelHelpers.GetAssetsPath("model", "tensorflow_inception_graph.pb"),
-                   ModelHelpers.GetAssetsPath("model", "imageClassifier.zip"));
+                                           ModelHelpers.GetAssetsPath("data", "tags.tsv"),
+                                           ModelHelpers.GetAssetsPath("images"),
+                                           ModelHelpers.GetAssetsPath("model", "tensorflow_inception_graph.pb"),
+                                           ModelHelpers.GetAssetsPath("model", "imageClassifier.zip"));
+
                 await modelBuilder.BuildAndTrain();
 
                 var modelEvaluator = new ModelEvaluator(
-                    ModelHelpers.GetAssetsPath("data", "tags.tsv"),
-                    ModelHelpers.GetAssetsPath("images"),
-                    ModelHelpers.GetAssetsPath("model", "imageClassifier.zip"));
+                                           ModelHelpers.GetAssetsPath("data", "tags.tsv"),
+                                           ModelHelpers.GetAssetsPath("images"),
+                                           ModelHelpers.GetAssetsPath("model", "imageClassifier.zip"));
+
                 await modelEvaluator.Evaluate();
+
             } catch (Exception ex)
             {
-
+                Console.WriteLine("InnerException: {0}", ex.InnerException.ToString());
+                throw;
             }
 
             Console.WriteLine("End of process");
