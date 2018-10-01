@@ -10,12 +10,12 @@ namespace BikeSharingDemand.Model
     public sealed class ModelBuilder
     {
         private readonly string _trainingDataLocation;
-        private readonly ILearningPipelineItem _algorythm;
+        private readonly ILearningPipelineItem _algorithm;
 
-        public ModelBuilder(string trainingDataLocation, ILearningPipelineItem algorythm)
+        public ModelBuilder(string trainingDataLocation, ILearningPipelineItem algorithm)
         {
             _trainingDataLocation = trainingDataLocation;
-            _algorythm = algorythm;
+            _algorithm = algorithm;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace BikeSharingDemand.Model
                                                 "NormalizedTemperature",
                                                 "Humidity",
                                                 "Windspeed"));
-            pipeline.Add(_algorythm);
+            pipeline.Add(_algorithm);
 
             return pipeline.Train<BikeSharingDemandSample, BikeSharingDemandPrediction>();
         }
