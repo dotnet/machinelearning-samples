@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Models;
-using Microsoft.ML.Trainers;
-using Microsoft.ML.Transforms;
+
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Legacy.Models;
+using Microsoft.ML.Legacy.Data;
+using Microsoft.ML.Legacy.Transforms;
+using Microsoft.ML.Legacy.Trainers;
 
 namespace MulticlassClassification_Iris
 {
