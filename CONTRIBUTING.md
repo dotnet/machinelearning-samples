@@ -22,9 +22,6 @@ An ML.NET team member will be assigned to your pull request once the continuous 
 
 All commits in a pull request will be squashed to a single commit with the original creator as author.
 
-## Contributing
-
-See [Contributing](docs/project-docs/contributing.md) for information about coding styles, source structure, making pull requests, and more.
 
 ## Uploading datasets
 * Only datasets that allowed for public use for all purposes (including redistribution) can be uploaded to this repository. 
