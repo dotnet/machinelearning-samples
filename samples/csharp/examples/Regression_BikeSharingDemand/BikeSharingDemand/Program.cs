@@ -4,9 +4,11 @@ using System.Runtime.InteropServices;
 using BikeSharingDemand.BikeSharingDemandData;
 using BikeSharingDemand.Helpers;
 using BikeSharingDemand.Model;
-using Microsoft.ML;
-using Microsoft.ML.Models;
-using Microsoft.ML.Trainers;
+
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Legacy.Models;
+using Microsoft.ML.Legacy.Trainers;
+
 
 namespace BikeSharingDemand
 {
