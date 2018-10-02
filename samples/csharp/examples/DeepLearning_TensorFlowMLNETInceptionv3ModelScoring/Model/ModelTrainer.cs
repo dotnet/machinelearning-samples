@@ -1,4 +1,8 @@
 ﻿using Microsoft.ML;
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Legacy.Data;
+using Microsoft.ML.Legacy.Trainers;
+using Microsoft.ML.Legacy.Transforms;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
 using Microsoft.ML.Transforms.TensorFlow;
@@ -64,7 +68,7 @@ namespace TensorFlowMLNETInceptionv3ModelScoring.Model
         protected PredictionModel<ImageNetData, ImageNetPrediction> Train(LearningPipeline pipeline)
         {
             // Initialize TensorFlow engine
-            TensorFlowUtils.Initialize();
+            //TensorFlowUtils.Initialize();
 
             var model = pipeline.Train<ImageNetData, ImageNetPrediction>();
             return model;
@@ -78,7 +82,7 @@ namespace TensorFlowMLNETInceptionv3ModelScoring.Model
             var pipeline = new LearningPipeline();
 
             // TextLoader loads tsv file, containing image file location and label 
-            pipeline.Add(new Microsoft.ML.Data.TextLoader(dataLocation).CreateFrom<ImageNetData>(useHeader: false));
+            pipeline.Add(new TextLoader(dataLocation).CreateFrom<ImageNetData>(useHeader: false));
 
             // ImageLoader reads input images
             pipeline.Add(new ImageLoader((nameof(ImageNetData.ImagePath), "ImageReal"))
@@ -113,7 +117,7 @@ namespace TensorFlowMLNETInceptionv3ModelScoring.Model
             // This activation map is used as a image vector featurizer 
             pipeline.Add(new TensorFlowScorer()
             {
-                ModelFile = modelLocation,
+                Model = modelLocation,
                 InputColumns = new[] { InceptionSettings.inputTensorName },
                 OutputColumns = new[] { InceptionSettings.outputTensorName }
             });

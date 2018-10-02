@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="0.6.0-preview-26912-3" />
-    <PackageReference Include="Microsoft.ML.CpuMath" Version="0.6.0-preview-26912-3" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="0.6.0-preview-26912-3" />
-    <PackageReference Include="Microsoft.ML.TensorFlow" Version="0.6.0-preview-26912-3" />
+    <PackageReference Include="Microsoft.ML" Version="0.6.0-preview-26929-2" />
+    <PackageReference Include="Microsoft.ML.CpuMath" Version="0.6.0-preview-26929-2" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="0.6.0-preview-26929-2" />
+    <PackageReference Include="Microsoft.ML.TensorFlow" Version="0.6.0-preview-26929-2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,13 +1,15 @@
-﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Models;
-using Microsoft.ML.Transforms.TensorFlow;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Legacy.Models;
+using Microsoft.ML.Legacy.Data;
+
 using TensorFlowMLNETInceptionv3ModelScoring.ImageData;
+using Microsoft.ML.Transforms.TensorFlow;
 
 namespace TensorFlowMLNETInceptionv3ModelScoring.Model
 {
@@ -27,7 +29,7 @@ namespace TensorFlowMLNETInceptionv3ModelScoring.Model
         public async Task Evaluate()
         {
             // Initialize TensorFlow engine (Needed before loading the ML.NET related to TensorFlow model. This won't be needed when using the new API in v0.6 with Estimators, etc.)
-            TensorFlowUtils.Initialize();
+            //TensorFlowUtils.Initialize();
 
             var model = await PredictionModel.ReadAsync<ImageNetData, ImageNetPrediction>(modelLocation);
 
