@@ -1,12 +1,10 @@
-﻿using ML = Microsoft.ML;
-//using Microsoft.ML.Runtime;
-//using Microsoft.ML.Runtime.Data;
-//using Microsoft.ML.Runtime.EntryPoints;
-using Microsoft.ML.Data;
-using System;
+﻿using System;
 using System.IO;
-using Microsoft.ML;
+using Microsoft.ML.Legacy;
 using System.Threading.Tasks;
+using Microsoft.ML.Legacy.Data;
+using Microsoft.ML.Legacy.Transforms;
+using Microsoft.ML.Legacy.Trainers;
 
 namespace eShopForecastModelsTrainer
 {
@@ -47,7 +45,7 @@ namespace eShopForecastModelsTrainer
 
             // The model needs the columns to be arranged into a single column of numeric type
             // First, we group all numeric columns into a single array named NumericalFeatures
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(
+            learningPipeline.Add(new ColumnConcatenator(
                 outputColumn: "NumericalFeatures",
                 nameof(CountryData.year),
                 nameof(CountryData.month),
@@ -61,19 +59,19 @@ namespace eShopForecastModelsTrainer
             ));
 
             // Second group is for categorical features (just one in this case), we name this column CategoryFeatures
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(outputColumn: "CategoryFeatures", nameof(CountryData.country)));
+            learningPipeline.Add(new ColumnConcatenator(outputColumn: "CategoryFeatures", nameof(CountryData.country)));
 
             // Then we need to transform the category column using one-hot encoding. This will return a numeric array
-            learningPipeline.Add(new ML.Transforms.CategoricalOneHotVectorizer("CategoryFeatures"));
+            learningPipeline.Add(new CategoricalOneHotVectorizer("CategoryFeatures"));
 
             // Once all columns are numeric types, all columns will be combined
             // into a single column, named Features 
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(outputColumn: "Features", "NumericalFeatures", "CategoryFeatures"));
+            learningPipeline.Add(new ColumnConcatenator(outputColumn: "Features", "NumericalFeatures", "CategoryFeatures"));
 
             // Add the Learner to the pipeline. The Learner is the machine learning algorithm used to train a model
             // In this case, FastTreeTweedieRegressor was one of the best performing algorithms, but you can 
             // choose any other regression algorithm (StochasticDualCoordinateAscentRegressor,PoissonRegressor,...)
-            learningPipeline.Add(new ML.Trainers.FastTreeTweedieRegressor { NumThreads = 1, FeatureColumn = "Features" });
+            learningPipeline.Add(new FastTreeTweedieRegressor { NumThreads = 1, FeatureColumn = "Features" });
 
             // Finally, we train the pipeline using the training dataset set at the first stage
             var model = learningPipeline.Train<CountryData, CountrySalesPrediction>();

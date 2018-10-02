@@ -1,12 +1,10 @@
-﻿using ML = Microsoft.ML;
-using Microsoft.ML;
-//using Microsoft.ML.Runtime;
-//using Microsoft.ML.Runtime.Data;
-//using Microsoft.ML.Runtime.EntryPoints;
-using Microsoft.ML.Data;
+﻿using ML = Microsoft.ML.Legacy;
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Legacy.Data;
 
 namespace eShopForecastModelsTrainer
 {
