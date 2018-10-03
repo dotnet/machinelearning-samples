@@ -2,11 +2,12 @@
 
 open System
 open System.IO
-open Microsoft.ML
-open Microsoft.ML.Runtime.Api
-open Microsoft.ML.Data
-open Microsoft.ML.Trainers
-open Microsoft.ML.Transforms
+
+open Microsoft.ML.Runtime.Api;
+open Microsoft.ML.Legacy;
+open Microsoft.ML.Legacy.Data;
+open Microsoft.ML.Legacy.Transforms;
+open Microsoft.ML.Legacy.Trainers;
 
 let AppPath = Path.Combine(__SOURCE_DIRECTORY__, "../../../..")
 let DataPath = Path.Combine(AppPath, "datasets", "iris-full.txt")

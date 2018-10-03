@@ -1,7 +1,9 @@
 ﻿using BikeSharingDemand.BikeSharingDemandData;
-using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Models;
+
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Legacy.Models;
+using Microsoft.ML.Legacy.Data;
+
 
 namespace BikeSharingDemand.Model
 {

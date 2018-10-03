@@ -2,12 +2,13 @@
 
 open System
 open System.IO
-open Microsoft.ML
-open Microsoft.ML.Data
-open Microsoft.ML.Models
-open Microsoft.ML.Runtime.Api
-open Microsoft.ML.Trainers
-open Microsoft.ML.Transforms
+
+open Microsoft.ML.Runtime.Api;
+open Microsoft.ML.Legacy;
+open Microsoft.ML.Legacy.Models;
+open Microsoft.ML.Legacy.Data;
+open Microsoft.ML.Legacy.Transforms;
+open Microsoft.ML.Legacy.Trainers;
 
 [<CLIMutable>]
 type SentimentData =

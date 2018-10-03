@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.ML;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
 using System.Threading.Tasks;
+
+using Microsoft.ML.Legacy;
+using Microsoft.ML.Runtime.Api;
 
 namespace eShopDashboard.Forecast
 {
