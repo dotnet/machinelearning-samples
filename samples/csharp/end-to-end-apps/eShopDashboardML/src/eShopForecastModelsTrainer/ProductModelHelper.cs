@@ -1,12 +1,11 @@
-﻿using ML = Microsoft.ML;
-using Microsoft.ML;
-//using Microsoft.ML.Runtime;
-//using Microsoft.ML.Runtime.Data;
-//using Microsoft.ML.Runtime.EntryPoints;
-using Microsoft.ML.Data;
+﻿using Microsoft.ML;
+using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Runtime.FastTree;
+using Microsoft.ML.Trainers;
+using Microsoft.ML.Core.Data;
 using System;
 using System.IO;
-using System.Threading.Tasks;
+using static eShopForecastModelsTrainer.ConsoleHelpers;
 
 namespace eShopForecastModelsTrainer
 {
@@ -17,16 +16,14 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <param name="outputModelPath">Trained model path</param>
-        public static async Task TrainAndSaveModel(string dataPath, string outputModelPath = "product_month_fastTreeTweedie.zip")
+        public static void TrainAndSaveModel(string dataPath, string outputModelPath = "product_month_fastTreeTweedie.zip")
         {
             if (File.Exists(outputModelPath))
             {
                 File.Delete(outputModelPath);
             }
 
-            var model = CreateProductModelUsingPipeline(dataPath);
-
-            await model.WriteAsync(outputModelPath);
+            CreateProductModelUsingPipeline(dataPath, outputModelPath);
         }
 
 
@@ -35,50 +32,42 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <returns></returns>
-        private static PredictionModel<ProductData, ProductUnitPrediction> 
-                        CreateProductModelUsingPipeline(string dataPath)
+        private static void CreateProductModelUsingPipeline(string dataPath, string outputModelPath)
         {
-            Console.WriteLine("*************************************************");
-            Console.WriteLine("Training product forecasting model using Pipeline");
+            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            var ctx = new RegressionContext(env);
 
-            var learningPipeline = new LearningPipeline();
+            ConsoleWriteHeader("Training product forecasting");
 
-            // First stage in the pipeline will be reading the source csv file
-            learningPipeline.Add(new TextLoader(dataPath).CreateFrom<ProductData>(useHeader: true, separator: ','));
+            var reader = TextLoader.CreateReader(env,
+                            c => (
+                                next: c.LoadFloat(0),
+                                productId: c.LoadText(1),
+                                year: c.LoadFloat(2),
+                                month: c.LoadFloat(3),
+                                units: c.LoadFloat(4),
+                                avg: c.LoadFloat(5),
+                                count: c.LoadFloat(6),
+                                max: c.LoadFloat(7),
+                                min: c.LoadFloat(8),
+                                prev: c.LoadFloat(9)),
+                            separator: ',', hasHeader: true);
 
-            // The model needs the columns to be arranged into a single column of numeric type
-            // First, we group all numeric columns into a single array named NumericalFeatures
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(
-                outputColumn: "NumericalFeatures",
-                nameof(ProductData.year),
-                nameof(ProductData.month),
-                nameof(ProductData.max),
-                nameof(ProductData.min),
-                nameof(ProductData.count),
-                nameof(ProductData.units),
-                nameof(ProductData.avg),
-                nameof(ProductData.prev)
-            ));
+            var est = reader.MakeNewEstimator()
+                .Append(row => (
+                    NumFeatures: row.year.ConcatWith(row.month, row.month, row.units, row.avg, row.count, row.max, row.min, row.prev),
+                    CatFeatures: row.productId.OneHotEncoding(),
+                    Label: row.next))
+                .Append(row => (
+                    Features: row.NumFeatures.ConcatWith(row.CatFeatures),
+                    row.Label))
+                .Append(r => (r.Label, score: ctx.Trainers.FastTree(r.Label, r.Features)));
 
-            // Second group is for categorical features (just one in this case), we name this column CategoryFeatures
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(outputColumn: "CategoryFeatures", nameof(ProductData.productId)));
+            var datasource = reader.Read(new MultiFileSource(dataPath));
+            var model = est.Fit(datasource);
 
-            // Then we need to transform the category column using one-hot encoding. This will return a numeric array
-            learningPipeline.Add(new ML.Transforms.CategoricalOneHotVectorizer("CategoryFeatures"));
-
-            // Once all columns are numeric types, all columns will be combined
-            // into a single column, named Features 
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(outputColumn: "Features", "NumericalFeatures", "CategoryFeatures"));
-
-            // Add the Learner to the pipeline. The Learner is the machine learning algorithm used to train a model
-            // In this case, FastTreeTweedieRegressor was one of the best performing algorithms, but you can 
-            // choose any other regression algorithm (StochasticDualCoordinateAscentRegressor,PoissonRegressor,...)
-            learningPipeline.Add(new ML.Trainers.FastTreeTweedieRegressor { NumThreads = 1, FeatureColumn = "Features" });
-
-            // Finally, we train the pipeline using the training dataset set at the first stage
-            var model = learningPipeline.Train<ProductData, ProductUnitPrediction>();
-
-            return model;
+            using (var file = File.OpenWrite(outputModelPath))
+                model.AsDynamic.SaveTo(env, file);
         }
 
         /// <summary>
@@ -86,36 +75,57 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="outputModelPath">Model file path</param>
         /// <returns></returns>
-        public static async Task TestPrediction(string outputModelPath = "product_month_fastTreeTweedie.zip")
+        public static void TestPrediction(string outputModelPath = "product_month_fastTreeTweedie.zip")
         {
-            Console.WriteLine("*********************************");
-            Console.WriteLine("Testing Product Unit Sales Forecast model");
+            ConsoleWriteHeader("Testing Product Unit Sales Forecast model");
 
             // Read the model that has been previously saved by the method SaveModel
-            var model = await PredictionModel.ReadAsync<ProductData, ProductUnitPrediction>(outputModelPath);
+            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            ITransformer model;
+            using (var file = File.OpenRead(outputModelPath))
+            {
+                model = TransformerChain
+                    .LoadFrom(env, file);
+            }
+
+            var predictor = model.MakePredictionFunction<ProductData, ProductUnitPrediction>(env);
 
             Console.WriteLine("** Testing Product 1 **");
 
             // Build sample data
             ProductData dataSample = new ProductData()
             {
-                productId = "263", month = 10, year = 2017, avg = 91, max = 370, min = 1,
-                count = 10, prev = 1675, units = 910
+                productId = "263",
+                month = 10,
+                year = 2017,
+                avg = 91,
+                max = 370,
+                min = 1,
+                count = 10,
+                prev = 1675,
+                units = 910
             };
 
             //model.Predict() predicts the nextperiod/month forecast to the one provided
-            ProductUnitPrediction prediction = model.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month+1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
+            ProductUnitPrediction prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
 
             dataSample = new ProductData()
             {
-                productId = "263", month = 11, year = 2017, avg = 29, max = 221, min = 1,
-                count = 35, prev = 910, units = 551
+                productId = "263",
+                month = 11,
+                year = 2017,
+                avg = 29,
+                max = 221,
+                min = 1,
+                count = 35,
+                prev = 910,
+                units = 551
             };
 
             //model.Predict() predicts the nextperiod/month forecast to the one provided
-            prediction = model.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month+1}, year: {dataSample.year} - Forecast Prediction (units): {prediction.Score}");
+            prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Forecast Prediction (units): {prediction.Score}");
 
             Console.WriteLine(" ");
 
@@ -123,21 +133,35 @@ namespace eShopForecastModelsTrainer
 
             dataSample = new ProductData()
             {
-                productId = "988", month = 10, year = 2017, avg = 43, max = 220, min = 1,
-                count = 25, prev = 1036, units = 1094
+                productId = "988",
+                month = 10,
+                year = 2017,
+                avg = 43,
+                max = 220,
+                min = 1,
+                count = 25,
+                prev = 1036,
+                units = 1094
             };
 
-            prediction = model.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month+1}, year: {dataSample.year} - Real Value (units): 1076, Forecasting (units): {prediction.Score}");
+            prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real Value (units): 1076, Forecasting (units): {prediction.Score}");
 
             dataSample = new ProductData()
             {
-                productId = "988", month = 11, year = 2017, avg = 41, max = 225, min = 4,
-                count = 26, prev = 1094, units = 1076
+                productId = "988",
+                month = 11,
+                year = 2017,
+                avg = 41,
+                max = 225,
+                min = 4,
+                count = 26,
+                prev = 1094,
+                units = 1076
             };
 
-            prediction = model.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month+1}, year: {dataSample.year} - Forecasting (units): {prediction.Score}");
+            prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Forecasting (units): {prediction.Score}");
         }
     }
 }
