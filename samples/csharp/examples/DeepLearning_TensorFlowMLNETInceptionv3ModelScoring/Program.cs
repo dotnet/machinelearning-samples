@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.ML.Runtime.ImageAnalytics;
+using Microsoft.ML.Transforms;
+using System;
 using System.Threading.Tasks;
 using TensorFlowMLNETInceptionv3ModelScoring.Model;
 
@@ -24,6 +26,10 @@ namespace TensorFlowMLNETInceptionv3ModelScoring
         {
             try
             {
+                if (typeof(TensorFlowTransform) == null) throw new Exception("Tensorflow not loaded correctly");
+
+                if (typeof(ImageLoaderTransform) == null) throw new Exception("ImageAnalytics not loaded correctly");
+
                 var modelBuilder = new ModelTrainer(
                                            ModelHelpers.GetAssetsPath("data", "tags.tsv"),
                                            ModelHelpers.GetAssetsPath("images"),
