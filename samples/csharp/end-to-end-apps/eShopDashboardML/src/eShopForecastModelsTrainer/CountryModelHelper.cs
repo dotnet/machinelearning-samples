@@ -1,12 +1,11 @@
-﻿using ML = Microsoft.ML;
-//using Microsoft.ML.Runtime;
-//using Microsoft.ML.Runtime.Data;
-//using Microsoft.ML.Runtime.EntryPoints;
-using Microsoft.ML.Data;
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.ML;
-using System.Threading.Tasks;
+using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Runtime.FastTree;
+using Microsoft.ML.Trainers;
+using Microsoft.ML.Core.Data;
+using static eShopForecastModelsTrainer.ConsoleHelpers;
 
 namespace eShopForecastModelsTrainer
 {
@@ -17,16 +16,14 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <param name="outputModelPath">Trained model path</param>
-        public static async Task TrainAndSaveModel(string dataPath, string outputModelPath = "country_month_fastTreeTweedie.zip")
+        public static void TrainAndSaveModel(string dataPath, string outputModelPath = "country_month_fastTreeTweedie.zip")
         {
             if (File.Exists(outputModelPath))
             {
                 File.Delete(outputModelPath);
             }
 
-            var model = CreateCountryModelUsingPipeline(dataPath);
-
-            await model.WriteAsync(outputModelPath);
+            CreateCountryModel(dataPath, outputModelPath);
         }
 
         /// <summary>
@@ -34,51 +31,43 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <returns></returns>
-        private static PredictionModel<CountryData, CountrySalesPrediction> 
-                         CreateCountryModelUsingPipeline(string dataPath)
+        private static void CreateCountryModel(string dataPath, string outputModelPath)
         {
-            Console.WriteLine("*************************************************");
-            Console.WriteLine("Training country forecasting model using Pipeline");
+            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            var ctx = new RegressionContext(env);
 
-            var learningPipeline = new LearningPipeline();
+            ConsoleWriteHeader("Training country forecasting model");
 
-            // First node in the workflow will be reading the source csv file, following the schema defined by dataSchema
-            learningPipeline.Add(new TextLoader(dataPath).CreateFrom<CountryData>(useHeader: true, separator: ','));
+            var reader = TextLoader.CreateReader(env,
+                            c => (
+                                next: c.LoadFloat(0),
+                                country: c.LoadText(1),
+                                year: c.LoadFloat(2),
+                                month: c.LoadFloat(3),
+                                max: c.LoadFloat(4),
+                                min: c.LoadFloat(5),
+                                std: c.LoadFloat(6),
+                                count: c.LoadFloat(7),
+                                sales: c.LoadFloat(8),
+                                med: c.LoadFloat(9),
+                                prev: c.LoadFloat(10)),
+                            separator: ',', hasHeader: true);
 
-            // The model needs the columns to be arranged into a single column of numeric type
-            // First, we group all numeric columns into a single array named NumericalFeatures
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(
-                outputColumn: "NumericalFeatures",
-                nameof(CountryData.year),
-                nameof(CountryData.month),
-                nameof(CountryData.max),
-                nameof(CountryData.min),
-                nameof(CountryData.std),
-                nameof(CountryData.count),
-                nameof(CountryData.sales),
-                nameof(CountryData.med),
-                nameof(CountryData.prev)
-            ));
+            var est = reader.MakeNewEstimator()
+                .Append(row => (
+                    NumFeatures: row.year.ConcatWith(row.month, row.max, row.min, row.std, row.count, row.sales, row.med, row.prev),
+                    CatFeatures: row.country.OneHotEncoding(),
+                    Label: row.next))
+                .Append(row => (
+                    Features: row.NumFeatures.ConcatWith(row.CatFeatures),
+                    row.Label))
+                .Append(r => (r.Label, score: ctx.Trainers.FastTree(r.Label, r.Features)));
 
-            // Second group is for categorical features (just one in this case), we name this column CategoryFeatures
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(outputColumn: "CategoryFeatures", nameof(CountryData.country)));
+            var datasource = reader.Read(new MultiFileSource(dataPath));
+            var model = est.Fit(datasource);
 
-            // Then we need to transform the category column using one-hot encoding. This will return a numeric array
-            learningPipeline.Add(new ML.Transforms.CategoricalOneHotVectorizer("CategoryFeatures"));
-
-            // Once all columns are numeric types, all columns will be combined
-            // into a single column, named Features 
-            learningPipeline.Add(new ML.Transforms.ColumnConcatenator(outputColumn: "Features", "NumericalFeatures", "CategoryFeatures"));
-
-            // Add the Learner to the pipeline. The Learner is the machine learning algorithm used to train a model
-            // In this case, FastTreeTweedieRegressor was one of the best performing algorithms, but you can 
-            // choose any other regression algorithm (StochasticDualCoordinateAscentRegressor,PoissonRegressor,...)
-            learningPipeline.Add(new ML.Trainers.FastTreeTweedieRegressor { NumThreads = 1, FeatureColumn = "Features" });
-
-            // Finally, we train the pipeline using the training dataset set at the first stage
-            var model = learningPipeline.Train<CountryData, CountrySalesPrediction>();
-
-            return model;
+            using (var file = File.OpenWrite(outputModelPath))
+                model.AsDynamic.SaveTo(env, file);
         }
 
         /// <summary>
@@ -86,15 +75,19 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="outputModelPath">Model file path</param>
         /// <returns></returns>
-        public static async Task TestPrediction(string outputModelPath = "country_month_fastTreeTweedie.zip")
+        public static void TestPrediction(string outputModelPath = "country_month_fastTreeTweedie.zip")
         {
-            Console.WriteLine(" ");
-            Console.WriteLine("*********************************");
-            Console.WriteLine("Testing Country Sales Forecast model");
+            ConsoleWriteHeader("Testing Country Sales Forecast model");
 
-            // Read the model that has been previously saved by the method SaveModel
-            var model = await PredictionModel.ReadAsync<CountryData, CountrySalesPrediction>(outputModelPath);
+            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            ITransformer model;
+            using (var file = File.OpenRead(outputModelPath))
+            {
+                model = TransformerChain
+                    .LoadFrom(env, file);
+            }
 
+            var predictor = model.MakePredictionFunction<CountryData, CountrySalesPrediction>(env);
 
             Console.WriteLine("** Testing Country 1 **");
 
@@ -113,12 +106,12 @@ namespace eShopForecastModelsTrainer
                 sales = 873612.9F,
             };
             // Predict sample data
-            var prediction = model.Predict(dataSample);
-            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(6.0084501F,10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score,10)}");
+            var prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(6.0084501F, 10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score, 10)}");
 
             dataSample = new CountryData()
             {
-                country = "United Kingdom", 
+                country = "United Kingdom",
                 month = 11,
                 year = 2017,
                 med = 288.72F,
@@ -129,8 +122,8 @@ namespace eShopForecastModelsTrainer
                 count = 2387,
                 sales = 1019647.67F,
             };
-            prediction = model.Predict(dataSample);
-            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score,10)}");
+            prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score, 10)}");
 
             Console.WriteLine(" ");
 
@@ -148,8 +141,8 @@ namespace eShopForecastModelsTrainer
                 count = 10,
                 sales = 5322.56F
             };
-            prediction = model.Predict(dataSample);
-            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(3.805769F,10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score,10)}");
+            prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(3.805769F, 10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score, 10)}");
 
             dataSample = new CountryData()
             {
@@ -164,8 +157,8 @@ namespace eShopForecastModelsTrainer
                 count = 11,
                 sales = 6393.96F,
             };
-            prediction = model.Predict(dataSample);
-            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score,10)}");
+            prediction = predictor.Predict(dataSample);
+            Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score, 10)}");
         }
     }
 }
