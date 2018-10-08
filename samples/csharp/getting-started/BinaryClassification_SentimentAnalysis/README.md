@@ -89,7 +89,7 @@ If you are not satisfied with the quality of the model, you can try to improve i
 >*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size so the training is quick. You should use bigger labeled sentiment datasets to significantly improve the quality of your models.*
 
 ### 4. Consume model
-After the model is trained, you can use the XXXXXXXXXXXXXXXXXXX `Predict()` API to predict the sentiment for new reviews. 
+After the model is trained, you can use the `Predict()` API to predict the sentiment for new sample text. 
 
 ```CSharp
 var predictionFunct = model.AsDynamic.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
