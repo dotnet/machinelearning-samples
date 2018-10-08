@@ -4,7 +4,6 @@ namespace BinaryClassification_SentimentAnalysis
 {
     public class SentimentPrediction
     {
-        [ColumnName("PredictedLabel")]
-        public bool Sentiment;
+        public bool predictedlabel { get; set; }
     }
 }

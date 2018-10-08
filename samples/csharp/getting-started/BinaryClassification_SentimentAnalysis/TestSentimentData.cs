@@ -4,22 +4,22 @@ namespace BinaryClassification_SentimentAnalysis
 {
     internal class TestSentimentData
     {
-        internal static readonly IEnumerable<SentimentData> Sentiments = new[]
+        internal static readonly IEnumerable<SentimentIssue> Sentiments = new[]
         {
-            new SentimentData
+            new SentimentIssue
             {
-                SentimentText = "Contoso's 11 is a wonderful experience",
-                Sentiment = 0
+                text = "Contoso's 11 is a wonderful experience",
+                label = 0
             },
-            new SentimentData
+            new SentimentIssue
             {
-                SentimentText = "The acting in this movie is very bad",
-                Sentiment = 0
+                text = "The acting in this movie is very bad",
+                label = 0
             },
-            new SentimentData
+            new SentimentIssue
             {
-                SentimentText = "Joe versus the Volcano Coffee Company is a great film.",
-                Sentiment = 0
+                text = "Joe versus the Volcano Coffee Company is a great film.",
+                label = 0
             }
         };
     }
