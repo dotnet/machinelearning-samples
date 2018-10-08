@@ -35,16 +35,16 @@ namespace BinaryClassification_SentimentAnalysis
 
             var est = reader.MakeNewEstimator().Append(row =>
             {
-                var text = row.text.FeaturizeText();  //Convert text to numeric vectors
-                var prediction = bctx.Trainers.Sdca(row.label, text);  //Specify SDCA trainer based on the 'label' column
-                return (row.label, prediction);  //Return label and prediction columns
+                var featurizedText = row.text.FeaturizeText();  //Convert text to numeric vectors
+                var prediction = bctx.Trainers.Sdca(row.label, featurizedText);  //Specify SDCA trainer based on the label and featurized text columns
+                return (row.label, prediction);  //Return label and prediction columns. "prediction" holds predictedLabel, score and probability
             });
 
-            // Another way to create an Estimator, with the same behaviour, by chaining appends
+            //Another way to create an Estimator, with the same behaviour, by chaining appends
             //var est = reader.MakeNewEstimator().Append(row => (label: row.label,
-            //                                                   text: row.text.FeaturizeText()))  //Convert text to numeric vectors                                  
+            //                                                  featurizedtext: row.text.FeaturizeText()))  //Convert text to numeric vectors                                  
             //                                   .Append(row => (label: row.label,
-            //                                                   prediction: bctx.Trainers.Sdca(row.label, row.text)));  //Specify SDCA trainer based on the 'label' column
+            //                                                  prediction: bctx.Trainers.Sdca(row.label, row.featurizedtext)));  //Specify SDCA trainer based on the label and featurized text columns
 
 
             //4. Build and train the model
@@ -88,7 +88,7 @@ namespace BinaryClassification_SentimentAnalysis
 
             Console.WriteLine();
             Console.WriteLine("=============== Test of model with a sample ===============");
-            Console.WriteLine($"Text: {sampleStatement.text} | Prediction: {(resultprediction.PredictionLabel ? "Negative" : "Positive")} sentiment");
+            Console.WriteLine($"Text: {sampleStatement.text} | Prediction: {(resultprediction.PredictionLabel ? "Negative" : "Positive")} sentiment | Probability: {resultprediction.Probability} ");
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
