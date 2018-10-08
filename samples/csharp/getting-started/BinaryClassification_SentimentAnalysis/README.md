@@ -1,3 +1,7 @@
+# API version
+It is important to note that this sample uses the static API with Estimators, new since ML.NET v0.6.
+This API is replacing the old LearningPipeline available since v0.1.
+
 # Sentiment Analysis for User Reviews
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
