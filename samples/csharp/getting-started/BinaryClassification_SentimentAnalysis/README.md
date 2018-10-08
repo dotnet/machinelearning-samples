@@ -1,4 +1,4 @@
-# API version
+# API version: Static and Estimators-based API
 It is important to note that this sample uses the static API with Estimators, new since ML.NET v0.6.
 This API is replacing the old LearningPipeline available since v0.1.
 
