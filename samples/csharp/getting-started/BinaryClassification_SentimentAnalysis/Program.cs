@@ -33,15 +33,19 @@ namespace BinaryClassification_SentimentAnalysis
 
             var bctx = new BinaryClassificationContext(env);
 
-            var est = reader.MakeNewEstimator().Append(row => (label: row.label,
-                                                               text: row.text.FeaturizeText()))  //Convert text to numeric vectors 
-                                               //Specify SDCA trainer based on the 'label' column
-                                               .Append(row => (label: row.label,
-                                                               prediction: bctx.Trainers.Sdca(row.label, row.text)))
-                                               //Specify 'predictedlabel' as the predicted value
-                                               .Append(row => (label: row.label,
-                                                               prediction: row.prediction,
-                                                               predictedlabel: row.prediction.predictedLabel));
+            var est = reader.MakeNewEstimator().Append(row =>
+            {
+                var text = row.text.FeaturizeText();  //Convert text to numeric vectors
+                var prediction = bctx.Trainers.Sdca(row.label, text);  //Specify SDCA trainer based on the 'label' column
+                return (row.label, prediction);  //Return label and prediction columns
+            });
+
+            // Another way to create an Estimator, with the same behaviour, by chaining appends
+            //var est = reader.MakeNewEstimator().Append(row => (label: row.label,
+            //                                                   text: row.text.FeaturizeText()))  //Convert text to numeric vectors                                  
+            //                                   .Append(row => (label: row.label,
+            //                                                   prediction: bctx.Trainers.Sdca(row.label, row.text)));  //Specify SDCA trainer based on the 'label' column
+
 
             //4. Build and train the model
 
@@ -75,16 +79,16 @@ namespace BinaryClassification_SentimentAnalysis
             //6. Test Sentiment Prediction with one sample text 
             var predictionFunct = model.AsDynamic.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
 
-            SentimentIssue textToTest = new SentimentIssue
+            SentimentIssue sampleStatement = new SentimentIssue
                                         {
                                             text = "This is a very rude movie"
                                         };
 
-            var resultprediction = predictionFunct.Predict(textToTest);
+            var resultprediction = predictionFunct.Predict(sampleStatement);
 
             Console.WriteLine();
             Console.WriteLine("=============== Test of model with a sample ===============");
-            Console.WriteLine($"Text: {textToTest.text} | Prediction: {(resultprediction.predictedlabel ? "Positive" : "Negative")} sentiment");
+            Console.WriteLine($"Text: {sampleStatement.text} | Prediction: {(resultprediction.PredictionLabel ? "Negative" : "Positive")} sentiment");
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
