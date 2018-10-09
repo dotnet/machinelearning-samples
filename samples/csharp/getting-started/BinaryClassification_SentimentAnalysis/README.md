@@ -52,17 +52,12 @@ var reader = TextLoader.CreateReader(env, ctx => (label: ctx.LoadBool(0),
 
 var bctx = new BinaryClassificationContext(env);
 
-var est = reader.MakeNewEstimator().Append(row => (label: row.label,
-                                                    text: row.text.FeaturizeText()))  //Convert text to numeric vectors 
-                                    //Specify SDCA trainer based on the 'label' column
-                                    .Append(row => (label: row.label,
-                                                    prediction: bctx.Trainers.Sdca(row.label, row.text)))
-                                    //Specify 'predictedlabel' as the predicted value
-                                    .Append(row => (label: row.label,
-                                                    prediction: row.prediction,
-                                                    predictedlabel: row.prediction.predictedLabel));
-
-
+var est = reader.MakeNewEstimator().Append(row =>
+{
+    var featurizedText = row.text.FeaturizeText();  //Convert text to numeric vectors
+    var prediction = bctx.Trainers.Sdca(row.label, featurizedText);  //Specify SDCA trainer based on the label and featurized text columns
+    return (row.label, prediction);  //Return label and prediction columns. "prediction" holds predictedLabel, score and probability
+});
 ```
 
 ### 2. Train model
@@ -96,12 +91,12 @@ After the model is trained, you can use the `Predict()` API to predict the senti
 ```CSharp
 var predictionFunct = model.AsDynamic.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
 
-SentimentIssue textToTest = new SentimentIssue
-                                {
-                                   text = "This is a very rude movie"
-                                };
+SentimentIssue sampleStatement = new SentimentIssue
+                            {
+                                text = "This is a very rude movie"
+                            };
 
-var resultprediction = predictionFunct.Predict(textToTest);
+var resultprediction = predictionFunct.Predict(sampleStatement);
 ```
 
-Where in `resultprediction.predictedlabel` will be either 1 or 0 depending if it is positive or negative predicted sentiment.
+Where in `resultprediction.Predictedlabel` will be either 1 or 0 depending if it is positive or negative predicted sentiment.
