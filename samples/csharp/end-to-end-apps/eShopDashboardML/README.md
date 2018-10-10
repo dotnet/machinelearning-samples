@@ -1,6 +1,11 @@
 # eShopDashboardML
 eShopDashboardML is a web app with Product Sales Forecast predictions using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
 
+## API version: Static and Estimators-based API
+It is important to note that this sample uses the **static API with Estimators**, available since ML.NET v0.6.
+
+# Overview
+
 This end-to-end sample app highlights the usage of ML.NET API by showing the following topics:
 
 1. How to train, build and generate ML models 
