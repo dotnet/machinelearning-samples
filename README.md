@@ -30,50 +30,25 @@ Type of problem: *Classify if something is A or B*
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Sentiment Analysis classification</a></h3>
-
-      ML TASK/AREA: Binary classification
-      PROBLEM TO SOLVE: Classify sentiment (positive or negative) of statements, such as customer reviews.
-      INDUSTRY/BUSINESS: Retail
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
   </td>
  </tr>
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
-
-      ML TASK/AREA: Binary classification
-      PROBLEM TO SOLVE: Predict/classify if a passenger from the Titanic survived or not.
-      INDUSTRY/BUSINESS: Academic & research
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 5 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 6 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
   </td>
  </tr>
-
 </table>
 
 
