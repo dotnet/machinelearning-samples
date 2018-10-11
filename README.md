@@ -33,7 +33,6 @@ Since the list of examples will be growing and they will be covering many scenar
       <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
   </td>
  </tr>
-  <tr>
  <tr>
    <td>
       <h2>Multi-class classification</h2>
@@ -44,7 +43,6 @@ Since the list of examples will be growing and they will be covering many scenar
       <h3><a href="TBD/Relative-URL">Iris classification</a></h
   </td>
  </tr>
-  <tr>
  <tr>
    <td>
       <h2>Regression</h2>
@@ -57,7 +55,6 @@ Since the list of examples will be growing and they will be covering many scenar
       <h3><a href="TBD/Relative-URL">Product sales forecast</a></h3>
   </td>
  </tr>
-  <tr>
  <tr>
    <td>
       <h2>Recommendation</h2>
