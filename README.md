@@ -45,8 +45,8 @@ Since the list of examples will be growing and they will be covering many scenar
  <tr>
    <td>
       <h2>Regression</h2>
-      <img src="images/regression-plotting.png" alt="regression plotting">
       <img src="images/regression-icon.png" alt="regression icon">
+      <img src="images/regression-plotting.png" alt="regression plotting">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Taxi fare prediction</a></h3>
