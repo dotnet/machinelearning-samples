@@ -19,8 +19,7 @@ Since the list of examples will be growing and they will be covering many scenar
 * ML task/area 
 * Industry/business
 
-# Samples Gallery classified by ML task/area 
-
+# Samples Gallery classified by ML task 
 
 <table>
  <tr>
@@ -102,6 +101,11 @@ Since the list of examples will be growing and they will be covering many scenar
       <h3><a href="TBD/Relative-URL">TBD</a></h3>
   </td>
  </tr>
+ </table>
+
+# Samples for predicting/scoring already trained models from other frameworks 
+
+<table>
  <tr>
    <td>
       <h2>Tensorflow model scoring</h2>
