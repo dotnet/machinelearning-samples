@@ -30,23 +30,29 @@ Type of problem: *Classify if something is A or B*
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Sentiment Analysis classification</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 5 ML task</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 6 ML task</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 </table>
@@ -59,51 +65,18 @@ Type of problem: *Classify something across multiple categories*
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <h3><a href="TBD/Relative-URL">GitHub issues labeler</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Iris classification</a></h3>
-
-      ML TASK/AREA: Multi-class classification
-      PROBLEM TO SOLVE: Predict/classify the type of iris flower
-      INDUSTRY/BUSINESS: Academic & research
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
- <tr>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 4 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 5 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 6 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
-  </td>
- </tr>
-
 </table>
 
 ## Regression
@@ -115,50 +88,17 @@ Type of problem: *Predict a value, how much, how many, such as sales or weather 
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Taxi Fare Prediction</a></h3>
-
-      ML TASK/AREA: Regression
-      PROBLEM TO SOLVE: Predict taxi fares
-      INDUSTRY/BUSINESS: Transport & travels
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Bike Sharing Demand</a></h3>
-
-      ML TASK/AREA: Regression
-      PROBLEM TO SOLVE: Predict bike sharing demand
-      INDUSTRY/BUSINESS: Transport & travels
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
- <tr>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 4 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 5 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 6 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
-  </td>
- </tr>
-
 </table>
 
 ## Recommendations
@@ -168,25 +108,16 @@ Type of problem: *Recommend something, such as product or movie, based on other 
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <h3><a href="TBD/Relative-URL">eCommerce product catalog recommender</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <h3><a href="TBD/Relative-URL">Sample 2 TBD</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 
@@ -199,25 +130,16 @@ Type of problem: *Group things/concepts across initially unknown/unnamed groups 
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <h3><a href="TBD/Relative-URL">Customer segmentation</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Clustering Iris Data</a></h3>
-
-      ML TASK/AREA: Clustering
-      PROBLEM TO SOLVE: Divide iris flowers into different groups that correspond to different types of iris.
-      INDUSTRY/BUSINESS: Academic & research
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 
@@ -230,25 +152,16 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <h3><a href="TBD/Relative-URL">Fraud detection in credit cards</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <h3><a href="TBD/Relative-URL">Sample 2 TBD</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 
@@ -259,30 +172,21 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 
 **Type of problem:** *Rank or order a list of items depending on certain interest. For example, ranking your product offering a the search page in a way that maximizes the probability of your items being sold.*
 
-![High level steps to build an ML model](images/ranking-chart.png)
+![Ranking icon](images/ranking-chart.png)
 
 <table>
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+    <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 
@@ -291,29 +195,20 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 ## Time Series Forecasting
 **Type of problem:** *Predict a value, how much, how many, such as sales forecast, but taking into account cycles/periods of time, such as seasons, influencing the prediction.*
 
-![Time Series chart](images/time-series-chart.png)
+![Time Series icon](images/time-series-chart.png)
 <table>
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-
-      ML task/area: TBD
-      Problem to solve: TBD
-      Industry/Business: TBD
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 
@@ -328,24 +223,16 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Classify/Identify an image</a></h3>
-
-      ML TASK/AREA: Deep Learning, Computer Vision
-      PROBLEM TO SOLVE: Classify an image/photo using the pre-trained Inception v3 TensorFlow model
-      INDUSTRY/BUSINESS: Any Industry/Business
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sentiment Analysis of people's photos</a></h3>
-
-      ML TASK/AREA: Deep Learning, Computer Vision
-      PROBLEM TO SOLVE: Sentiment analysis of people's photos. Identify if they are happy, sad, angry, etc. by using a pre-trained TensorFlow model
-      INDUSTRY/BUSINESS: Any
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer for an ML.NET model</a></h3>
+      <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer in ML.NET</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
 
-      ML TASK/AREA: Deep Learning, Compute rVision
-      PROBLEM TO SOLVE: Use TensorFlow model as featurizer. TensorFlow model is the pre-trained Inception v3 TensorFlow model that featurizes a collection of images and that is used by an ML.NET multi-class classification task. 
-      INDUSTRY/BUSINESS: Any
   </td>
  </tr>
 
@@ -361,24 +248,15 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-
-      ML task/area: XXXXXXXXX
-      Problem to solve: XXXXXXXXXX
-      Industry/Business: XXXXXXXXX
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sentiment Analysis classification</a></h3>
-
-      ML TASK/AREA: Binary classification
-      PROBLEM TO SOLVE: Classify sentiment (positive or negative) of statements, such as customer reviews.
-      INDUSTRY/BUSINESS: Retail
+      <h3><a href="TBD/Relative-URL">Customer reviews sentiment analysis</a></h3>
+      <img src="images/tbd-image.png" alt="TBD image">
   </td>
  </tr>
 </table>
