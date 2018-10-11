@@ -32,21 +32,10 @@ Type of problem: *Classify if something is A or B*
       <h3><a href="TBD/Relative-URL">Sentiment Analysis classification</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
-  </td>
- </tr>
- <tr>
-  <td>
       <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 5 ML task</a></h3>
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 6 ML task</a></h3>
+      
   </td>
  </tr>
 </table>
@@ -65,7 +54,7 @@ Type of problem: *Classify something across multiple categories*
       <h3><a href="TBD/Relative-URL">Iris classification</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
+      
   </td>
  </tr>
 </table>
@@ -84,7 +73,7 @@ Type of problem: *Predict a value, how much, how many, such as sales or weather 
       <h3><a href="TBD/Relative-URL">Bike Sharing Demand</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      <h3><a href="TBD/Relative-URL">Products Sales Forecast</a></h3>
   </td>
  </tr>
 </table>
@@ -99,10 +88,7 @@ Type of problem: *Recommend something, such as product or movie, based on other 
       <h3><a href="TBD/Relative-URL">eCommerce product catalog recommender</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 TBD</a></h3>
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      <h3><a href="TBD/Relative-URL">Movies recommender</a></h3>
   </td>
  </tr>
 
@@ -111,7 +97,7 @@ Type of problem: *Recommend something, such as product or movie, based on other 
 ## Clustering
 Type of problem: *Group things/concepts across initially unknown/unnamed groups or clusters*
 
-![High level steps to build an ML model](images/clustering-plotting.png)
+![Clustering plotting](images/clustering-plotting.png)
 <table>
  <tr>
   <td>
@@ -120,11 +106,7 @@ Type of problem: *Group things/concepts across initially unknown/unnamed groups 
   <td>
       <h3><a href="TBD/Relative-URL">Clustering Iris Data</a></h3>
   </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
-  </td>
  </tr>
-
 </table>
 
 ## Anomaly Detection
@@ -195,17 +177,15 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Classify/Identify images/photos</a></h3>
+      <h3><a href="TBD/Relative-URL">Classify/Identify images</a></h3>
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer in ML.NET</a></h3>
-
   </td>
  </tr>
-
 </table>
 
 
@@ -217,11 +197,16 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
+      <h3><a href="TBD/Relative-URL">eCommerce product catalog recommender</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
+      <h3><a href="TBD/Relative-URL">Product sales forecast</a></h3>
   </td>
+  <td>
+      <h3><a href="TBD/Relative-URL">Movies recommender</a></h3>
+  </td>
+ </tr>
+  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Customer reviews sentiment analysis</a></h3>
   </td>
@@ -238,12 +223,8 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <td>
       <h3><a href="TBD/Relative-URL">Bike Sharing Demand</a></h3>
   </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
-  </td>
  </tr>
 </table>
-
 
 ## Financial services samples
 ![Financial icon](images/icon-financial.png)
@@ -252,15 +233,19 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <td>
       <h3><a href="TBD/Relative-URL">CC Fraud Detection</a></h3>
   </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 TBD</a></h3>
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
-  </td>
  </tr>
 </table>
 
+## Marketing
+
+![Clustering plotting](images/icon-marketing.png)
+<table>
+ <tr>
+  <td>
+      <h3><a href="TBD/Relative-URL">Customer segmentation</a></h3>
+  </td>
+ </tr>
+</table>
 
 ## Education & research samples
 ![Financial icon](images/icon-education.png)
@@ -285,11 +270,6 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <td>
       <h3><a href="TBD/Relative-URL">GitHub issues labeler</a></h3>
   </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 TBD</a></h3>
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
  </tr>
 </table>
 
@@ -299,16 +279,15 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Classify/Identify an image</a></h3>
+      <h3><a href="TBD/Relative-URL">Classify/Identify images</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
+      <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
+      <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer in ML.NET</a></h3>
   </td>
  </tr>
-
 </table>
 
 # NuGet packages to use
