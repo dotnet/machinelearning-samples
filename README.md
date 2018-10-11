@@ -16,7 +16,7 @@ For VB.NET samples, check this external repo supported by the community (Kudos f
 https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic
 
 Since the list of examples will be growing and they will be covering many scenarios depending on ML tasks but also showing typical business problems to solve, the samples are classified by two pivots:
-* ML Task or 
+* ML task/area 
 * Industry/business
 
 # Samples Gallery classified by ML task/area 
@@ -90,6 +90,9 @@ Type of problem: *Recommend something, such as product or movie, based on other 
   <td>
       <h3><a href="TBD/Relative-URL">Movies recommender</a></h3>
   </td>
+    <td>
+      
+  </td>
  </tr>
 
 </table>
@@ -106,6 +109,9 @@ Type of problem: *Group things/concepts across initially unknown/unnamed groups 
   <td>
       <h3><a href="TBD/Relative-URL">Clustering Iris Data</a></h3>
   </td>
+    <td>
+      
+  </td>
  </tr>
 </table>
 
@@ -119,10 +125,10 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
       <h3><a href="TBD/Relative-URL">Fraud detection in credit cards</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 TBD</a></h3>
+      
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 TBD</a></h3>
+      
   </td>
  </tr>
 
@@ -138,13 +144,13 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
+      <h3><a href="TBD/Relative-URL">TBD</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
+      
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
+      
   </td>
  </tr>
 
@@ -157,13 +163,13 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
 <table>
  <tr>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 1 ML task</a></h3>
+      <h3><a href="TBD/Relative-URL">TBD</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 2 ML task</a></h3>
+      
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sample 3 ML task</a></h3>
+      
   </td>
  </tr>
 
@@ -180,7 +186,7 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
       <h3><a href="TBD/Relative-URL">Classify/Identify images</a></h3>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
+      <h3><a href="TBD/Relative-URL">Image style transfer</a></h3>
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer in ML.NET</a></h3>
@@ -188,6 +194,23 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
  </tr>
 </table>
 
+## Tensorflow model scoring
+**Type of problem:** *Run/predict/score using an already trained ONNX model.*
+
+![TensorFlow logo](images/onnx-logo.png)
+<table>
+ <tr>
+  <td>
+      <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
+  </td>
+  <td>
+      
+  </td>
+  <td>
+      
+  </td>
+ </tr>
+</table>
 
 
 # Samples Gallery classified by Industry/Business 
