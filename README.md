@@ -34,9 +34,6 @@ Type of problem: *Classify if something is A or B*
   <td>
       <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
   </td>
-  <td>
-      
-  </td>
  </tr>
 </table>
 
@@ -52,9 +49,6 @@ Type of problem: *Classify something across multiple categories*
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Iris classification</a></h3>
-  </td>
-  <td>
-      
   </td>
  </tr>
 </table>
@@ -90,9 +84,6 @@ Type of problem: *Recommend something, such as product or movie, based on other 
   <td>
       <h3><a href="TBD/Relative-URL">Movies recommender</a></h3>
   </td>
-    <td>
-      
-  </td>
  </tr>
 
 </table>
@@ -109,9 +100,6 @@ Type of problem: *Group things/concepts across initially unknown/unnamed groups 
   <td>
       <h3><a href="TBD/Relative-URL">Clustering Iris Data</a></h3>
   </td>
-    <td>
-      
-  </td>
  </tr>
 </table>
 
@@ -124,14 +112,7 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <td>
       <h3><a href="TBD/Relative-URL">Fraud detection in credit cards</a></h3>
   </td>
-  <td>
-      
-  </td>
-  <td>
-      
-  </td>
  </tr>
-
 </table>
 
 
@@ -146,12 +127,6 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <td>
       <h3><a href="TBD/Relative-URL">TBD</a></h3>
   </td>
-  <td>
-      
-  </td>
-  <td>
-      
-  </td>
  </tr>
 
 </table>
@@ -164,12 +139,6 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
  <tr>
   <td>
       <h3><a href="TBD/Relative-URL">TBD</a></h3>
-  </td>
-  <td>
-      
-  </td>
-  <td>
-      
   </td>
  </tr>
 
@@ -203,12 +172,6 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <td>
       <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
   </td>
-  <td>
-      
-  </td>
-  <td>
-      
-  </td>
  </tr>
 </table>
 
@@ -232,6 +195,10 @@ Type of problem: *Detect issues/problems across items in a binary-based approach
   <tr>
   <td>
       <h3><a href="TBD/Relative-URL">Customer reviews sentiment analysis</a></h3>
+  </td>
+  <td>
+  </td>
+  <td>
   </td>
  </tr>
 </table>
