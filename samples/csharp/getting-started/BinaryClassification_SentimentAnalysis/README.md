@@ -8,8 +8,8 @@ It is important to note that this sample uses the **static API with Estimators**
 
 ## Problem
 This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use small wikipedia-detox-datasets (one dataset for training and a second dataset for model's accuracy evaluation) that were processed by humans and each comment has been assigned a sentiment label: 
-* 0 - negative
-* 1 - positive
+* 0 - nice/positive
+* 1 - toxic/negative
 
 Using those datasets we will build a model that when predicting it will analyze a string and predict a sentiment value of 0 or 1.
 
