@@ -41,11 +41,11 @@ namespace BinaryClassification_SentimentAnalysis
                 //Load training data
                 IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
 
-                //3.Create an estimator to use afterwards for creating / traing the model.
+                //3.Create a flexible pipeline (composed by a chain of estimators) 
+                // to use afterwards for creating / traing the model.
 
-                var pipeline = new TermEstimator(env, "label")
-                                    .Append(new TextTransform(env, "text", "features"))  //Convert the text column to numeric vectors (Features column)   
-                                    .Append(new LinearClassificationTrainer(env, "features", "label"));
+                var pipeline = new TextTransform(env, "text", "features")  //Convert the text column to numeric vectors (Features column)   
+                                   .Append(new LinearClassificationTrainer(env, "features", "label"));
 
                 Console.WriteLine("=============== Training model ===============");
 
