@@ -46,8 +46,6 @@ namespace BinaryClassification_SentimentAnalysis
                 var pipeline = new TermEstimator(env, "label")
                                     .Append(new TextTransform(env, "text", "features"))  //Convert the text column to numeric vectors (Features column)   
                                     .Append(new LinearClassificationTrainer(env, "features", "label"));
-                //.Append(new StochasticGradientDescentClassificationTrainer(env, "features", "label"))
-                //.Append(new KeyToValueEstimator(env, ("label", "predictionlabel")));
 
                 Console.WriteLine("=============== Training model ===============");
 
