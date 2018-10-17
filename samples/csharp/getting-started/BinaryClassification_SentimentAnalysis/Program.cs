@@ -41,7 +41,10 @@ namespace BinaryClassification_SentimentAnalysis
                 //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
 
                 var pipeline = new TextTransform(env, "Text", "Features")  //Convert the text column to numeric vectors (Features column)   
-                                   .Append(new LinearClassificationTrainer(env, "Features", "Label"));
+                                           .Append(new LinearClassificationTrainer(env, new LinearClassificationTrainer.Arguments(), 
+                                                                                   "Features", 
+                                                                                   "Label"));                                                                
+                                           //.Append(new LinearClassificationTrainer(env, "Features", "Label")); //(Simpler in ML.NET v0.7)
 
 
 
