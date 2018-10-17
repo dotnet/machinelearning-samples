@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
 using Microsoft.ML.Runtime.Learners;
-using Microsoft.ML.Runtime;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Training;
 using Microsoft.ML;
-using Microsoft.ML.StaticPipe;
-using Microsoft.ML.Trainers;
 
 namespace BinaryClassification_SentimentAnalysis
 {
