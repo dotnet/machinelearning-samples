@@ -4,7 +4,7 @@ namespace BinaryClassification_SentimentAnalysis
 {
     public class SentimentIssue
     {
-        public bool label { get; set; }
-        public string text { get; set; }
+        public bool Label { get; set; }
+        public string Text { get; set; }
     }
 }

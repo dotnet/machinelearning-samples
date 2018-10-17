@@ -4,15 +4,13 @@ namespace BinaryClassification_SentimentAnalysis
 {
     public class SentimentPrediction
     {
-        //[ColumnName("prediction.predictedLabel")] 
-
         [ColumnName("PredictedLabel")]
-        public bool PredictionLabel { get; set; }
+        public bool Prediction { get; set; }
 
-        //[ColumnName("prediction.probability")]
-        //public float Probability { get; set; }
+        [ColumnName("Probability")]
+        public float Probability { get; set; }
 
-        //[ColumnName("prediction.score")]
-        //public float Score { get; set; }
+        [ColumnName("Score")]
+        public float Score { get; set; }
     }
 }
