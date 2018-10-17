@@ -66,10 +66,8 @@ namespace BinaryClassification_SentimentAnalysis
                 var predictions = model.Transform(testDataView);
 
                 var binClassificationCtx = new BinaryClassificationContext(env);
-                var metrics = binClassificationCtx.Evaluate(predictions, "Label", 
-                                                                         "Score",
-                                                                         "Probability",
-                                                                         "PredictedLabel");
+                var metrics = binClassificationCtx.Evaluate(predictions, "Label");
+
                 Console.WriteLine();
                 Console.WriteLine("Model quality metrics evaluation");
                 Console.WriteLine("------------------------------------------");
