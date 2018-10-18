@@ -66,7 +66,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
 
             // FastTreeBinaryClassifier is an algorithm that will be used to train the model.
             // It has three hyperparameters for tuning decision tree performance. 
-            pipeline.Add(new FastTreeBinaryClassifier() { NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2 });
+            pipeline.Add(new FastTreeBinaryClassifier() {NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2});
 
             Console.WriteLine("=============== Training model ===============");
             // The pipeline is trained on the dataset that has been loaded and transformed.
