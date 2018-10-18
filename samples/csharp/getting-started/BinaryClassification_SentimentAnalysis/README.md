@@ -33,30 +33,39 @@ Building a model includes:
 
 * Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
 
-* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `FeaturizeText()`)
+* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `TextTransform`)
 
-* Choosing a trainer/learning algorithm (`SDCA or Stochastic Dual Coordinate Ascent`) to train the model with. 
+* Choosing a trainer/learning algorithm (such as `LinearClassificationTrainer`) to train the model with. 
 
 The initial code is similar to the following:
 
 ```CSharp
 //1. Create ML.NET context/environment
-var env = new LocalEnvironment();
-
-//2. Create DataReader with data schema mapped to file's columns
-var reader = TextLoader.CreateReader(env, ctx => (label: ctx.LoadBool(0),
-                                                    text: ctx.LoadText(1)));
-
-//3. Create an estimator to use afterwards for creating/traing the model.
-
-var bctx = new BinaryClassificationContext(env);
-
-var est = reader.MakeNewEstimator().Append(row =>
+using (var env = new LocalEnvironment())
 {
-    var featurizedText = row.text.FeaturizeText();  //Convert text to numeric vectors
-    var prediction = bctx.Trainers.Sdca(row.label, featurizedText);  //Specify SDCA trainer based on the label and featurized text columns
-    return (row.label, prediction);  //Return label and prediction columns. "prediction" holds predictedLabel, score and probability
-});
+    //2. Create DataReader with data schema mapped to file's columns
+    var reader = new TextLoader(env,
+                                new TextLoader.Arguments()
+                                {
+                                    Separator = "tab",
+                                    HasHeader = true,
+                                    Column = new[]
+                                    {
+                                        new TextLoader.Column("Label", DataKind.Bool, 0),
+                                        new TextLoader.Column("Text", DataKind.Text, 1)
+                                    }
+                                });
+
+    //Load training data
+    IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
+
+
+    //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
+
+    var pipeline = new TextTransform(env, "Text", "Features")  //Convert the text column to numeric vectors (Features column)   
+                                .Append(new LinearClassificationTrainer(env, "Features", "Label")); //(Simpler in ML.NET v0.7)
+
+}
 ```
 
 ### 2. Train model
@@ -65,19 +74,28 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training you need to call the `Fit()` method while providing the training dataset (`wikipedia-detox-250-line-data.tsv` file) in a DataView object.
 
 ```CSharp
-var traindata = reader.Read(new MultiFileSource(TrainDataPath));            
-var model = est.Fit(traindata);
+var model = pipeline.Fit(trainingDataView);
 ```
 
+Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
+
 ### 3. Evaluate model
+
 We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments. 
 
-`Evaluate()` compares the predicted values for the test dataset and produces various metrics you can explore.
+`Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 ```CSharp
-var testdata = reader.Read(new MultiFileSource(TestDataPath));
-var predictions = model.Transform(testdata);
-var metrics = bctx.Evaluate(predictions, row => row.label, row => row.prediction);
+IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
+
+var predictions = model.Transform(testDataView);
+
+var binClassificationCtx = new BinaryClassificationContext(env);
+var metrics = binClassificationCtx.Evaluate(predictions, "Label");
+
+Console.WriteLine("Model quality metrics evaluation");
+Console.WriteLine("------------------------------------------");
+Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
 ```
 
 If you are not satisfied with the quality of the model, you can try to improve it by providing larger training datasets and by choosing different training algorithms with different hyper-parameters for each algorithm.
@@ -85,17 +103,20 @@ If you are not satisfied with the quality of the model, you can try to improve i
 >*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size so the training is quick. You should use bigger labeled sentiment datasets to significantly improve the quality of your models.*
 
 ### 4. Consume model
+
 After the model is trained, you can use the `Predict()` API to predict the sentiment for new sample text. 
 
 ```CSharp
-var predictionFunct = model.AsDynamic.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
+// Create the prediction function 
+var predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
 
-SentimentIssue sampleStatement = new SentimentIssue
-                            {
-                                text = "This is a very rude movie"
-                            };
+var resultprediction = predictionFunct.Predict(new SentimentIssue	
+                                              {	
+                                                 text = "This is a very rude movie"	
+                                              });
 
-var resultprediction = predictionFunct.Predict(sampleStatement);
+Console.WriteLine($"Text: {sampleStatement.text} | Prediction: {(resultprediction.PredictionLabel ? "Negative" : "Positive")} sentiment");
+
 ```
 
-Where in `resultprediction.Predictedlabel` will be either 1 or 0 depending if it is positive or negative predicted sentiment.
+Where in `resultprediction.PredictionLabel` will be either 1 or 0 depending if it is a positive or negative predicted sentiment.
