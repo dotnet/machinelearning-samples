@@ -29,7 +29,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
 
             // STEP 3: Make a prediction
             var prediction = model.Predict(TestTitanicData.Passenger);
-            Console.WriteLine($"Did this passenger survive?   Actual: Yes   Predicted: {(prediction.Survived ? "Yes" : "No")}");
+            Console.WriteLine($"Did this passenger survive?   Actual: Yes   Predicted: {(prediction.Survived ? "Yes" : "No")} with {prediction.Probability*100}% probability");
 
             Console.ReadLine();
         }
@@ -66,7 +66,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
 
             // FastTreeBinaryClassifier is an algorithm that will be used to train the model.
             // It has three hyperparameters for tuning decision tree performance. 
-            pipeline.Add(new FastTreeBinaryClassifier() {NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2});
+            pipeline.Add(new AveragedPerceptronBinaryClassifier());
 
             Console.WriteLine("=============== Training model ===============");
             // The pipeline is trained on the dataset that has been loaded and transformed.
