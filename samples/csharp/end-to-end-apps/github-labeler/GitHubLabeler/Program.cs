@@ -21,10 +21,8 @@ namespace GitHubLabeler
 
             Configuration = builder.Build();
 
-            //Build and train the custom model
-            Predictor.Train();
+            await Predictor.TrainAsync();
 
-            //Use the model to label issues from a GitHub repo
             await Label();
         }
 
