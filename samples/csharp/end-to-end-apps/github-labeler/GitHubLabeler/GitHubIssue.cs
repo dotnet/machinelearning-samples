@@ -10,7 +10,7 @@ namespace GitHubLabeler
         public string ID;
 
         [Column(ordinal: "1")]
-        public string Area; // This is an issue label, for example "area-System.Threading"
+        public string Area; // This is an issue label, for example "area-System.Data"
 
         [Column(ordinal: "2")]
         public string Title;

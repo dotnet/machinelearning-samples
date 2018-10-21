@@ -30,7 +30,7 @@ namespace GitHubLabeler
             var newIssues = await GetNewIssues();
             foreach (var issue in newIssues.Where(issue => !issue.Labels.Any()))
             {
-                var label = await PredictLabel(issue);
+                var label = PredictLabel(issue);
                 ApplyLabel(issue, label);
             }
         }
@@ -40,7 +40,7 @@ namespace GitHubLabeler
             var issueRequest = new RepositoryIssueRequest
             {
                 State = ItemStateFilter.Open,
-                Filter = IssueFilter.All,                
+                Filter = IssueFilter.All,
                 Since = DateTime.Now.AddMinutes(-10)
             };
 
@@ -51,7 +51,7 @@ namespace GitHubLabeler
                             .ToList();
         }
 
-        private async Task<string> PredictLabel(Issue issue)
+        private string PredictLabel(Issue issue)
         {
             var corefxIssue = new GitHubIssue
             {
@@ -60,7 +60,7 @@ namespace GitHubLabeler
                 Description = issue.Body
             };
 
-            var predictedLabel = await Predictor.PredictAsync(corefxIssue);
+            var predictedLabel = Predictor.Predict(corefxIssue);
 
             return predictedLabel;
         }
@@ -69,7 +69,7 @@ namespace GitHubLabeler
         {
             var issueUpdate = new IssueUpdate();
             issueUpdate.AddLabel(label);
-            
+
             _client.Issue.Update(_repoOwner, _repoName, issue.Number, issueUpdate);
 
             Console.WriteLine($"Issue {issue.Number} : \"{issue.Title}\" \t was labeled as: {label}");
