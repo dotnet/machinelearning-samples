@@ -1,5 +1,5 @@
-﻿using AnomalyDetection.Common;
-using AnomalyDetection.Common.DataModels;
+﻿using CreditCardFraudDetection.Common;
+using CreditCardFraudDetection.Common.DataModels;
 
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
@@ -11,7 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace AnomalyDetection.Train
+namespace CreditCardFraudDetection.Trainer
 {
     public class ModelBuilder
     {

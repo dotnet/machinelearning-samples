@@ -1,5 +1,5 @@
-﻿using AnomalyDetection.Common;
-using AnomalyDetection.Common.DataModels;
+﻿using CreditCardFraudDetection.Common;
+using CreditCardFraudDetection.Common.DataModels;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
@@ -7,7 +7,7 @@ using Microsoft.ML.Runtime.Data.IO;
 using System;
 using System.Linq;
 
-namespace AnomalyDetection.Predictor
+namespace CreditCardFraudDetection.Predictor
 {
     public class ModelsEvaluator
     {

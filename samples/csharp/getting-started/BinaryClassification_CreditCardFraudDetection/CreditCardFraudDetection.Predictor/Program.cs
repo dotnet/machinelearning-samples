@@ -1,14 +1,14 @@
-﻿using AnomalyDetection.Common;
+﻿using CreditCardFraudDetection.Common;
 using System.IO;
 
-namespace AnomalyDetection.Predictor
+namespace CreditCardFraudDetection.Predictor
 {
     class Program
     {
         static void Main(string[] args)
         {
             var assetsPath = ConsoleHelpers.GetAssetsPath(@"..\..\..\assets");
-            var trainOutput = ConsoleHelpers.GetAssetsPath(@"..\..\..\..\AnomalyDetection.Train\assets\output");
+            var trainOutput = ConsoleHelpers.GetAssetsPath(@"..\..\..\..\CreditCardFraudDetection.Trainer\assets\output");
 
 
             if (!File.Exists(Path.Combine(trainOutput, "testData.idv")) ||

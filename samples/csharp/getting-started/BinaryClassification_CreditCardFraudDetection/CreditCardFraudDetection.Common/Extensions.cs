@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace AnomalyDetection.Common
+namespace CreditCardFraudDetection.Common
 {
     public static class ConsoleExtensions
     {

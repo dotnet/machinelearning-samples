@@ -1,4 +1,4 @@
-﻿using AnomalyDetection.Common.DataModels;
+﻿using CreditCardFraudDetection.Common.DataModels;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 using System;
@@ -6,7 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace AnomalyDetection.Common
+namespace CreditCardFraudDetection.Common
 {
     public static class ConsoleHelpers
     {
