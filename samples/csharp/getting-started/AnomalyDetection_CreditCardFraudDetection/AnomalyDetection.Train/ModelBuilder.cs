@@ -55,7 +55,8 @@ namespace AnomalyDetection.Train
 
             var logMeanVarNormalizer =   new Normalizer(_env,Normalizer.NormalizerMode.MeanVariance ,("Features", "FeaturesNormalizedByMeanVar"));
 
-            var estimator = new ConcatEstimator(_env, "Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",
+            //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
+            var pipeline = new ConcatEstimator(_env, "Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",
                                                                           "V7", "V8", "V9", "V10", "V11", "V12",
                                                                           "V13", "V14", "V15", "V16", "V17", "V18",
                                                                           "V19", "V20", "V21", "V22", "V23", "V24",
@@ -72,7 +73,7 @@ namespace AnomalyDetection.Train
             // Now run the n-fold cross-validation experiment, using the same pipeline.
             // Can't do stratification when column type is a boolean
             // var cvResults = _context.CrossValidate(_trainData, estimator, labelColumn: "Label", numFolds: numFolds, stratificationColumn: "Label");
-            var cvResults = _context.CrossValidate(_trainData, estimator, labelColumn: "Label", numFolds: cvNumFolds);
+            var cvResults = _context.CrossValidate(_trainData, pipeline, labelColumn: "Label", numFolds: cvNumFolds);
 
 
             // Let's get Cross Validate metrics           
