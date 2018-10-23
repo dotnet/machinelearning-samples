@@ -22,9 +22,11 @@ namespace BikeSharingDemand
             
 
             var modelBuilder = new ModelBuilder(trainingDataLocation);
-            modelBuilder.TransformDataInPipeline();
+            var pipeline = modelBuilder.TransformDataInPipeline();
 
-            var model = modelBuilder.BuildAndTrainWithSdcaRegressionTrainer();
+            var sdcaModel = modelBuilder.BuildAndTrainWithSdcaRegressionTrainer(pipeline);
+
+            var possionModel = modelBuilder.BuildAndTrainWithPoissonRegressionTrainer(pipeline);
 
             //var modelEvaluator = new ModelEvaluator();
 
