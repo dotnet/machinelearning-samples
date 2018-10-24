@@ -1,4 +1,4 @@
-﻿using AnomalyDetection.Common;
+﻿using CreditCardFraudDetection.Common;
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Trainers;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.IO;
 using Microsoft.ML.Runtime.Data.IO;
 
-namespace AnomalyDetection.Train
+namespace CreditCardFraudDetection.Trainer
 {
     class Program
     {

@@ -16,12 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnomalyDetection.Common\AnomalyDetection.Common.csproj" />
+    <Folder Include="assets\input\" />
+    <Folder Include="assets\output\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="assets\input\" />
-    <Folder Include="assets\output\" />
+    <ProjectReference Include="..\CreditCardFraudDetection.Common\CreditCardFraudDetection.Common.csproj" />
   </ItemGroup>
   
 </Project>

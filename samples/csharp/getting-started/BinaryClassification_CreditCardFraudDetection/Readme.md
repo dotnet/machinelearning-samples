@@ -1,9 +1,9 @@
-# Fraud detection in credit cards - Anomaly detection based on binary classification and PCA
+# Fraud detection in credit cards based on binary classification and PCA
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
 ## API version: Dynamic and Estimators-based API
-It is important to note that this sample uses the dynamic API with Estimators, there is also a [code example](src/AnomalyDetection.Train/Program.cs#L34) using the static api.
+It is important to note that this sample uses the dynamic API with Estimators, there is also a [code example](src/CreditCardFraudDetection.Trainer/Program.cs#L34) using the static api.
 
 ## Problem
 This problem is centered around predicting if credit card transaction i sa fraud or no. We will use a [dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud) from Worldline and the Machine Learning Group (http://mlg.ulb.ac.be) of ULB (Université Libre de Bruxelles) collected and analysed during a research collaboration.  

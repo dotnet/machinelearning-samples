@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using static Microsoft.ML.Runtime.Data.RoleMappedSchema;
 
-namespace AnomalyDetection.Common.DataModels
+namespace CreditCardFraudDetection.Common.DataModels
 {
 
     public interface IModelEntity {
