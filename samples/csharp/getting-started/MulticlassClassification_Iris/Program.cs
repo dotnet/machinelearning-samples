@@ -3,9 +3,7 @@ using System.IO;
 
 using Microsoft.ML.Runtime.Learners;
 using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML;
-using Microsoft.ML.Runtime;
 
 namespace MulticlassClassification_Iris
 {
@@ -14,7 +12,6 @@ namespace MulticlassClassification_Iris
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         private static string TrainDataPath => Path.Combine(AppPath, "datasets", "iris-train.txt");
         private static string TestDataPath => Path.Combine(AppPath, "datasets", "iris-test.txt");
-        private static string ModelPath => Path.Combine(AppPath, "IrisModel.zip");
 
         private static void Main(string[] args)
         {
