@@ -4,14 +4,6 @@
     {
         internal class TestIrisData
         {
-            internal static readonly IrisData Iris0 = new IrisData()
-            {
-                SepalLength = 5.0f,
-                SepalWidth = 2.0f,
-                PetalLength = 3.5f,
-                PetalWidth = 1.0f,
-            };
-
             internal static readonly IrisData Iris1 = new IrisData()
             {
                 SepalLength = 5.1f,

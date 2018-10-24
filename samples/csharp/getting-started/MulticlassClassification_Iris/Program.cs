@@ -40,7 +40,7 @@ namespace MulticlassClassification_Iris
                 //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
                 var pipeline = 
                     new ConcatEstimator(env, "Features", new[] { "SepalLength", "SepalWidth", "PetalLength", "PetalWidth" })
-                           .Append(new SdcaMultiClassTrainer(env, new SdcaMultiClassTrainer.Arguments { NumThreads = 1, Shuffle = false },
+                           .Append(new SdcaMultiClassTrainer(env, new SdcaMultiClassTrainer.Arguments(),
                                                                    "Features",
                                                                    "Label"));
 
@@ -96,14 +96,6 @@ namespace MulticlassClassification_Iris
 
 
                 prediction = predictionFunct.Predict(TestIrisData.Iris3);
-                Console.WriteLine($"Actual: versicolor. Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-                Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-                Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
-                Console.WriteLine();
-
-
-
-                prediction = predictionFunct.Predict(TestIrisData.Iris0);
                 Console.WriteLine($"Actual: versicolor. Predicted probability: setosa:      {prediction.Score[0]:0.####}");
                 Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
                 Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
