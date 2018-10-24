@@ -22,7 +22,7 @@ namespace Regression_TaxiFarePrediction
             // STEP 1: Create and train a model
             var model = BuildAndTrain();
 
-            // STEP2: Test accuracy
+            // STEP2: Evaluate accuracy of the model
             Evaluate(TestDataPath, model);
 
             // STEP 3: Make a test prediction
