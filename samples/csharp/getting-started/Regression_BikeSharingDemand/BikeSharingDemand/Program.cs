@@ -1,94 +1,60 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using BikeSharingDemand.BikeSharingDemandData;
 using BikeSharingDemand.Helpers;
 using BikeSharingDemand.Model;
 
-using Microsoft.ML.Legacy;
-using Microsoft.ML.Legacy.Models;
-using Microsoft.ML.Legacy.Trainers;
+using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Learners;
 
 namespace BikeSharingDemand
 {
-    class Program
+    internal static class Program
     {
+        private static string TrainingDataLocation = @"Data/hour_train.csv";
+        private static string TestDataLocation = @"Data/hour_test.csv";
+
         static void Main(string[] args)
         {
-            var trainingDataLocation = @"Data/hour_train.csv";
-            var testDataLocation = @"Data/hour_test.csv";
+            var pipelineTransforms = new PipelineTransforms(TrainingDataLocation);
+            var dataView = pipelineTransforms.CreateDataView();
+            var pipeline = pipelineTransforms.TransformDataInPipeline(dataView);
 
-            
+            var sdcaModelBuilder = new ModelBuilder<RegressionPredictionTransformer<LinearRegressionPredictor>>(TrainingDataLocation);
+            var sdcaModel = sdcaModelBuilder.BuildAndTrainWithSdcaRegressionTrainer(pipeline, dataView);
+            sdcaModelBuilder.TestSinglePrediction(sdcaModel);
+            var sdcaModelEvaluator = new ModelEvaluator<RegressionPredictionTransformer<LinearRegressionPredictor>>();
+            var sdcaModelMetrics = sdcaModelEvaluator.Evaluate(TestDataLocation, sdcaModel);
+            sdcaModelEvaluator.PrintRegressionMetrics("SDCA regression model", sdcaModelMetrics);
 
-            var modelBuilder = new ModelBuilder(trainingDataLocation);
-            var pipeline = modelBuilder.TransformDataInPipeline();
+            var poissonModelBuilder = new ModelBuilder<RegressionPredictionTransformer<PoissonRegressionPredictor>>(TrainingDataLocation);
+            var poissonModel = poissonModelBuilder.BuildAndTrainWithPoissonRegressionTrainer(pipeline, dataView);
+            poissonModelBuilder.TestSinglePrediction(poissonModel);
+            var poissonModelEvaluator = new ModelEvaluator<RegressionPredictionTransformer<PoissonRegressionPredictor>>();
+            var poissonModelMetrics = poissonModelEvaluator.Evaluate(TestDataLocation, poissonModel);
+            poissonModelEvaluator.PrintRegressionMetrics("Poisson regression model", poissonModelMetrics);
 
-            var sdcaModel = modelBuilder.BuildAndTrainWithSdcaRegressionTrainer(pipeline);
+            //Other possible Learners to implement and compare
+            //...FastTreeRegressor...
+            //...FastForestRegressor...
+            //...OnlineGradientDescentRegressor...
+            //...FastTreeTweedieRegressor...
+            //...GeneralizedAdditiveModelRegressor...
 
-            var possionModel = modelBuilder.BuildAndTrainWithPoissonRegressionTrainer(pipeline);
+            //Visualize some predictions compared to observations from the test dataset
+            var sdcaTester = new ModelTester<RegressionPredictionTransformer<LinearRegressionPredictor>>();
+            sdcaTester.VisualizeSomePredictions("SDCA regression model", TestDataLocation, sdcaModel, 10);
 
-            //var modelEvaluator = new ModelEvaluator();
+            var poissonTester = new ModelTester<RegressionPredictionTransformer<PoissonRegressionPredictor>>();
+            poissonTester.VisualizeSomePredictions("Poisson regression model", TestDataLocation, poissonModel, 10);
 
-            //var fastTreeModel = new ModelBuilder(trainingDataLocation, new FastTreeRegressor()).BuildAndTrain();
-            //var fastTreeMetrics = modelEvaluator.Evaluate(fastTreeModel, testDataLocation);
-            //PrintMetrics("Fast Tree", fastTreeMetrics);
-
-            //var fastForestModel = new ModelBuilder(trainingDataLocation, new FastForestRegressor()).BuildAndTrain();
-            //var fastForestMetrics = modelEvaluator.Evaluate(fastForestModel, testDataLocation);
-            //PrintMetrics("Fast Forest", fastForestMetrics);
-
-            //var poissonModel = new ModelBuilder(trainingDataLocation, new PoissonRegressor()).BuildAndTrain();
-            //var poissonMetrics = modelEvaluator.Evaluate(poissonModel, testDataLocation);
-            //PrintMetrics("Poisson", poissonMetrics);
-
-            //var gradientDescentModel = new ModelBuilder(trainingDataLocation, new OnlineGradientDescentRegressor()).BuildAndTrain();
-            //var gradientDescentMetrics = modelEvaluator.Evaluate(gradientDescentModel, testDataLocation);
-            //PrintMetrics("Online Gradient Descent", gradientDescentMetrics);
-
-            //var fastTreeTweedieModel = new ModelBuilder(trainingDataLocation, new FastTreeTweedieRegressor()).BuildAndTrain();
-            //var fastTreeTweedieMetrics = modelEvaluator.Evaluate(fastTreeTweedieModel, testDataLocation);
-            //PrintMetrics("Fast Tree Tweedie", fastTreeTweedieMetrics);
-
-            //var additiveModel = new ModelBuilder(trainingDataLocation, new GeneralizedAdditiveModelRegressor()).BuildAndTrain();
-            //var additiveMetrics = modelEvaluator.Evaluate(additiveModel, testDataLocation);
-            //PrintMetrics("Generalized Additive Model", additiveMetrics);
-
-            //var stochasticDualCorordinateAscentModel = new ModelBuilder(trainingDataLocation, new StochasticDualCoordinateAscentRegressor()).BuildAndTrain();
-            //var stochasticDualCorordinateAscentMetrics = modelEvaluator.Evaluate(stochasticDualCorordinateAscentModel, testDataLocation);
-            //PrintMetrics("Stochastic Dual Coordinate Ascent", stochasticDualCorordinateAscentMetrics);
-
-            //VisualizeTenPredictionsForTheModel(fastTreeTweedieModel, testDataLocation);
-            //fastTreeTweedieModel.WriteAsync(@".\Model.zip");
+            //Save models as .ZIP files
+            sdcaModelBuilder.SaveModelAsFile(sdcaModel, @".\sdcaModel.zip");
+            poissonModelBuilder.SaveModelAsFile(poissonModel, @".\poissonModel.zip");
 
             Console.ReadLine();
         }
-
-        private static void PrintMetrics(string name, RegressionMetrics metrics)
-        {
-            Console.WriteLine($"*************************************************");
-            Console.WriteLine($"*       Metrics for {name}          ");
-            Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
-            Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
-            Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
-            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
-            Console.WriteLine($"*************************************************");
-        }
-
-        //private static void VisualizeTenPredictionsForTheModel(
-        //    PredictionModel<BikeSharingDemandSample, BikeSharingDemandPrediction> model,
-        //    string testDataLocation)
-        //{
-        //    var testData = new BikeSharingDemandsCsvReader().GetDataFromCsv(testDataLocation).ToList();
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        var prediction = model.Predict(testData[i]);
-        //        Console.WriteLine($"-------------------------------------------------");
-        //        Console.WriteLine($"Predicted : {prediction.PredictedCount}");
-        //        Console.WriteLine($"Actual:    {testData[i].Count}");
-        //        Console.WriteLine($"-------------------------------------------------");
-        //    }
-        //}
     }
 }

@@ -20,12 +20,13 @@ namespace BikeSharingDemand.Helpers
                     Hour = float.Parse(x[5]),
                     Holiday = float.Parse(x[6]),
                     Weekday = float.Parse(x[7]),
-                    Weather = float.Parse(x[8]),
-                    Temperature = float.Parse(x[9]),
-                    NormalizedTemperature = float.Parse(x[10]),
-                    Humidity = float.Parse(x[11]),
-                    Windspeed = float.Parse(x[12]),
-                    Count = float.Parse(x[15])
+                    WorkingDay = float.Parse(x[8]),
+                    Weather = float.Parse(x[9]),
+                    Temperature = float.Parse(x[10]),
+                    NormalizedTemperature = float.Parse(x[11]),
+                    Humidity = float.Parse(x[12]),
+                    Windspeed = float.Parse(x[13]),
+                    Count = float.Parse(x[16])
                 });
         }
     }
