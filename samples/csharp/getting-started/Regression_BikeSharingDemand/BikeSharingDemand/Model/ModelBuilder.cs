@@ -6,6 +6,7 @@ using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Learners;
 using System;
 using System.IO;
+using Microsoft.ML.Runtime.FastTree;
 
 namespace BikeSharingDemand.Model
 {
@@ -18,7 +19,17 @@ namespace BikeSharingDemand.Model
             _mlcontext = new LocalEnvironment();
         }
 
-        //public TransformerChain<TPredictionTransformer>
+        public TransformerChain<RegressionPredictionTransformer<FastTreeRegressionPredictor>>
+                    BuildAndTrainWithFastTreeRegressionTrainer(EstimatorChain<ITransformer> pipeline, IDataView dataView)
+        {
+            var pipelineWithTrainer = pipeline.Append(new FastTreeRegressionTrainer(_mlcontext, "Label", "Features"));
+
+            Console.WriteLine("=============== Training model ===============");
+            var model = pipelineWithTrainer.Fit(dataView);
+
+            return model;
+        }
+
         public TransformerChain<RegressionPredictionTransformer<LinearRegressionPredictor>>
                     BuildAndTrainWithSdcaRegressionTrainer(EstimatorChain<ITransformer> pipeline, IDataView dataView)
         {
@@ -34,7 +45,6 @@ namespace BikeSharingDemand.Model
             return model;
         }
 
-        //public TransformerChain<TPredictionTransformer>
         public TransformerChain<RegressionPredictionTransformer<PoissonRegressionPredictor>>
                     BuildAndTrainWithPoissonRegressionTrainer(EstimatorChain<ITransformer> pipeline, IDataView dataView)
         {
