@@ -18,10 +18,12 @@ namespace BikeSharingDemand
 
         static void Main(string[] args)
         {
+            // 1. Common data transformations in the pipeline
             var pipelineTransforms = new PipelineTransforms(TrainingDataLocation);
             var dataView = pipelineTransforms.CreateDataView();
             var pipeline = pipelineTransforms.TransformDataInPipeline(dataView);
 
+            // 2. Build/train, evaluate and test with SDCA algorithm
             var sdcaModelBuilder = new ModelBuilder<RegressionPredictionTransformer<LinearRegressionPredictor>>(TrainingDataLocation);
             var sdcaModel = sdcaModelBuilder.BuildAndTrainWithSdcaRegressionTrainer(pipeline, dataView);
             sdcaModelBuilder.TestSinglePrediction(sdcaModel);
@@ -29,6 +31,7 @@ namespace BikeSharingDemand
             var sdcaModelMetrics = sdcaModelEvaluator.Evaluate(TestDataLocation, sdcaModel);
             sdcaModelEvaluator.PrintRegressionMetrics("SDCA regression model", sdcaModelMetrics);
 
+            // 3. Build/train, evaluate and test with Poisson Regression algorithm
             var poissonModelBuilder = new ModelBuilder<RegressionPredictionTransformer<PoissonRegressionPredictor>>(TrainingDataLocation);
             var poissonModel = poissonModelBuilder.BuildAndTrainWithPoissonRegressionTrainer(pipeline, dataView);
             poissonModelBuilder.TestSinglePrediction(poissonModel);
@@ -43,14 +46,14 @@ namespace BikeSharingDemand
             //...FastTreeTweedieRegressor...
             //...GeneralizedAdditiveModelRegressor...
 
-            //Visualize some predictions compared to observations from the test dataset
+            // 4. Visualize some predictions compared to observations from the test dataset
             var sdcaTester = new ModelTester<RegressionPredictionTransformer<LinearRegressionPredictor>>();
             sdcaTester.VisualizeSomePredictions("SDCA regression model", TestDataLocation, sdcaModel, 10);
 
             var poissonTester = new ModelTester<RegressionPredictionTransformer<PoissonRegressionPredictor>>();
             poissonTester.VisualizeSomePredictions("Poisson regression model", TestDataLocation, poissonModel, 10);
 
-            //Save models as .ZIP files
+            // 5. Save models as .ZIP files
             sdcaModelBuilder.SaveModelAsFile(sdcaModel, @".\sdcaModel.zip");
             poissonModelBuilder.SaveModelAsFile(poissonModel, @".\poissonModel.zip");
 
