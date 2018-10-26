@@ -47,7 +47,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Sentiment analysis &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
       <h3>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/examples/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -57,8 +57,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
       <h3>Issues classification &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
-      <h3>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp;<a href="TBD/Relative-URL">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <a href="samples/csharp/end-to-end-apps/github-labeler">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      <h3>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -70,9 +70,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Price prediction &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
       <h3>Sales forecast &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      <a href="samples/csharp/end-to-end-apps/eShopDashboardML">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
       <h3>Demand prediction &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
