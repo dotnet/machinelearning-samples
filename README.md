@@ -21,6 +21,9 @@ There are two types of samples/apps in the repo:
 * **Getting started samples (C# and F#)** - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 * **End-to-end apps (C#)** - "Real world" examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
 
+These types of apps will be highlighted by the following icons:
+<img src="images/app-type-icons.png" alt="Type of app icons">
+
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
 -------------------------------------------------------
