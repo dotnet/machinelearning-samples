@@ -72,7 +72,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Sales forecast &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/end-to-end-apps/eShopDashboardML">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
       <h3>Demand prediction &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -82,9 +82,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
       <h3>Product recommender &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
       <h3>Movie recommender &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
   </td>
  </tr>
   <tr>
@@ -94,9 +94,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
       <h3>Customer segmentation &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
       <h3>Clustering Iris flowers &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp; <a href="TBD/Relative-URL">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
   <tr>
@@ -124,11 +124,11 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
       <h3>Object detection and classification with TensorFlow model &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
       <h3>Image style transfer with TensorFlow model &nbsp;&nbsp;&nbsp;
        - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
       <h3>TensorFlow model as featurizer in ML.NET &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
       <h3>ONNX model scoring - Coming soon</h3>
   </td>
  </tr>
