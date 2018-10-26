@@ -72,8 +72,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
-      <h3>Issues classification</h3> <h3><a href="TBD/Relative-URL">C#</a> <a href="TBD/Relative-URL">F#</a></h3>
-      <h3>Iris flowers classification</h3> <h3><a href="TBD/Relative-URL">C#</a> <a href="TBD/Relative-URL">F#</a></h3>
+      <h3>Issues classification &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp; <a href="TBD/Relative-URL">F#</a></h3>
+      <h3>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp;<a href="TBD/Relative-URL">F#</a></h3>
   </td>
  </tr>
  <tr>
