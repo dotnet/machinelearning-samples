@@ -38,36 +38,37 @@ namespace eShopForecastModelsTrainer
 
             ConsoleWriteHeader("Training country forecasting model");
 
-            var reader = TextLoader.CreateReader(env,
-                            c => (
-                                next: c.LoadFloat(0),
-                                country: c.LoadText(1),
-                                year: c.LoadFloat(2),
-                                month: c.LoadFloat(3),
-                                max: c.LoadFloat(4),
-                                min: c.LoadFloat(5),
-                                std: c.LoadFloat(6),
-                                count: c.LoadFloat(7),
-                                sales: c.LoadFloat(8),
-                                med: c.LoadFloat(9),
-                                prev: c.LoadFloat(10)),
-                            separator: ',', hasHeader: true);
+            var reader = new TextLoader(env, new TextLoader.Arguments
+            {
+                Column = new[] {
+                    new TextLoader.Column("next", DataKind.R4, 0 ),
+                    new TextLoader.Column("country", DataKind.Text, 1 ),
+                    new TextLoader.Column("year", DataKind.R4, 2 ),
+                    new TextLoader.Column("month", DataKind.R4, 3 ),
+                    new TextLoader.Column("max", DataKind.R4, 4 ),
+                    new TextLoader.Column("min", DataKind.R4, 5 ),
+                    new TextLoader.Column("std", DataKind.R4, 6 ),
+                    new TextLoader.Column("count", DataKind.R4, 7 ),
+                    new TextLoader.Column("sales", DataKind.R4, 8 ),
+                    new TextLoader.Column("med", DataKind.R4, 9 ),
+                    new TextLoader.Column("prev", DataKind.R4, 10 )
+                },
+                HasHeader = true,
+                Separator = ","
+            });
 
-            var est = reader.MakeNewEstimator()
-                .Append(row => (
-                    NumFeatures: row.year.ConcatWith(row.month, row.max, row.min, row.std, row.count, row.sales, row.med, row.prev),
-                    CatFeatures: row.country.OneHotEncoding(),
-                    Label: row.next))
-                .Append(row => (
-                    Features: row.NumFeatures.ConcatWith(row.CatFeatures),
-                    row.Label))
-                .Append(r => (r.Label, score: ctx.Trainers.FastTree(r.Label, r.Features)));
+
+            var pipeline = new ConcatEstimator(env, "NumFeatures", new[] { "year", "month", "max", "min", "std", "count", "sales", "med", "prev" })
+                .Append(new CategoricalEstimator(env, "CatFeatures", "country"))
+                .Append(new ConcatEstimator(env, "Features", new[] { "NumFeatures", "CatFeatures" }))
+                .Append(new CopyColumnsEstimator(env, "next", "Label"))
+                .Append(new FastTreeTweedieTrainer(env, "Label", "Features"));
 
             var datasource = reader.Read(new MultiFileSource(dataPath));
-            var model = est.Fit(datasource);
+            var model = pipeline.Fit(datasource);
 
             using (var file = File.OpenWrite(outputModelPath))
-                model.AsDynamic.SaveTo(env, file);
+                model.SaveTo(env, file);
         }
 
         /// <summary>
