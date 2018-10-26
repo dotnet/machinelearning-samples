@@ -1,77 +1,107 @@
 # ML.NET Samples
-
 [![](https://dotnet.visualstudio.com/_apis/public/build/definitions/9ee6d478-d288-47f7-aacc-f6e6d082ae6d/22/badge)](https://dotnet.visualstudio.com/public/_build/index?definitionId=22 )
-
 # Overview
 
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers.
 
-The official ML.NET samples are divided in three categories:
-* **Getting started samples (C# and F#)** - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
-* **End-to-end apps (C#)** - real world examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
+In this, Microsoft provides ML.NET samples that help you to get started with machine learning by using .NET, not just to run/score pre-trained models but fundamentally enabling you to create and train your own custom ML models in .NET. 
 
-For VB.NET samples, check this external repo supported by the community (Kudos for Nukepayload2):
-https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic
+# NuGet packages to use
+Until ML.NET is released as final v1.0, most of the samples in this repo will be using preview released versions (i.e. v0.6, v0.7, v0.8, etc.) available at **NuGet** by using the  released Microsoft.ML NuGet packages available here:
+https://www.nuget.org/packages/Microsoft.ML/
 
+However, a few of the samples might also be using nightly releases available at **MyGet** using this alternate NuGet feed: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json. 
 
 # Samples Gallery classified by ML task 
+
+All the samples are in C# and some of them also support a F# version. We encourage the community to help us migrating samples to F# and newer versions of ML.NET.
+
+There are two types of samples/apps in the repo:
+
+* **Getting started samples (C# and F#)** - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
+* **End-to-end apps (C#)** - "Real world" examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
+
+The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
+
+-------------------------------------------------------
 
 <table>
  <tr>
    <td>
-      <h2>Binary Classification</h2>
-      <img src="images/binary-classification-plotting.png" alt="Binary classification chart">
+      <h1>ML Task</h1>
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Customer reviews sentiment analysis</a></h3>
-      <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
+      <h1>Scenario</h1>
+  </td>
+ </tr>
+ <tr>
+   <td>
+      <h2>Two-class classification</h2>
+      <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
+  </td>
+  <td>
+    <table>
+    <tr>
+    <td>
+        <h3>Sentiment analysis</h3>
+    </td>
+    <td>
+        <h3><a href="TBD/Relative-URL">C#</a></h3>
+    </td>
+        <td>
+        <h3><a href="TBD/Relative-URL">F#</a></h3>
+    </td>
+    </tr>
+    </table>
+      <h3><a href="TBD/Relative-URL">Sentiment analysis</a></h3>
+      <h3><a href="TBD/Relative-URL">Survival Prediction</a></h3>
   </td>
  </tr>
  <tr>
    <td>
       <h2>Multi-class classification</h2>
-      <img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">
+      <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">GitHub issues labeler</a></h3>
-      <h3><a href="TBD/Relative-URL">Iris classification</a></h
+      <h3><a href="TBD/Relative-URL">Issues classification</a></h3>
+      <h3><a href="TBD/Relative-URL">Iris flowers classification</a></h
   </td>
  </tr>
  <tr>
    <td>
       <h2>Regression</h2>
-      <img src="images/regression-icons.png" alt="regression icon">
+      <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Taxi fare prediction</a></h3>
-      <h3><a href="TBD/Relative-URL">Bike sharing demand</a></h3>
-      <h3><a href="TBD/Relative-URL">Product sales forecast</a></h3>
+      <h3><a href="TBD/Relative-URL">Price prediction</a></h3>
+      <h3><a href="TBD/Relative-URL">Sales forecast</a></h3>
+      <h3><a href="TBD/Relative-URL">Demand prediction</a></h3>
   </td>
  </tr>
  <tr>
    <td>
       <h2>Recommendation</h2>
-      <img src="images/recommendation-icon.png" alt="Recommendations icon">
+      <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">eCommerce product catalog recommender</a></h3>
-      <h3><a href="TBD/Relative-URL">Movies recommender</a></h3>
+      <h3><a href="TBD/Relative-URL">Product recommender</a></h3>
+      <h3><a href="TBD/Relative-URL">Movie recommender</a></h3>
   </td>
  </tr>
   <tr>
    <td>
       <h2>Clustering</h2>
-      <img src="images/clustering-plotting.png" alt="Clustering plotting">
+      <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Customer segmentation</a></h3>
-      <h3><a href="TBD/Relative-URL">Clustering Iris Data</a></h3>
+      <h3><a href="TBD/Relative-URL">Clustering Iris flowers</a></h3>
   </td>
  </tr>
   <tr>
    <td>
       <h2>Anomaly detection</h2>
-      <img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">
+      <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
   <td>
       <h3><a href="TBD/Relative-URL">Fraud detection in credit cards</a></h3>
@@ -80,136 +110,33 @@ https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visu
   <tr>
    <td>
       <h2>Ranking</h2>
-      <img src="images/ranking-chart.png" alt="xxxxxx">
+      <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">TBD</a></h3>
+      <h3>Coming soon</h3>
   </td>
  </tr>
   <tr>
    <td>
-      <h2>Time Series Forecasting</h2>
-      <img src="images/time-series-chart.png" alt="xxxxxx">
+      <h2>Deep Learning</h2>
+      <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">TBD</a></h3>
+      <h3><a href="TBD/Relative-URL">Object detection and classification with TensorFlow model</a></h3>
+      <h3><a href="TBD/Relative-URL">Image style transfer with TensorFlow model</a></h3>
+      <h3><a href="TBD/Relative-URL">TensorFlow model as featurizer in ML.NET</a></h3>
+      <h3>ONNX model scoring - Coming soon</h3>
   </td>
  </tr>
  </table>
 
-# Samples for predicting/scoring already trained models from other frameworks 
+-------------------------------------------------------
 
-<table>
- <tr>
-   <td>
-      <h2>Tensorflow model scoring</h2>
-      <img src="images/tensorflow-logo.png" alt="TensorFlow logo">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Classify/Identify images</a></h3>
-      <h3><a href="TBD/Relative-URL">Image style transfer</a></h3>
-      <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer in ML.NET</a></h3>
-  </td>
- </tr>
-   <tr>
-   <td>
-      <h2>ONNX model scoring</h2>
-      <img src="images/onnx-logo.png" alt="ONNX logo">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
-  </td>
- </tr>
-</table>
+## Visual Basic .NET samples
 
+For VB.NET samples, check this external repo supported by the community (Kudos for Nukepayload2):
+https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic
 
-The next gallery showcases the same examples but classified by industry/business
-
-
-
-# Samples Gallery classified by Industry/Business 
-
-
-<table>
- <tr>
-   <td>
-      <h2>Retail samples</h2>
-      <img src="images/icon-retail.png" alt="Retail icon">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">eCommerce product catalog recommender</a></h3>
-      <h3><a href="TBD/Relative-URL">Product sales forecast</a></h3>
-      <h3><a href="TBD/Relative-URL">Movies recommender</a></h3>
-      <h3><a href="TBD/Relative-URL">Customer reviews sentiment analysis</a></h3>
-  </td>
- </tr>
-  <tr>
-   <td>
-      <h2>Transport & travel</h2>
-      <img src="images/icon-transport.png" alt="Transport icon">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Taxi Fare Prediction</a></h3>
-      <h3><a href="TBD/Relative-URL">Bike Sharing Demand</a></h3>
-  </td>
- </tr>
-  <tr>
-   <td>
-      <h2>Financial services samples</h2>
-      <img src="images/icon-financial.png" alt="Financial icon">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Fraud detection in credit cards</a></h3>
-  </td>
- </tr>
-   <tr>
-   <td>
-      <h2>Marketing samples</h2>
-      <img src="images/icon-marketing.png" alt="Marketing icon">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Customer segmentation</a></h3>
-  </td>
- </tr>
-  <tr>
-   <td>
-      <h2>Academic & research samples</h2>
-      <img src="images/icon-education.png" alt="academic icon.png">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Iris classification</a></h3>
-      <h3><a href="TBD/Relative-URL">Clustering Iris Data</a></h3>
-      <h3><a href="TBD/Relative-URL">Titanic Passenger Survival Prediction</a></h3>
-  </td>
- </tr>
-  <tr>
-   <td>
-      <h2>Development & computing</h2>
-      <img src="images/icon-dev-computing.png" alt="Dev and computing icon">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">GitHub issues labeler</a></h3>
-  </td>
- </tr>
-  <tr>
-   <td>
-      <h2>Any industry/business</h2>
-      <img src="images/icon-any-industry-business.png" alt="Question mark icon">
-  </td>
-  <td>
-      <h3><a href="TBD/Relative-URL">Classify/Identify images</a></h3>
-      <h3><a href="TBD/Relative-URL">Sentiment analysis of faces in photos</a></h3>
-      <h3><a href="TBD/Relative-URL">Use TensorFlow model as featurizer in ML.NET</a></h3>
-      <h3><a href="TBD/Relative-URL">Image style transfer</a></h3>
-  </td>
- </tr>
- </table>
-
-
-
-
-# NuGet packages to use
-Until ML.NET is released as final v1.0, most of the samples in this repo will be using preview released versions (i.e. v0.6, v0.7, etc.) available at NuGet (using released  [Microsoft.ML](https://www.nuget.org/packages/Microsoft.ML/) NuGet packages). However, a few of the samples might also be using nightly releases available at MyGet using this feed: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json. 
 
 In addition, if you would like to explore the examples directly referencing the source code of ML.NET, check out [scenario tests](https://github.com/dotnet/machinelearning/tree/master/test/Microsoft.ML.Tests/Scenarios) in [ML.NET repository](https://github.com/dotnet/machinelearning).
 
