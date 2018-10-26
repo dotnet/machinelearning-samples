@@ -12,9 +12,9 @@ https://www.nuget.org/packages/Microsoft.ML/
 
 However, a few of the samples might also be using nightly releases available at **MyGet** using this alternate NuGet feed: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json. 
 
-# Samples Gallery classified by ML task 
+# Samples Gallery 
 
-All the samples are in C# and some of them also support a F# version. We encourage the community to help us migrating samples to F# and newer versions of ML.NET.
+All the samples are in C# and some of them also support F#. We encourage the community to help us migrating samples to F# and newer versions of ML.NET. Pull requests are welcome!
 
 There are two types of samples/apps in the repo:
 
@@ -28,15 +28,15 @@ The official ML.NET samples are divided in multiple categories depending on the 
 <table>
  <tr>
    <td>
-      <h1>ML Task</h1>
+      <h3>ML Task</h3>
   </td>
   <td>
-      <h1>Scenario</h1>
+      <h3>Scenario</h3>
   </td>
  </tr>
  <tr>
    <td>
-      <h2>Two-class classification</h2>
+      <h3>Two-class classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
   <td>
@@ -52,24 +52,33 @@ The official ML.NET samples are divided in multiple categories depending on the 
         <h3><a href="TBD/Relative-URL">F#</a></h3>
     </td>
     </tr>
+        <tr>
+    <td>
+        <h3>Survival Prediction</h3>
+    </td>
+    <td>
+        <h3><a href="TBD/Relative-URL">C#</a></h3>
+    </td>
+        <td>
+        <h3><a href="TBD/Relative-URL">F#</a></h3>
+    </td>
+    </tr>   
     </table>
-      <h3><a href="TBD/Relative-URL">Sentiment analysis</a></h3>
-      <h3><a href="TBD/Relative-URL">Survival Prediction</a></h3>
   </td>
  </tr>
  <tr>
    <td>
-      <h2>Multi-class classification</h2>
+      <h3>Multi-class classification</h3>
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Issues classification</a></h3>
-      <h3><a href="TBD/Relative-URL">Iris flowers classification</a></h
+      <h3>Issues classification</h3> <h3><a href="TBD/Relative-URL">C#</a> <a href="TBD/Relative-URL">F#</a></h3>
+      <h3>Iris flowers classification</h3> <h3><a href="TBD/Relative-URL">C#</a> <a href="TBD/Relative-URL">F#</a></h3>
   </td>
  </tr>
  <tr>
    <td>
-      <h2>Regression</h2>
+      <h3>Regression</h3>
       <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
   <td>
@@ -90,7 +99,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
   <tr>
    <td>
-      <h2>Clustering</h2>
+      <h3>Clustering</h3>
       <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
   <td>
@@ -100,16 +109,16 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
   <tr>
    <td>
-      <h2>Anomaly detection</h2>
+      <h3>Anomaly detection</h3>
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Fraud detection in credit cards</a></h3>
+      <h3>Coming soon</h3>
   </td>
  </tr>
   <tr>
    <td>
-      <h2>Ranking</h2>
+      <h3>Ranking</h3>
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
   <td>
@@ -118,7 +127,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
   <tr>
    <td>
-      <h2>Deep Learning</h2>
+      <h3>Deep Learning</h3>
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
