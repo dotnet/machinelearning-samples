@@ -21,7 +21,7 @@ There are two types of samples/apps in the repo:
 * **Getting started samples (C# and F#)** - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 * **End-to-end apps (C#)** - "Real world" examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
 
-These types of apps will be highlighted by the following icons:
+These mentioned type of sample apps are highlighted with the following icons:
 
 <img src="images/app-type-icons.png" alt="Type of app icons">
 
@@ -45,7 +45,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
     <td>
       <h3>Sentiment analysis &nbsp;&nbsp;&nbsp;
-      <a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp; <a href="TBD/Relative-URL">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
       <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
