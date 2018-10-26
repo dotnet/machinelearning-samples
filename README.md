@@ -28,10 +28,10 @@ The official ML.NET samples are divided in multiple categories depending on the 
 <table>
  <tr>
    <td>
-      <h3>ML Task</h3>
+      <h3><b>ML Task</b></h3>
   </td>
   <td>
-      <h3>Scenario</h3>
+      <h3><b>Scenario</b></h3>
   </td>
  </tr>
  <tr>
@@ -39,31 +39,10 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Two-class classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
-  <td>
-    <table>
-    <tr>
     <td>
-        <h3>Sentiment analysis</h3>
-    </td>
-    <td>
-        <h3><a href="TBD/Relative-URL">C#</a></h3>
-    </td>
-        <td>
-        <h3><a href="TBD/Relative-URL">F#</a></h3>
-    </td>
-    </tr>
-        <tr>
-    <td>
-        <h3>Survival Prediction</h3>
-    </td>
-    <td>
-        <h3><a href="TBD/Relative-URL">C#</a></h3>
-    </td>
-        <td>
-        <h3><a href="TBD/Relative-URL">F#</a></h3>
-    </td>
-    </tr>   
-    </table>
+      <h3>Sentiment analysis &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp; <a href="TBD/Relative-URL">F#</a></h3>
+      <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> </h3>
   </td>
  </tr>
  <tr>
@@ -72,7 +51,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
-      <h3>Issues classification &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp; <a href="TBD/Relative-URL">F#</a></h3>
+      <h3>Issues classification &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
       <h3>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp;<a href="TBD/Relative-URL">F#</a></h3>
   </td>
  </tr>
@@ -82,19 +62,24 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Price prediction</a></h3>
-      <h3><a href="TBD/Relative-URL">Sales forecast</a></h3>
-      <h3><a href="TBD/Relative-URL">Demand prediction</a></h3>
+      <h3>Price prediction &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a></h3>
+      <h3>Sales forecast &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
+      <h3>Demand prediction &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
   </td>
  </tr>
  <tr>
    <td>
-      <h2>Recommendation</h2>
+      <h3>Recommendation</h3>
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Product recommender</a></h3>
-      <h3><a href="TBD/Relative-URL">Movie recommender</a></h3>
+      <h3>Product recommender &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
+      <h3>Movie recommender &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
   </td>
  </tr>
   <tr>
@@ -103,8 +88,10 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Customer segmentation</a></h3>
-      <h3><a href="TBD/Relative-URL">Clustering Iris flowers</a></h3>
+      <h3>Customer segmentation &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
+      <h3>Clustering Iris flowers &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> &nbsp; &nbsp; <a href="TBD/Relative-URL">F#</a></h3>
   </td>
  </tr>
   <tr>
@@ -131,9 +118,12 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
-      <h3><a href="TBD/Relative-URL">Object detection and classification with TensorFlow model</a></h3>
-      <h3><a href="TBD/Relative-URL">Image style transfer with TensorFlow model</a></h3>
-      <h3><a href="TBD/Relative-URL">TensorFlow model as featurizer in ML.NET</a></h3>
+      <h3>Object detection and classification with TensorFlow model &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
+      <h3>Image style transfer with TensorFlow model &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
+      <h3>TensorFlow model as featurizer in ML.NET &nbsp;&nbsp;&nbsp;
+      <a href="TBD/Relative-URL">C#</a> </h3>
       <h3>ONNX model scoring - Coming soon</h3>
   </td>
  </tr>
