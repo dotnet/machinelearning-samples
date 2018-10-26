@@ -31,7 +31,7 @@ namespace Clustering_Iris
                                     {
                                      new TextLoader.Column("Label", DataKind.R4, 0),
                                      new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),
                                      new TextLoader.Column("PetalLength", DataKind.R4, 3),
                                      new TextLoader.Column("PetalWidth", DataKind.R4, 4),
 
