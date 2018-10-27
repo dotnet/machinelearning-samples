@@ -24,10 +24,11 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  <tr>
    <td>
-      <h3>Binary classification</h3>
+      <h3>Two-class classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
   <td>
+  Also called 'Binary classification'. Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
   </td>
     <td>
       <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
@@ -42,6 +43,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
+  Task of classifying instances into one of three or more classes, predicting which group each one belongs to.
   </td>
   <td>
       <h4>Issues classification &nbsp;&nbsp;&nbsp;
@@ -55,6 +57,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
   <td>
+  The task is to predict a numeric value with given input variable data. It is widely used for forecasting and 'how much / how many' predictions.
   </td>
   <td>
       <h4>Price prediction &nbsp;&nbsp;&nbsp;
@@ -71,6 +74,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
   <td>
+  Recommender systems are typically based on content based and collaborative filtering methods. A collaborative method predicts what items/products a user might like based on his past actions/likes/ratings compared to other users. 
+  </td>
   <td>
       <h4>Product recommender &nbsp;&nbsp;&nbsp;
       Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
@@ -84,6 +89,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
   <td>
+  ML task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar to each other than to those in other groups. It is an exploratory task. It does not classify items across particular labels.
+  </td>
   <td>
       <h4>Customer segmentation &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
@@ -97,6 +104,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
   <td>
+  Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
+  </td>
   <td>
       <h4>Coming soon</h4>
   </td>
@@ -107,6 +116,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
   <td>
+  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/deslike, context, interests, etc.
+  </td>
   <td>
       <h4>Coming soon</h4>
   </td>
@@ -116,8 +127,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Deep Learning</h3>
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
-  
   <td>
+  Deep learning part of machine learning. Deep learning architectures such as deep neural networks, are usually applied to fields such as computer vision (object detection, image classification, style transfer), speech recognition, natural language processing and audio recognition. 
+  </td>
   <td>
       <h4>Object detection Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
       <h4>Style Transfer  Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
