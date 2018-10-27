@@ -1,14 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using BikeSharingDemand.BikeSharingDemandData;
 using BikeSharingDemand.Helpers;
-using BikeSharingDemand.Model;
-
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.FastTree;
-using Microsoft.ML.Runtime.Learners;
+using Microsoft.ML;
+using Microsoft.ML.Core.Data;
+using Microsoft.ML.Runtime;
+using Microsoft.ML.Runtime.Api;
 
 namespace BikeSharingDemand
 {
@@ -19,54 +14,52 @@ namespace BikeSharingDemand
 
         static void Main(string[] args)
         {
-            // 1. Common data transformations in the pipeline
-            var pipelineTransforms = new PipelineTransforms(TrainingDataLocation);
-            var dataView = pipelineTransforms.CreateDataView();
-            var pipeline = pipelineTransforms.TransformDataInPipeline(dataView);
+            // Set a random seed for repeatable results.
+            var mlContext = new MLContext(seed: 0);
 
-            // 2. Build/train, evaluate and test with Fast Tree regressor algorithm
-            var fastTreeModelBuilder = new ModelBuilder<RegressionPredictionTransformer<FastTreeRegressionPredictor>>(TrainingDataLocation);
-            var fastTreeModel = fastTreeModelBuilder.BuildAndTrainWithFastTreeRegressionTrainer(pipeline, dataView);
-            fastTreeModelBuilder.TestSinglePrediction(fastTreeModel);
-            var fastTreeModelEvaluator = new ModelEvaluator<RegressionPredictionTransformer<FastTreeRegressionPredictor>>();
-            var fastTreeModelMetrics = fastTreeModelEvaluator.Evaluate(TestDataLocation, fastTreeModel);
-            fastTreeModelEvaluator.PrintRegressionMetrics("Fast Tree regression model", fastTreeModelMetrics);
+            // 1. Common data and data pre-processing
+            var trainingDataView = mlContext.CreateDataView(BikeSharingData.ReadCsv(TrainingDataLocation));
+            var testDataView = mlContext.CreateDataView(BikeSharingData.ReadCsv(TestDataLocation));
+            var dataPreprocessor = new BikeSharingDataPreprocessor(mlContext);
+            var dataPreprocessPipeline = dataPreprocessor.DataPreprocessPipeline;
 
-            // 3. Build/train, evaluate and test with SDCA regressor algorithm
-            var sdcaModelBuilder = new ModelBuilder<RegressionPredictionTransformer<LinearRegressionPredictor>>(TrainingDataLocation);
-            var sdcaModel = sdcaModelBuilder.BuildAndTrainWithSdcaRegressionTrainer(pipeline, dataView);
-            sdcaModelBuilder.TestSinglePrediction(sdcaModel);
-            var sdcaModelEvaluator = new ModelEvaluator<RegressionPredictionTransformer<LinearRegressionPredictor>>();
-            var sdcaModelMetrics = sdcaModelEvaluator.Evaluate(TestDataLocation, sdcaModel);
-            sdcaModelEvaluator.PrintRegressionMetrics("SDCA regression model", sdcaModelMetrics);
+            //Peek data in training DataView after applying the PreprocessPipeline's transformations  
+            ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataPreprocessPipeline, 10);
+            ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", trainingDataView, dataPreprocessPipeline, 10);
 
-            // 4. Build/train, evaluate and test with Poisson regressor algorithm
-            var poissonModelBuilder = new ModelBuilder<RegressionPredictionTransformer<PoissonRegressionPredictor>>(TrainingDataLocation);
-            var poissonModel = poissonModelBuilder.BuildAndTrainWithPoissonRegressionTrainer(pipeline, dataView);
-            poissonModelBuilder.TestSinglePrediction(poissonModel);
-            var poissonModelEvaluator = new ModelEvaluator<RegressionPredictionTransformer<PoissonRegressionPredictor>>();
-            var poissonModelMetrics = poissonModelEvaluator.Evaluate(TestDataLocation, poissonModel);
-            poissonModelEvaluator.PrintRegressionMetrics("Poisson regression model", poissonModelMetrics);
+            var regressionLearners = new (string name, IEstimator<ITransformer> value)[]
+            {
+                ("FastTree", mlContext.Regression.Trainers.FastTree()),
+                //("OnlineGradientDescent", mlContext.Regression.Trainers.OnlineGradientDescent()),
+                ("Poisson", mlContext.Regression.Trainers.PoissonRegression()),
+                ("SDCA", mlContext.Regression.Trainers.StochasticDualCoordinateAscent())
+                //Other possible learners that could be included
+                //...FastForestRegressor...
+                //...FastTreeTweedieRegressor...
+                //...GeneralizedAdditiveModelRegressor...
+            };
 
-            //Other possible Learners to implement and compare
-            //...FastForestRegressor...
-            //...OnlineGradientDescentRegressor...
-            //...FastTreeTweedieRegressor...
-            //...GeneralizedAdditiveModelRegressor...
+            // Per each regression trainer, Train, Evaluate, Test and Save a different model
+            foreach (var learner in regressionLearners)
+            {
+                Console.WriteLine("================== Training model ==================");
+                var model = new BikeSharingModel(mlContext, dataPreprocessPipeline, learner.value);
+                var trainedModel = model.Train(trainingDataView);
 
-            // 4. Visualize some predictions compared to observations from the test dataset
+                Console.WriteLine("========= Predict a single data point ===============");
+                var prediction = model.PredictSingle(BikeSharingData.SingleDemandData);
+                ConsoleHelper.PrintPrediction(prediction);
 
-            var fastTreeTester = new ModelTester<RegressionPredictionTransformer<FastTreeRegressionPredictor>>();
-            fastTreeTester.VisualizeSomePredictions("Fast Tree regression model", TestDataLocation, fastTreeModel, 10);
+                Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+                var metrics = model.Evaluate(testDataView);
+                ConsoleHelper.PrintRegressionMetrics(learner.name, metrics);
 
-            var sdcaTester = new ModelTester<RegressionPredictionTransformer<LinearRegressionPredictor>>();
-            sdcaTester.VisualizeSomePredictions("SDCA regression model", TestDataLocation, sdcaModel, 10);
+                //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
+                ModelTester.VisualizeSomePredictions(learner.name, TestDataLocation, trainedModel, 10);
 
-            var poissonTester = new ModelTester<RegressionPredictionTransformer<PoissonRegressionPredictor>>();
-            poissonTester.VisualizeSomePredictions("Poisson regression model", TestDataLocation, poissonModel, 10);
-
-            // 5. Just saving as .ZIP file the model based on Fast Tree which is the one with better accuracy and tests
-            fastTreeModelBuilder.SaveModelAsFile(fastTreeModel, @".\FastTreeModel.zip");
+                //Save the model file that can be used by any application
+                model.SaveAsFile($"./{learner.name}Model.zip");
+            }
 
             Console.ReadLine();
         }

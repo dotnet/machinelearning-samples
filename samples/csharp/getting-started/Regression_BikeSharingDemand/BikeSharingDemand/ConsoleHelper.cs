@@ -5,16 +5,36 @@ using System.Linq;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 
-using BikeSharingDemand.BikeSharingDemandData;
 using Microsoft.ML.Core.Data;
 using System.Collections.Generic;
 using Microsoft.ML.Data;
+using Microsoft.ML;
 
 namespace BikeSharingDemand.Helpers
 {
     public static class ConsoleHelper
     {
-        public static List<BikeSharingDemandSample> PeekDataViewInConsole(LocalEnvironment context, IDataView dataView, EstimatorChain<ITransformer> pipeline, int numberOfRows = 4)
+        public static void PrintPrediction(BikeSharingData.Prediction prediction)
+        {
+            Console.WriteLine($"*************************************************");
+            Console.WriteLine($"Predicted : {prediction.PredictedCount}");
+            Console.WriteLine($"*************************************************");
+        }
+
+        public static void PrintRegressionMetrics(string name, RegressionEvaluator.Result metrics)
+        {
+            Console.WriteLine($"*************************************************");
+            Console.WriteLine($"*       Metrics for {name} regression model      ");
+            Console.WriteLine($"*------------------------------------------------");
+            Console.WriteLine($"*       LossFn: {metrics.LossFn:0.##}");
+            Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
+            Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
+            Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
+            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
+            Console.WriteLine($"*************************************************");
+        }
+
+        public static List<BikeSharingData.Demand> PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Show {0} rows with all the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
@@ -24,7 +44,7 @@ namespace BikeSharingDemand.Helpers
 
             // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
             // Convert to an enumerable of user-defined type.
-            var someRows = transformedData.AsEnumerable<BikeSharingDemandSample>(context, reuseRowObject: false)
+            var someRows = transformedData.AsEnumerable<BikeSharingData.Demand>(mlContext, reuseRowObject: false)
                                            //.Where(x => x.Count > 0)
                                            // Take a couple values as an array.
                                            .Take(numberOfRows)
@@ -36,7 +56,7 @@ namespace BikeSharingDemand.Helpers
             return someRows;
         }
 
-        public static List<float[]> PeekFeaturesColumnDataInConsole(string columnName, LocalEnvironment mlcontext, IDataView dataView, EstimatorChain<ITransformer> pipeline, int numberOfRows = 4)
+        public static List<float[]> PeekFeaturesColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Show {0} rows with just the '{1}' column", numberOfRows, columnName );
             ConsoleWriteHeader(msg);
@@ -44,7 +64,7 @@ namespace BikeSharingDemand.Helpers
             var transformedData = pipeline.Fit(dataView).Transform(dataView);
             // Extract the 'Features' column.
             
-            var someColumnData = transformedData.GetColumn<float[]>(mlcontext, columnName)
+            var someColumnData = transformedData.GetColumn<float[]>(mlContext, columnName)
                                                         .Take(numberOfRows).ToList();
 
             // print to console the peeked rows
@@ -60,7 +80,7 @@ namespace BikeSharingDemand.Helpers
             return someColumnData;
         }
 
-            public static void ConsoleWriteHeader(params string[] lines)
+        public static void ConsoleWriteHeader(params string[] lines)
         {
             var defaultColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Yellow;
