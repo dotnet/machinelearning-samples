@@ -79,9 +79,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
   <td>
-      <h3>Product recommender &nbsp;&nbsp;&nbsp;
+      <h4>Product recommender &nbsp;&nbsp;&nbsp;
       Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
-      <h3>Movie recommender &nbsp;&nbsp;&nbsp;
+      <h4>Movie recommender &nbsp;&nbsp;&nbsp;
       Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
   </td>
  </tr>
@@ -93,7 +93,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <td>
       <h3>Customer segmentation &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Clustering Iris flowers &nbsp;&nbsp;&nbsp;
+      <h4>Clustering Iris flowers &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
@@ -103,7 +103,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
   <td>
-      <h3>Coming soon</h3>
+      <h4>Coming soon</h4>
   </td>
  </tr>
   <tr>
@@ -112,7 +112,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
   <td>
-      <h3>Coming soon</h3>
+      <h4>Coming soon</h4>
   </td>
  </tr>
   <tr>
@@ -121,13 +121,13 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
-      <h3>Object detection and classification with TensorFlow model &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Image style transfer with TensorFlow model &nbsp;&nbsp;&nbsp;
-       - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
-      <h3>TensorFlow model as featurizer in ML.NET &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>ONNX model scoring - Coming soon</h3>
+      <h4>Object detection and classification with TensorFlow model &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>Image style transfer with TensorFlow model &nbsp;&nbsp;&nbsp;
+       - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
+      <h4>TensorFlow model as featurizer in ML.NET &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>ONNX model scoring - Coming soon</h4>
   </td>
  </tr>
  </table>
