@@ -1,5 +1,9 @@
 # Customer Segmentation - Clustering sample
 
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.6           | Dynamic API | Evolving | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+
 ## Problem
 
 You want to **identify groups of customers with similar profile** so you could target them afterwards (like different marketing campaings per identified customer group with similra characteristics, etc.)

@@ -1,4 +1,17 @@
-# Iris Classification
+# Iris flowers classification (F#)
+
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.6           | LearningPipeline API | Needs update to  Dynamic API: [Contribute](/CONTRIBUTING.md) | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+
+------------------------------------
+
+**Important**: This F# sample needs to be updated to the new dynamic API available since ML.NET 0.6. It currently uses the deprecated LearningPipeline API.
+
+Contribution from the community will be welcomed! 
+
+------------------------------------
+
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
 ## Problem

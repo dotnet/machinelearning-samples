@@ -1,5 +1,10 @@
 # Bike Sharing Demand - Regression problem sample
 
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.6           | Dynamic API | **Evolving** | Console app | .csv files | Demand prediction | Regression | Fast Tree regressor |
+
+
 ## DataSet
 The original data comes from a public UCI dataset:
 https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset
