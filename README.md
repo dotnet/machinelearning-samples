@@ -25,10 +25,10 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
     <td>
-      <h3>Sentiment analysis &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h5>Sentiment analysis &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h5>
+      <h5>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h5>
+      <h5>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h5>
   </td>
  </tr>
  <tr>
