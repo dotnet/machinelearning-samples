@@ -8,7 +8,7 @@ There are two types of samples/apps in the repo:
 
 * **Getting started samples** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png)- ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* **End-to-end apps** ![] (https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-icons.png) - "Real world" examples of web, desktop, mobile, and other applications infused with ML solutions via [ML.NET APIs](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet).
+* **End-to-end apps** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-icons.png) - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
 These mentioned type of sample apps are highlighted with the following icons:
 
