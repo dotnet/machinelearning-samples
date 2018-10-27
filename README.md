@@ -12,7 +12,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
 
 <table>
  <tr>
-   <td>
+   <td width="25%">
       <h3><b>ML Task</b></h3>
   </td>
   <td>
@@ -23,7 +23,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
  <tr>
-   <td>
+   <td width="25%">
       <h3>Two-class classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
@@ -38,7 +38,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
  <tr>
-   <td>
+   <td width="25%">
       <h3>Multi-class classification</h3>
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
@@ -52,7 +52,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
  <tr>
-   <td>
+   <td width="25%">
       <h3>Regression</h3>
       <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
@@ -69,7 +69,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
  <tr>
-   <td>
+   <td width="25%">
       <h3>Recommendation</h3>
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
@@ -84,7 +84,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
   <tr>
-   <td>
+   <td width="25%">
       <h3>Clustering</h3>
       <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
@@ -99,7 +99,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
   <tr>
-   <td>
+   <td width="25%">
       <h3>Anomaly detection</h3>
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
@@ -111,7 +111,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
   <tr>
-   <td>
+   <td width="25%">
       <h3>Ranking</h3>
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
@@ -123,7 +123,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
  </tr>
   <tr>
-   <td>
+   <td width="25%">
       <h3>Deep Learning</h3>
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
