@@ -6,9 +6,9 @@ In this GitHub repo, we provide samples which will help you get started with ML.
 
 There are two types of samples/apps in the repo:
 
-* **Getting started samples** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png)- ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
+* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png) **Getting started samples** - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* **End-to-end apps** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png) - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET.
+* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png) **End-to-end apps** - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET.
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
