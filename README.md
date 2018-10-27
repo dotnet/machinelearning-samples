@@ -38,14 +38,14 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  <tr>
    <td>
-      <h3>Two-class classification</h3>
+      <h3>Binary classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
     <td>
-      <h3>Sentiment analysis &nbsp;&nbsp;&nbsp;
+      <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h4>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h4>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -54,9 +54,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
-      <h3>Issues classification &nbsp;&nbsp;&nbsp;
+      <h4>Issues classification &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/end-to-end-apps/github-labeler">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
-      <h3>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h4>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
