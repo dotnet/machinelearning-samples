@@ -16,7 +16,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3><b>ML Task</b></h3>
   </td>
   <td>
-      <h3 width="40%"><b>Description</b></h3>
+      <h3 width="35%"><b>Description</b></h3>
   </td>
   <td>
       <h3><b>Scenario</b></h3>
@@ -27,7 +27,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Two-class classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   Also called 'Binary classification'. Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
   </td>
     <td>
@@ -42,7 +42,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Multi-class classification</h3>
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   Task of classifying instances into one of three or more classes, predicting which group each one belongs to.
   </td>
   <td>
@@ -56,7 +56,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Regression</h3>
       <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   The task is to predict a numeric value with given input variable data. It is widely used for forecasting and 'how much / how many' predictions.
   </td>
   <td>
@@ -73,7 +73,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Recommendation</h3>
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   Recommender systems are typically based on content based and collaborative filtering methods. A collaborative method predicts what items/products a user might like based on his past actions/likes/ratings compared to other users. 
   </td>
   <td>
@@ -88,7 +88,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Clustering</h3>
       <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   ML task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar to each other than to those in other groups. It is an exploratory task. It does not classify items across particular labels.
   </td>
   <td>
@@ -103,7 +103,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Anomaly detection</h3>
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
   </td>
   <td>
@@ -115,7 +115,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Ranking</h3>
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/deslike, context, interests, etc.
   </td>
   <td>
@@ -127,7 +127,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Deep Learning</h3>
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
-  <td width="40%">
+  <td width="35%">
   Deep learning part of machine learning. Deep learning architectures such as deep neural networks, are usually applied to fields such as computer vision (object detection, image classification, style transfer), speech recognition, natural language processing and audio recognition. 
   </td>
   <td>
