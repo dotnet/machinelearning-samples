@@ -4,17 +4,7 @@
 
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers.
 
-In this GitHub repo, Microsoft provides ML.NET samples that help you to get started with machine learning by using .NET, not just to run/score pre-trained models but fundamentally enabling you to create and train your own custom ML models in .NET. 
-
-# NuGet packages to use
-Until ML.NET is released as final v1.0, most of the samples in this repo will be using preview released versions (i.e. v0.6, v0.7, v0.8, etc.) available at **NuGet** by using the  released Microsoft.ML NuGet packages available here:
-https://www.nuget.org/packages/Microsoft.ML/
-
-However, a few of the samples might also be using nightly releases available at **MyGet** using this alternate NuGet feed: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json. 
-
-# Samples Gallery 
-
-All the samples are in C# and some of them also support F#. We encourage the community to help us migrating samples to F# and newer versions of ML.NET. Pull requests are welcome!
+In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
 
 There are two types of samples/apps in the repo:
 
@@ -79,9 +69,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
   <td>
-      <h4>Product recommender &nbsp;&nbsp;&nbsp;
+      <h3>Product recommender &nbsp;&nbsp;&nbsp;
       Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
-      <h4>Movie recommender &nbsp;&nbsp;&nbsp;
+      <h3>Movie recommender &nbsp;&nbsp;&nbsp;
       Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
   </td>
  </tr>
@@ -103,7 +93,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
   <td>
-      <h4>Coming soon</h4>
+      <h3>Coming soon</h3>
   </td>
  </tr>
   <tr>
@@ -112,7 +102,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
   <td>
-      <h4>Coming soon</h4>
+      <h3>Coming soon</h3>
   </td>
  </tr>
   <tr>
@@ -121,28 +111,18 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
-      <h4>Object detection and classification with TensorFlow model &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Image style transfer with TensorFlow model &nbsp;&nbsp;&nbsp;
+      <h3>Object detection &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Style Transfer &nbsp;&nbsp;&nbsp;
        - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>TensorFlow model as featurizer in ML.NET &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>ONNX model scoring - Coming soon</h4>
+      <h3>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>ONNX with ML.NET - Coming soon</h3>
   </td>
  </tr>
  </table>
 
 -------------------------------------------------------
-
-## Visual Basic .NET samples
-
-For VB.NET samples, check this external repo supported by the community (Kudos for Nukepayload2):
-https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic
-
-
-In addition, if you would like to explore the examples directly referencing the source code of ML.NET, check out [scenario tests](https://github.com/dotnet/machinelearning/tree/master/test/Microsoft.ML.Tests/Scenarios) in [ML.NET repository](https://github.com/dotnet/machinelearning).
-
-
 
 ## Learn more
 
