@@ -38,7 +38,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  <tr>
    <td>
-      <h4>Multi-class classification</h4>
+      <h3>Multi-class classification</h3>
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
