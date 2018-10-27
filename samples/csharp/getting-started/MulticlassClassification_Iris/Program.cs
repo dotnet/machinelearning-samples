@@ -1,12 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 
-using Microsoft.ML.Legacy;
-using Microsoft.ML.Legacy.Models;
-using Microsoft.ML.Legacy.Data;
-using Microsoft.ML.Legacy.Transforms;
-using Microsoft.ML.Legacy.Trainers;
+using Microsoft.ML.Runtime.Learners;
+using Microsoft.ML.Runtime.Data;
+using Microsoft.ML;
 
 namespace MulticlassClassification_Iris
 {
@@ -14,113 +11,96 @@ namespace MulticlassClassification_Iris
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         private static string TrainDataPath => Path.Combine(AppPath, "datasets", "iris-train.txt");
-        private static string TestDataPath => Path.Combine(AppPath,  "datasets", "iris-test.txt");
-        private static string ModelPath => Path.Combine(AppPath, "IrisModel.zip");
+        private static string TestDataPath => Path.Combine(AppPath, "datasets", "iris-test.txt");
 
-        private static async Task Main(string[] args)
+        private static void Main(string[] args)
         {
-            // STEP 1: Create a model
-            var model = await TrainAsync();
-
-            // STEP2: Test accuracy
-            Evaluate(model);
-
-            // STEP 3: Make a prediction
-            Console.WriteLine();
-            var prediction = model.Predict(TestIrisData.Iris1);
-            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
-            Console.WriteLine();
-            
-            prediction = model.Predict(TestIrisData.Iris2);
-            Console.WriteLine($"Actual: virginica.  Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
-            Console.WriteLine();
-
-            prediction = model.Predict(TestIrisData.Iris3);
-            Console.WriteLine($"Actual: versicolor. Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
-            
-            Console.ReadLine();
-        }
-
-        internal static async Task<PredictionModel<IrisData, IrisPrediction>> TrainAsync()
-        {
-            // LearningPipeline holds all steps of the learning process: data, transforms, learners.
-            var pipeline = new LearningPipeline
+            //1. Create ML.NET context/environment
+            using (var env = new LocalEnvironment())
             {
-                // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-                // all the column names and their types.
-                new TextLoader(TrainDataPath).CreateFrom<IrisData>(),
+                //2. Create DataReader with data schema mapped to file's columns
+                var reader = new TextLoader(env,
+                                            new TextLoader.Arguments()
+                                            {
+                                                Separator = "tab",
+                                                HasHeader = true,
+                                                Column = new[]
+                                                {
+                                                    new TextLoader.Column("Label", DataKind.R4, 0),
+                                                    new TextLoader.Column("SepalLength", DataKind.R4, 1),
+                                                    new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                                                    new TextLoader.Column("PetalLength", DataKind.R4, 3),
+                                                    new TextLoader.Column("PetalWidth", DataKind.R4, 4),
+                                                }
+                                            });
                 
-                // Transforms
-                // When ML model starts training, it looks for two columns: Label and Features.
-                // Label:   values that should be predicted. If you have a field named Label in your data type,
-                //              like in this example, no extra actions required.
-                //          If you don’t have it, copy the column you want to predict with ColumnCopier transform:
-                //              new ColumnCopier(("FareAmount", "Label"))
-                // Features: all data used for prediction. At the end of all transforms you need to concatenate
-                //              all columns except the one you want to predict into Features column with
-                //              ColumnConcatenator transform:
-                new ColumnConcatenator("Features",
-                    "SepalLength",
-                    "SepalWidth",
-                    "PetalLength",
-                    "PetalWidth"),
-                // StochasticDualCoordinateAscentClassifier is an algorithm that will be used to train the model.
-                new StochasticDualCoordinateAscentClassifier()
-            };
+                //Load training data
+                IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
 
-            Console.WriteLine("=============== Training model ===============");
-            // The pipeline is trained on the dataset that has been loaded and transformed.
-            var model = pipeline.Train<IrisData, IrisPrediction>();
+                //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
+                var pipeline = 
+                    new ConcatEstimator(env, "Features", new[] { "SepalLength", "SepalWidth", "PetalLength", "PetalWidth" })
+                           .Append(new SdcaMultiClassTrainer(env, new SdcaMultiClassTrainer.Arguments(),
+                                                                   "Features",
+                                                                   "Label"));
 
-            // Saving the model as a .zip file.
-            await model.WriteAsync(ModelPath);
 
-            Console.WriteLine("=============== End training ===============");
-            Console.WriteLine("The model is saved to {0}", ModelPath);
+                //4. Create and train the model            
+                Console.WriteLine("=============== Create and Train the Model ===============");
 
-            return model;
-        }
+                var model = pipeline.Fit(trainingDataView);
 
-        private static void Evaluate(PredictionModel<IrisData, IrisPrediction> model)
-        {
-            // To evaluate how good the model predicts values, the model is ran against new set
-            // of data (test data) that was not involved in training.
-            var testData = new TextLoader(TestDataPath).CreateFrom<IrisData>();
-            
-            // ClassificationEvaluator performs evaluation for Multiclass Classification type of ML problems.
-            var evaluator = new ClassificationEvaluator {OutputTopKAcc = 3};
-            
-            Console.WriteLine("=============== Evaluating model ===============");
 
-            var metrics = evaluator.Evaluate(model, testData);
-            Console.WriteLine("Metrics:");
-            Console.WriteLine($"    AccuracyMacro = {metrics.AccuracyMacro:0.####}, a value between 0 and 1, the closer to 1, the better");
-            Console.WriteLine($"    AccuracyMicro = {metrics.AccuracyMicro:0.####}, a value between 0 and 1, the closer to 1, the better");
-            Console.WriteLine($"    LogLoss = {metrics.LogLoss:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
-            Console.WriteLine();
-            Console.WriteLine($"    ConfusionMatrix:");
+                Console.WriteLine("=============== End of training ===============");
+                Console.WriteLine();
 
-            // Print confusion matrix
-            for (var i = 0; i < metrics.ConfusionMatrix.Order; i++)
-            {
-                for (var j = 0; j < metrics.ConfusionMatrix.ClassNames.Count; j++)
-                {
-                    Console.Write("\t" + metrics.ConfusionMatrix[i, j]);
-                }
+
+                //5. Evaluate the model and show accuracy stats
+
+                //Load evaluation/test data
+                IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
+
+                Console.WriteLine("=============== Evaluating Model's accuracy with Test data===============");
+                var predictions = model.Transform(testDataView);
+
+                var multiClassificationCtx = new MulticlassClassificationContext(env);
+                var metrics = multiClassificationCtx.Evaluate(predictions, "Label");
+
+                Console.WriteLine("Metrics:");
+                Console.WriteLine($"    AccuracyMacro = {metrics.AccuracyMacro:0.####}, a value between 0 and 1, the closer to 1, the better");
+                Console.WriteLine($"    AccuracyMicro = {metrics.AccuracyMicro:0.####}, a value between 0 and 1, the closer to 1, the better");
+                Console.WriteLine($"    LogLoss = {metrics.LogLoss:0.####}, the closer to 0, the better");
+                Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
+                Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
+                Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
+                Console.WriteLine();
+
+
+                //6. Test Sentiment Prediction with one sample text 
+                var predictionFunct = model.MakePredictionFunction<IrisData, IrisPrediction>(env);
+
+
+
+                var prediction = predictionFunct.Predict(TestIrisData.Iris1);
+                Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {prediction.Score[0]:0.####}");
+                Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
+                Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
+                Console.WriteLine();
+
+
+                prediction = predictionFunct.Predict(TestIrisData.Iris2);
+                Console.WriteLine($"Actual: virginica.  Predicted probability: setosa:      {prediction.Score[0]:0.####}");
+                Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
+                Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
+                Console.WriteLine();
+
+
+                prediction = predictionFunct.Predict(TestIrisData.Iris3);
+                Console.WriteLine($"Actual: versicolor. Predicted probability: setosa:      {prediction.Score[0]:0.####}");
+                Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
+                Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
                 Console.WriteLine();
             }
-
-            Console.WriteLine("=============== End evaluating ===============");
-            Console.WriteLine();
         }
     }
 }

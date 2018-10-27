@@ -27,21 +27,21 @@ namespace eShopDashboard.Controllers
 
         [HttpGet]
         [Route("product/{productId}/unitdemandestimation")]
-        public async Task <IActionResult> GetProductUnitDemandEstimation(string productId,
+        public IActionResult GetProductUnitDemandEstimation(string productId,
             [FromQuery]int year, [FromQuery]int month,
             [FromQuery]float units, [FromQuery]float avg,
             [FromQuery]int count, [FromQuery]float max,
             [FromQuery]float min, [FromQuery]float prev)
         {
             // next,productId,year,month,units,avg,count,max,min,prev
-            var nextMonthUnitDemandEstimation = await productSales.Predict($"{appSettings.ForecastModelsPath}/product_month_fastTreeTweedie.zip", productId, year, month, units, avg, count, max, min, prev);
+            var nextMonthUnitDemandEstimation = productSales.Predict($"{appSettings.ForecastModelsPath}/product_month_fastTreeTweedie.zip", productId, year, month, units, avg, count, max, min, prev);
 
             return Ok(nextMonthUnitDemandEstimation.Score);
         }
 
         [HttpGet]
         [Route("country/{country}/unitdemandestimation")]
-        public async Task<IActionResult> GetCountrySalesForecast(string country,
+        public IActionResult GetCountrySalesForecast(string country,
             [FromQuery]int year,
             [FromQuery]int month, [FromQuery]float med,
             [FromQuery]float max, [FromQuery]float min,
@@ -49,7 +49,7 @@ namespace eShopDashboard.Controllers
             [FromQuery]float sales, [FromQuery]float std)
         {
             // next,country,year,month,max,min,std,count,sales,med,prev
-            var nextMonthSalesForecast = await countrySales.Predict($"{appSettings.ForecastModelsPath}/country_month_fastTreeTweedie.zip", country, year, month, max, min, std, count, sales, med, prev);
+            var nextMonthSalesForecast = countrySales.Predict($"{appSettings.ForecastModelsPath}/country_month_fastTreeTweedie.zip", country, year, month, max, min, std, count, sales, med, prev);
 
             return Ok(nextMonthSalesForecast.Score);
         }

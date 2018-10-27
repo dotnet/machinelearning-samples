@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+using Microsoft.ML.Core.Data;
+using Microsoft.ML.Runtime.Data;
 using System.IO;
-using System.Threading.Tasks;
-
-using Microsoft.ML.Legacy;
-using Microsoft.ML.Runtime.Api;
 
 namespace eShopDashboard.Forecast
 {
@@ -28,7 +25,6 @@ namespace eShopDashboard.Forecast
             this.prev = prev;
         }
 
-        [ColumnName("Label")]
         public float next;
 
         public string productId;
@@ -57,10 +53,10 @@ namespace eShopDashboard.Forecast
         /// <summary>
         /// This method demonstrates how to run prediction on one example at a time.
         /// </summary>
-        public async Task<ProductUnitPrediction> Predict(string modelPath, string productId, int year, int month, float units, float avg, int count, float max, float min, float prev)
+        public ProductUnitPrediction Predict(string modelPath, string productId, int year, int month, float units, float avg, int count, float max, float min, float prev)
         {
             // Load model
-            var predictionEngine = await CreatePredictionEngineAsync(modelPath);
+            var predictionEngine = CreatePredictionEngineAsync(modelPath);
 
             // Build country sample
             var inputExample = new ProductData(productId, year, month, units, avg, count, max, min, prev);
@@ -73,10 +69,17 @@ namespace eShopDashboard.Forecast
         /// <summary>
         /// This function creates a prediction engine from the model located in the <paramref name="modelPath"/>.
         /// </summary>
-        private async Task<PredictionModel<ProductData, ProductUnitPrediction>> CreatePredictionEngineAsync(string modelPath)
+        private PredictionFunction<ProductData, ProductUnitPrediction> CreatePredictionEngineAsync(string modelPath)
         {
-            PredictionModel<ProductData, ProductUnitPrediction> model = await PredictionModel.ReadAsync<ProductData, ProductUnitPrediction>(modelPath);
-            return model;
+            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            ITransformer model;
+            using (var file = File.OpenRead(modelPath))
+            {
+                model = TransformerChain
+                    .LoadFrom(env, file);
+            }
+
+            return model.MakePredictionFunction<ProductData, ProductUnitPrediction>(env);
         }
     }
 }

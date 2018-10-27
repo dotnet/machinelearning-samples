@@ -21,7 +21,7 @@ namespace GitHubLabeler
 
             Configuration = builder.Build();
 
-            await Predictor.TrainAsync();
+            Predictor.Train();
 
             await Label();
         }
