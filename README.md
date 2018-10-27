@@ -1,19 +1,28 @@
 # ML.NET Samples
 [![](https://dotnet.visualstudio.com/_apis/public/build/definitions/9ee6d478-d288-47f7-aacc-f6e6d082ae6d/22/badge)](https://dotnet.visualstudio.com/public/_build/index?definitionId=22 )
-[ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
+[ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. 
+
+In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
 
 There are two types of samples/apps in the repo:
 
-* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png) <b> Getting started </b> - ML.NET code focused samples for each ML task or area presented as console apps.
+* **Getting started samples** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png)- ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png) <b> End-to-end apps</b> - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET.
+* **End-to-end apps** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png) - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
-The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning tasks.
+These mentioned type of sample apps are highlighted with the following icons:
+
+<img src="images/app-type-icons.png" alt="Type of app icons">
+
+The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
 <table>
  <tr>
    <td>
       <h3><b>ML Task</b></h3>
+  </td>
+  <td>
+      <h3><b>Description</b></h3>
   </td>
   <td>
       <h3><b>Scenario</b></h3>
@@ -24,11 +33,13 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3>Binary classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
+  <td>
+  </td>
     <td>
-      <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h3>Sentiment analysis &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Survival Prediction &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClasification_Titanic">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -37,9 +48,11 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/multi-class-classification-plotting.png" alt="Multi-class classification">-->
   </td>
   <td>
-      <h4>Issues classification &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/github-labeler">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+  </td>
+  <td>
+      <h3>Issues classification &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/end-to-end-apps/github-labeler">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      <h3>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -48,12 +61,14 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/regression-icons.png" alt="regression icon">-->
   </td>
   <td>
-      <h4>Price prediction &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Sales forecast &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/eShopDashboardML">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>Demand prediction &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+  </td>
+  <td>
+      <h3>Price prediction &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Sales forecast &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/end-to-end-apps/eShopDashboardML">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      <h3>Demand prediction &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
  <tr>
@@ -62,10 +77,11 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/recommendation-icon.png" alt="Recommendations icon">-->
   </td>
   <td>
-      <h4>Product recommender &nbsp;&nbsp;&nbsp;
-      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>Movie recommender &nbsp;&nbsp;&nbsp;
-      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
+  <td>
+      <h3>Product recommender &nbsp;&nbsp;&nbsp;
+      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
+      <h3>Movie recommender &nbsp;&nbsp;&nbsp;
+      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h3>
   </td>
  </tr>
   <tr>
@@ -74,10 +90,11 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/clustering-plotting.png" alt="Clustering plotting">-->
   </td>
   <td>
-      <h4>Customer segmentation &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Clustering Iris flowers &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+  <td>
+      <h3>Customer segmentation &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Clustering Iris flowers &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
   </td>
  </tr>
   <tr>
@@ -86,7 +103,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/anomaly-detection-plotting.png" alt="anomaly detection chart">-->
   </td>
   <td>
-      <h4>Coming soon</h4>
+  <td>
+      <h3>Coming soon</h3>
   </td>
  </tr>
   <tr>
@@ -95,7 +113,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/ranking-chart.png" alt="xxxxxx">-->
   </td>
   <td>
-      <h4>Coming soon</h4>
+  <td>
+      <h3>Coming soon</h3>
   </td>
  </tr>
   <tr>
@@ -104,13 +123,14 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
-      <h4>Object detection &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Style Transfer &nbsp;&nbsp;&nbsp;
+  <td>
+      <h3>Object detection &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>Style Transfer &nbsp;&nbsp;&nbsp;
        - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>ONNX with ML.NET - Coming soon</h4>
+      <h3>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
+      <h3>ONNX with ML.NET - Coming soon</h3>
   </td>
  </tr>
  </table>
