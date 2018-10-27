@@ -19,7 +19,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h3 width="35%"><b>Description</b></h3>
   </td>
   <td>
-      <h3><b>Scenario</b></h3>
+      <h3><b>Scenarios</b></h3>
   </td>
  </tr>
  <tr>
