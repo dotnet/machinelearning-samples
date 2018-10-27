@@ -10,10 +10,6 @@ There are two types of samples in this repo:
 
 * **End-to-end apps** - "Real world" examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
-These mentioned type of sample apps are highlighted with the following icons:
-
-<img src="images/app-type-icons.png" alt="Type of app icons">
-
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
 <table>
