@@ -104,13 +104,13 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/tensorflow-logo.png" alt="TensorFlow logo">-->
   </td>
   <td>
-      <h3>Object detection &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Style Transfer &nbsp;&nbsp;&nbsp;
+      <h4>Object detection &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>Style Transfer &nbsp;&nbsp;&nbsp;
        - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h3>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>ONNX with ML.NET - Coming soon</h3>
+      <h4>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>ONNX with ML.NET - Coming soon</h4>
   </td>
  </tr>
  </table>
