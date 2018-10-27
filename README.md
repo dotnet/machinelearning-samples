@@ -4,9 +4,9 @@
 
 There are two types of samples/apps in the repo:
 
-* **Getting started samples** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png)- ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
+* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png) Getting Started- ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* **End-to-end apps** ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png) - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
+* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png) End-End apps- Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
@@ -118,13 +118,13 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
   <td>
-      <h3>Object detection &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>Style Transfer &nbsp;&nbsp;&nbsp;
-       - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h3>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
-      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h3>
-      <h3>ONNX with ML.NET - Coming soon</h3>
+      <b>Object detection &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b>
+      <b>Style Transfer &nbsp;&nbsp;&nbsp;
+       - Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></b>
+      <b>TensorFlow with ML.NET &nbsp;&nbsp;&nbsp;
+      Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b>
+      <b>ONNX with ML.NET - Coming soon</b>
   </td>
  </tr>
  </table>
