@@ -6,17 +6,19 @@ using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 
+using BikeSharingDemand.DataStructures;
+
 namespace BikeSharingDemand
 {
-    public class BikeSharingModel
+    public class ModelBuilder
     {
         private MLContext _mlcontext;
         private IEstimator<ITransformer> _trainingPipeline;
 
         public ITransformer TrainedModel { get; private set; }
-        public PredictionFunction<BikeSharingData.Demand, BikeSharingData.Prediction> PredictionFunction { get; private set;}
+        public PredictionFunction<DemandObservation, DemandPrediction> PredictionFunction { get; private set;}
 
-        public BikeSharingModel(
+        public ModelBuilder(
             MLContext mlContext,
             IEstimator<ITransformer> dataPreprocessPipeline,
             IEstimator<ITransformer> regressionLearner)
@@ -28,7 +30,7 @@ namespace BikeSharingDemand
         public ITransformer Train(IDataView trainingData)
         {
             TrainedModel = _trainingPipeline.Fit(trainingData);
-            PredictionFunction = TrainedModel.MakePredictionFunction<BikeSharingData.Demand, BikeSharingData.Prediction>(_mlcontext);
+            PredictionFunction = TrainedModel.MakePredictionFunction<DemandObservation, DemandPrediction>(_mlcontext);
             return TrainedModel;
         }
 
@@ -39,17 +41,17 @@ namespace BikeSharingDemand
         /// </summary>
         /// <param name="input">Single data</param>
         /// <returns>Prediction for the input data</returns>
-        public BikeSharingData.Prediction PredictSingle(BikeSharingData.Demand input)
+        public DemandPrediction PredictSingle(DemandObservation input)
         {
             CheckTrained();
             return PredictionFunction.Predict(input);
         }
 
-        public IEnumerable<BikeSharingData.Prediction> PredictBatch(IDataView inputDataView)
+        public IEnumerable<DemandPrediction> PredictBatch(IDataView inputDataView)
         {
             CheckTrained();
             var predictions = TrainedModel.Transform(inputDataView);
-            return predictions.AsEnumerable<BikeSharingData.Prediction>(_mlcontext, reuseRowObject: false);
+            return predictions.AsEnumerable<DemandPrediction>(_mlcontext, reuseRowObject: false);
         }
 
         public RegressionEvaluator.Result Evaluate(IDataView testData)

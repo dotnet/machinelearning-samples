@@ -10,14 +10,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="Datasets\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\hour_test.csv">
+    <None Update="Datasets\hour_test.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\hour_train.csv">
+    <None Update="Datasets\hour_train.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

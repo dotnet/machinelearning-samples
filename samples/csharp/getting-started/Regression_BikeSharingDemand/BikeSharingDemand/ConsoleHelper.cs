@@ -10,16 +10,27 @@ using System.Collections.Generic;
 using Microsoft.ML.Data;
 using Microsoft.ML;
 
+using BikeSharingDemand.DataStructures;
+
 namespace BikeSharingDemand.Helpers
 {
     public static class ConsoleHelper
     {
-        public static void PrintPrediction(BikeSharingData.Prediction prediction)
+        public static void PrintPrediction(DemandPrediction prediction)
         {
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"Predicted : {prediction.PredictedCount}");
             Console.WriteLine($"*************************************************");
         }
+
+        public static void PrintPredictionVersusObserved(string predictionCount, string observedCount)
+        {
+            Console.WriteLine($"-------------------------------------------------");
+            Console.WriteLine($"Predicted : {predictionCount}");
+            Console.WriteLine($"Actual:     {observedCount}");
+            Console.WriteLine($"-------------------------------------------------");
+        }
+
 
         public static void PrintRegressionMetrics(string name, RegressionEvaluator.Result metrics)
         {
@@ -34,7 +45,7 @@ namespace BikeSharingDemand.Helpers
             Console.WriteLine($"*************************************************");
         }
 
-        public static List<BikeSharingData.Demand> PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
+        public static List<DemandObservation> PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Show {0} rows with all the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
@@ -44,7 +55,7 @@ namespace BikeSharingDemand.Helpers
 
             // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
             // Convert to an enumerable of user-defined type.
-            var someRows = transformedData.AsEnumerable<BikeSharingData.Demand>(mlContext, reuseRowObject: false)
+            var someRows = transformedData.AsEnumerable<DemandObservation>(mlContext, reuseRowObject: false)
                                            //.Where(x => x.Count > 0)
                                            // Take a couple values as an array.
                                            .Take(numberOfRows)
