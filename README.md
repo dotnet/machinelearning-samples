@@ -28,7 +28,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
   <td width="35%">
-  Also called 'Binary classification'. Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
+  Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
   </td>
     <td>
       <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
