@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using static eShopForecastModelsTrainer.ConsoleHelpers;
 
 namespace eShopForecastModelsTrainer
 {
@@ -9,19 +10,16 @@ namespace eShopForecastModelsTrainer
         {
             try
             {
-                await ProductModelHelper.TrainAndSaveModel("data/products.stats.csv");
-                await ProductModelHelper.TestPrediction();
+                ProductModelHelper.TrainAndSaveModel("data/products.stats.csv");
+                ProductModelHelper.TestPrediction();
 
-                await CountryModelHelper.TrainAndSaveModel("data/countries.stats.csv");
-                await CountryModelHelper.TestPrediction();
-
-                Console.Write("Hit any key to exit");
-                Console.ReadLine();
-
+                CountryModelHelper.TrainAndSaveModel("data/countries.stats.csv");
+                CountryModelHelper.TestPrediction();
             } catch(Exception ex)
             {
-                Console.Write(ex.Message);
+                ConsoleWriteException(ex.Message);
             }
+            ConsolePressAnyKey();
         }
     }
 }

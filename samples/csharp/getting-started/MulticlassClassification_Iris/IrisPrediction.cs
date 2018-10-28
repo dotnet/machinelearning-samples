@@ -4,7 +4,6 @@ namespace MulticlassClassification_Iris
 {
     public class IrisPrediction
     {
-        [ColumnName("Score")]
         public float[] Score;
     }
 }

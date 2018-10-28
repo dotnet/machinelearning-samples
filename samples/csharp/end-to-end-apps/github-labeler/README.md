@@ -1,4 +1,10 @@
 # GitHub Labeler
+
+| ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.6           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class  classification | SDCA multi-class classifier |
+
+
 This is a simple prototype application to demonstrate how to use [ML.NET](https://www.nuget.org/packages/Microsoft.ML/) APIs. The main focus is on creating, training, and using ML (Machine Learning) model that is implemented in Predictor.cs class.
 
 ## Overview
@@ -6,7 +12,7 @@ GitHubLabeler is a .NET Core console application that:
 * trains ML model on your labeled GitHub issues to teach the model what label should be assigned for a new issue. (As an example, you can use `corefx-issues-train.tsv` file that contains issues from public [corefx](https://github.com/dotnet/corefx) repository)
 * labeles a new issue. The application will get all unlabeled open issues from the GitHub repository specified at the `appsettings.json` file and label them using the trained ML model created on the step above.  
 
-This ML model is using multi-class classification algorithm and text capabilities (`TextFeaturizer`) of [ML.NET](https://www.nuget.org/packages/Microsoft.ML/).
+This ML model is using multi-class classification algorithm (`SdcaMultiClassTrainer`) from [ML.NET](https://www.nuget.org/packages/Microsoft.ML/).
 
 ## Enter you GitHub configuration data
 1. **Provide your GitHub data** in the `appsettings.json` file:
@@ -53,7 +59,7 @@ When the model is trained, it can be used for predicting new issue's label. It i
 await Label();
 ```
 
-For testing convenience only open and not labeled issues that were created in the past 10 minutes are subject to labeling:
+For testing convenience only load not labeled issues that were created in the past 10 minutes are subject to labeling:
 ```csharp
 Since = DateTime.Now.AddMinutes(-10)
 ```

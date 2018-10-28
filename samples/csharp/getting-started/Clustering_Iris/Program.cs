@@ -1,74 +1,151 @@
-﻿using System;
+﻿using Microsoft.ML;
+using Microsoft.ML.Core.Data;
+using Microsoft.ML.Runtime.Api;
+using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Runtime.KMeans;
+using Microsoft.ML.Runtime.Learners;
+using System;
 using System.IO;
-using System.Threading.Tasks;
-
-using Microsoft.ML.Legacy;
-using Microsoft.ML.Legacy.Data;
-using Microsoft.ML.Legacy.Transforms;
-using Microsoft.ML.Legacy.Trainers;
 
 namespace Clustering_Iris
 {
-    public static class Program
+    internal static class Program
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         private static string DataPath => Path.Combine(AppPath, "datasets", "iris-full.txt");
-        private static string ModelPath => Path.Combine(AppPath, "IrisClustersModel.zip");
+        private static string ModelPath => Path.Combine(AppPath, "IrisModel.zip");
 
-        private static async Task Main(string[] args)
+
+        private static void Main(string[] args)
         {
-            // STEP 1: Create a model
-            var model = await TrainAsync();
-        
-            // STEP 2: Make a prediction
-            Console.WriteLine();
-            var prediction1 = model.Predict(TestIrisData.Setosa1);
-            var prediction2 = model.Predict(TestIrisData.Setosa2);          
-            Console.WriteLine($"Clusters assigned for setosa flowers:");
-            Console.WriteLine($"                                        {prediction1.SelectedClusterId}");
-            Console.WriteLine($"                                        {prediction2.SelectedClusterId}");
-
-            var prediction3 = model.Predict(TestIrisData.Virginica1);
-            var prediction4 = model.Predict(TestIrisData.Virginica2);
-            Console.WriteLine($"Clusters assigned for virginica flowers:");
-            Console.WriteLine($"                                        {prediction3.SelectedClusterId}");
-            Console.WriteLine($"                                        {prediction4.SelectedClusterId}");
-            
-            var prediction5 = model.Predict(TestIrisData.Versicolor1);
-            var prediction6 = model.Predict(TestIrisData.Versicolor2);
-            Console.WriteLine($"Clusters assigned for versicolor flowers:");
-            Console.WriteLine($"                                        {prediction5.SelectedClusterId}");
-            Console.WriteLine($"                                        {prediction6.SelectedClusterId}");
-            Console.ReadLine();
-        }
-
-        internal static async Task<PredictionModel<IrisData, ClusterPrediction>> TrainAsync()
-        {
-            // LearningPipeline holds all steps of the learning process: data, transforms, learners.
-            var pipeline = new LearningPipeline
+            // Create ML.NET context/environment
+            using (var env = new LocalEnvironment())
             {
-                // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-                // all the column names and their types.
-                new TextLoader(DataPath).CreateFrom<IrisData>(useHeader: true),
-                // ColumnConcatenator concatenates all columns into Features column
-                new ColumnConcatenator("Features",
-                    "SepalLength",
-                    "SepalWidth",
-                    "PetalLength",
-                    "PetalWidth"),
-                // KMeansPlusPlusClusterer is an algorithm that will be used to build clusters. We set the number of clusters to 3.
-                new KMeansPlusPlusClusterer() { K = 3 }
-            };
+                // Create DataReader with data schema mapped to file's columns
+                var reader = new TextLoader(env,
+                                new TextLoader.Arguments()
+                                {
+                                    Separator = "\t",
+                                    HasHeader = true,
+                                    Column = new[]
+                                    {
+                                     new TextLoader.Column("Label", DataKind.R4, 0),
+                                     new TextLoader.Column("SepalLength", DataKind.R4, 1),
+                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                                     new TextLoader.Column("PetalLength", DataKind.R4, 3),
+                                     new TextLoader.Column("PetalWidth", DataKind.R4, 4),
 
-            Console.WriteLine("=============== Training model ===============");
-            var model = pipeline.Train<IrisData, ClusterPrediction>();
-            Console.WriteLine("=============== End training ===============");
-            
-            // Saving the model as a .zip file.
-            await model.WriteAsync(ModelPath);
-            Console.WriteLine("The model is saved to {0}", ModelPath);
-           
-            return model;
+                                    }
+                                });
+                //Load training data
+                IDataView trainingDataView = reader.Read(new MultiFileSource(DataPath));
+
+                // Transform your data and add a learner
+                // Add a learning algorithm to the pipeline. e.g.(What are characteristics of iris is this?)
+                // Convert the Label back into original text (after converting to number in step 3)
+                var pipeline = new ConcatEstimator(env, "Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
+                       .Append(new KMeansPlusPlusTrainer(env, "Features",clustersCount:3));
+
+                // Create and train the model            
+                Console.WriteLine("=============== Create and Train the Model ===============");
+
+                var model = pipeline.Fit(trainingDataView);
+
+                Console.WriteLine("=============== End of training ===============");
+                Console.WriteLine();
+
+                // Test with one sample text 
+                var sampleIrisData = new IrisData()
+                {
+                    SepalLength = 3.3f,
+                    SepalWidth = 1.6f,
+                    PetalLength = 0.2f,
+                    PetalWidth = 5.1f,
+                };
+
+                var prediction = model.MakePredictionFunction<IrisData, IrisPrediction>(env).Predict(
+                    sampleIrisData);
+
+                Console.WriteLine($"Clusters assigned for setosa flowers:"+prediction.SelectedClusterId);
+                // Save model to .ZIP file
+                SaveModelAsFile(env, model);
+
+                // Predict again but now testing the model loading from the .ZIP file
+                PredictWithModelLoadedFromFile(sampleIrisData);
+
+                Console.WriteLine("=============== End of process, hit any key to finish ===============");
+                Console.ReadKey();
+            }
+
+
         }
+
+        private static void SaveModelAsFile(LocalEnvironment env, TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> model)
+        {
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                model.SaveTo(env, fs);
+
+            Console.WriteLine("The model is saved to {0}", ModelPath);
+        }
+
+        private static void PredictWithModelLoadedFromFile(IrisData sampleData)
+        {
+            // Test with Loaded Model from .zip file
+
+            using (var env = new LocalEnvironment())
+            {
+                ITransformer loadedModel;
+                using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    loadedModel = TransformerChain.LoadFrom(env, stream);
+                }
+
+                // Create prediction engine and make prediction.
+                var prediction = loadedModel.MakePredictionFunction<IrisData, IrisPrediction>(env).Predict(
+                    new IrisData()
+                    {
+                        SepalLength = 3.3f,
+                        SepalWidth = 1.6f,
+                        PetalLength = 0.2f,
+                        PetalWidth = 5.1f,
+                    });
+
+                Console.WriteLine();
+                Console.WriteLine($"Clusters assigned for setosa flowers:" + prediction.SelectedClusterId);
+            }
+        }
+
+    }
+
+
+
+    // Define your data structures
+    public class IrisData
+    {
+        [Column("0")]
+        public float Label;
+
+        [Column("1")]
+        public float SepalLength;
+
+        [Column("2")]
+        public float SepalWidth;
+
+        [Column("3")]
+        public float PetalLength;
+
+        [Column("4")]
+        public float PetalWidth;
+
+    }
+
+    // IrisPrediction is the result returned from prediction operations
+    public class IrisPrediction
+    {
+        [ColumnName("PredictedLabel")]
+        public uint SelectedClusterId;
+
+        [ColumnName("Score")]
+        public float[] Distance;
     }
 }

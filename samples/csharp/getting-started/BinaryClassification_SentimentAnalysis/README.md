@@ -1,12 +1,20 @@
 # Sentiment Analysis for User Reviews
+
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.6           | Dynamic API | Up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
-## Problem
-This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use IMDB and Yelp comments that were processed by humans and each comment has been assigned a label: 
-* 0 - negative
-* 1 - positive
+## API version: Static and Estimators-based API
+It is important to note that this sample uses the **static API with Estimators**, available since ML.NET v0.6.
 
-Using those datasets we will build a model that will analyze a string and predict a sentiment value of 0 or 1.
+## Problem
+This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use small wikipedia-detox-datasets (one dataset for training and a second dataset for model's accuracy evaluation) that were processed by humans and each comment has been assigned a sentiment label: 
+* 0 - nice/positive
+* 1 - toxic/negative
+
+Using those datasets we will build a model that when predicting it will analyze a string and predict a sentiment value of 0 or 1.
 
 ## ML task - Binary classification
 The generalized problem of **binary classification** is to classify items into one of two classes (classifying items into more than two classes is called **multiclass classification**).
@@ -20,67 +28,98 @@ The common feature for all those examples is that the parameter we want to predi
 ## Solution
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
 
-![Build -> Train -> Evaluate -> Consume](../../../../../master/samples/csharp/getting-started/shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](../../../../../samples-new-api/samples/csharp/getting-started/shared_content/modelpipeline.png)
 
 ### 1. Build model
 
-Building a model includes: uploading data (`sentiment-imdb-train.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `TextFeaturizer`), and choosing a learning algorithm (`FastTreeBinaryClassifier`). All of those steps are stored in a `LearningPipeline`:
+Building a model includes: 
+
+* Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
+
+* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `TextTransform`)
+
+* Choosing a trainer/learning algorithm (such as `LinearClassificationTrainer`) to train the model with. 
+
+The initial code is similar to the following:
+
 ```CSharp
-// LearningPipeline holds all steps of the learning process: data, transforms, learners.  
-var pipeline = new LearningPipeline();
-// The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-// all the column names and their types.
-pipeline.Add(new TextLoader(TrainDataPath).CreateFrom<SentimentData>());
-// TextFeaturizer is a transform that will be used to featurize an input column to format and clean the data.
-pipeline.Add(new TextFeaturizer("Features", "SentimentText"));
-// FastTreeBinaryClassifier is an algorithm that will be used to train the model.
-// It has three hyperparameters for tuning decision tree performance. 
-pipeline.Add(new FastTreeBinaryClassifier() {NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2});
+//1. Create ML.NET context/environment
+using (var env = new LocalEnvironment())
+{
+    //2. Create DataReader with data schema mapped to file's columns
+    var reader = new TextLoader(env,
+                                new TextLoader.Arguments()
+                                {
+                                    Separator = "tab",
+                                    HasHeader = true,
+                                    Column = new[]
+                                    {
+                                        new TextLoader.Column("Label", DataKind.Bool, 0),
+                                        new TextLoader.Column("Text", DataKind.Text, 1)
+                                    }
+                                });
+
+    //Load training data
+    IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
+
+
+    //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
+
+    var pipeline = new TextTransform(env, "Text", "Features")  //Convert the text column to numeric vectors (Features column)   
+                                .Append(new LinearClassificationTrainer(env, "Features", "Label")); //(Simpler in ML.NET v0.7)
+
+}
 ```
+
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide the types for our data object `SentimentData` and  prediction object `SentimentPrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
+
+To perform training you need to call the `Fit()` method while providing the training dataset (`wikipedia-detox-250-line-data.tsv` file) in a DataView object.
+
 ```CSharp
-var model = pipeline.Train<SentimentData, SentimentPrediction>();
+var model = pipeline.Fit(trainingDataView);
 ```
+
+Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
+
 ### 3. Evaluate model
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`sentiment-yelp-test.txt`). This dataset also contains known sentiments. `BinaryClassificationEvaluator` calculates the difference between known fares and values predicted by the model in various metrics.
+
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments. 
+
+`Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
+
 ```CSharp
-    var testData = new TextLoader(TestDataPath).CreateFrom<SentimentData>();
+IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
 
-    var evaluator = new BinaryClassificationEvaluator();
-    var metrics = evaluator.Evaluate(model, testData);
+var predictions = model.Transform(testDataView);
+
+var binClassificationCtx = new BinaryClassificationContext(env);
+var metrics = binClassificationCtx.Evaluate(predictions, "Label");
+
+Console.WriteLine("Model quality metrics evaluation");
+Console.WriteLine("------------------------------------------");
+Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
 ```
->*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
-If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
+If you are not satisfied with the quality of the model, you can try to improve it by providing larger training datasets and by choosing different training algorithms with different hyper-parameters for each algorithm.
 
->*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size for performance purposes. You can use bigger labeled sentiment datasets available online to significantly improve the quality.*
+>*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size so the training is quick. You should use bigger labeled sentiment datasets to significantly improve the quality of your models.*
 
 ### 4. Consume model
-After the model is trained, we can use the `Predict()` API to predict the sentiment for new reviews. 
+
+After the model is trained, you can use the `Predict()` API to predict the sentiment for new sample text. 
 
 ```CSharp
-var predictions = model.Predict(TestSentimentData.Sentiments);
-```
-Where `TestSentimentData.Sentiments` contains new user reviews that we want to analyze.
+// Create the prediction function 
+var predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
 
-```CSharp
-internal static readonly IEnumerable<SentimentData> Sentiments = new[]
-{
-    new SentimentData
-    {
-        SentimentText = "Contoso's 11 is a wonderful experience",
-        Sentiment = 0
-    },
-    new SentimentData
-    {
-        SentimentText = "The acting in this movie is very bad",
-        Sentiment = 0
-    },
-    new SentimentData
-    {
-        SentimentText = "Joe versus the Volcano Coffee Company is a great film.",
-        Sentiment = 0
-    }
-};
+var resultprediction = predictionFunct.Predict(new SentimentIssue	
+                                              {	
+                                                 text = "This is a very rude movie"	
+                                              });
+
+Console.WriteLine($"Text: {sampleStatement.text} | Prediction: {(resultprediction.PredictionLabel ? "Negative" : "Positive")} sentiment");
+
 ```
+
+Where in `resultprediction.PredictionLabel` will be either 1 or 0 depending if it is a positive or negative predicted sentiment.

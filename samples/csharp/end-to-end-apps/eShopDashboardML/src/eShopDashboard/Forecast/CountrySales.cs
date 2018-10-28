@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.ML.Core.Data;
+using Microsoft.ML.Runtime.Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -29,7 +31,6 @@ namespace eShopDashboard.Forecast
             this.prev = prev;
         }
 
-        [ColumnName("Label")]
         public float next;
 
         public string country;
@@ -59,10 +60,10 @@ namespace eShopDashboard.Forecast
         /// <summary>
         /// This method demonstrates how to run prediction on one example at a time.
         /// </summary>
-        public async Task<CountrySalesPrediction> Predict(string modelPath, string country, int year, int month, float max, float min, float std, int count, float sales, float med, float prev)
+        public CountrySalesPrediction Predict(string modelPath, string country, int year, int month, float max, float min, float std, int count, float sales, float med, float prev)
         {
             // Load model
-            var predictionEngine = await CreatePredictionEngineAsync(modelPath);
+            var predictionEngine = CreatePredictionEngineAsync(modelPath);
 
             // Build country sample
             var countrySample = new CountryData(country, year, month, max, min, std, count, sales, med, prev);
@@ -74,10 +75,17 @@ namespace eShopDashboard.Forecast
         /// <summary>
         /// This function creates a prediction engine from the model located in the <paramref name="modelPath"/>.
         /// </summary>
-        private async Task<PredictionModel<CountryData, CountrySalesPrediction>> CreatePredictionEngineAsync(string modelPath)
+        private PredictionFunction<CountryData, CountrySalesPrediction> CreatePredictionEngineAsync(string modelPath)
         {
-            PredictionModel<CountryData, CountrySalesPrediction> model = await PredictionModel.ReadAsync<CountryData, CountrySalesPrediction>(modelPath);
-            return model;
+            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            ITransformer model;
+            using (var file = File.OpenRead(modelPath))
+            {
+                model = TransformerChain
+                    .LoadFrom(env, file);
+            }
+
+            return model.MakePredictionFunction<CountryData, CountrySalesPrediction>(env);
         }
     }
 }

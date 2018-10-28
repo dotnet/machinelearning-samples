@@ -1,4 +1,17 @@
-# Clustering Iris Data
+# Clustering Iris flowers (F#)
+
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.6           | LearningPipeline API | Needs update to  Dynamic API: [Contribute](/CONTRIBUTING.md) | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+
+------------------------------------
+
+**Important**: This F# sample needs to be updated to the new dynamic API available since ML.NET 0.6. It currently uses the deprecated LearningPipeline API.
+
+Contribution from the community will be welcomed! 
+
+------------------------------------
+
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
 ## Problem

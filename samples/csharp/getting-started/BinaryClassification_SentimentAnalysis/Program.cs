@@ -1,14 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Legacy;
-using Microsoft.ML.Legacy.Models;
-using Microsoft.ML.Legacy.Data;
-using Microsoft.ML.Legacy.Transforms;
-using Microsoft.ML.Legacy.Trainers;
+using Microsoft.ML.Runtime.Learners;
+using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Core.Data;
+using Microsoft.ML;
 
 namespace BinaryClassification_SentimentAnalysis
 {
@@ -16,91 +11,133 @@ namespace BinaryClassification_SentimentAnalysis
     internal static class Program
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-        private static string TrainDataPath => Path.Combine(AppPath, "datasets", "sentiment-imdb-train.txt");
-        private static string TestDataPath => Path.Combine(AppPath, "datasets", "sentiment-yelp-test.txt");
+        private static string TrainDataPath => Path.Combine(AppPath, "datasets", "wikipedia-detox-250-line-data.tsv");
+        private static string TestDataPath => Path.Combine(AppPath, "datasets", "wikipedia-detox-250-line-test.tsv");
         private static string ModelPath => Path.Combine(AppPath, "SentimentModel.zip");
 
-        private static async Task Main(string[] args)
+
+        static void Main(string[] args)
         {
-            // STEP 1: Create a model
-            var model = await TrainAsync();
-
-            // STEP2: Test accuracy
-            Evaluate(model);
-
-            // STEP 3: Make a prediction
-            var predictions = model.Predict(TestSentimentData.Sentiments);
-
-            var sentimentsAndPredictions =
-                TestSentimentData.Sentiments.Zip(predictions, (sentiment, prediction) => (sentiment, prediction));
-            foreach (var item in sentimentsAndPredictions)
+            //1. Create ML.NET context/environment
+            using (var env = new LocalEnvironment())
             {
-                Console.WriteLine(
-                    $"Sentiment: {item.sentiment.SentimentText} | Prediction: {(item.prediction.Sentiment ? "Positive" : "Negative")} sentiment");
+                //2. Create DataReader with data schema mapped to file's columns
+                var reader = new TextLoader(env,
+                                            new TextLoader.Arguments()
+                                            {
+                                                Separator = "tab",
+                                                HasHeader = true,
+                                                Column = new[]
+                                                {
+                                                    new TextLoader.Column("Label", DataKind.Bool, 0),
+                                                    new TextLoader.Column("Text", DataKind.Text, 1)
+                                                }
+                                            });
+
+                //Load training data
+                IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
+
+
+                //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
+
+                var pipeline = new TextTransform(env, "Text", "Features")  //Convert the text column to numeric vectors (Features column)   
+                                           .Append(new LinearClassificationTrainer(env, new LinearClassificationTrainer.Arguments(), 
+                                                                                   "Features", 
+                                                                                   "Label"));                                                                
+                                           //.Append(new LinearClassificationTrainer(env, "Features", "Label")); //(Simpler in ML.NET v0.7)
+
+
+
+                //4. Create and train the model            
+                Console.WriteLine("=============== Create and Train the Model ===============");
+
+                var model = pipeline.Fit(trainingDataView);
+
+                Console.WriteLine("=============== End of training ===============");
+                Console.WriteLine();
+
+
+                //5. Evaluate the model and show accuracy stats
+
+                //Load evaluation/test data
+                IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
+
+                Console.WriteLine("=============== Evaluating Model's accuracy with Test data===============");
+                var predictions = model.Transform(testDataView);
+
+                var binClassificationCtx = new BinaryClassificationContext(env);
+                var metrics = binClassificationCtx.Evaluate(predictions, "Label");
+
+                Console.WriteLine();
+                Console.WriteLine("Model quality metrics evaluation");
+                Console.WriteLine("------------------------------------------");
+                Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
+                Console.WriteLine($"Auc: {metrics.Auc:P2}");
+                Console.WriteLine($"F1Score: {metrics.F1Score:P2}");
+                Console.WriteLine("=============== End of Model's evaluation ===============");
+                Console.WriteLine();
+
+
+                //6. Test Sentiment Prediction with one sample text 
+                var predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
+
+                SentimentIssue sampleStatement = new SentimentIssue
+                {
+                    Text = "This is a very rude movie"
+                };
+
+                var resultprediction = predictionFunct.Predict(sampleStatement);
+
+                Console.WriteLine();
+                Console.WriteLine("=============== Test of model with a sample ===============");
+
+                Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
+
+                // Save model to .ZIP file
+                SaveModelAsFile(env, model);
+
+                // Predict again but now testing the model loading from the .ZIP file
+                PredictWithModelLoadedFromFile(sampleStatement);
+
+                Console.WriteLine("=============== End of process, hit any key to finish ===============");
+                Console.ReadKey();
             }
-
-            Console.ReadLine();
         }
 
-        public static async Task<PredictionModel<SentimentData, SentimentPrediction>> TrainAsync()
+        private static void SaveModelAsFile(LocalEnvironment env, TransformerChain<BinaryPredictionTransformer<Microsoft.ML.Runtime.Internal.Internallearn.IPredictorWithFeatureWeights<float>>> model)
         {
-            // LearningPipeline holds all steps of the learning process: data, transforms, learners.  
-            var pipeline = new LearningPipeline();
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                model.SaveTo(env, fs);
 
-            // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-            // all the column names and their types.
-            pipeline.Add(new TextLoader(TrainDataPath).CreateFrom<SentimentData>());
-
-            // TextFeaturizer is a transform that will be used to featurize an input column to format and clean the data.
-            pipeline.Add(new TextFeaturizer("Features", "SentimentText"));
-
-            // FastTreeBinaryClassifier is an algorithm that will be used to train the model.
-            // It has three hyperparameters for tuning decision tree performance. 
-            pipeline.Add(new FastTreeBinaryClassifier() {NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2});
-
-            Console.WriteLine("=============== Training model ===============");
-            // The pipeline is trained on the dataset that has been loaded and transformed.
-            var model = pipeline.Train<SentimentData, SentimentPrediction>();
-
-            // Saving the model as a .zip file.
-            await model.WriteAsync(ModelPath);
-
-            Console.WriteLine("=============== End training ===============");
             Console.WriteLine("The model is saved to {0}", ModelPath);
-
-            return model;
         }
 
-        private static void Evaluate(PredictionModel<SentimentData, SentimentPrediction> model)
+        private static void PredictWithModelLoadedFromFile(SentimentIssue sampleStatement)
         {
-            // To evaluate how good the model predicts values, the model is ran against new set
-            // of data (test data) that was not involved in training.
-            var testData = new TextLoader(TestDataPath).CreateFrom<SentimentData>();
-            
-            // BinaryClassificationEvaluator performs evaluation for Binary Classification type of ML problems.
-            var evaluator = new BinaryClassificationEvaluator();
+            // Test with Loaded Model from .zip file
 
-            Console.WriteLine("=============== Evaluating model ===============");
+            using (var env2 = new LocalEnvironment())
+            {
+                ITransformer loadedModel;
+                using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    loadedModel = TransformerChain.LoadFrom(env2, stream);
+                }
 
-            var metrics = evaluator.Evaluate(model, testData);
-            // BinaryClassificationMetrics contains the overall metrics computed by binary classification evaluators
-            // The Accuracy metric gets the accuracy of a classifier which is the proportion 
-            //of correct predictions in the test set.
+                // Create prediction engine and make prediction.
 
-            // The Auc metric gets the area under the ROC curve.
-            // The area under the ROC curve is equal to the probability that the classifier ranks
-            // a randomly chosen positive instance higher than a randomly chosen negative one
-            // (assuming 'positive' ranks higher than 'negative').
+                var engine = loadedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env2);
 
-            // The F1Score metric gets the classifier's F1 score.
-            // The F1 score is the harmonic mean of precision and recall:
-            //  2 * precision * recall / (precision + recall).
+                var predictionFromLoaded = engine.Predict(sampleStatement);
 
-            Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
-            Console.WriteLine($"Auc: {metrics.Auc:P2}");
-            Console.WriteLine($"F1Score: {metrics.F1Score:P2}");
-            Console.WriteLine("=============== End evaluating ===============");
-            Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("=============== Test of model with a sample ===============");
+
+                Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(predictionFromLoaded.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {predictionFromLoaded.Probability} ");
+
+            }
         }
+
+
     }
 }
