@@ -24,7 +24,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  <tr>
    <td width="25%">
-      <h3>Two-class classification</h3>
+      <h3>Binary classification</h3>
       <!--<img src="images/binary-classification-plotting.png" alt="Binary classification chart">-->
   </td>
   <td width="35%">
