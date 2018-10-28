@@ -14,3 +14,75 @@ phases:
     displayName: Build Titanic (BinaryClassification)
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
+
+- phase: CreditCardFraudDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build CreditCardFraudDetection (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
+
+- phase: SentimentAnalysis
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build SentimentAnalysis (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\BinaryClassification_SentimentAnalysis.sln'
+
+- phase: CustomerSegmentation
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build CustomerSegmentation (Clustering)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.sln'
+
+- phase: IrisClustering
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Iris (Clustering)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
+
+- phase: IrisMultiClass
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Iris (MulticlassClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\MulticlassClassification_Iris\MulticlassClassification_Iris.sln'
+
+- phase: BikeSharingDemand
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build BikeSharingDemand (Regression)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand.sln'
+
+- phase: TaxiFarePrediction
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build TaxiFarePrediction (Regression)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\Regression_TaxiFarePrediction.sln'
+
+- phase: GitHubLabeler
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build GitHubLabeler
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\github-labeler\GitHubLabeler.sln'
+
+- phase: eShopDashboardML
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build eShopDashboardML (Regression)
+    inputs:
+      projects: '.\samples\csharp\getting-started\eShopDashboardML\eShopDashboardML.sln'
