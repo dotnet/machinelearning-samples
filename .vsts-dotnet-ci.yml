@@ -1,5 +1,5 @@
 phases:
-- phase: BinaryClasification_Titanic
+  - phase: Titanic
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -7,7 +7,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
 
-  - phase: BinaryClassification_CreditCardFraudDetection
+  - phase: CreditCardFraudDetection
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -15,7 +15,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
 
-  - phase: BinaryClassification_SentimentAnalysis
+  - phase: SentimentAnalysis
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -23,7 +23,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\BinaryClassification_SentimentAnalysis.sln'
 
-  - phase: Clustering_CustomerSegmentation
+  - phase: CustomerSegmentation
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -31,7 +31,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.sln'
 
-  - phase: Clustering_Iris
+  - phase: IrisClustering
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -39,7 +39,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
 
-  - phase: MulticlassClassification_Iris
+  - phase: IrisMultiClass
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -47,7 +47,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\MulticlassClassification_Iris\MulticlassClassification_Iris.sln'
 
-  - phase: Regression_BikeSharingDemand
+  - phase: BikeSharingDemand
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
@@ -55,7 +55,7 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand.sln'
 
-  - phase: Regression_TaxiFarePrediction
+  - phase: TaxiFarePrediction
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
