@@ -85,4 +85,4 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build eShopDashboardML (Regression)
     inputs:
-      projects: '.\samples\csharp\getting-started\eShopDashboardML\eShopDashboardML.sln'
+      projects: '.\samples\csharp\end-to-end-apps\eShopDashboardML\eShopDashboardML.sln'
