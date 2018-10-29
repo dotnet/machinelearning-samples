@@ -19,42 +19,65 @@ let TrainDataPath= Path.Combine(AppPath, "datasets", "taxi-fare-train.csv")
 let TestDataPath= Path.Combine(AppPath, "datasets", "taxi-fare-test.csv")
 let ModelPath= Path.Combine(AppPath, "TaxiFareModel.zip")
 
-type TaxiTrip() =
-    [<Column("0")>]
-    member val VendorId: string = "" with get, set
+[<CLIMutable>]
+type TaxiTrip = {
+    [<Column("0")>] VendorId : string
+    [<Column("1")>] RateCode : string
+    [<Column("2")>] PassengerCount : float32
+    [<Column("3")>] TripTime : float32
+    [<Column("4")>] TripDistance : float32
+    [<Column("5")>] PaymentType : string
+    [<Column("6")>] FareAmount : float32
+} with static member Empty = {
+            VendorId  = ""
+            RateCode = ""
+            PassengerCount = 0.0f
+            TripTime = 0.0f
+            TripDistance = 0.0f
+            PaymentType = ""
+            FareAmount = 0.0f
+        }
 
-    [<Column("1")>]
-    member val RateCode: string = "" with get, set
-    
-    [<Column("2")>]
-    member val PassengerCount: float32 = 0.0f with get, set
-    
-    [<Column("3")>]
-    member val TripTime: float32 = 0.0f with get, set
-    
-    [<Column("4")>]
-    member val TripDistance: float32 = 0.0f with get, set
-    
-    [<Column("5")>]
-    member val PaymentType: string = "" with get, set
-    
-    [<Column("6")>]
-    member val FareAmount: float32 = 0.0f with get,set
+[<CLIMutable>]
+type TaxiTripFarePrediction = {
+    FareAmount : float32
+}
 
-type TaxiTripFarePrediction() =
-    [<ColumnName("Score")>]
-    member val FareAmount: float32 = 0.0f with get, set
+// type TaxiTrip() =
+//     [<Column("0")>]
+//     member val VendorId: string = "" with get, set
+
+//     [<Column("1")>]
+//     member val RateCode: string = "" with get, set
+
+//     [<Column("2")>]
+//     member val PassengerCount: float32 = 0.0f with get, set
+
+//     [<Column("3")>]
+//     member val TripTime: float32 = 0.0f with get, set
+
+//     [<Column("4")>]
+//     member val TripDistance: float32 = 0.0f with get, set
+
+//     [<Column("5")>]
+//     member val PaymentType: string = "" with get, set
+
+//     [<Column("6")>]
+//     member val FareAmount: float32 = 0.0f with get,set
+
+// type TaxiTripFarePrediction() =
+//     [<ColumnName("Score")>]
+//     member val FareAmount: float32 = 0.0f with get, set
 
 module TestTaxiTrips =
-    let Trip1 = 
-       TaxiTrip(
-            VendorId = "VTS",
-            RateCode = "1",
-            PassengerCount = 1.0f,
-            TripDistance = 10.33f,
-            PaymentType = "CSH",
-            FareAmount = 0.0f // predict it. actual = 29.5
-       )
+    let Trip1 = { TaxiTrip.Empty with
+                        VendorId = "VTS"
+                        RateCode = "1"
+                        PassengerCount = 1.0f
+                        TripDistance = 10.33f
+                        PaymentType = "CSH"
+                        FareAmount = 0.0f // predict it. actual = 29.5
+                }
 
 
 let Train() =
@@ -64,7 +87,7 @@ let Train() =
     // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
     // all the column names and their types.
     pipeline.Add (TextLoader(TrainDataPath).CreateFrom<TaxiTrip>(separator=','))
-        
+
     // Transforms
     // When ML model starts training, it looks for two columns: Label and Features.
     // Label:   values that should be predicted. If you have a field named Label in your data type,
@@ -88,15 +111,15 @@ let Train() =
         //FastTreeRegressor is an algorithm that will be used to train the model.
     pipeline.Add(FastTreeRegressor())
 
-    Console.WriteLine("=============== Training model ===============")
+    printfn "=============== Training model ==============="
     // The pipeline is trained on the dataset that has been loaded and transformed.
     let model = pipeline.Train<TaxiTrip, TaxiTripFarePrediction>()
 
     // Saving the model as a .zip file.
     model.WriteAsync(ModelPath) |> Async.AwaitTask |> Async.RunSynchronously
 
-    Console.WriteLine("=============== End training ===============")
-    Console.WriteLine("The model is saved to {0}", ModelPath)
+    printfn "=============== End training ==============="
+    printfn "The model is saved to %s" ModelPath
 
     model
 
@@ -110,29 +133,29 @@ let Evaluate(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>) =
     // values in the test dataset.
     let evaluator = RegressionEvaluator()
 
-    Console.WriteLine("=============== Evaluating model ===============")
+    printfn "=============== Evaluating model ==============="
 
     let metrics = evaluator.Evaluate(model, testData)
 
-    Console.WriteLine(sprintf "Rms = {metrics.Rms}, ideally should be around 2.8, can be improved with larger dataset")
-    Console.WriteLine(sprintf "RSquared = {metrics.RSquared}, a value between 0 and 1, the closer to 1, the better")
-    Console.WriteLine("=============== End evaluating ===============")
-    Console.WriteLine()
+    printfn "Rms = {metrics.Rms}, ideally should be around 2.8, can be improved with larger dataset"
+    printfn "RSquared = {metrics.RSquared}, a value between 0 and 1, the closer to 1, the better"
+    printfn "=============== End evaluating ==============="
+    printfn ""
 
 let GetDataFromCsv(dataLocation: string, numMaxRecords: int) =
     File.ReadAllLines(dataLocation)
         .Skip(1)
         .Select(fun x -> x.Split(','))
-        .Select(fun x -> 
-            TaxiTrip(
-                VendorId = x.[0],
-                RateCode = x.[1],
-                PassengerCount = Single.Parse(x.[2]),
-                TripTime = Single.Parse(x.[3]),
-                TripDistance = Single.Parse(x.[4]),
-                PaymentType = x.[5],
+        .Select(fun x ->
+            { TaxiTrip.Empty with
+                VendorId = x.[0]
+                RateCode = x.[1]
+                PassengerCount = Single.Parse(x.[2])
+                TripTime = Single.Parse(x.[3])
+                TripDistance = Single.Parse(x.[4])
+                PaymentType = x.[5]
                 FareAmount = Single.Parse(x.[6])
-            )
+            }
         )
         .Take(numMaxRecords)
 
@@ -143,7 +166,7 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
 
     use pl = new PLStream()
     // use SVG backend and write to SineWaves.svg in current directory
-    let chartFileName = 
+    let chartFileName =
         if (args.Length = 1 && args.[0] = "svg") then
             pl.sdev("svg")
             let chartFileName = "TaxiRegressionDistribution.svg"
@@ -194,7 +217,7 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
     let mutable xyMultiTotal = 0.0
     let mutable xSquareTotal = 0.0
 
-    for i in 0 .. testData.Count-1 do 
+    for i in 0 .. testData.Count-1 do
         let farePrediction = model.Predict(testData.[i])
 
         let x = [| float testData.[i].FareAmount |]
@@ -214,10 +237,10 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
 
         let ySquare = y.[0] * y.[0]
 
-        Console.WriteLine(sprintf "-------------------------------------------------")
-        Console.WriteLine(sprintf "Predicted : {FarePrediction.FareAmount}")
-        Console.WriteLine(sprintf "Actual:    {testData[i].FareAmount}")
-        Console.WriteLine(sprintf "-------------------------------------------------")
+        printfn "-------------------------------------------------"
+        printfn "Predicted : {FarePrediction.FareAmount}"
+        printfn "Actual:    {testData[i].FareAmount}"
+        printfn "-------------------------------------------------"
 
     // Regression Line calculation explanation:
     // https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/more-on-regression/v/regression-line-example
@@ -253,11 +276,11 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
 
     // output version of PLplot
     let verText = pl.gver()
-    Console.WriteLine("PLplot version " + verText)
+    printfn "PLplot version %s" verText
 
     // Open Chart File In Microsoft Photos App (Or default app, like browser for .svg)
 
-    Console.WriteLine("Showing chart...")
+    printfn "Showing chart..."
     let chartFileNamePath = @".\" + chartFileName
     let p = new Process(StartInfo=ProcessStartInfo(chartFileNamePath, UseShellExecute = true))
     p.Start() |> ignore
@@ -271,11 +294,11 @@ Evaluate(model)
 
 // STEP 3: Make a test prediction
 let prediction = model.Predict(TestTaxiTrips.Trip1)
-Console.WriteLine(sprintf "Predicted fare: {prediction.FareAmount:0.####}, actual fare: 29.5")
+printfn "Predicted fare: {prediction.FareAmount:0.####}, actual fare: 29.5"
 
 //STEP 4: Paint regression distribution chart for a number of elements read from a Test DataSet file
 let args = Environment.GetCommandLineArgs().[1..]
-PaintChart(model, TestDataPath, 100, args) 
+PaintChart(model, TestDataPath, 100, args)
 
-Console.WriteLine("Press any key to exit..")
+printfn "Press any key to exit.."
 Console.ReadLine() |> ignore
