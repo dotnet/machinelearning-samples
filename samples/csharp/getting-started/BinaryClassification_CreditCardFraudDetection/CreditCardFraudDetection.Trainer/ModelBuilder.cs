@@ -83,8 +83,8 @@ namespace CreditCardFraudDetection.Trainer
             {
                 ConsoleHelpers.ConsoleWriteHeader($"Train Metrics Cross Validate [{count}/{cvNumFolds}]:");
                 result.metrics.ToConsole();
-                ConsoleHelpers.ConsoleWriteHeader($"Show 4 [model {count}]");
-                ConsoleHelpers.InspectScoredData(_env, result.scoredTestData);
+                ConsoleHelpers.ConsoleWriteHeader($"Show 4 transactions fraud (true) and 4 transactions not fraud (false) - {count}]");
+                ConsoleHelpers.InspectScoredData(_env, result.scoredTestData, 4);
                 count++;
             });
             // save model with best accuracy
@@ -159,8 +159,8 @@ namespace CreditCardFraudDetection.Trainer
                 // Split the data 80:20 into train and test sets, train and evaluate.
 
                 data = reader.Read(new MultiFileSource(_dataSetFile));
-                ConsoleHelpers.ConsoleWriteHeader("Show 4 (source)");
-                ConsoleHelpers.InspectData(env, data);
+                ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (source)");
+                ConsoleHelpers.InspectData(env, data, 4);
 
 
 
@@ -188,21 +188,21 @@ namespace CreditCardFraudDetection.Trainer
             else {
                 // Load splited data
                 var binTrainData = new BinaryLoader(env, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "trainData.idv")));
-                var trainRoles = new RoleMappedData(binTrainData, roles: TransactionVectorModel.Roles());
+                var trainRoles = new RoleMappedData(binTrainData, roles: TransactionObservation.Roles());
                 trainData = trainRoles.Data;
 
 
                 var binTestData = new BinaryLoader(env, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "testData.idv")));
-                var testRoles = new RoleMappedData(binTestData, roles: TransactionVectorModel.Roles());
+                var testRoles = new RoleMappedData(binTestData, roles: TransactionObservation.Roles());
                 testData = testRoles.Data;
 
             }
 
-            ConsoleHelpers.ConsoleWriteHeader("Show 4 (traindata)");
-            ConsoleHelpers.InspectData(env, trainData);
+            ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (traindata)");
+            ConsoleHelpers.InspectData(env, trainData, 4);
 
-            ConsoleHelpers.ConsoleWriteHeader("Show 4 (testData)");
-            ConsoleHelpers.InspectData(env, testData);
+            ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (testData)");
+            ConsoleHelpers.InspectData(env, testData, 4);
 
             return (classification, reader, trainData, testData);
         }

@@ -10,7 +10,7 @@ namespace CreditCardFraudDetection.Common.DataModels
         void PrintToConsole();
     }
 
-    public class TransactionVectorModel : IModelEntity
+    public class TransactionObservation : IModelEntity
     {
         public bool Label;
         public float V1;
@@ -85,7 +85,7 @@ namespace CreditCardFraudDetection.Common.DataModels
         }
     }
 
-    public class TransactionEstimatorModel : IModelEntity
+    public class TransactionFraudPrediction : IModelEntity
     {
         public bool Label;
         public bool PredictedLabel;
@@ -94,7 +94,7 @@ namespace CreditCardFraudDetection.Common.DataModels
 
         public void PrintToConsole()
         {
-            Console.WriteLine($"Predicted Label: {PredictedLabel} [{Label}]");
+            Console.WriteLine($"Predicted Label: {PredictedLabel}");
             Console.WriteLine($"Probability: {Probability}  ({Score})");
         }
     }
