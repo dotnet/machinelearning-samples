@@ -142,6 +142,8 @@ After the model is trained, we can use the `Predict()` API to predict the fare a
 
 ```
 
-Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the method `` as in the following screenshot:
+Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the implemented method `PlotRegressionChart()` as in the following screenshot:
 
+
+![Regression plot-chart](images/regression-plotting-taxi-fare.png)
 
