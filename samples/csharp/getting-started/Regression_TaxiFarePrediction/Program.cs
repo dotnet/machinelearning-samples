@@ -72,7 +72,7 @@ namespace Regression_TaxiFarePrediction
                                     .Append(new CategoricalEstimator(mlcontext, "PaymentType"))
                                     .Append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"));
 
-            // We apply our Trainer to predict the 'HasChurned' label.
+            // We apply our selected Trainer (SDCA Regression algorithm)
             var pipelineWithTrainer = pipeline.Append(new SdcaRegressionTrainer(mlcontext, new SdcaRegressionTrainer.Arguments(),
                                                                                 "Features", "Label"));
 
