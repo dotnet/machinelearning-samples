@@ -33,8 +33,11 @@ namespace CreditCardFraudDetection.Predictor
             var dataSetFile = Path.Combine(assetsPath,"input", "testData.idv");
             var modelFile = Path.Combine(assetsPath, "input", "cv-fastTree.zip");
 
-            var modelEvaluator = new ModelsEvaluator(modelFile,dataSetFile);
-            modelEvaluator.EvaluateModel();
+            var modelEvaluator = new Predictor(modelFile,dataSetFile);
+
+            int numberOfTransactions = 5;
+            modelEvaluator.RunMultiplePredictions(numberOfTransactions);
+
             ConsoleHelpers.ConsolePressAnyKey();
         }
     }

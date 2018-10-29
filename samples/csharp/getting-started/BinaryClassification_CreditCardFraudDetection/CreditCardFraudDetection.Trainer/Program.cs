@@ -79,8 +79,8 @@ namespace CreditCardFraudDetection.Trainer
             // (remember though, readers are lazy, so the actual 
             //  reading will happen when the data is accessed).
 
-            ConsoleHelpers.ConsoleWriteHeader("Show 4 (source)");
-            ConsoleHelpers.InspectData(env, data.AsDynamic);
+            ConsoleHelpers.ConsoleWriteHeader("Peek/show 4 fraud transactions and 4 NOT fraud transactions, from the Training Dataset");
+            ConsoleHelpers.InspectData(env, data.AsDynamic, 4);
 
             // We know that this is a Binary Classification task,
             // so we create a Binary Classification context:
@@ -144,7 +144,7 @@ namespace CreditCardFraudDetection.Trainer
                 ConsoleHelpers.ConsoleWriteHeader($"Train Metrics Cross Validate [{count}/{numFolds}]:");
                 result.metrics.ToConsole();
                 ConsoleHelpers.ConsoleWriteHeader($"Show 4 [model {count}]");
-                ConsoleHelpers.InspectScoredData(env, result.scoredTestData.AsDynamic);
+                ConsoleHelpers.InspectScoredData(env, result.scoredTestData.AsDynamic, 4);
                 count++;
             });
 
