@@ -32,56 +32,80 @@ The common feature for all those examples is that the parameter we want to predi
 ## Solution
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict taxi fares.
 
-![Build -> Train -> Evaluate -> Consume](../../../../../master/samples/csharp/getting-started/shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
 ### 1. Build model
 
-Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnCopier`,`CategoricalOneHotVectorizer`,`ColumnConcatenator`), and choosing a learning algorithm (`FastTreeRegressor`). All of those steps are stored in a `LearningPipeline`:
+Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (`FastTreeRegressor` in this case):
+
 ```CSharp
-// LearningPipeline holds all steps of the learning process: data, transforms, learners.
-var pipeline = new LearningPipeline
-{
-    // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-    // all the column names and their types. This will be used to create the model, and train it.
-    new TextLoader(TrainDataPath).CreateFrom<TaxiTrip>(separator:','),
-                
-    // Transforms
-    // When ML model starts training, it looks for two columns: Label and Features.
-    // Label:   values that should be predicted. If you have a field named Label in your data type,
-    //              no extra actions required.
-    //          If you don’t have it, like in this example, copy the column you want to predict with
-    //              ColumnCopier transform:
-    new ColumnCopier(("FareAmount", "Label")),
-                
-    // CategoricalOneHotVectorizer transforms categorical (string) values into 0/1 vectors
-    new CategoricalOneHotVectorizer("VendorId",
-        "RateCode",
-    "PaymentType"),
-    // Features: all data used for prediction. At the end of all transforms you need to concatenate
-    //              all columns except the one you want to predict into Features column with
-    //              ColumnConcatenator transform:
-    new ColumnConcatenator("Features",
-        "VendorId",
-        "RateCode",
-        "PassengerCount",
-        "TripDistance",
-        "PaymentType"),
-        //FastTreeRegressor is an algorithm that will be used to train the model.
-    new FastTreeRegressor()
-    };
+//Create ML Context
+LocalEnvironment mlcontext = new LocalEnvironment();
+
+// Create the TextLoader by defining the data columns and where to find (column position) them in the text file.
+TextLoader textLoader = new TextLoader(mlcontext,
+                                new TextLoader.Arguments()
+                                {
+                                    Separator = ",",
+                                    HasHeader = true,
+                                    Column = new[]
+                                    {
+                                        new TextLoader.Column("VendorId", DataKind.Text, 0),
+                                        new TextLoader.Column("RateCode", DataKind.Text, 1),
+                                        new TextLoader.Column("PassengerCount", DataKind.R4, 2),
+                                        new TextLoader.Column("TripTime", DataKind.R4, 3),
+                                        new TextLoader.Column("TripDistance", DataKind.R4, 4),
+                                        new TextLoader.Column("PaymentType", DataKind.Text, 5),
+                                        new TextLoader.Column("FareAmount", DataKind.R4, 6)
+                                    }
+                                });
+
+// Now read the file (remember though, readers are lazy, so the actual reading will happen when 'fitting').
+IDataView dataView = textLoader.Read(new MultiFileSource(TrainDataPath));
+
+//Copy the Count column to the Label column 
+
+// In our case, we will one-hot encode as categorical values the VendorId, RateCode and PaymentType
+// Then concatenate that with the numeric columns.
+var pipeline = new CopyColumnsEstimator(mlcontext, "FareAmount", "Label")
+                        .Append(new CategoricalEstimator(mlcontext, "VendorId"))
+                        .Append(new CategoricalEstimator(mlcontext, "RateCode"))
+                        .Append(new CategoricalEstimator(mlcontext, "PaymentType"))
+                        .Append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"));
+
+// We apply our selected trainer (SDCA algorithm)
+var pipelineWithTrainer = pipeline.Append(new SdcaRegressionTrainer(mlcontext, new SdcaRegressionTrainer.Arguments(),
+                                                                    "Features", "Label"));
+
 ```
+
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known fare values) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide the types for our data object `TaxiTrip` and  prediction object `TaxiTripFarePrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known fare values) to tune the parameters of the model. It is implemented in the `Fit()` API. To perform training we just call the method while providing the DataView.
 ```CSharp
-var model = pipeline.Train<TaxiTrip, TaxiTripFarePrediction>();
+var model = pipelineWithTrainer.Fit(dataView);
 ```
 ### 3. Evaluate model
 We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`taxi-fare-test.csv`). This dataset also contains known fares. `RegressionEvaluator` calculates the difference between known fares and values predicted by the model in various metrics.
-```CSharp
-    var testData = new TextLoader(TestDataPath).CreateFrom<TaxiTrip>(separator: ',');
 
-    var evaluator = new RegressionEvaluator();        
-    var metrics = evaluator.Evaluate(model, testData);
+```CSharp
+            IDataView testDataView = textLoader.Read(new MultiFileSource(testDataLocation));
+
+            Console.WriteLine("=============== Evaluating Model's accuracy with Test data===============");
+            var predictions = model.Transform(testDataView);
+
+            var regressionCtx = new RegressionContext(mlcontext);
+            var metrics = regressionCtx.Evaluate(predictions, "Label", "Score");
+            var algorithmName = "SdcaRegressionTrainer";
+            Console.WriteLine($"*************************************************");
+            Console.WriteLine($"*       Metrics for {algorithmName}          ");
+            Console.WriteLine($"*------------------------------------------------");
+            Console.WriteLine($"*       LossFn: {metrics.LossFn:0.##}");
+            Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
+            Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
+            Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
+            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
+            Console.WriteLine($"*************************************************");
+
 ```
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
@@ -93,22 +117,33 @@ If you are not satisfied with the quality of the model, there are a variety of w
 After the model is trained, we can use the `Predict()` API to predict the fare amount for specified trip. 
 
 ```CSharp
-var prediction = model.Predict(TestTaxiTrips.Trip1);
-Console.WriteLine($"Predicted fare: {prediction.FareAmount:0.####}, actual fare: 29.5");
-```
-Where `TestTaxiTrips.Trip1` stores the information about the trip we'd like to get the prediction for.
 
-```CSharp
-internal class TestTaxiTrips
-    {
-        internal static readonly TaxiTrip Trip1 = new TaxiTrip
-        {
-            VendorId = "VTS",
-            RateCode = "1",
-            PassengerCount = 1,
-            TripDistance = 10.33f,
-            PaymentType = "CSH",
-            FareAmount = 0 // predict it. actual = 29.5
-        };
-    }
+            //Prediction test
+            // Create prediction engine and make prediction.
+            var engine = model.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlcontext);
+
+            //Sample: 
+            //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
+            //VTS,1,1,1140,3.75,CRD,15.5
+
+            var taxiTripSample = new TaxiTrip()
+            {
+                VendorId = "VTS",
+                RateCode = "1",
+                PassengerCount = 1,
+                TripTime = 1140,
+                TripDistance = 3.75f,
+                PaymentType = "CRD",
+                FareAmount = 0 // To predict. Actual/Observed = 15.5
+            };
+
+            var prediction = engine.Predict(taxiTripSample);
+                Console.WriteLine($"**********************************************************************");
+                Console.WriteLine($"Predicted fare: {prediction.FareAmount:0.####}, actual fare: 29.5");
+                Console.WriteLine($"**********************************************************************");
+
 ```
+
+Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the method `` as in the following screenshot:
+
+
