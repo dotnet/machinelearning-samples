@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Learners;
 using Microsoft.ML;
+using Microsoft.ML.Core.Data;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -19,14 +20,17 @@ namespace Regression_TaxiFarePrediction
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
+            //Create ML Context with seed for repeteable/deterministic results
+            LocalEnvironment mlcontext = new LocalEnvironment(seed: 0);
+
             // STEP 1: Create and train a model
-            var model = BuildAndTrain();
+            var model = BuildAndTrain(mlcontext);
 
             // STEP2: Evaluate accuracy of the model
-            Evaluate(TestDataPath, model);
+            Evaluate(mlcontext, TestDataPath, model);
 
             // STEP 3: Make a test prediction
-            TestSinglePrediction(model);
+            TestSinglePrediction(mlcontext, model);
 
             //STEP 4: Paint regression distribution chart for a number of elements read from a Test DataSet file
             PlotRegressionChart(model, TestDataPath, 100, args);
@@ -35,20 +39,15 @@ namespace Regression_TaxiFarePrediction
             Console.ReadLine();
         }
 
-        private static TransformerChain<RegressionPredictionTransformer<LinearRegressionPredictor>>
-                    BuildAndTrain()
+        private static TextLoader CreateTaxiFareDataFileLoader(LocalEnvironment mlcontext)
         {
-            //Create ML Context
-            LocalEnvironment mlcontext = new LocalEnvironment();
-
-            // Create the TextLoader by defining the data columns and where to find (column position) them in the text file.
-            TextLoader textLoader = new TextLoader(mlcontext,
-                                          new TextLoader.Arguments()
-                                          {
-                                              Separator = ",",
-                                              HasHeader = true,
-                                              Column = new[]
-                                              {
+            return new TextLoader(mlcontext,
+                                                      new TextLoader.Arguments()
+                                                      {
+                                                          Separator = ",",
+                                                          HasHeader = true,
+                                                          Column = new[]
+                                                          {
                                                     new TextLoader.Column("VendorId", DataKind.Text, 0),
                                                     new TextLoader.Column("RateCode", DataKind.Text, 1),
                                                     new TextLoader.Column("PassengerCount", DataKind.R4, 2),
@@ -56,8 +55,14 @@ namespace Regression_TaxiFarePrediction
                                                     new TextLoader.Column("TripDistance", DataKind.R4, 4),
                                                     new TextLoader.Column("PaymentType", DataKind.Text, 5),
                                                     new TextLoader.Column("FareAmount", DataKind.R4, 6)
-                                              }
-                                          });
+                                                          }
+                                                      });
+        }
+
+        private static ITransformer BuildAndTrain(LocalEnvironment mlcontext)
+        {
+            // Create the TextLoader by defining the data columns and where to find (column position) them in the text file.
+            TextLoader textLoader = CreateTaxiFareDataFileLoader(mlcontext);
 
             // Now read the file (remember though, readers are lazy, so the actual reading will happen when 'fitting').
             IDataView dataView = textLoader.Read(new MultiFileSource(TrainDataPath));
@@ -83,29 +88,13 @@ namespace Regression_TaxiFarePrediction
             return model;
         }
 
-        private static RegressionEvaluator.Result Evaluate(string testDataLocation, 
-                                                           TransformerChain<RegressionPredictionTransformer<LinearRegressionPredictor>> model
+        private static RegressionEvaluator.Result Evaluate(LocalEnvironment mlcontext,
+                                                           string testDataLocation,
+                                                           ITransformer model
                                                           )
         {
-            var mlcontext = new LocalEnvironment();
-
             //Create TextLoader with schema related to columns in the TESTING/EVALUATION data file
-            TextLoader textLoader = new TextLoader(mlcontext,
-                                          new TextLoader.Arguments()
-                                          {
-                                              Separator = ",",
-                                              HasHeader = true,
-                                              Column = new[]
-                                              {
-                                                    new TextLoader.Column("VendorId", DataKind.Text, 0),
-                                                    new TextLoader.Column("RateCode", DataKind.Text, 1),
-                                                    new TextLoader.Column("PassengerCount", DataKind.R4, 2),
-                                                    new TextLoader.Column("TripTime", DataKind.R4, 3),
-                                                    new TextLoader.Column("TripDistance", DataKind.R4, 4),
-                                                    new TextLoader.Column("PaymentType", DataKind.Text, 5),
-                                                    new TextLoader.Column("FareAmount", DataKind.R4, 6)
-                                              }
-                                          });
+            TextLoader textLoader = CreateTaxiFareDataFileLoader(mlcontext);
 
             //Load evaluation/test data
             IDataView testDataView = textLoader.Read(new MultiFileSource(testDataLocation));
@@ -129,9 +118,8 @@ namespace Regression_TaxiFarePrediction
             return metrics;
         }
 
-        private static void TestSinglePrediction(TransformerChain<RegressionPredictionTransformer<LinearRegressionPredictor>> model)
+        private static void TestSinglePrediction(LocalEnvironment mlcontext, ITransformer model)
         {
-            var mlcontext = new LocalEnvironment();
             //Prediction test
             // Create prediction engine and make prediction.
             var engine = model.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlcontext);
@@ -157,10 +145,10 @@ namespace Regression_TaxiFarePrediction
                 Console.WriteLine($"**********************************************************************");
         }
 
-        private static void PlotRegressionChart(TransformerChain<RegressionPredictionTransformer<LinearRegressionPredictor>> model,
-                                       string testDataSetPath,
-                                       int numberOfRecordsToRead,
-                                       string[] args)
+        private static void PlotRegressionChart(ITransformer model,
+                                                string testDataSetPath,
+                                                int numberOfRecordsToRead,
+                                                string[] args)
         {
             //Create the Prediction Function
             var mlcontext = new LocalEnvironment();
@@ -313,7 +301,6 @@ namespace Regression_TaxiFarePrediction
 
     }
 
-    
     public class TaxiTripCsvReader
     {
         public IEnumerable<TaxiTrip> GetDataFromCsv(string dataLocation, int numMaxRecords)
