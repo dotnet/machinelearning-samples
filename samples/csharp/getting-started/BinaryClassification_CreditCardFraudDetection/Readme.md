@@ -10,19 +10,21 @@ In this introductory sample, you'll see how to use ML.NET to predict a credit ca
 It is important to note that this sample uses the dynamic API with Estimators.
 
 ## Problem
-This problem is centered around predicting if credit card transaction i sa fraud or no. We will use a [dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud) from Worldline and the Machine Learning Group (http://mlg.ulb.ac.be) of ULB (Université Libre de Bruxelles) collected and analysed during a research collaboration.  
-
-It contains only numerical input variables which are the result of a PCA transformation. Unfortunately, due to confidentiality issues, we cannot provide the original features and more background information about the data.  
+This problem is centered around predicting if credit card transaction (with its related info/variables) is a fraud or no. 
+ 
+The input information of the transactions contain only numerical input variables which are the result of PCA transformations. Unfortunately, due to confidentiality issues, the original features and additional background information are nor available, but the way you build the model doesn't change.  
 
 Features V1, V2, ... V28 are the principal components obtained with PCA, the only features which have not been transformed with PCA are 'Time' and 'Amount'. 
 
-Feature 'Time' contains the seconds elapsed between each transaction and the first transaction in the dataset. The feature 'Amount' is the transaction Amount, this feature can be used for example-dependant cost-senstive learning. Feature 'Class' is the response variable and it takes value 1 in case of fraud and 0 otherwise.
+The feature 'Time' contains the seconds elapsed between each transaction and the first transaction in the dataset. The feature 'Amount' is the transaction Amount, this feature can be used for example-dependant cost-senstive learning. Feature 'Class' is the response variable and it takes value 1 in case of fraud and 0 otherwise.
 
 The dataset is highly unbalanced, the positive class (frauds) account for 0.172% of all transactions.
 
-Using those datasets we will build a model that when predicting it will analyze a transaction and predict a fraud value of false or true.
+Using those datasets you build a model that when predicting it will analyze a transaction's input variables and predict a fraud value of false or true.
 
 ## DataSet
+
+The trainig and testing data is based on a public [dataset available at Kaggle](https://www.kaggle.com/mlg-ulb/creditcardfraud) originally from Worldline and the Machine Learning Group (http://mlg.ulb.ac.be) of ULB (Université Libre de Bruxelles), collected and analysed during a research collaboration. 
 
 The datasets contains transactions made by credit cards in September 2013 by european cardholders. This dataset presents transactions that occurred in two days, where we have 492 frauds out of 284,807 transactions.
 
@@ -34,10 +36,9 @@ More details on current and past projects on related topics are available on htt
 
 Binary or binomial classification is the task of classifying the elements of a given set into two groups (predicting which group each one belongs to) on the basis of a classification rule. Contexts requiring a decision as to whether or not an item has some qualitative property, some specified characteristic
   
-
 ## Solution
 
-To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a fraud for a crdit card transaction.
+To solve this problem, first you need to build a machine learning model. Then you train the model on existing training data, evaluate how good its accuracy is, and lastly you consume the model (deploying the built model in a different app) to predict a fraud for a sample credit card transaction.
 
 ![Build -> Train -> Evaluate -> Consume](https://raw.githubusercontent.com/dotnet/machinelearning-samples/features/samples-new-api/samples/csharp/getting-started/shared_content/modelpipeline.png)
 
