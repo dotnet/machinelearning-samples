@@ -226,7 +226,7 @@ ClientBin/
 *.publishsettings
 orleans.codegen.cs
 
-# Including strong name files can present a security risk 
+# Including strong name files can present a security risk
 # (https://github.com/github/gitignore/pull/2483#issue-259490424)
 #*.snk
 
@@ -323,10 +323,15 @@ __pycache__/
 # OpenCover UI analysis results
 OpenCover/
 
-# Azure Stream Analytics local run output 
+# Azure Stream Analytics local run output
 ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
 # Ignore external test datasets.
 /test/data/external/
+IrisClustersModel.zip
+SentimentModel.zip
+IrisModel.zip
+samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiRegressionDistribution.png
+TaxiFareModel.zip
