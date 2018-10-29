@@ -25,8 +25,6 @@ namespace CreditCardFraudDetection.Trainer
         private IDataView _testData;
         private LocalEnvironment _env;
 
-
-        // todo all with dinamic APi
         public ModelBuilder(string assetsPath, string dataSetFile)
         {
             _assetsPath = assetsPath ?? throw new ArgumentNullException(nameof(assetsPath));
@@ -37,7 +35,6 @@ namespace CreditCardFraudDetection.Trainer
 
         public ModelBuilder Build(int? seed = 1)
         {
-
             // Create a new environment for ML.NET operations.
             // It can be used for exception tracking and logging, 
             // as well as the source of randomness.
