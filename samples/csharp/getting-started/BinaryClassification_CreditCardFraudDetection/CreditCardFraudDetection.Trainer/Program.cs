@@ -5,6 +5,7 @@ using Microsoft.ML.Trainers;
 using System.Linq;
 using System.IO;
 using Microsoft.ML.Runtime.Data.IO;
+using System;
 
 namespace CreditCardFraudDetection.Trainer
 {
@@ -14,13 +15,19 @@ namespace CreditCardFraudDetection.Trainer
         {
             var assetsPath = ConsoleHelpers.GetAssetsPath(@"..\..\..\assets");
             var zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
-            var dataSetFile = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.csv");
+            var dataSetFile = Path.Combine(assetsPath, "input", "creditcard.csv");
+
+            try {
+                ConsoleHelpers.UnZipDataSet(zipDataSet, dataSetFile);
+
+                TrainModelWithDynamicApi(assetsPath, dataSetFile);
+                //TrainModelWithStaticApi(assetsPath, dataSetFile);
+            }
+            catch (Exception e) {
+                ConsoleHelpers.ConsoleWriteException(new[] { e.Message , e.StackTrace });
+            }
 
 
-            ConsoleHelpers.UnZipDataSet(zipDataSet, dataSetFile);
-
-            TrainModelWithDynamicApi(assetsPath, dataSetFile);
-            //TrainModelWithStaticApi(assetsPath, dataSetFile);
 
             ConsoleHelpers.ConsolePressAnyKey();
         }
