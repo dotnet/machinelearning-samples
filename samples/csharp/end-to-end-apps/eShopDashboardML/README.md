@@ -33,17 +33,16 @@ Learn how to set it up in Visual Studio plus further explanations on the code:
 
 - [Setting up eShopDashboard in Visual Studio and running the web app](docs/Setting-up-eShopDashboard-in-Visual-Studio-and-running-it.md)
 
-- [Create and Train your ML models](docs/Create-and-train-the-models-%5BOptional%5D.md) 
-   - This step is optional as the web app is already configured to use a pre-trained model. But you can create your own trained model and swap the pre-trained model with your own. 
+- [Create and Train your ML models](docs/Create-and-train-the-models-%5BOptional%5D.md)
+  - This step is optional as the web app is already configured to use a pre-trained model. But you can create your own trained model and swap the pre-trained model with your own.
 
 ## Walkthrough on the implemented ML.NET code
 
 ### Problem
+
 This problem is centered around country and product forecasting based on previus sales
 
-
 ### DataSet
-
 
 To solve this problem, we will build an ML model that takes as inputs:  
 
@@ -56,13 +55,11 @@ To solve this problem, we will build an ML model that takes as inputs:
 
 The ML Task for this sample is a Regression, which is a supervised machine learning task that is used to predict the value of the next period (in this case the sales prediction) from a set of related features/variables.
 
-
 ### Solution
-
 
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and finally we'll consume the model to predict sales.
 
-![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](./../../getting-started/shared_content/modelpipeline.png)
 
 #### 1. Build Model
 
@@ -76,8 +73,8 @@ Then, you need to apply some transformations to the data:
 - Copy next colmun to rename it to label
 - Add Fast Tree Tweedie Trainer
 
-
 Add a KMeansPlusPlusTrainer; main parameter to use with this learner is clustersCount, that specifies the number of clusters
+
 ```csharp
  var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
  var ctx = new RegressionContext(env);
@@ -168,10 +165,6 @@ Basically, we load the model, then the data file and finally we make a predictio
  return model.MakePredictionFunction<ProductData, ProductUnitPrediction>(env);
 ```
 
-
-
 ## Citation
 eShopDashboardML dataset is based on a public Online Retail Dataset from **UCI**: http://archive.ics.uci.edu/ml/datasets/online+retail
 > Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197â€“208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
-
-
