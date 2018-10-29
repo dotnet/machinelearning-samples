@@ -60,15 +60,15 @@ let TrainAsync() =
     // It has three hyperparameters for tuning decision tree performance. 
     pipeline.Add(FastTreeBinaryClassifier(NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2))
 
-    Console.WriteLine("=============== Training model ===============")
+    printfn "=============== Training model ==============="
     // The pipeline is trained on the dataset that has been loaded and transformed.
     let model = pipeline.Train<SentimentData, SentimentPrediction>()
 
     // Saving the model as a .zip file.
     model.WriteAsync(modelPath) |> Async.AwaitTask |> Async.RunSynchronously
 
-    Console.WriteLine("=============== End training ===============")
-    Console.WriteLine(sprintf "The model is saved to %s" modelPath)
+    printfn "=============== End training ==============="
+    printfn "The model is saved to %s" modelPath
 
     model
 
@@ -80,7 +80,7 @@ let Evaluate(model: PredictionModel<SentimentData, SentimentPrediction> ) =
     // BinaryClassificationEvaluator performs evaluation for Binary Classification type of ML problems.
     let evaluator = BinaryClassificationEvaluator()
 
-    Console.WriteLine("=============== Evaluating model ===============")
+    printfn "=============== Evaluating model ==============="
 
     let metrics = evaluator.Evaluate(model, testData)
     // BinaryClassificationMetrics contains the overall metrics computed by binary classification evaluators
@@ -96,11 +96,11 @@ let Evaluate(model: PredictionModel<SentimentData, SentimentPrediction> ) =
     // The F1 score is the harmonic mean of precision and recall:
     //  2 * precision * recall / (precision + recall).
 
-    Console.WriteLine(sprintf "Accuracy: %0.2f" metrics.Accuracy)
-    Console.WriteLine(sprintf "Auc: %0.2f" metrics.Auc)
-    Console.WriteLine(sprintf "F1Score: %0.2f" metrics.F1Score)
-    Console.WriteLine("=============== End evaluating ===============")
-    Console.WriteLine()
+    printfn "Accuracy: %0.2f" metrics.Accuracy
+    printfn "Auc: %0.2f" metrics.Auc
+    printfn "F1Score: %0.2f" metrics.F1Score
+    printfn "=============== End evaluating ==============="
+    printfn ""
 
 // STEP 1: Create a model
 let model = TrainAsync()
@@ -111,8 +111,13 @@ Evaluate(model)
 // STEP 3: Make a prediction
 let predictions = model.Predict(sentiments)
 
-for (sentiment, prediction) in Seq.zip sentiments predictions do
-    Console.WriteLine( sprintf "Sentiment: %s | Prediction: %s sentiment" sentiment.SentimentText (if prediction.Sentiment then "Positive" else "Negative"))
+//for (sentiment, prediction) in Seq.zip sentiments predictions do
+    //printfn "Sentiment: %s | Prediction: %s sentiment" sentiment.SentimentText (if prediction.Sentiment then "Positive" else "Negative")
+
+//TODO: which way is better? above or below?
+predictions
+|> Seq.zip sentiments
+|> Seq.iter (fun (s,p) -> printfn "Sentiment: %s | Prediction: %s sentiment" s.SentimentText (if p.Sentiment then "Positive" else "Negative"))
 
 Console.ReadLine() |> ignore
 
