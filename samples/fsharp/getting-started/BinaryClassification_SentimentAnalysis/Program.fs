@@ -6,9 +6,22 @@ open Microsoft.ML
 open System.IO
 
 
+/// Type representing the text to run sentiment analysis on.
+[<CLIMutable>] 
+type SentimentIssue = 
+    { 
+        Text : string 
+    }
 
-type [<CLIMutable>] SentimentIssue = { Label : bool; Text : string }
-type [<CLIMutable>] SentimentPrediction = { PredictedLabel : bool; Probability : float32; Score : float32 }
+/// Result of sentiment prediction.
+[<CLIMutable>]
+type  SentimentPrediction = 
+    { 
+        // Predicted sentiment: 0 - negative, 1 - positive
+        PredictedLabel : bool; 
+        Probability : float32; 
+        Score : float32 
+    }
 
 
 module Pipeline =
@@ -117,7 +130,7 @@ let main argv =
 
     //6. Test Sentiment Prediction with one sample text 
     let predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction> env
-    let sampleStatement = { Label = false; Text = "This is a very rude movie" }
+    let sampleStatement = { Text = "This is a very rude movie" }
     let resultprediction = predictionFunct.Predict sampleStatement
 
     printfn ""

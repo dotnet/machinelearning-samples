@@ -65,21 +65,16 @@ The initial code is similar to the following:
 
     printfn "=============== Create and Train the Model ==============="
 
-    let model = 
+    let pipeline = 
         env
-        //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
         |> Pipeline.textTransform "Text" "Features"
         |> Pipeline.append (LinearClassificationTrainer(env, LinearClassificationTrainer.Arguments(), "Features", "Label"))
 ```
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide the types for our data object `SentimentData` and  prediction object `SentimentPrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. To perform training you need to call the Fit() method while providing the training dataset (wikipedia-detox-250-line-data.tsv file) in a DataView object.
 ```fsharp
     let model = 
-        env
-        //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
-        |> Pipeline.textTransform "Text" "Features"
-        |> Pipeline.append (LinearClassificationTrainer(env, LinearClassificationTrainer.Arguments(), "Features", "Label"))
-        //4. Create and train the model            
+        pipeline          
         |> Pipeline.fit trainingDataView
 ```
 ### 3. Evaluate model
