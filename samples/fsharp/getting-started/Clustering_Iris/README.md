@@ -30,7 +30,7 @@ To solve this problem, first we will build and train an ML model. Then we will u
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnConcatenator`), and choosing a learning algorithm (`KMeansPlusPlusClusterer`). All of those steps are stored in a `LearningPipeline`:
+Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ConcatEstimator`), and choosing a learning algorithm (`KMeansPlusPlusTrainer`). All of those steps are stored in a `EstimatorChain`:
 ```fsharp
 	// LearningPipeline holds all steps of the learning process: data, transforms, learners.
     
@@ -59,7 +59,7 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
     let trainingDataView = MultiFileSource(DataPath) |> reader.Read
 ```
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on the given data. It is implemented in the `Fit()` method from the Estimator object. To perform training we just call the method and provide our data object  `IrisData` and  prediction object `ClusterPrediction`.
+Training the model is a process of running the chosen algorithm on the given data. It is implemented in the `Fit()` method from the Estimator object. To perform training we just call the method and provide our data.
 ```fsharp
     let model = 
         env
