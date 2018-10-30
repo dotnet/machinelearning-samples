@@ -2,7 +2,7 @@
 
 This page serves as a way to track down the approval of the datasets being used by the ML.NET samples.
 
-|  Dataset name   | Original Dataset | Processed Datasets |       Samples using the Dataset        | Approval Status |
+|  Dataset name   | Original Dataset | Processed Dataset |       Sample using the Dataset        | Approval Status |
 |-----------------|------------------|--------------------|----------------------------------------|--------|
 | Wikipedia Detox |   [Original](https://meta.wikimedia.org/wiki/Research:Detox/Data_Release)   | [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/datasets)                   | [BinaryClassification_SentimentAnalysis](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_SentimentAnalysis) | PENDING |
 | Credit Card Fraud Detection |    [Original](https://www.kaggle.com/mlg-ulb/creditcardfraud)  |    [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/input) | [BinaryClassification_CreditCardFraudDetection](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection) | PENDING |
