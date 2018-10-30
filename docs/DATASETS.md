@@ -26,7 +26,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
 
-### Wikipedia Detox
+### Wikipedia Detox dataset
 
 >This dataset is provided under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/). Redistributing the dataset "wikipedia-detox-250-line-data.tsv" with attribution:
 >
@@ -38,6 +38,16 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 >Original readme: https://meta.wikimedia.org/wiki/Research:Detox
 
+### Credit Card Fraud Detection dataset
+
+>The trainig and testing data is based on a public dataset available at Kaggle originally from Worldline and the Machine Learning Group (http://mlg.ulb.ac.be) of ULB (Université Libre de Bruxelles), collected and analysed during a research collaboration.
+>
+>The datasets contains transactions made by credit cards in September 2013 by european cardholders. This dataset presents transactions that occurred in two days, where we have 492 frauds out of 284,807 transactions.
+>
+>By: Andrea Dal Pozzolo, Olivier Caelen, Reid A. Johnson and Gianluca Bontempi. Calibrating Probability with Undersampling for Unbalanced Classification. In Symposium on Computational Intelligence and Data Mining (CIDM), IEEE, 2015
+>
+>More details on current and past projects on related topics are available on http://mlg.ulb.ac.be/BruFence and http://mlg.ulb.ac.be/ARTML
+>
 
 ### NYC Taxi Fare
 
