@@ -16,7 +16,7 @@ The datasets are provided under the original terms that Microsoft received such 
 |  TLC Trip Record Data  |  [Original](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/datasets)   |   [Regression_TaxiFarePrediction](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_TaxiFarePrediction)    |  PENDING |
 |  Online Retail Data Set   |  [Original](http://archive.ics.uci.edu/ml/datasets/online+retail)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/eShopDashboardML/src/eShopForecastModelsTrainer/data)   |   [eShopDashboardML](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/eShopDashboardML)    |  PENDING |
 |  Online Retail Data Set   |  [Original](http://archive.ics.uci.edu/ml/datasets/online+retail)  |   [Processed](http://TBD)   |   [Product recommender](http://TBD)    |  PENDING |
-|  Bike Sharing Dataset Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_BikeSharingDemand/BikeSharingDemandConsoleApp/data)   |   [Regression_BikeSharingDemand](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_BikeSharingDemand)    |  PENDING |
+|  Bike Sharing Dataset  |  [Original](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_BikeSharingDemand/BikeSharingDemandConsoleApp/data)   |   [Regression_BikeSharingDemand](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_BikeSharingDemand)    |  PENDING |
 |  TBD Movies-Dataset  |  [Original](http://TBD)  |   [Processed](http://TBD)   |   [Movie recommender](http://TBD)    |  PENDING |
 |  WineKMC  |  [Original](https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip) [Related Download 1](http://blog.yhat.com/static/misc/data/WineKMC.xlsx ) [Related Info](http://blog.yhat.com/posts/customer-segmentation-using-python.html) |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/inputs)   |   [Clustering_CustomerSegmentation](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation)    |  PENDING |
 |  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  PENDING |
@@ -95,6 +95,28 @@ The datasets are provided under the original terms that Microsoft received such 
 > Original source: Online Retail Dataset from UCI: http://archive.ics.uci.edu/ml/datasets/online+retail
 >
 >Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197â€“208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
+
+### Bike Sharing Dataset
+
+>
+>Redistributing the "Processed Dataset" datasets with attribution:
+> Original source:  from UCI dataset: https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset
+>
+
+### WineKMC dataset
+
+>
+>Redistributing the "Processed Dataset" datasets with attribution:
+> Original source:  John Foreman's book Data Smart: http://www.john-foreman.com/data-smart-book.html
+> https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip
+> 
+
+### WikiMedia photos
+
+>
+>Redistributing the "Processed Dataset" datasets with attribution:
+> Original source: https://commons.wikimedia.org/wiki/Category:Images
+>
 
 
 
