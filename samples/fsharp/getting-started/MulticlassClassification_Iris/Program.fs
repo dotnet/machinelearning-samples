@@ -14,21 +14,16 @@ let TrainDataPath= Path.Combine(AppPath, "datasets", "iris-train.txt")
 let TestDataPath= Path.Combine(AppPath,  "datasets", "iris-test.txt")
 let ModelPath= Path.Combine(AppPath, "IrisModel.zip")
 
+/// Holds information about Iris flower to be classified.
 [<CLIMutable>]
 type IrisData = {
-    Label : float32
     SepalLength : float32
     SepalWidth : float32
     PetalLength : float32
     PetalWidth : float32
-} with static member Empty = {
-        Label = 0.0f
-        SepalLength = 0.0f
-        SepalWidth = 0.0f
-        PetalLength = 0.0f
-        PetalWidth = 0.0f
-    }
+} 
 
+/// Result of Iris classification. The array holds probability of the flower to be one of setosa, virginica or versicolor.
 [<CLIMutable>]
 type IrisPrediction = {
         Score : float32 []
@@ -36,9 +31,9 @@ type IrisPrediction = {
 
 
 module TestIrisData =
-    let Iris1 = { IrisData.Empty with SepalLength = 5.1f; SepalWidth = 3.3f; PetalLength = 1.6f; PetalWidth= 0.2f}
-    let Iris2 = { IrisData.Empty with SepalLength = 6.4f; SepalWidth = 3.1f; PetalLength = 5.5f; PetalWidth = 2.2f}
-    let Iris3 = { IrisData.Empty with SepalLength = 4.4f; SepalWidth = 3.1f; PetalLength = 2.5f; PetalWidth = 1.2f}
+    let Iris1 = { SepalLength = 5.1f; SepalWidth = 3.3f; PetalLength = 1.6f; PetalWidth= 0.2f }
+    let Iris2 = { SepalLength = 6.4f; SepalWidth = 3.1f; PetalLength = 5.5f; PetalWidth = 2.2f }
+    let Iris3 = { SepalLength = 4.4f; SepalWidth = 3.1f; PetalLength = 2.5f; PetalWidth = 1.2f }
 
 
 module Pipeline =
@@ -140,4 +135,6 @@ let main argv =
     printfn "                                           virginica:   %.4f"prediction.Score.[2]
     printfn ""
        
+    Console.ReadLine() |> ignore
+
     0 // return an integer exit code
