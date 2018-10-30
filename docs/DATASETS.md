@@ -30,6 +30,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 >This dataset is provided under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/). Redistributing the dataset "wikipedia-detox-250-line-data.tsv" with attribution:
 >
 > Wulczyn, Ellery; Thain, Nithum; Dixon, Lucas (2016): Wikipedia Detox. figshare.
@@ -44,6 +45,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 >The trainig and testing data is based on a public dataset available at Kaggle originally from Worldline and the Machine Learning Group (http://mlg.ulb.ac.be) of ULB (Université Libre de Bruxelles), collected and analysed during a research collaboration.
 >
 >The datasets contains transactions made by credit cards in September 2013 by european cardholders. This dataset presents transactions that occurred in two days, where we have 492 frauds out of 284,807 transactions.
@@ -67,6 +69,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 >Issues downloaded from public repository https://github.com/dotnet/corefx.
 >
 
@@ -92,6 +95,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 > Original source: Online Retail Dataset from UCI: http://archive.ics.uci.edu/ml/datasets/online+retail
 >
 >Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197â€“208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
@@ -100,6 +104,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 > Original source:  from UCI dataset: https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset
 >
 
@@ -107,7 +112,9 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 > Original source:  John Foreman's book Data Smart: http://www.john-foreman.com/data-smart-book.html
+>
 > https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip
 > 
 
@@ -115,6 +122,7 @@ The datasets are provided under the original terms that Microsoft received such 
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
+>
 > Original source: https://commons.wikimedia.org/wiki/Category:Images
 >
 
