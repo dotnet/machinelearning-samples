@@ -17,6 +17,7 @@ This page serves as a way to track down the approval of the datasets being used 
 |  TBD Movies-Dataset  |  [Original](http://TBD)  |   [Processed](http://TBD)   |   [Movie recommender](http://TBD)    |  PENDING |
 |  WineKMC  |  [Original](https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip) [Related Download 1](http://blog.yhat.com/static/misc/data/WineKMC.xlsx ) [Related Info](http://blog.yhat.com/posts/customer-segmentation-using-python.html) |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/inputs)   |   [Clustering_CustomerSegmentation](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation)    |  PENDING |
 |  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  PENDING |
+|  SMS Spam Collection Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection)  |   [Processed](http://TBD)   |   [Spam Filter TBD](http://TBD)    |  PENDING |
 
 
 
