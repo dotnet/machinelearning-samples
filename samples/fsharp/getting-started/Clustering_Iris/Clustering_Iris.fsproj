@@ -9,6 +9,7 @@
     <Compile Include="Program.fs" />
     <Folder Include="datasets\" />
     <None Include="..\..\..\..\datasets\iris-full.txt" Link="datasets\iris-full.txt" />
+    <None Include="README.md" />
   </ItemGroup>
 
   <ItemGroup>
