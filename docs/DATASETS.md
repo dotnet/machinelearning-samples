@@ -127,4 +127,10 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 
 
+### SMS Spam Collection Data Set
+>
+>Redistributing the "Processed Dataset" datasets with attribution:
+>
+> Original source: https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection
+>
 
