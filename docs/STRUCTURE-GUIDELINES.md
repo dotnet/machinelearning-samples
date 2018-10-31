@@ -38,14 +38,14 @@ For any other framework and language guidelines on how to design your .NET code,
 - [F# code guidelines](https://docs.microsoft.com/en-us/dotnet/fsharp/style-guide/index#five-principles-of-good-f-code)
 - [Visual Basic guidelines](https://docs.microsoft.com/en-us/dotnet/visual-basic/programming-guide/program-structure/program-structure-and-code-conventions)
 
-## Project structure
+## Project structure guidelines
 
 The project structure is a combination of the following topics:
 
 - Directory/folder structure
 - Opinionated code style practices
 
-## Directory/folder structure
+## Application types
 
 For the following content, the following concepts appearing in the directory/folder structure must be defined:
 
@@ -55,7 +55,9 @@ Note that Xamarin apps usually run on ARM devices (iOS or Android) and ML.NET as
 
 Before getting into the specific directory/folde structure, let's review a few premises driving that structure.
 
-### A sample can be composed by multiple applications
+## Principles
+
+### A sample can be composed by multiple apps
 
 An important characteristic of the ML.NET samples is that some/many of them might have multiple related apps such as a console app for model creation/training and a different app for deploying the trained model, such as a Web app or desktop app. Each of those apps might be very different in purpose (ML model workflow vs. production app predicting with a trained model), therefore, the folder structure can and must be different depending on the type of app.
 
@@ -64,11 +66,61 @@ An important characteristic of the ML.NET samples is that some/many of them migh
 The main goal here is that you should be able to copy the app's folder (such a web app folder) to any server or dev machine and still have everything it needs to run. That includes:
 
  - For an "end-user" app (app predicting with a trained model), its folder must include the ML.NET model file it needs for predicting.
- - For a "model builder/training" app, its folder must include the training and test datasets or if those files are too big for GitHub, then it should implement an automated way for download those files. 
+ - For an "ML model builder/training" app, its folder must include the training and test datasets or if those files are too big for GitHub, then it should implement an automated way for download those files. 
 
 Essentially, the rule is that everything you need to run each app must be available within the app's project folder, without any absolute filepaths or references to other folders in the filesystem out of the scope of the app. 
 
 This rule can be arguable for your own ML workflow if you want to be more agile in your own apps by accessing common folders for generated models. However, for samples that must be able to run out-of-the-box when you just copy a single app (i.e. only the "production" app) to a different machine/server, this rule should be followed when implementing the ML.NET samples.
+
+## Directory/folder structure
+
+### Directory structure for a sample with a single training/test app (e.g. ML Model builder console app)
+
+If the ML.NET sample is basic you might just have a single console-app, then your folder structure won't have additional end-user apps of the shared library mentioned later, because all the data-structure classes can also be positioned within this single console-app, like in the following directory structure:
+
+```
+ML.NET Sample
+├── Solution.sln               <- Top-level VS solution targeting all apps in the sample
+├── README.md                  <- Top-level README for developers
+├── docs                       <- Global docs folder documenting the whole sample
+├── images                     <- Images used by the .md documents
+│
+└── MLModelBuilderApp          <- Usually a console app for building/training/evaluating/testing a model
+     ├── Data
+     │   ├── Raw               <- The original, immutable data dump.
+     │   └── Processed         <- The final, canonical datasets for training/evaluating/testing.
+     ├── MLModels              <- The trained, generated saved/serialized ML.NET model files
+     ├── MyConsoleApp          <- Source code for this particular app
+     │   ├── MLDataStructures  <- Data classes for observations and predictions (Remove if using shared library)
+     │   ├── .csproj           <- App's .csproj project file
+     │   └── .cs files         <- Main code files
+     └── MyTestProject         <- Unit tests project 
+```
+### TO DISCUSS: Alternative choices for data and models folders
+
+Input/Ouput approach for the Model Builder app (building/training/evaluating/testing a model):
+
+```
+ML.NET Sample
+├── Solution.sln            
+├── README.md               
+├── docs                    
+├── images                  
+└── MLModelBuilderApp       
+     ├── assets (or "io")
+     │   ├── input
+     │   │     └── data
+     │   │           ├── raw                   
+     │   │           └── processed      
+     │   └── output  
+     │         ├── models           
+     │         └── data             
+     ├── MyConsoleApp                
+     │   ├── DataStructures 
+     │   ├── .csproj        
+     │   └── .cs files      
+     └── MyTestProject            
+```
 
 ### Directory structure for a sample with multiple apps
 
@@ -81,37 +133,36 @@ ML.NET Sample
 ├── docs                       <- Global docs folder documenting the whole sample
 ├── images                     <- Images used by the .md documents
 │
-├── Model-Builder-App          <- Usually a console app for building/training/evaluating/testing a model
+├── MLModelBuilderApp          <- Usually a console app for building/training/evaluating/testing a model
 │    ├── Data
 │    │   ├── Raw               <- The original, immutable data dump.
-│    │   ├── Working           <- Intermediate data that has been transformed.
 │    │   └── Processed         <- The final, canonical datasets for training/evaluating/testing.
-│    ├── Models                <- The trained, generated saved/serialized ML.NET model files
+│    ├── MLModels              <- The trained, generated saved/serialized ML.NET model files
 │    ├── MyConsoleApp          <- Source code for this particular app
-│    │   ├── DataStructures    <- Data classes for observations and predictions (Remove if using shared library)
+│    │   ├── MLDataStructures  <- Data classes for observations and predictions (Remove if using shared library)
 │    │   ├── .csproj           <- App's .csproj project file
 │    │   └── .cs files         <- Main code files
-│    └── MyTestProject         <- Unit test project 
+│    └── MyTestProject         <- Unit tests project for this app's code
 │
-├── End-User-App               <- Actual final-user's app using the trained model just for predicting/scoring. 
+├── EndUserApp                 <- Actual final-user's app using the trained model just for predicting/scoring. 
 │    ├── MyWebApp              <- Source code for this particular app (WebApp, ConsoleApp, DesktopApp, etc.)
 │    │   ├── MLDataStructures  <- Data classes for observations and predictions (Remove if using shared library)
 │    │   ├── MLModels          <- ML.NET serialized .ZIP model files 
-│    │   ├── EntityModels      <- Entity classes when using databases, EF, etc. 
+│    │   ├── EntityModel       <- Could also be "Model" or "DomainModel": Entity classes when using databases, EF, etc. 
 │    │   └── Other files       <- App's files and folders
-│    └── MyTestProject         <- Unit test project 
+│    └── MyTestProject         <- Unit tests project for this app's code 
 │
 └── Shared-Library             <- Shared Library with common classes across apps 
      ├── MySharedLibrary       <- Source code 
      │   ├── MLDataStructures  <- Data classes for observations and predictions
      │   └── Other files       <- App's files and folders
-     └── MyTestProject         <- Unit test project 
+     └── MyTestProject         <- Unit tests project for this class library code 
 
 ```
 
 Clearly, the app's folder structure for the "End-user" application is the one that probably can be very different depending on the app type (ASP.NET Core web app, WPF desktop app, Xamarin mobile app, etc.) The point is to simply highlight possible folder names for the serialized ML.NET models and data structure classes used by the model.
 
-#### Reason why datasets are distributed across the samples which use them instead of having a single folder for ALL datasets from ALL samples
+#### Reason why datasets are distributed across the samples which use them instead of having a single folder for ALL datasets from ALL samples in the ML.NET-Samples repository
 
 Because of the same "autonomous samples" argument explained above. Essentially, the rule is that everything you need to run each app must be available within the app's project folder, without any absolute filepaths or references to other folders in the filesystem out of the scope of the app.
 
@@ -125,57 +176,6 @@ Even when it might be tempting to put it within the project's code folder so you
 
 Since any given ML.NET sample could be comprised by multiple apps/projects (e.g. a console training-app and a web app), the solution has to be placed in the root level of the sample so when opening the solution in Visual Studio you see all the related app's projects.
 
-### TO DISCUSS: Alternative choices for data and models folders
-
-Input/Ouput approach for the Model Builder app (building/training/evaluating/testing a model):
-
-```
-ML.NET Sample
-├── Solution.sln            
-├── README.md               
-├── docs                    
-├── images                  
-└── Model-Builder-App       
-     ├── assets (or "io")
-     │   ├── input
-     │   │     └── data
-     │   │           ├── raw            
-     │   │           ├── working        
-     │   │           └── processed      
-     │   └── output  
-     │         ├── models           
-     │         └── data             
-     ├── MyConsoleApp                
-     │   ├── DataStructures 
-     │   ├── .csproj        
-     │   └── .cs files      
-     └── MyTestProject            
-```
-
-### Directory structure for a sample with a single training/test app (e.g. Model builder console app)
-
-Of course, if the sample is very basic and you just have a single console-app, then your folder structure won't have the shared library neithe, as all the data-structure classes can also be positioned within the single console-app, like in the following simplified directory structure:
-
-```
-ML.NET Sample
-├── Solution.sln               <- Top-level VS solution targeting all apps in the sample
-├── README.md                  <- Top-level README for developers
-├── docs                       <- Global docs folder documenting the whole sample
-├── images                     <- Images used by the .md documents
-│
-└── Model-Builder-App          <- Usually a console app for building/training/evaluating/testing a model
-     ├── Data
-     │   ├── Raw               <- The original, immutable data dump.
-     │   ├── Working           <- Intermediate data that has been transformed.
-     │   └── Processed         <- The final, canonical datasets for training/evaluating/testing.
-     ├── Models                <- The trained, generated saved/serialized ML.NET model files
-     ├── MyConsoleApp          <- Source code for this particular app
-     │   ├── DataStructures    <- Data classes for observations and predictions (Remove if using shared library)
-     │   ├── .csproj           <- App's .csproj project file
-     │   └── .cs files         <- Main code files
-     └── MyTestProject         <- Unit test project 
-```
-
 
 #### Additional references of .NET project structure
 
@@ -188,7 +188,6 @@ ML.NET Sample
 - [Organizing and testing projects with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/tutorials/testing-with-cli)
 
 - [David Fowler's project structure (ASP.NET team)](https://gist.github.com/davidfowl/ed7564297c61fe9ab814)
-
 
 
 
