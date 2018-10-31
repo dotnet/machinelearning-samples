@@ -13,31 +13,33 @@ using static CustomerSegmentation.Model.ConsoleHelpers;
 
 namespace CustomerSegmentation.Model
 {
-    public class ModelEvaluator
+    public class ModelScorer
     {
         private readonly string pivotDataLocation;
         private readonly string modelLocation;
         private readonly string plotLocation;
-        private readonly LocalEnvironment env;
+        private readonly string csvlocation;
+        private readonly LocalEnvironment mlContext;
 
-        public ModelEvaluator(string pivotDataLocation, string modelLocation, string plotLocation)
+        public ModelScorer(string pivotDataLocation, string modelLocation, string plotLocation, string csvlocation)
         {
             this.pivotDataLocation = pivotDataLocation;
             this.modelLocation = modelLocation;
             this.plotLocation = plotLocation;
-            env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+            this.csvlocation = csvlocation;
+            mlContext = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic results
         }
 
-        public void Evaluate()
+        public void CreateCustomerClusters()
         {
             ITransformer model;
             using (var file = File.OpenRead(modelLocation))
             {
                 model = TransformerChain
-                    .LoadFrom(env, file);
+                    .LoadFrom(mlContext, file);
             }
             
-            var reader = new TextLoader(env,
+            var reader = new TextLoader(mlContext,
                 new TextLoader.Arguments
                 {
                     Column = new[] {
@@ -53,17 +55,35 @@ namespace CustomerSegmentation.Model
             var data = reader.Read(new MultiFileSource(pivotDataLocation));
 
             var predictions = model.Transform(data)
-                            .AsEnumerable<ClusteringPrediction>(env, false)
+                            .AsEnumerable<ClusteringPrediction>(mlContext, false)
                             .ToArray();
 
-            SaveCustomerSegmentationPlot(predictions, plotLocation);
+            //Generate data files with customer data grouped by clusters
+            SaveCustomerSegmentationCSV(predictions, csvlocation);
 
+            //Plot/paint the clusters in a chart and open it with the by-default image-tool in Windows
+            SaveCustomerSegmentationPlotChart(predictions, plotLocation);
             OpenChartInDefaultWindow(plotLocation);
-
 
         }
 
-        private static void SaveCustomerSegmentationPlot(IEnumerable<ClusteringPrediction> predictions, string plotLocation)
+        private static void SaveCustomerSegmentationCSV(IEnumerable<ClusteringPrediction> predictions, string csvlocation)
+        {
+            ConsoleWriteHeader("CSV Customer Segmentation");
+            using (var w = new System.IO.StreamWriter(csvlocation))
+            {
+                w.WriteLine($"LastName,SelectedClusterId");
+                w.Flush();
+                predictions.ToList().ForEach(prediction => {
+                    w.WriteLine($"{prediction.LastName},{prediction.SelectedClusterId}");
+                    w.Flush();
+                });
+            }
+
+            Console.WriteLine($"CSV location: {csvlocation}");
+        }
+
+        private static void SaveCustomerSegmentationPlotChart(IEnumerable<ClusteringPrediction> predictions, string plotLocation)
         {
             ConsoleWriteHeader("Plot Customer Segmentation");
 
