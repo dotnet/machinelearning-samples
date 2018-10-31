@@ -188,3 +188,42 @@ ML.NET Sample
 - [Organizing and testing projects with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/tutorials/testing-with-cli)
 
 - [David Fowler's project structure (ASP.NET team)](https://gist.github.com/davidfowl/ed7564297c61fe9ab814)
+
+
+
+
+## Internal code structure for the Model Builder app
+ 
+
+### Phase A: Iterative process building the model
+
+	1. Input dataset (where is my data)
+	2. Loader function (define columns)
+	3. Feature engineering (process raw input data)
+	4. Learner (define my pipeline's model type & hyperparameters)
+	5. TrainTest / CV (get metrics for my pipeline)
+	6. (Look at metrics)
+	7. (Iterate to improve metrics -- goto step 3 or 4)
+	8. Re-train a model for production on 100% of data
+
+**Train with 100% of the data once the algorithm and config are decided**:
+ 
+You should do a full re-train after your iterative train/evaluate/test cycles because of the following reasons:
+
+- The full re-training on the entire dataset gives you a better model because it is trained with more data. 
+- The CV/TrainTest gives your pipeline's metrics { accuracy, AUC, NDCG, etc } so you can compare different approaches (algorithm/hyper-parameters). 
+- The full retraining, on 100% of the dataset, is the model to deploy in production.
+
+### B. Deploy the model to production application (end-user application)
+
+Point to different samples on how to host trained models in an different application types:
+- Web App (ASP.NET Core app, MVC, Razor)
+- Web API service (ASP.NET Core Web API)
+- Desktop app (UWP, WPF, WinForms)
+- Mobile app (Xamarin app, when ARM is supported by ML.NET)
+- Edge/IoT (When ARM is supported by ML.NET)
+
+
+#### Additional references for model builder app
+
+- [Machine Learning Project Structure: Stages, Roles, and Tools](https://www.altexsoft.com/blog/datascience/machine-learning-project-structure-stages-roles-and-tools/)
