@@ -227,3 +227,7 @@ Point to different samples on how to host trained models in an different applica
 #### Additional references for model builder app
 
 - [Machine Learning Project Structure: Stages, Roles, and Tools](https://www.altexsoft.com/blog/datascience/machine-learning-project-structure-stages-roles-and-tools/)
+
+## Opinionated code style practices
+
+TBD
