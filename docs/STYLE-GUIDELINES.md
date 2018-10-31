@@ -1,4 +1,4 @@
-# Style Guidelines for ML.NET Samples
+# Structure Guidelines for ML.NET Samples
 
 This section provides guidelines for creating or updating the samples at the [ML.NET samples GitHub repo](https://github.com/dotnet/machinelearning-samples).
 
@@ -49,7 +49,7 @@ The project structure is a combination of the following topics:
 
 For the following content, the following concepts appearing in the directory/folder structure must be defined:
 
-- **Model builder app**: Also called "training" app. Usually a console app where you create/train/validate/test an ML.NET model
+- **Model builder app**: Can also be called "model training" app. Usually a console app where you create/train/validate/test an ML.NET model
 - **Production app**: The "production" app that simply uses the trained model. Usually it can be an ASP.NET web app, a service (Web API), a desktop app or a mobile Xamarin app.
 Note that Xamarin apps usually run on ARM devices (iOS or Android) and ML.NET as of 2018 just supports x64 and x86, but the mobile Xamarin app could be invoking remote Web API services, though.
 
@@ -157,3 +157,6 @@ ML.NET Sample
 - [Cookiecutter Data Science](https://drivendata.github.io/cookiecutter-data-science/)
 
 - [A Quick Guide to Organizing [Data Science] Projects](https://medium.com/outlier-bio-blog/a-quick-guide-to-organizing-data-science-projects-updated-for-2016-4cbb1e6dac71)
+
+- [Data Science Project Folder Structure](https://dzone.com/articles/data-science-project-folder-structure)
+
