@@ -10,5 +10,7 @@ namespace CustomerSegmentation.RetailData
         public float[] Distance;
         [ColumnName("PCAFeatures")]
         public float[] Location;
+        [ColumnName("LastName")]
+        public string LastName;
     }
 }
