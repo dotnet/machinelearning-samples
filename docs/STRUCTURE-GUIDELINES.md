@@ -179,13 +179,12 @@ ML.NET Sample
 
 #### Additional references of .NET project structure
 
-- [Organizing and testing projects with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/tutorials/testing-with-cli)
-
-- [David Fowler's project structure (ASP.NET team)](https://gist.github.com/davidfowl/ed7564297c61fe9ab814)
-
 - [Cookiecutter Data Science](https://drivendata.github.io/cookiecutter-data-science/)
 
 - [A Quick Guide to Organizing [Data Science] Projects](https://medium.com/outlier-bio-blog/a-quick-guide-to-organizing-data-science-projects-updated-for-2016-4cbb1e6dac71)
 
 - [Data Science Project Folder Structure](https://dzone.com/articles/data-science-project-folder-structure)
 
+- [Organizing and testing projects with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/tutorials/testing-with-cli)
+
+- [David Fowler's project structure (ASP.NET team)](https://gist.github.com/davidfowl/ed7564297c61fe9ab814)
