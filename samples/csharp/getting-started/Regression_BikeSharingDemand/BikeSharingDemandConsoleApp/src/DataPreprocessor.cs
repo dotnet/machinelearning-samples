@@ -1,5 +1,4 @@
-﻿using BikeSharingDemand.Helpers;
-using Microsoft.ML;
+﻿using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Transforms;

@@ -12,6 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\..\common\ModelBuilder.cs" Link="Common\ModelBuilder.cs" />
+    <Compile Include="..\..\..\..\common\ModelScorer.cs" Link="Common\ModelScorer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="..\..\data\Readme.txt" Link="Data\Readme.txt" />
   </ItemGroup>
 

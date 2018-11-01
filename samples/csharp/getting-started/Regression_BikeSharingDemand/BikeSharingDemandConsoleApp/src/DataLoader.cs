@@ -15,7 +15,7 @@ namespace BikeSharingDemand
 
         public DataLoader(MLContext mlContext)
         {
-            var _mlContext = mlContext;
+            _mlContext = mlContext;
 
             _loader = mlContext.Data.TextReader(new TextLoader.Arguments()
                                                 {

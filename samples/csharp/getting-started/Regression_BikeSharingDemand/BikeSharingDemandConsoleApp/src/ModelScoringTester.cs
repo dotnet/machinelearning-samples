@@ -11,23 +11,11 @@ using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Learners;
 
 using BikeSharingDemand.DataStructures;
-using BikeSharingDemand.Helpers;
 
 namespace BikeSharingDemand
 {
-    public static class ModelTester
+    public static class ModelScoringTester
     {
-        public static ITransformer LoadModelFromZipFile(MLContext mlContext, string modelPath)
-        {
-            ITransformer loadedModel;
-            using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                loadedModel = TransformerChain.LoadFrom(mlContext, stream);
-            }
-
-            return loadedModel;
-        }
-
         public static void VisualizeSomePredictions(string modelName, string testDataLocation, ITransformer model, int numberOfPredictions)
         {
             //Prediction test
@@ -43,7 +31,7 @@ namespace BikeSharingDemand
             {
                 var prediction = engine.Predict(testData[i]);
 
-                ConsoleHelper.PrintPredictionVersusObserved(prediction.PredictedCount.ToString(), 
+                Common.ConsoleHelper.PrintRegressionPredictionVersusObserved(prediction.PredictedCount.ToString(), 
                                                             testData[i].Count.ToString());
             }
 
