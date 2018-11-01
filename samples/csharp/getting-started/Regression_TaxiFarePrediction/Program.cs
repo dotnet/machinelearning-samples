@@ -111,11 +111,10 @@ namespace Regression_TaxiFarePrediction
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {algorithmName}          ");
             Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       LossFn: {metrics.LossFn:0.##}");
             Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
+            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
             Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
             Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
-            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
             Console.WriteLine($"*************************************************");
 
             return metrics;
