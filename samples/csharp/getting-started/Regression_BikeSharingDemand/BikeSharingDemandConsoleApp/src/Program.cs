@@ -41,10 +41,10 @@ namespace BikeSharingDemand
             {
                 ("FastTree", mlContext.Regression.Trainers.FastTree()),
                 ("Poisson", mlContext.Regression.Trainers.PoissonRegression()),
-                ("SDCA", mlContext.Regression.Trainers.StochasticDualCoordinateAscent())
+                ("SDCA", mlContext.Regression.Trainers.StochasticDualCoordinateAscent()),
+                ("FastTreeTweedie", mlContext.Regression.Trainers.FastTreeTweedie()),
                 //Other possible learners that could be included
                 //...FastForestRegressor...
-                //...FastTreeTweedieRegressor...
                 //...GeneralizedAdditiveModelRegressor...
                 //...OnlineGradientDescent... (Might need to normalize the features first)
             };
