@@ -43,13 +43,19 @@ namespace BinaryClasification_TitanicSurvivalPrediction
             // all the column names and their types.
             pipeline.Add(new TextLoader(TrainDataPath).CreateFrom<TitanicData>(useHeader: true, separator: ','));
 
-            // Transform any text feature to numeric values
+            // Transform low-dimensional categorical columns to one-hot indicators
             pipeline.Add(new CategoricalOneHotVectorizer(
                 "Sex",
-                "Ticket",
-                "Fare",
                 "Cabin",
+                "Pclass",
+                "SibSp",
+                "Parch",
                 "Embarked"));
+
+            // Transform high-dimensional categorical columns to one-hot hash indicators
+            pipeline.Add(new CategoricalHashOneHotVectorizer(
+                "Ticket",
+                "Cabin") { HashBits = 2 });
 
             // Put all features into a vector
             pipeline.Add(new ColumnConcatenator(
@@ -66,7 +72,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
 
             // FastTreeBinaryClassifier is an algorithm that will be used to train the model.
             // It has three hyperparameters for tuning decision tree performance. 
-            pipeline.Add(new FastTreeBinaryClassifier() {NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2});
+            pipeline.Add(new FastTreeBinaryClassifier());// {NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2});
 
             Console.WriteLine("=============== Training model ===============");
             // The pipeline is trained on the dataset that has been loaded and transformed.

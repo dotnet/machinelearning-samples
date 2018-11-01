@@ -13,7 +13,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
             SibSp = 0,
             Parch = 1,
             Ticket = "230433",
-            Fare = "26",
+            Fare = 26,
             Cabin = "",
             Embarked = "S"
         };

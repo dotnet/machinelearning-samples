@@ -32,7 +32,7 @@ namespace BinaryClasification_TitanicSurvivalPrediction
         public string Ticket;
 
         [Column("9")]
-        public string Fare;
+        public float Fare;
 
         [Column("10")]
         public string Cabin;
