@@ -75,6 +75,9 @@ namespace Regression_TaxiFarePrediction
                                     .Append(new CategoricalEstimator(mlcontext, "VendorId"))
                                     .Append(new CategoricalEstimator(mlcontext, "RateCode"))
                                     .Append(new CategoricalEstimator(mlcontext, "PaymentType"))
+                                    .Append(new Normalizer(mlcontext, "PassengerCount", Normalizer.NormalizerMode.MeanVariance))
+                                    .Append(new Normalizer(mlcontext, "TripTime", Normalizer.NormalizerMode.MeanVariance))
+                                    .Append(new Normalizer(mlcontext, "TripDistance", Normalizer.NormalizerMode.MeanVariance))
                                     .Append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"));
 
             // We apply our selected Trainer (SDCA Regression algorithm)
