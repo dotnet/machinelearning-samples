@@ -34,12 +34,12 @@ namespace CustomerSegmentation.Model
             return reader;
         }
 
-        public TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> BuildAndTrain(string pivotLocation, int kClusters = 3, int rank = 2, int seed = 42)
+        public TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> BuildAndTrain(string pivotLocation, int kClusters = 3, int rank = 2)
         {
             ConsoleWriteHeader("Build and Train using Static API");
             Console.Out.WriteLine($"Input file: {pivotLocation}");
 
-            var pipeline = new PcaEstimator(env, "Features", "PCAFeatures", rank: rank, advancedSettings: (p) => p.Seed = seed)
+            var pipeline = new PcaEstimator(env, "Features", "PCAFeatures", rank: rank)
                 .Append(new CategoricalEstimator(env, new[] { new CategoricalEstimator.ColumnInfo("LastName", "LastNameKey", CategoricalTransform.OutputKind.Ind) }))
                 .Append(new KMeansPlusPlusTrainer(env, "Features", clustersCount: kClusters));
 
