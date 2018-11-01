@@ -75,6 +75,9 @@ namespace Regression_TaxiFarePrediction
                                     .Append(new CategoricalEstimator(mlcontext, "VendorId"))
                                     .Append(new CategoricalEstimator(mlcontext, "RateCode"))
                                     .Append(new CategoricalEstimator(mlcontext, "PaymentType"))
+                                    .Append(new Normalizer(mlcontext, "PassengerCount", Normalizer.NormalizerMode.MeanVariance))
+                                    .Append(new Normalizer(mlcontext, "TripTime", Normalizer.NormalizerMode.MeanVariance))
+                                    .Append(new Normalizer(mlcontext, "TripDistance", Normalizer.NormalizerMode.MeanVariance))
                                     .Append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"));
 
             // We apply our selected Trainer (SDCA Regression algorithm)
@@ -108,11 +111,10 @@ namespace Regression_TaxiFarePrediction
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {algorithmName}          ");
             Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       LossFn: {metrics.LossFn:0.##}");
             Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
+            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
             Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
             Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
-            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
             Console.WriteLine($"*************************************************");
 
             return metrics;
