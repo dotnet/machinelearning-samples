@@ -6,17 +6,22 @@ using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 
-using BikeSharingDemand.DataStructures;
+//using BikeSharingDemand.DataStructures;
 
-namespace BikeSharingDemand
+namespace Common
 {
-    public class ModelBuilder
+    public class ModelBuilder<TObservation, TPrediction> 
+                                    where TObservation : class
+                                    where TPrediction : class, new()
     {
         private MLContext _mlcontext;
         private IEstimator<ITransformer> _trainingPipeline;
 
         public ITransformer TrainedModel { get; private set; }
-        public PredictionFunction<DemandObservation, DemandPrediction> PredictionFunction { get; private set;}
+
+        //(Original, with NO Generics)
+        //public PredictionFunction<DemandObservation, DemandPrediction> PredictionFunction { get; private set;}
+        public PredictionFunction<TObservation, TPrediction> PredictionFunction { get; private set; }
 
         public ModelBuilder(
             MLContext mlContext,
@@ -30,28 +35,28 @@ namespace BikeSharingDemand
         public ITransformer Train(IDataView trainingData)
         {
             TrainedModel = _trainingPipeline.Fit(trainingData);
-            PredictionFunction = TrainedModel.MakePredictionFunction<DemandObservation, DemandPrediction>(_mlcontext);
+            PredictionFunction = TrainedModel.MakePredictionFunction<TObservation, TPrediction>(_mlcontext);
             return TrainedModel;
         }
 
         /// <summary>
         /// For single prediction it's easier to use the PredictionFunction
-        /// beacuse we can directly use the BikeSharingData.DemandSample and
-        /// BikeSharingData.Prediction classes instead of IDataView.
+        /// beacuse we can directly use the TObservation and
+        /// TPrediction instead of IDataView.
         /// </summary>
         /// <param name="input">Single data</param>
         /// <returns>Prediction for the input data</returns>
-        public DemandPrediction PredictSingle(DemandObservation input)
+        public TPrediction PredictSingle(TObservation input)
         {
             CheckTrained();
             return PredictionFunction.Predict(input);
         }
 
-        public IEnumerable<DemandPrediction> PredictBatch(IDataView inputDataView)
+        public IEnumerable<TPrediction> PredictBatch(IDataView inputDataView)
         {
             CheckTrained();
             var predictions = TrainedModel.Transform(inputDataView);
-            return predictions.AsEnumerable<DemandPrediction>(_mlcontext, reuseRowObject: false);
+            return predictions.AsEnumerable<TPrediction>(_mlcontext, reuseRowObject: false);
         }
 
         public RegressionEvaluator.Result Evaluate(IDataView testData)

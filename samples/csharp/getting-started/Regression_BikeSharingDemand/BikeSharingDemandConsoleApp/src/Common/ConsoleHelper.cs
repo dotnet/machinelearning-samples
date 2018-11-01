@@ -10,20 +10,20 @@ using System.Collections.Generic;
 using Microsoft.ML.Data;
 using Microsoft.ML;
 
-using BikeSharingDemand.DataStructures;
+using System.Reflection;
 
-namespace BikeSharingDemand.Helpers
+namespace Common
 {
     public static class ConsoleHelper
     {
-        public static void PrintPrediction(DemandPrediction prediction)
+        public static void PrintPrediction(string prediction)
         {
             Console.WriteLine($"*************************************************");
-            Console.WriteLine($"Predicted : {prediction.PredictedCount}");
+            Console.WriteLine($"Predicted : {prediction}");
             Console.WriteLine($"*************************************************");
         }
 
-        public static void PrintPredictionVersusObserved(string predictionCount, string observedCount)
+        public static void PrintRegressionPredictionVersusObserved(string predictionCount, string observedCount)
         {
             Console.WriteLine($"-------------------------------------------------");
             Console.WriteLine($"Predicted : {predictionCount}");
@@ -45,9 +45,10 @@ namespace BikeSharingDemand.Helpers
             Console.WriteLine($"*************************************************");
         }
 
-        public static List<DemandObservation> PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
+        public static List<TObservation> PeekDataViewInConsole<TObservation>(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
+            where TObservation : class, new()
         {
-            string msg = string.Format("Show {0} rows with all the columns", numberOfRows.ToString());
+            string msg = string.Format("Showing {0} rows with all the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
 
             //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
@@ -55,14 +56,21 @@ namespace BikeSharingDemand.Helpers
 
             // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
             // Convert to an enumerable of user-defined type.
-            var someRows = transformedData.AsEnumerable<DemandObservation>(mlContext, reuseRowObject: false)
-                                           //.Where(x => x.Count > 0)
-                                           // Take a couple values as an array.
+            var someRows = transformedData.AsEnumerable<TObservation>(mlContext, reuseRowObject: false)
+                                           // Take the specified number of rows
                                            .Take(numberOfRows)
+                                           // Convert to List
                                            .ToList();
 
-            // print to console the peeked rows
-            someRows.ForEach(row => { Console.WriteLine($"Label [Count]: {row.Count} || Features: [Season] {row.Season} [Year] {row.Year} [Month] {row.Month} [Hour] {row.Hour} [Holiday] {row.Holiday} [Weekday] {row.Weekday} [WorkingDay] {row.WorkingDay} [Weather] {row.Weather} [Temperature] {row.Temperature} [NormalizedTemperature] {row.NormalizedTemperature} [Humidity] {row.Humidity} [Windspeed] {row.Windspeed} "); });
+            someRows.ForEach(row =>
+                                {
+                                    string lineToPrint = "Row--> ";
+                                    foreach (FieldInfo field in row.GetType().GetFields())
+                                    {
+                                        lineToPrint += $"| {field.Name}: {field.GetValue(row)}";
+                                    }
+                                    Console.WriteLine(lineToPrint);
+                                });
 
             return someRows;
         }
