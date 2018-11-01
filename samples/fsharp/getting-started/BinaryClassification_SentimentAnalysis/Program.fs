@@ -1,123 +1,154 @@
-﻿module BinaryClassification_SentimentAnalysis
+﻿open System
 
-open System
+open Microsoft.ML.Runtime.Learners
+open Microsoft.ML.Runtime.Data
+open Microsoft.ML
 open System.IO
 
-open Microsoft.ML.Runtime.Api;
-open Microsoft.ML.Legacy;
-open Microsoft.ML.Legacy.Models;
-open Microsoft.ML.Legacy.Data;
-open Microsoft.ML.Legacy.Transforms;
-open Microsoft.ML.Legacy.Trainers;
 
+/// Type representing the text to run sentiment analysis on.
+[<CLIMutable>] 
+type SentimentIssue = 
+    { 
+        Text : string 
+    }
+
+/// Result of sentiment prediction.
 [<CLIMutable>]
-type SentimentData =
-    { [<Column("0")>]
-      SentimentText: string
-      [<Column("1", name="Label")>]
-      Sentiment: float32 }
-
-[<CLIMutable>]
-type SentimentPrediction =
-    { [<ColumnName("PredictedLabel")>]
-      Sentiment: bool }
+type  SentimentPrediction = 
+    { 
+        // Predicted sentiment: 0 - negative, 1 - positive
+        PredictedLabel : bool; 
+        Probability : float32; 
+        Score : float32 
+    }
 
 
-//type SentimentData() =
-//    [<Column("0")>]
-//    member val SentimentText: string = "" with get, set
+module Pipeline =
+    open Microsoft.ML.Core.Data
 
-//    [<Column("1", name="Label")>]
-//    member val Sentiment: float32 = 0.0f with get, set
+    let textTransform (inputColumn : string) outputColumn env =
+        TextTransform(env, inputColumn, outputColumn)
 
-//type SentimentPrediction() =
-//    [<ColumnName("PredictedLabel")>]
-//    member val Sentiment: bool = false with get, set
+    let append (estimator : IEstimator<'b>) (pipeline : IEstimator<ITransformer>)  = 
+        pipeline.Append estimator
+        
+    let fit (dataView : IDataView) (pipeline : EstimatorChain<'a>) =
+        pipeline.Fit dataView
 
 
-let sentiments = 
-   [| { SentimentText = "Contoso's 11 is a wonderful experience"; Sentiment = 1.0f }
-      { SentimentText = "The acting in this movie is very bad"; Sentiment = 0.0f }
-      { SentimentText = "Joe versus the Volcano Coffee Company is a great film."; Sentiment = 1.0f } |]
-
-let AppPath = Path.Combine(__SOURCE_DIRECTORY__, "../../../..")
-let TrainDataPath = Path.Combine(AppPath, "datasets", "sentiment-imdb-train.txt")
-let TestDataPath = Path.Combine(AppPath, "datasets", "sentiment-yelp-test.txt")
+let AppPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
+let TrainDataPath = Path.Combine(AppPath, "datasets", "wikipedia-detox-250-line-data.tsv")
+let TestDataPath = Path.Combine(AppPath, "datasets", "wikipedia-detox-250-line-test.tsv")
 let modelPath = Path.Combine(AppPath, "SentimentModel.zip")
 
-let TrainAsync() =
-    // LearningPipeline holds all steps of the learning process: data, transforms, learners.  
-    let pipeline = LearningPipeline()
 
-    // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-    // all the column names and their types.
-    pipeline.Add(TextLoader(TrainDataPath).CreateFrom<SentimentData>())
+let printPrediction statement resultprediction =
+    printfn 
+        "Text: %s | Prediction: %s sentiment | Probability: %f"
+        statement
+        (if resultprediction.PredictedLabel then "Toxic" else "Nice")
+        resultprediction.Probability
 
-    // TextFeaturizer is a transform that will be used to featurize an input column to format and clean the data.
-    pipeline.Add(TextFeaturizer("Features", "SentimentText"))
 
-    // FastTreeBinaryClassifier is an algorithm that will be used to train the model.
-    // It has three hyperparameters for tuning decision tree performance. 
-    pipeline.Add(FastTreeBinaryClassifier(NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2))
+let saveModelAsFile env (model : TransformerChain<'a>)=
+    use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
+    model.SaveTo(env, fs)
 
-    printfn "=============== Training model ==============="
-    // The pipeline is trained on the dataset that has been loaded and transformed.
-    let model = pipeline.Train<SentimentData, SentimentPrediction>()
-
-    // Saving the model as a .zip file.
-    model.WriteAsync(modelPath) |> Async.AwaitTask |> Async.RunSynchronously
-
-    printfn "=============== End training ==============="
     printfn "The model is saved to %s" modelPath
 
-    model
 
-let Evaluate(model: PredictionModel<SentimentData, SentimentPrediction> ) =
-    // To evaluate how good the model predicts values, the model is ran against new set
-    // of data (test data) that was not involved in training.
-    let testData = TextLoader(TestDataPath).CreateFrom<SentimentData>()
-    
-    // BinaryClassificationEvaluator performs evaluation for Binary Classification type of ML problems.
-    let evaluator = BinaryClassificationEvaluator()
+let predictWithModelLoadedFromFile (sampleStatement : SentimentIssue) =
+    // Test with Loaded Model from .zip file
+    use env = new LocalEnvironment()
+    use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
+    let loadedModel = TransformerChain.LoadFrom(env, stream)
 
-    printfn "=============== Evaluating model ==============="
+    // Create prediction engine and make prediction.
+    let engine = loadedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction> env
 
-    let metrics = evaluator.Evaluate(model, testData)
-    // BinaryClassificationMetrics contains the overall metrics computed by binary classification evaluators
-    // The Accuracy metric gets the accuracy of a classifier which is the proportion 
-    //of correct predictions in the test set.
+    let predictionFromLoaded = engine.Predict sampleStatement
+       
+    printfn ""
+    printfn "=============== Test of model with a sample ==============="
+    printPrediction sampleStatement.Text predictionFromLoaded
 
-    // The Auc metric gets the area under the ROC curve.
-    // The area under the ROC curve is equal to the probability that the classifier ranks
-    // a randomly chosen positive instance higher than a randomly chosen negative one
-    // (assuming 'positive' ranks higher than 'negative').
 
-    // The F1Score metric gets the classifier's F1 score.
-    // The F1 score is the harmonic mean of precision and recall:
-    //  2 * precision * recall / (precision + recall).
+[<EntryPoint>]
+let main argv =
 
-    printfn "Accuracy: %0.2f" metrics.Accuracy
-    printfn "Auc: %0.2f" metrics.Auc
-    printfn "F1Score: %0.2f" metrics.F1Score
-    printfn "=============== End evaluating ==============="
+    //1. Create ML.NET context/environment
+    use env = new LocalEnvironment()
+
+    //2. Create DataReader with data schema mapped to file's columns
+    let reader = 
+        TextLoader(
+            env, 
+            TextLoader.Arguments(
+                Separator = "tab", 
+                HasHeader = true, 
+                Column = 
+                    [|
+                        TextLoader.Column("Label", Nullable DataKind.Bool, 0)
+                        TextLoader.Column("Text", Nullable DataKind.Text, 1)
+                    |]
+                )
+            )
+
+    //Load training data
+    let trainingDataView = MultiFileSource(TrainDataPath) |> reader.Read
+
+    printfn "=============== Create and Train the Model ==============="
+
+    let model = 
+        env
+        //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
+        |> Pipeline.textTransform "Text" "Features"
+        |> Pipeline.append (LinearClassificationTrainer(env, LinearClassificationTrainer.Arguments(), "Features", "Label"))
+        //4. Create and train the model            
+        |> Pipeline.fit trainingDataView
+
+    printfn "=============== End of training ==============="
     printfn ""
 
-// STEP 1: Create a model
-let model = TrainAsync()
+    //5. Evaluate the model and show accuracy stats
+    let testDataView = MultiFileSource(TestDataPath) |> reader.Read
 
-// STEP2: Test accuracy
-Evaluate(model)
+    printfn "=============== Evaluating Model's accuracy with Test data==============="
+    let predictions = model.Transform testDataView
+    let binClassificationCtx = env |> BinaryClassificationContext
+    let metrics = binClassificationCtx.Evaluate(predictions, "Label")
 
-// STEP 3: Make a prediction
-let predictions = model.Predict(sentiments)
+    printfn ""
+    printfn "Model quality metrics evaluation"
+    printfn "------------------------------------------"
+    printfn "Accuracy: %.2f%%" (metrics.Accuracy * 100.)
+    printfn "Auc: %.2f%%" (metrics.Auc * 100.)
+    printfn "F1Score: %.2f%%" (metrics.F1Score * 100.)
+    printfn "=============== End of Model's evaluation ==============="
+    printfn ""
 
-//for (sentiment, prediction) in Seq.zip sentiments predictions do
-    //printfn "Sentiment: %s | Prediction: %s sentiment" sentiment.SentimentText (if prediction.Sentiment then "Positive" else "Negative")
+    //6. Test Sentiment Prediction with one sample text 
+    let predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction> env
+    let sampleStatement = { Text = "This is a very rude movie" }
+    let resultprediction = predictionFunct.Predict sampleStatement
 
-//TODO: which way is better? above or below?
-predictions
-|> Seq.zip sentiments
-|> Seq.iter (fun (s,p) -> printfn "Sentiment: %s | Prediction: %s sentiment" s.SentimentText (if p.Sentiment then "Positive" else "Negative"))
+    printfn ""
+    printfn "=============== Test of model with a sample ==============="
+    printPrediction sampleStatement.Text resultprediction
 
-Console.ReadLine() |> ignore
 
+    // Save model to .ZIP file
+
+    saveModelAsFile env model
+
+
+
+    // Predict again but now testing the model loading from the .ZIP file
+
+    predictWithModelLoadedFromFile sampleStatement
+
+    printfn "=============== End of process, hit any key to finish ==============="
+
+    Console.ReadLine() |> ignore
+    0 // return an integer exit code
