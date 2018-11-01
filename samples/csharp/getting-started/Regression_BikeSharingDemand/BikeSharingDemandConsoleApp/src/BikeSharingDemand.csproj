@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
     <Compile Include="..\..\..\..\common\ModelBuilder.cs" Link="Common\ModelBuilder.cs" />
     <Compile Include="..\..\..\..\common\ModelScorer.cs" Link="Common\ModelScorer.cs" />
   </ItemGroup>
