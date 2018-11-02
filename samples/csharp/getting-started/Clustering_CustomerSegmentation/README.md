@@ -65,7 +65,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 There is only one problem. How do we know how many clusters our data should have? This is a real problem for which there is no perfect solution. In this sample we used the Elbow method [paper](http://web.stanford.edu/~hastie/Papers/gap.pdf).
 
-![elbow plot](.\CustomerSegmentation.Train\assets\outputs\elbow.svg)
+![elbow plot](./CustomerSegmentation.Train/assets/outputs/elbow.svg)
 
 As you can see, at k=5 the graph begins to flatten significantly. This point where the graph starts to smooth out is the prophesied “elbow” for which we have been looking.
 
