@@ -12,21 +12,28 @@ namespace GitHubLabeler
 {
     internal static class Program
     {
+        private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+
+        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";
+        //private static string DataPath => Path.Combine(AppPath, "Data", "corefx-issues-train.tsv");
+
+        private static string BaseModelsLocation = @"../../../../MLModels";
+        private static string ModelPath => Path.Combine(AppPath, "GitHubLabelerModel.zip");
+
         public static IConfiguration Configuration { get; set; }
         private static async Task Main(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                                        .SetBasePath(Directory.GetCurrentDirectory())
-                                        .AddJsonFile("appsettings.json");
+            SetupAppConfiguration();
 
-            Configuration = builder.Build();
+            //1. ChainedBuilderExtensions and Train the model
+            Predictor.Train(DataSetLocation, ModelPath);
 
-            Predictor.Train();
-
-            await Label();
+            //2. Predict Issue Labels and apply into a real GitHub repo
+            await PredictLabelsAndUpdateGitHub(ModelPath);
         }
 
-        private static async Task Label()
+        private static async Task PredictLabelsAndUpdateGitHub(string ModelPath)
         {
             var token = Configuration["GitHubToken"];
             var repoOwner = Configuration["GitHubRepoOwner"];
@@ -42,12 +49,21 @@ namespace GitHubLabeler
                 return;
             }
 
-            var labeler = new Labeler(repoOwner, repoName, token);
+            var labeler = new Labeler(ModelPath, repoOwner, repoName, token);
 
             await labeler.LabelAllNewIssues();
 
             Console.WriteLine("Labeling completed");
             Console.ReadLine();
+        }
+
+        private static void SetupAppConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                                        .SetBasePath(Directory.GetCurrentDirectory())
+                                        .AddJsonFile("appsettings.json");
+
+            Configuration = builder.Build();
         }
     }
 }
