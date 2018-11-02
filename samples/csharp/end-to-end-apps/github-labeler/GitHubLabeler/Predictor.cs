@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Learners;
@@ -33,6 +35,8 @@ namespace GitHubLabeler
                         }
                     });
 
+                var trainData = reader.Read(new MultiFileSource(DataPath));
+
                 var pipeline = new TermEstimator(env, "Area", "Label")
                     .Append(new TextTransform(env, "Title", "Title"))
                     .Append(new TextTransform(env, "Description", "Description"))
@@ -40,12 +44,26 @@ namespace GitHubLabeler
                     .Append(new SdcaMultiClassTrainer(env, new SdcaMultiClassTrainer.Arguments()))
                     .Append(new KeyToValueEstimator(env, "PredictedLabel"));
 
+                var context = new MulticlassClassificationContext(env);
+
+                var cvResults = context.CrossValidate(trainData, pipeline, labelColumn: "Label", numFolds: 5);
+
+                var microAccuracies = cvResults.Select(r => r.metrics.AccuracyMicro);
+                var macroAccuracies = cvResults.Select(r => r.metrics.AccuracyMacro);
+                var logLoss = cvResults.Select(r => r.metrics.LogLoss);
+                var logLossReduction = cvResults.Select(r => r.metrics.LogLossReduction);
+                                                                                      
                 Console.WriteLine("=============== Training model ===============");
 
-                var model = pipeline.Fit(reader.Read(new MultiFileSource(DataPath)));
+                var model = pipeline.Fit(trainData);
 
                 using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     model.SaveTo(env, fs);
+
+                Console.WriteLine("Average MicroAccuracy: " + microAccuracies.Average());
+                Console.WriteLine("Average MacroAccuracy: " + macroAccuracies.Average());
+                Console.WriteLine("Average LogLoss: " + logLoss.Average());
+                Console.WriteLine("Average LogLossReduction: " + logLossReduction.Average());
 
                 Console.WriteLine("=============== End training ===============");
                 Console.WriteLine("The model is saved to {0}", ModelPath);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.FastTree;
@@ -56,8 +57,7 @@ namespace eShopForecastModelsTrainer
                 HasHeader = true,
                 Separator = ","
             });
-
-
+            
             var pipeline = new ConcatEstimator(env, "NumFeatures", new[] { "year", "month", "max", "min", "std", "count", "sales", "med", "prev" })
                 .Append(new CategoricalEstimator(env, "CatFeatures", "country"))
                 .Append(new ConcatEstimator(env, "Features", new[] { "NumFeatures", "CatFeatures" }))
@@ -65,7 +65,22 @@ namespace eShopForecastModelsTrainer
                 .Append(new FastTreeTweedieTrainer(env, "Label", "Features"));
 
             var datasource = reader.Read(new MultiFileSource(dataPath));
+
+            var cvResults = ctx.CrossValidate(datasource, pipeline, labelColumn: "Label", numFolds: 5);
+
+            var L1 = cvResults.Select(r => r.metrics.L1);
+            var L2 = cvResults.Select(r => r.metrics.L2);
+            var RMS = cvResults.Select(r => r.metrics.L1);
+            var lossFunction = cvResults.Select(r => r.metrics.LossFn);
+            var R2 = cvResults.Select(r => r.metrics.RSquared);
+
             var model = pipeline.Fit(datasource);
+
+            Console.WriteLine("Average L1 Loss: " + L1.Average());
+            Console.WriteLine("Average L2 Loss: " + L2.Average());
+            Console.WriteLine("Average RMS: " + RMS.Average());
+            Console.WriteLine("Average Loss Function: " + lossFunction.Average());
+            Console.WriteLine("Average R-squared: " + R2.Average());
 
             using (var file = File.OpenWrite(outputModelPath))
                 model.SaveTo(env, file);

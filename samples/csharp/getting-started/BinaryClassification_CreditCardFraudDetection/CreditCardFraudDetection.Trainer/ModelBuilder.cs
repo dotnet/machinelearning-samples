@@ -65,31 +65,16 @@ namespace CreditCardFraudDetection.Trainer
                                                     numTrees: 100,
                                                     minDocumentsInLeafs : 10,
                                                     learningRate: 0.2));
-            
 
-            // Now run the n-fold cross-validation experiment, using the same pipeline.
-            // Can't do stratification when column type is a boolean
-            // var cvResults = _context.CrossValidate(_trainData, estimator, labelColumn: "Label", numFolds: numFolds, stratificationColumn: "Label");
-            var cvResults = _context.CrossValidate(_trainData, pipeline, labelColumn: "Label", numFolds: cvNumFolds);
+            var model = pipeline.Fit(_trainData);
 
+            var metrics = _context.Evaluate(model.Transform(_testData), "Label");
 
-            // Let's get Cross Validate metrics           
-            int count = 1;
-            var cvModels = cvResults.ToList();
-            cvModels.ForEach(result =>
-            {
-                ConsoleHelpers.ConsoleWriteHeader($"Train Metrics Cross Validate [{count}/{cvNumFolds}]:");
-                result.metrics.ToConsole();
-                ConsoleHelpers.ConsoleWriteHeader($"Show 4 transactions fraud (true) and 4 transactions not fraud (false) - {count}]");
-                ConsoleHelpers.InspectScoredData(_env, result.scoredTestData, 4);
-                count++;
-            });
-            // save model with best accuracy
-            var bestmodel = cvModels.OrderByDescending(result => result.metrics.Accuracy).Select(result => result.model).FirstOrDefault();           
-            bestmodel.SaveModel(_env, Path.Combine(_outputPath, "cv-fastTree.zip"));
-            Console.WriteLine("");
-            Console.WriteLine("Saved best model.");
+            ConsoleHelpers.ConsoleWriteHeader($"Test Metrics:");
+            metrics.ToConsole();
 
+            model.SaveModel(_env, Path.Combine(_outputPath, "fastTree.zip"));
+            Console.WriteLine("Saved model to " + Path.Combine(_outputPath, "fastTree.zip"));
         }
 
         private (BinaryClassificationContext context, TextLoader, IDataView trainData, IDataView testData) 
