@@ -7,7 +7,7 @@ namespace ImageClassification.ImageData
     {
         public float[] Score;
 
-        public string PredictedLabel;
+        public string PredictedLabelValue;
     }
 
     public class ImageNetWithLabelPrediction : ImageNetPrediction
@@ -16,7 +16,7 @@ namespace ImageClassification.ImageData
         {
             Label = label;
             Score = pred.Score;
-            PredictedLabel = pred.PredictedLabel;
+            PredictedLabelValue = pred.PredictedLabelValue;
         }
 
         public string Label;

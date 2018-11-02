@@ -73,12 +73,12 @@ namespace ImageClassification.Model
             return (labels[index],max);
         }
 
-        public static IEnumerable<string> GetColumnNames(this ISchema schema)
+        public static IEnumerable<string> GetColumnNames(this Schema schema)
         {
             for (int i = 0; i < schema.ColumnCount; i++)
             {
-                if (!schema.IsHidden(i))
-                    yield return schema.GetColumnName(i);
+                if (!MetadataUtils.IsHidden(schema, i)
+)                    yield return schema.GetColumnName(i);
             }
         }
     }

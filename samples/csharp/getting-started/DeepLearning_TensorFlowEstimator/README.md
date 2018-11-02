@@ -1,4 +1,11 @@
 # Image Classification
+
+
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.7.0-preview-27031-8           | Dynamic API | Evolving | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
+
+
 ## Problem 
 Image classification is a common problem which has been solved quite a while using Machine Learning techniques. In this sample, we will review an approach that mixes new techniques (deep learning) and old school (SDCA) techniques.
 
@@ -46,12 +53,13 @@ The `TextLoader.CreateReader()` is used to define the schema of the text file th
 ```
 The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 ```csharp
- var pipeline = new CategoricalEstimator(env, new[] { new CategoricalEstimator.ColumnInfo("Label", "LabelTokey", CategoricalTransform.OutputKind.Key) });
-       //.Append(new ImageLoaderEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
-       //.Append(new ImageResizerEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-       //.Append(new ImagePixelExtractorEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-       //.Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }));
-       //.Append(new SdcaRegressionTrainer(env, new SdcaRegressionTrainer.Arguments(), "softmax2_pre_activation", "LabelTokey"));
+ var pipeline = new ValueToKeyMappingEstimator(env, "Label", "LabelTokey") 
+    .Append(new ImageLoadingEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
+    .Append(new ImageResizingEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+    .Append(new ImagePixelExtractingEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+    .Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
+    .Append(new SdcaMultiClassTrainer(env, "softmax2_pre_activation", "LabelTokey"))
+    .Append(new KeyToValueEstimator(env, ("PredictedLabel", "PredictedLabelValue")));
 ```
 
 ### 2. Train model
@@ -61,7 +69,8 @@ In order to begin the training, we declare a datasource and then execute `Fit` o
  var model = pipeline.Fit(data);
 
 ```
-As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.
+As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
+
 ![](./docs/train_debug.png)
 
 ### 3. Evaluate model
@@ -69,7 +78,9 @@ After the training, we evaluate the model using the training data. The `Evaluate
 ```csharp
  var sdcaContext = new MulticlassClassificationContext(env);
  ConsoleWriteHeader("Classification metrics");
- var metrics = sdcaContext.Evaluate(trainData, label: "LabelToKey", predictedLabel: "PredictedLabel");
+ var metrics = sdcaContext.Evaluate(trainData, label: "LabelTokey", predictedLabel: "PredictedLabel");
+ Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
+ Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 ```
 
 Finally, we save the model:

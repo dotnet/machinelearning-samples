@@ -21,7 +21,7 @@ namespace ImageClassification.Model
             this.dataLocation = dataLocation;
             this.imagesFolder = imagesFolder;
             this.modelLocation = modelLocation;
-            env = new LocalEnvironment();
+            env = new ConsoleEnvironment( seed: 1);
         }
 
         public void EvaluateStaticApi()
@@ -46,9 +46,9 @@ namespace ImageClassification.Model
             // from the predictor
             testData
                 .Select(td => new { td, pred = predictor.Predict(td) })
-                .Select(pr => (pr.td.ImagePath, pr.pred.PredictedLabel, pr.pred.Score))
+                .Select(pr => (pr.td.ImagePath, pr.pred.PredictedLabelValue, pr.pred.Score))
                 .ToList()
-                .ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath, pr.PredictedLabel, pr.Score.Max()));
+                .ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath, pr.PredictedLabelValue, pr.Score.Max()));
         }
     }
 }

@@ -52,10 +52,8 @@ namespace ImageClassification.ImageData
     {
         public string ImagePath;
         public string Label;
-        public string PredictedLabel;
+        public string PredictedLabelValue;
         public float[] Score;
         public float[] softmax2_pre_activation;
-        public float[] softmax2;
-        public float[] output2;
     }
 }

@@ -11,6 +11,8 @@ using Microsoft.ML.Trainers;
 using Microsoft.ML.Runtime.Api;
 using static ImageClassification.Model.ConsoleHelpers;
 using Microsoft.ML.Runtime.Learners;
+using Microsoft.ML.Transforms.Categorical;
+using Microsoft.ML.Transforms.Conversions;
 
 namespace ImageClassification.Model
 {
@@ -28,7 +30,7 @@ namespace ImageClassification.Model
             this.imagesFolder = imagesFolder;
             this.inputModelLocation = inputModelLocation;
             this.outputModelLocation = outputModelLocation;
-            env = new LocalEnvironment();
+            env = new ConsoleEnvironment(seed: 1);
         }
 
         private struct ImageNetSettings
@@ -61,15 +63,15 @@ namespace ImageClassification.Model
                     }
                 });
 
-            
 
-            var pipeline = new CategoricalEstimator(env, new[] { new CategoricalEstimator.ColumnInfo("Label", "LabelTokey", CategoricalTransform.OutputKind.Key) });
-                        //.Append(new ImageLoaderEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
-                        //.Append(new ImageResizerEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-                        //.Append(new ImagePixelExtractorEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-                        //.Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }));
-                        //.Append(new SdcaRegressionTrainer(env, new SdcaRegressionTrainer.Arguments(), "softmax2_pre_activation", "LabelTokey"));
 
+            var pipeline = new ValueToKeyMappingEstimator(env, "Label", "LabelTokey")
+                        .Append(new ImageLoadingEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
+                        .Append(new ImageResizingEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+                        .Append(new ImagePixelExtractingEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+                        .Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
+                        .Append(new SdcaMultiClassTrainer(env, "softmax2_pre_activation", "LabelTokey"))
+                        .Append(new KeyToValueEstimator(env, ("PredictedLabel", "PredictedLabelValue")));
 
             // Train the pipeline
             ConsoleWriteHeader("Training classification model");
@@ -81,21 +83,21 @@ namespace ImageClassification.Model
             var trainData = model.Transform(data);
             var loadedModelOutputColumnNames = trainData.Schema.GetColumnNames();
             var trainData2 = trainData.AsEnumerable<ImageNetPipeline>(env, false, true).ToList();
-            trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath, pr.PredictedLabel, pr.Score.Max()));
+            trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
-            //// Get some performance metric on the model using training data            
+            // Get some performance metric on the model using training data            
             var sdcaContext = new MulticlassClassificationContext(env);
             ConsoleWriteHeader("Classification metrics");
-            var metrics = sdcaContext.Evaluate(trainData, label: "LabelToKey", predictedLabel: "PredictedLabel");
+            var metrics = sdcaContext.Evaluate(trainData, label: "LabelTokey", predictedLabel: "PredictedLabel");
             Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
-            Console.WriteLine($"PerClassLogLoss is: {String.Join(",", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
+            Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 
-            //// Save the model to assets/outputs
-            //ConsoleWriteHeader("Save model to local file");
-            //ModelHelpers.DeleteAssets(outputModelLocation);
-            //using (var f = new FileStream(outputModelLocation, FileMode.Create))
-            //    model.SaveTo(env, f);
-            //Console.WriteLine($"Model saved: {outputModelLocation}");
+            // Save the model to assets/outputs
+            ConsoleWriteHeader("Save model to local file");
+            ModelHelpers.DeleteAssets(outputModelLocation);
+            using (var f = new FileStream(outputModelLocation, FileMode.Create))
+                model.SaveTo(env, f);
+            Console.WriteLine($"Model saved: {outputModelLocation}");
         }
 
     }
