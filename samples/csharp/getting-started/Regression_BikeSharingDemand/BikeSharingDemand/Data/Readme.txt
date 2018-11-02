@@ -4,11 +4,11 @@ The actual folder holding the DatSets is placed at the same level than /src, so 
 
 This is the folder structure:
 
-<your-local-repo-folder>/data
+<folder-in-your-local-repo>/Data
    ---Dataset files
 
-<your-local-repo-folder>/models
+<folder-in-your-local-repo>/MLModels
    ---Generated trained model files
 
-<your-local-repo-folder>/src
+<folder-in-your-local-repo>/app-code-project
    ---Source code files
