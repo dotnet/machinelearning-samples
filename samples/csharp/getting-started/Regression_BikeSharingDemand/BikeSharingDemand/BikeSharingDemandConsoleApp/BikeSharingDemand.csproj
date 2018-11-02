@@ -12,7 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\data\Readme.txt" Link="Data\Readme.txt" />
+    <Compile Include="..\..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\..\common\ModelBuilder.cs" Link="Common\ModelBuilder.cs" />
+    <Compile Include="..\..\..\..\common\ModelScorer.cs" Link="Common\ModelScorer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Data\Readme.txt" Link="Data\Readme.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\data\hour_test.csv" Link="Data\hour_test.csv" />
-    <None Include="..\..\data\hour_train.csv" Link="Data\hour_train.csv" />
+    <None Include="..\Data\hour_test.csv" Link="Data\hour_test.csv" />
+    <None Include="..\Data\hour_train.csv" Link="Data\hour_train.csv" />
   </ItemGroup>
 
 </Project>
