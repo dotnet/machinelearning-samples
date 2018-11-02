@@ -66,7 +66,6 @@ To solve this problem, first we will build an ML model. Then we will train the m
 Next, the model's pipeline is built
 
 Then, you need to apply some transformations to the data:
-
 - Concat current features to a new Column named NumFeatures
 - Tramsform  productId using [one-hot](https://en.wikipedia.org/wiki/One-hot)
 - Concat all generated fetures in one column
@@ -74,6 +73,8 @@ Then, you need to apply some transformations to the data:
 - Add Fast Tree Tweedie Trainer
 
 Add a KMeansPlusPlusTrainer; main parameter to use with this learner is clustersCount, that specifies the number of clusters
+
+[Model build and train](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
 
 ```csharp
  var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
@@ -153,6 +154,9 @@ We evaluate the accuracy of the model. Evaluate model with a sample products
 #### 4. Consume the model
 
 Basically, we load the model, then the data file and finally we make a prediction function.
+
+- [Country sales prediction](./src/eShopDashboard/Forecast/CountrySales.cs##L66)
+- [Product sales sales prediction](./src/eShopDashboard/Forecast/ProductSales.cs##L66)
 
 ```csharp
  var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
