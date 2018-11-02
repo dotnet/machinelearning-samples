@@ -20,6 +20,7 @@ namespace CustomerSegmentation
             var offersCsv = Path.Combine(assetsPath, "inputs", "offers.csv");
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
             var modelZip = Path.Combine(assetsPath, "outputs", "retailClustering.zip");
+            var elbowPlot = Path.Combine(assetsPath, "outputs", "elbow.svg");
 
             try
             {
@@ -44,10 +45,11 @@ namespace CustomerSegmentation
                 // (Optional) Peek data in training DataView after applying the PreprocessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
+                Common.ElbowMethod.CalculateK(mlContext, dataProcessPipeline, pivotDataView, elbowPlot);
 
                 // STEP 2: Create and train the model
                 // Change to mlContext.Clustering. when KMeans is available in the catalog
-                var trainer = new KMeansPlusPlusTrainer(mlContext, "Features", clustersCount: 3);
+                var trainer = new KMeansPlusPlusTrainer(mlContext, "Features", clustersCount: 5);
                 var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, dataProcessPipeline, trainer);
                 var trainedModel = modelBuilder.Train(pivotDataView);
 
@@ -57,9 +59,6 @@ namespace CustomerSegmentation
 
                 // STEP3: Save/persist the model as a .ZIP file
                 modelBuilder.SaveModelAsFile(modelZip);
-
-                Console.WriteLine("Press any key to exit..");
-                Console.ReadLine();
 
             } catch (Exception ex)
             {
