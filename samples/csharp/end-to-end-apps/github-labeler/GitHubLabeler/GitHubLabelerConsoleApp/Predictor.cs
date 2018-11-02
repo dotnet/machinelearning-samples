@@ -13,9 +13,14 @@ namespace GitHubLabeler
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string DataPath => Path.Combine(AppPath, "datasets", "corefx-issues-train.tsv");
+        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";
 
+        private static string BaseModelsLocation = @"../../../../MLModels";
         private static string ModelPath => Path.Combine(AppPath, "GitHubLabelerModel.zip");
+
+        //private static string DataPath => Path.Combine(AppPath, "Data", "corefx-issues-train.tsv");
+
 
         public static void Train()
         {
@@ -35,7 +40,7 @@ namespace GitHubLabeler
                         }
                     });
 
-                var trainData = reader.Read(new MultiFileSource(DataPath));
+                var trainData = reader.Read(new MultiFileSource(DataSetLocation));
 
                 var pipeline = new TermEstimator(env, "Area", "Label")
                     .Append(new TextTransform(env, "Title", "Title"))
@@ -46,6 +51,7 @@ namespace GitHubLabeler
 
                 var context = new MulticlassClassificationContext(env);
 
+                Console.WriteLine("=============== Cross Validating and getting Evaluation Metrics ===============");
                 var cvResults = context.CrossValidate(trainData, pipeline, labelColumn: "Label", numFolds: 5);
 
                 var microAccuracies = cvResults.Select(r => r.metrics.AccuracyMicro);
