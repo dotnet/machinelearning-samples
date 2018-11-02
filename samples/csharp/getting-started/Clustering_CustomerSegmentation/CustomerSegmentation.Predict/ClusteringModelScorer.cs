@@ -22,17 +22,25 @@ namespace CustomerSegmentation.Model
         private readonly string _plotLocation;
         private readonly string _csvlocation;
         private readonly MLContext _mlContext;
-        private readonly ITransformer _trainedModel;
+        private ITransformer _trainedModel;
 
-        public ClusteringModelScorer(MLContext mlContext, ITransformer trainedModel, string pivotDataLocation, string plotLocation, string csvlocation)
+        public ClusteringModelScorer(MLContext mlContext, string pivotDataLocation, string plotLocation, string csvlocation)
         {
             _pivotDataLocation = pivotDataLocation;
             _plotLocation = plotLocation;
             _csvlocation = csvlocation;
             _mlContext = mlContext;
-            _trainedModel = trainedModel;
         }
 
+        public ITransformer LoadModelFromZipFile(string modelPath)
+        {
+            using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                _trainedModel = TransformerChain.LoadFrom(_mlContext, stream);
+            }
+
+            return _trainedModel;
+        }
 
         public void CreateCustomerClusters()
         {            

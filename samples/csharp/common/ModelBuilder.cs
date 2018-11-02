@@ -6,8 +6,6 @@ using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 
-//using BikeSharingDemand.DataStructures;
-
 namespace Common
 {
     public class ModelBuilder<TObservation, TPrediction> 
@@ -20,11 +18,11 @@ namespace Common
 
         public ModelBuilder(
             MLContext mlContext,
-            IEstimator<ITransformer> dataPreprocessPipeline,
+            IEstimator<ITransformer> dataProcessPipeline,
             IEstimator<ITransformer> trainer)
         {
             _mlcontext = mlContext;
-            _trainingPipeline = dataPreprocessPipeline.Append(trainer);
+            _trainingPipeline = dataProcessPipeline.Append(trainer);
         }
         
         public ITransformer Train(IDataView trainingData)

@@ -10,7 +10,7 @@ namespace BikeSharingDemand
 {
     public class DataProcessor
     {
-        public IEstimator<ITransformer> DataPreprocessPipeline { get; private set; }
+        public IEstimator<ITransformer> DataProcessPipeline { get; private set; }
 
         private static string[] _featureColumns = new[] {
             "Season", "Year", "Month",
@@ -20,8 +20,8 @@ namespace BikeSharingDemand
 
         public DataProcessor(MLContext mlContext)
         {
-            // Configure data transformations in the Preprocess pipeline
-            DataPreprocessPipeline =
+            // Configure data transformations in the Process pipeline
+            DataProcessPipeline =
                 // Copy the Count column to the Label column
                 new CopyColumnsEstimator(mlContext, "Count", "Label")
                     // Concatenate all the numeric columns into a single features column

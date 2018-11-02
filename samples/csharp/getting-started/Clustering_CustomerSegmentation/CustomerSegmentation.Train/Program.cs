@@ -38,16 +38,15 @@ namespace CustomerSegmentation
                 var pivotDataView = dataLoader.GetDataView(pivotCsv);
 
                 //STEP 1: Process data transformations in pipeline
-                var dataPreprocessor = new DataProcessor(mlContext, 2);
-                var dataProcessPipeline = dataPreprocessor.DataProcessPipeline;
+                var dataProcessor = new DataProcessor(mlContext, 2);
+                var dataProcessPipeline = dataProcessor.DataProcessPipeline;
 
-                // (Optional) Peek data in training DataView after applying the PreprocessPipeline's transformations  
+                // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
-                // STEP 2: Create and train the model
-                // Change to mlContext.Clustering. when KMeans is available in the catalog
-                var trainer = new KMeansPlusPlusTrainer(mlContext, "Features", clustersCount: 3);
+                // STEP 2: Create and train the model                
+                var trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount: 3);
                 var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, dataProcessPipeline, trainer);
                 var trainedModel = modelBuilder.Train(pivotDataView);
 
