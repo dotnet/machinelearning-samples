@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Runtime.Api;
 
-namespace CustomerSegmentation.RetailData
+namespace CustomerSegmentation.DataStructures
 {
     public class ClusteringPrediction
     {

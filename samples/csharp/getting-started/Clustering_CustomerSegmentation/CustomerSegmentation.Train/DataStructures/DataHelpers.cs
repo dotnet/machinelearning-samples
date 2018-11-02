@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static CustomerSegmentation.Model.ConsoleHelpers;
 
-namespace CustomerSegmentation.RetailData
+namespace CustomerSegmentation.DataStructures
 {
     public class DataHelpers
     {
@@ -17,7 +16,7 @@ namespace CustomerSegmentation.RetailData
 
         public static IEnumerable<PivotData> PreProcess(string offersDataLocation, string transactionsDataLocation)
         {
-            ConsoleWriteHeader("Preprocess input files");
+            Common.ConsoleHelper.ConsoleWriteHeader("Preprocess input files");
             Console.WriteLine($"Offers file: {offersDataLocation}");
             Console.WriteLine($"Transactions file: {transactionsDataLocation}");
 

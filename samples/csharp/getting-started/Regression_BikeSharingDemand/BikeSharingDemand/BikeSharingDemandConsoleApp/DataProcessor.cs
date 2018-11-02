@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BikeSharingDemand
 {
-    public class DataPreprocessor
+    public class DataProcessor
     {
         public IEstimator<ITransformer> DataPreprocessPipeline { get; private set; }
 
@@ -18,7 +18,7 @@ namespace BikeSharingDemand
             "Weather", "Temperature", "NormalizedTemperature",
             "Humidity", "Windspeed" };
 
-        public DataPreprocessor(MLContext mlContext)
+        public DataProcessor(MLContext mlContext)
         {
             // Configure data transformations in the Preprocess pipeline
             DataPreprocessPipeline =

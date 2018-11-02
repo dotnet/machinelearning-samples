@@ -1,5 +1,4 @@
-﻿using CustomerSegmentation.RetailData;
-using Microsoft.ML.Core.Data;
+﻿using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 using OxyPlot;
@@ -9,37 +8,35 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using static CustomerSegmentation.Model.ConsoleHelpers;
+
+using Common;
+using CustomerSegmentation.DataStructures;
+using Microsoft.ML;
 
 namespace CustomerSegmentation.Model
 {
-    public class ModelScorer
+    public class ClusteringModelScorer
     {
-        private readonly string pivotDataLocation;
-        private readonly string modelLocation;
-        private readonly string plotLocation;
-        private readonly string csvlocation;
-        private readonly LocalEnvironment mlContext;
+        private readonly string _pivotDataLocation;
 
-        public ModelScorer(string pivotDataLocation, string modelLocation, string plotLocation, string csvlocation)
+        private readonly string _plotLocation;
+        private readonly string _csvlocation;
+        private readonly MLContext _mlContext;
+        private readonly ITransformer _trainedModel;
+
+        public ClusteringModelScorer(MLContext mlContext, ITransformer trainedModel, string pivotDataLocation, string plotLocation, string csvlocation)
         {
-            this.pivotDataLocation = pivotDataLocation;
-            this.modelLocation = modelLocation;
-            this.plotLocation = plotLocation;
-            this.csvlocation = csvlocation;
-            mlContext = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic results
+            _pivotDataLocation = pivotDataLocation;
+            _plotLocation = plotLocation;
+            _csvlocation = csvlocation;
+            _mlContext = mlContext;
+            _trainedModel = trainedModel;
         }
 
+
         public void CreateCustomerClusters()
-        {
-            ITransformer model;
-            using (var file = File.OpenRead(modelLocation))
-            {
-                model = TransformerChain
-                    .LoadFrom(mlContext, file);
-            }
-            
-            var reader = new TextLoader(mlContext,
+        {            
+            var reader = new TextLoader(_mlContext,
                 new TextLoader.Arguments
                 {
                     Column = new[] {
@@ -50,26 +47,25 @@ namespace CustomerSegmentation.Model
                     Separator = ","
                 });
 
-            ConsoleWriteHeader("Read model");
-            Console.WriteLine($"Model location: {modelLocation}");
-            var data = reader.Read(new MultiFileSource(pivotDataLocation));
+            var data = reader.Read(new MultiFileSource(_pivotDataLocation));
 
-            var predictions = model.Transform(data)
-                            .AsEnumerable<ClusteringPrediction>(mlContext, false)
+            //Apply data transformation to create predictions/clustering
+            var predictions = _trainedModel.Transform(data)
+                            .AsEnumerable<ClusteringPrediction>(_mlContext, false)
                             .ToArray();
 
             //Generate data files with customer data grouped by clusters
-            SaveCustomerSegmentationCSV(predictions, csvlocation);
+            SaveCustomerSegmentationCSV(predictions, _csvlocation);
 
             //Plot/paint the clusters in a chart and open it with the by-default image-tool in Windows
-            SaveCustomerSegmentationPlotChart(predictions, plotLocation);
-            OpenChartInDefaultWindow(plotLocation);
+            SaveCustomerSegmentationPlotChart(predictions, _plotLocation);
+            OpenChartInDefaultWindow(_plotLocation);
 
         }
 
         private static void SaveCustomerSegmentationCSV(IEnumerable<ClusteringPrediction> predictions, string csvlocation)
         {
-            ConsoleWriteHeader("CSV Customer Segmentation");
+            ConsoleHelper.ConsoleWriteHeader("CSV Customer Segmentation");
             using (var w = new System.IO.StreamWriter(csvlocation))
             {
                 w.WriteLine($"LastName,SelectedClusterId");
@@ -85,7 +81,7 @@ namespace CustomerSegmentation.Model
 
         private static void SaveCustomerSegmentationPlotChart(IEnumerable<ClusteringPrediction> predictions, string plotLocation)
         {
-            ConsoleWriteHeader("Plot Customer Segmentation");
+            Common.ConsoleHelper.ConsoleWriteHeader("Plot Customer Segmentation");
 
             var plot = new PlotModel { Title = "Customer Segmentation", IsLegendVisible = true };
 

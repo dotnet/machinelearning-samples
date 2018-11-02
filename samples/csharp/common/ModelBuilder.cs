@@ -16,50 +16,24 @@ namespace Common
     {
         private MLContext _mlcontext;
         private IEstimator<ITransformer> _trainingPipeline;
-
         public ITransformer TrainedModel { get; private set; }
-
-        //(Original, with NO Generics)
-        //public PredictionFunction<DemandObservation, DemandPrediction> PredictionFunction { get; private set;}
-        public PredictionFunction<TObservation, TPrediction> PredictionFunction { get; private set; }
 
         public ModelBuilder(
             MLContext mlContext,
             IEstimator<ITransformer> dataPreprocessPipeline,
-            IEstimator<ITransformer> regressionLearner)
+            IEstimator<ITransformer> trainer)
         {
             _mlcontext = mlContext;
-            _trainingPipeline = dataPreprocessPipeline.Append(regressionLearner);
+            _trainingPipeline = dataPreprocessPipeline.Append(trainer);
         }
         
         public ITransformer Train(IDataView trainingData)
         {
-            TrainedModel = _trainingPipeline.Fit(trainingData);
-            PredictionFunction = TrainedModel.MakePredictionFunction<TObservation, TPrediction>(_mlcontext);
+            TrainedModel = _trainingPipeline.Fit(trainingData);            
             return TrainedModel;
         }
 
-        /// <summary>
-        /// For single prediction it's easier to use the PredictionFunction
-        /// beacuse we can directly use the TObservation and
-        /// TPrediction instead of IDataView.
-        /// </summary>
-        /// <param name="input">Single data</param>
-        /// <returns>Prediction for the input data</returns>
-        public TPrediction PredictSingle(TObservation input)
-        {
-            CheckTrained();
-            return PredictionFunction.Predict(input);
-        }
-
-        public IEnumerable<TPrediction> PredictBatch(IDataView inputDataView)
-        {
-            CheckTrained();
-            var predictions = TrainedModel.Transform(inputDataView);
-            return predictions.AsEnumerable<TPrediction>(_mlcontext, reuseRowObject: false);
-        }
-
-        public RegressionEvaluator.Result Evaluate(IDataView testData)
+        public RegressionEvaluator.Result EvaluateRegressionModel(IDataView testData)
         {
             CheckTrained();
             var predictions = TrainedModel.Transform(testData);
@@ -67,9 +41,19 @@ namespace Common
             return metrics;
         }
 
-        public void SaveAsFile(string persistedModelPath)
+        public ClusteringEvaluator.Result EvaluateClusteringModel(IDataView dataView)
         {
             CheckTrained();
+            var predictions = TrainedModel.Transform(dataView);
+
+            var metrics = _mlcontext.Clustering.Evaluate(predictions, score:"Score", features: "Features");
+            return metrics;
+        }
+
+        public void SaveModelAsFile(string persistedModelPath)
+        {
+            CheckTrained();
+
             using (var fs = new FileStream(persistedModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 _mlcontext.Model.Save(TrainedModel, fs);
             Console.WriteLine("The model is saved to {0}", persistedModelPath);
@@ -77,7 +61,7 @@ namespace Common
 
         private void CheckTrained()
         {
-            if (TrainedModel == null || PredictionFunction == null)
+            if (TrainedModel == null)
                 throw new InvalidOperationException("Cannot test before training. Call Train() first.");
         }
 

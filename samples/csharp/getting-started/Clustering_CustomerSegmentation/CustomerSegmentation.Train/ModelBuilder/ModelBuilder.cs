@@ -1,19 +1,20 @@
 ﻿using System;
-using static CustomerSegmentation.Model.ConsoleHelpers;
 using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.KMeans;
 using System.IO;
+using Microsoft.ML.Trainers.KMeans;
+using Microsoft.ML.Transforms.Categorical;
+using Microsoft.ML.Transforms.PCA;
 
 namespace CustomerSegmentation.Model
 {
     public class ModelBuilder
     {
-        private readonly LocalEnvironment env;
+        private readonly MLContext env;
 
-        public ModelBuilder(LocalEnvironment mlContext)
+        public ModelBuilder(MLContext mlContext)
         {
             env = mlContext;
         }
@@ -36,14 +37,12 @@ namespace CustomerSegmentation.Model
 
         public TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> BuildAndTrain(string pivotLocation, int kClusters = 3, int rank = 2)
         {
-            ConsoleWriteHeader("Build and Train using Static API");
             Console.Out.WriteLine($"Input file: {pivotLocation}");
 
-            var pipeline = new PcaEstimator(env, "Features", "PCAFeatures", rank: rank)
-                .Append(new CategoricalEstimator(env, new[] { new CategoricalEstimator.ColumnInfo("LastName", "LastNameKey", CategoricalTransform.OutputKind.Ind) }))
+            var pipeline = new PrincipalComponentAnalysisEstimator(env, "Features", "PCAFeatures", rank: rank)
+                .Append(new OneHotEncodingEstimator(env, new[] { new OneHotEncodingEstimator.ColumnInfo("LastName", "LastNameKey", CategoricalTransform.OutputKind.Ind) }))
                 .Append(new KMeansPlusPlusTrainer(env, "Features", clustersCount: kClusters));
 
-            ConsoleWriteHeader("Training model for customer clustering");
             TextLoader reader = CreateTextLoader();
             var dataSource = reader.Read(new MultiFileSource(pivotLocation));
             var model = pipeline.Fit(dataSource);
@@ -53,7 +52,7 @@ namespace CustomerSegmentation.Model
 
         public void Evaluate(string pivotLocation, TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> model)
         {
-            ConsoleWriteHeader("Evaluate model");
+            Common.ConsoleHelper.ConsoleWriteHeader("Evaluate model");
             TextLoader reader = CreateTextLoader();
             var dataSource = reader.Read(new MultiFileSource(pivotLocation));
 
@@ -68,59 +67,11 @@ namespace CustomerSegmentation.Model
 
         public void SaveModel(string modelLocation, TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> model)
         {
-            ConsoleWriteHeader("Save model to local file");
+            Common.ConsoleHelper.ConsoleWriteHeader("Save model to local file");
             ModelHelpers.DeleteAssets(modelLocation);
             using (var f = new FileStream(modelLocation, FileMode.Create))
                 model.SaveTo(env, f);
             Console.WriteLine($"Model saved: {modelLocation}");
         }
-
-        //public void BuildAndTrain(int kClusters = 3)
-        //{
-        //    ConsoleWriteHeader("Build and Train using Static API");
-        //    Console.Out.WriteLine($"Input file: {pivotLocation}");
-
-        //    ConsoleWriteHeader("Reading file ...");
-        //    var reader = new TextLoader(env,
-        //        new TextLoader.Arguments
-        //        {
-        //            Column = new[] {
-        //                new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-        //                new TextLoader.Column("LastName", DataKind.Text, 32)
-        //            },
-        //            HasHeader = true,
-        //            Separator = ","
-        //        });
-
-
-        //    var estrimator = new PcaEstimator(env, "Features", "PCAFeatures", rank: 2, advancedSettings: (p) => p.Seed = 42)
-        //    .Append(new CategoricalEstimator(env, new[] { new CategoricalEstimator.ColumnInfo("LastName", "LastNameKey", CategoricalTransform.OutputKind.Ind) }))
-        //    .Append(new KMeansPlusPlusTrainer(env, "Features", clustersCount: kClusters));
-
-
-        //    ConsoleWriteHeader("Training model for customer clustering");
-
-        //    var dataSource = reader.Read(new MultiFileSource(pivotLocation));
-        //    var model = estrimator.Fit(dataSource);
-        //    var data = model.Transform(dataSource);
-
-        //    // inspect data
-        //    var columnNames = data.Schema.GetColumnNames().ToArray();
-        //    var trainDataAsEnumerable = data.AsEnumerable<PivotPipelineData>(env, false).Take(10).ToArray();
-
-        //    ConsoleWriteHeader("Evaluate model");
-
-        //    var clustering = new ClusteringContext(env);
-        //    var metrics = clustering.Evaluate(data, score: "Score", features: "Features");
-        //    Console.WriteLine($"AvgMinScore is: {metrics.AvgMinScore}");
-        //    Console.WriteLine($"Dbi is: {metrics.Dbi}");
-
-        //    ConsoleWriteHeader("Save model to local file");
-        //    ModelHelpers.DeleteAssets(modelLocation);
-        //    using (var f = new FileStream(modelLocation, FileMode.Create))
-        //        model.SaveTo(env, f);
-        //    Console.WriteLine($"Model saved: {modelLocation}");
-
-        //}
     }
 }

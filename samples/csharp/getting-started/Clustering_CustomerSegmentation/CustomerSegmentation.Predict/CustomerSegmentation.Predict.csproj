@@ -7,22 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\CustomerSegmentation.Train\ModelBuilder\ConsoleHelpers.cs" Link="ModelScorer\ConsoleHelpers.cs" />
-    <Compile Include="..\CustomerSegmentation.Train\ModelBuilder\ModelHelpers.cs" Link="ModelScorer\ModelHelpers.cs" />
-    <Compile Include="..\CustomerSegmentation.Train\RetailData\ClusteringPrediction.cs" Link="RetailData\ClusteringPrediction.cs" />
-    <Compile Include="..\CustomerSegmentation.Train\RetailData\DataHelpers.cs" Link="RetailData\DataHelpers.cs" />
-    <Compile Include="..\CustomerSegmentation.Train\RetailData\Offer.cs" Link="RetailData\Offer.cs" />
-    <Compile Include="..\CustomerSegmentation.Train\RetailData\PivotData.cs" Link="RetailData\PivotData.cs" />
-    <Compile Include="..\CustomerSegmentation.Train\RetailData\Transaction.cs" Link="RetailData\Transaction.cs" />
+    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\ModelLoader.cs" Link="Common\ModelLoader.cs" />
+    <Compile Include="..\CustomerSegmentation.Train\DataStructures\ClusteringPrediction.cs" Link="DataStructures\ClusteringPrediction.cs" />
+    <Compile Include="..\CustomerSegmentation.Train\DataStructures\DataHelpers.cs" Link="DataStructures\DataHelpers.cs" />
+    <Compile Include="..\CustomerSegmentation.Train\DataStructures\Offer.cs" Link="DataStructures\Offer.cs" />
+    <Compile Include="..\CustomerSegmentation.Train\DataStructures\PivotData.cs" Link="DataStructures\PivotData.cs" />
+    <Compile Include="..\CustomerSegmentation.Train\DataStructures\Transaction.cs" Link="DataStructures\Transaction.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML" Version="0.7.0-preview-27031-8" />
     <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RetailData\" />
+    <Folder Include="DataStructures\" />
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

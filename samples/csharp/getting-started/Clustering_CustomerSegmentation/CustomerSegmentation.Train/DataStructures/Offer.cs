@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace CustomerSegmentation.RetailData
+namespace CustomerSegmentation.DataStructures
 {
     public class Offer
     {

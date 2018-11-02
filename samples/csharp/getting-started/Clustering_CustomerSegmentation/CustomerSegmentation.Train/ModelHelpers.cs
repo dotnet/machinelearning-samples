@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CustomerSegmentation.Model
+namespace CustomerSegmentation
 {
     public static class ModelHelpers
     {
@@ -65,14 +65,14 @@ namespace CustomerSegmentation.Model
             return Columns<T, DateTime>().ToArray();
         }
 
-        public static IEnumerable<string> GetColumnNames(this ISchema schema)
-        {
-            for (int i = 0; i < schema.ColumnCount; i++)
-            {
-                if (!schema.IsHidden(i))
-                    yield return schema.GetColumnName(i);
-            }
-        }
+        //public static IEnumerable<string> GetColumnNames(this ISchema schema)
+        //{
+        //    for (int i = 0; i < schema.ColumnCount; i++)
+        //    {
+        //        if (!schema.IsHidden(i))
+        //            yield return schema.GetColumnName(i);
+        //    }
+        //}
     }
 
 }

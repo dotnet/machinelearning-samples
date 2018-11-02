@@ -45,6 +45,16 @@ namespace Common
             Console.WriteLine($"*************************************************");
         }
 
+        public static void PrintClusteringMetrics(string name, ClusteringEvaluator.Result metrics)
+        {
+            Console.WriteLine($"*************************************************");
+            Console.WriteLine($"*       Metrics for {name} clustering model      ");
+            Console.WriteLine($"*------------------------------------------------");
+            Console.WriteLine($"*       AvgMinScore: {metrics.AvgMinScore}");
+            Console.WriteLine($"*       Dbi is: {metrics.Dbi}");
+            Console.WriteLine($"*************************************************");
+        }
+
         public static List<TObservation> PeekDataViewInConsole<TObservation>(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
             where TObservation : class, new()
         {

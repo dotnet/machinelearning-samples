@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CustomerSegmentation.RetailData
+namespace CustomerSegmentation.DataStructures
 {
     public class Transaction
     {

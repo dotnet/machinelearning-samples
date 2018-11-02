@@ -28,12 +28,12 @@ namespace BikeSharingDemand
             var testDataView = dataLoader.GetDataView(TestDataLocation);
 
             // 2. Common data pre-process with pipeline data transformations
-            var dataPreprocessor = new DataPreprocessor(mlContext);
-            var dataPreprocessPipeline = dataPreprocessor.DataPreprocessPipeline;
+            var dataPreprocessor = new DataProcessor(mlContext);
+            var dataProcessPipeline = dataPreprocessor.DataPreprocessPipeline;
 
             // (Optional) Peek data in training DataView after applying the PreprocessPipeline's transformations  
-            Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataPreprocessPipeline, 10);
-            Common.ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", trainingDataView, dataPreprocessPipeline, 10);
+            Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataProcessPipeline, 10);
+            Common.ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 10);
 
             // Definition of regression trainers/algorithms to use
             var regressionLearners = new (string name, IEstimator<ITransformer> value)[]
@@ -53,19 +53,19 @@ namespace BikeSharingDemand
             foreach (var learner in regressionLearners)
             {
                 Console.WriteLine("================== Training model ==================");
-                var modelBuilder = new Common.ModelBuilder<DemandObservation,DemandPrediction>(mlContext, dataPreprocessPipeline, learner.value);
+                var modelBuilder = new Common.ModelBuilder<DemandObservation,DemandPrediction>(mlContext, dataProcessPipeline, learner.value);
                 var trainedModel = modelBuilder.Train(trainingDataView);
 
                 Console.WriteLine("========= Predict a single data point ===============");
-                var prediction = modelBuilder.PredictSingle(DemandObservationSample.SingleDemandSampleData);
-                Common.ConsoleHelper.PrintPrediction(prediction.PredictedCount.ToString());
+                //var prediction = modelBuilder.PredictSingle(DemandObservationSample.SingleDemandSampleData);
+                //Common.ConsoleHelper.PrintPrediction(prediction.PredictedCount.ToString());
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-                var metrics = modelBuilder.Evaluate(testDataView);
+                var metrics = modelBuilder.EvaluateRegressionModel(testDataView);
                 Common.ConsoleHelper.PrintRegressionMetrics(learner.name, metrics);
 
                 //Save the model file that can be used by any application
-                modelBuilder.SaveAsFile($"{ModelsLocation}/{learner.name}Model.zip");
+                modelBuilder.SaveModelAsFile($"{ModelsLocation}/{learner.name}Model.zip");
             }
 
             // 4. Try/test Predictions with the created models
@@ -75,7 +75,7 @@ namespace BikeSharingDemand
             foreach (var learner in regressionLearners)
             {
                 //Load current model
-                var trainedModel = Common.ModelScorer.LoadModelFromZipFile(mlContext, $"{ModelsLocation}/{learner.name}Model.zip");
+                var trainedModel = Common.ModelLoader.LoadModelFromZipFile(mlContext, $"{ModelsLocation}/{learner.name}Model.zip");
                 Console.WriteLine($"================== Visualize/test 10 predictions for model {learner.name}Model.zip ==================");
                 //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
                 ModelScoringTester.VisualizeSomePredictions(learner.name, TestDataLocation, trainedModel, 10);

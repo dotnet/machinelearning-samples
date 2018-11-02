@@ -4,17 +4,12 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime;
 using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.Learners;
-
-using BikeSharingDemand.DataStructures;
 
 namespace Common
 {
-    public static class ModelScorer
+    public static class ModelLoader
     {
         public static ITransformer LoadModelFromZipFile(MLContext mlContext, string modelPath)
         {

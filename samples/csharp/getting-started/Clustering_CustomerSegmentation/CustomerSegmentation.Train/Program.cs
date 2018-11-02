@@ -2,15 +2,17 @@
 using CustomerSegmentation.Model;
 using System.IO;
 using System.Threading.Tasks;
-using CustomerSegmentation.RetailData;
-using static CustomerSegmentation.Model.ConsoleHelpers;
+using CustomerSegmentation.DataStructures;
 using Microsoft.ML.Runtime.Data;
+using Microsoft.ML;
+using CustomerSegmentation.Train.DataStructures;
+using Microsoft.ML.Trainers.KMeans;
 
 namespace CustomerSegmentation
 {
     public class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var assetsPath = ModelHelpers.GetAssetsPath(@"..\..\..\assets");
 
@@ -25,30 +27,46 @@ namespace CustomerSegmentation
                 //var modelBuilder = new ModelBuilder(pivotCsv, modelZip, kValuesSvg);
                 //modelBuilder.BuildAndTrain();
 
+                //STEP 0: Special data pre-process in this sample creating the PivotTable csv file
                 DataHelpers.PreProcessAndSave(offersCsv, transactionsCsv, pivotCsv);
 
                 //Create the MLContext to share across components for deterministic results
-                LocalEnvironment mlContext = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
+                MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
-                // STEP 1: Create and train a model
-                var modelBuilder = new ModelBuilder(mlContext);
-                var model = modelBuilder.BuildAndTrain(pivotCsv);
+                //STEP 1: Common data loading
+                DataLoader dataLoader = new DataLoader(mlContext);
+                var pivotDataView = dataLoader.GetDataView(pivotCsv);
 
-                // STEP2: Evaluate accuracy of the model
-                modelBuilder.Evaluate(pivotCsv, model);
+                //STEP 1: Process data transformations in pipeline
+                var dataPreprocessor = new DataProcessor(mlContext, 2);
+                var dataProcessPipeline = dataPreprocessor.DataProcessPipeline;
 
-                // STEP3: Save model
-                modelBuilder.SaveModel(modelZip, model);
+                // (Optional) Peek data in training DataView after applying the PreprocessPipeline's transformations  
+                Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
+                Common.ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
+
+                // STEP 2: Create and train the model
+                // Change to mlContext.Clustering. when KMeans is available in the catalog
+                var trainer = new KMeansPlusPlusTrainer(mlContext, "Features", clustersCount: 3);
+                var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, dataProcessPipeline, trainer);
+                var trainedModel = modelBuilder.Train(pivotDataView);
+
+                // STEP3: Evaluate accuracy of the model
+                var metrics = modelBuilder.EvaluateClusteringModel(pivotDataView);
+                Common.ConsoleHelper.PrintClusteringMetrics("KMeansPlusPlus", metrics);
+
+                // STEP3: Save/persist the model as a .ZIP file
+                modelBuilder.SaveModelAsFile(modelZip);
 
                 Console.WriteLine("Press any key to exit..");
                 Console.ReadLine();
 
             } catch (Exception ex)
             {
-                ConsoleWriteException(ex.Message);
+                Common.ConsoleHelper.ConsoleWriteException(ex.Message);
             }
 
-            ConsolePressAnyKey();
+            Common.ConsoleHelper.ConsolePressAnyKey();
         }
     }
 }
