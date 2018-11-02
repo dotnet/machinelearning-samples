@@ -2,31 +2,36 @@
 using CustomerSegmentation.Model;
 using System.IO;
 using System.Threading.Tasks;
-using static CustomerSegmentation.Model.ConsoleHelpers;
+using Common;
+using Microsoft.ML;
 
 namespace CustomerSegmentation
 {
     public class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            var assetsPath = ModelHelpers.GetAssetsPath(@"..\..\..\assets");
-
+            var assetsPath = @"..\..\..\assets";
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
-            var modelZip = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
+            var modelZipFilePath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
             var plotSvg = Path.Combine(assetsPath, "outputs", "customerSegmentation.svg");
             var plotCsv = Path.Combine(assetsPath, "outputs", "customerSegmentation.csv");
 
             try
             {
-                var modelEvaluator = new ModelScorer(pivotCsv, modelZip, plotSvg, plotCsv);
-                modelEvaluator.CreateCustomerClusters();
+                MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic results
+                var trainedModel = Common.ModelLoader.LoadModelFromZipFile(mlContext, modelZipFilePath);
+
+                //Create the clusters: Create data files and plot a chart
+                var clusteringModelScorer = new ClusteringModelScorer(mlContext, trainedModel, pivotCsv, plotSvg, plotCsv);
+
+                clusteringModelScorer.CreateCustomerClusters();
             } catch (Exception ex)
             {
-                ConsoleWriteException(ex.Message);
+                Common.ConsoleHelper.ConsoleWriteException(ex.Message);
             }
 
-            ConsolePressAnyKey();
+            Common.ConsoleHelper.ConsolePressAnyKey();
         }
     }
 }
