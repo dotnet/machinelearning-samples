@@ -10,9 +10,9 @@ namespace BikeSharingDemand
 {
     internal static class Program
     {
-        private static string ModelsLocation = @"../../../../models";
+        private static string ModelsLocation = @"../../../../MLModels";
 
-        private static string DatasetsLocation = @"../../../../data";
+        private static string DatasetsLocation = @"../../../../Data";
         private static string TrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
         private static string TestDataLocation = $"{DatasetsLocation}/hour_test.csv";
         
@@ -80,7 +80,9 @@ namespace BikeSharingDemand
                 //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
                 ModelScoringTester.VisualizeSomePredictions(learner.name, TestDataLocation, trainedModel, 10);
             }
-            Console.ReadLine();
+
+            Common.ConsoleHelper.ConsolePressAnyKey();
+
         }
     }
 }
