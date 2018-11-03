@@ -7,9 +7,12 @@ using Microsoft.ML;
 using Octokit;
 using System.IO;
 using Microsoft.ML.Runtime.Data;
+using GitHubLabeler.DataStructures;
+using Common;
 
 namespace GitHubLabeler
 {
+    //This "Labeler" class could be used in a different End-User application (Web app, other console app, desktop app, etc.)
     internal class Labeler
     {
         private readonly GitHubClient _client;
@@ -17,37 +20,43 @@ namespace GitHubLabeler
         private readonly string _repoName;
         private readonly string _modelPath;
         private readonly MLContext _mlContext;
-        private readonly ITransformer _loadedModel;
-        private readonly PredictionFunction<GitHubIssue, GitHubIssuePrediction> _engine;
 
-        public Labeler(string modelPath, string repoOwner, string repoName, string accessToken)
+        private readonly ModelScorer<GitHubIssue, GitHubIssuePrediction> _modelScorer;
+
+        public Labeler(string modelPath, string repoOwner = "", string repoName = "", string accessToken = "")
         {
             _modelPath = modelPath;
             _repoOwner = repoOwner;
             _repoName = repoName;
-
-            
+           
             _mlContext = new MLContext(seed:1);
 
-            //Load model from .ZIP file
-            using (var stream = new FileStream(_modelPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read))
+            //Load file model into ModelScorer
+            _modelScorer = new ModelScorer<GitHubIssue, GitHubIssuePrediction>(_mlContext);
+            _modelScorer.LoadModelFromZipFile(_modelPath);
+
+            //Configure Client to access a GitHub repo
+            if (accessToken != string.Empty)
             {
-                _loadedModel = TransformerChain.LoadFrom(_mlContext, stream);
+                var productInformation = new ProductHeaderValue("MLGitHubLabeler");
+                _client = new GitHubClient(productInformation)
+                {
+                    Credentials = new Credentials(accessToken)
+                };
             }
+        }
 
-            // Create prediction engine
-            _engine = _loadedModel.MakePredictionFunction<GitHubIssue, GitHubIssuePrediction>(_mlContext);
+        public void TestPredictionForSingleIssue()
+        {
+            GitHubIssue singleIssue = new GitHubIssue() { ID = "Any-ID", Title = "Entity Framework crashes", Description = "When connecting to the database, EF is crashing" };
 
-            // Client to access GitHub
-            var productInformation = new ProductHeaderValue("MLGitHubLabeler");
-            _client = new GitHubClient(productInformation)
-            {
-                Credentials = new Credentials(accessToken)
-            };
+            //Predict label for single hard-coded issue
+            var prediction = _modelScorer.PredictSingle(singleIssue);
+            Console.WriteLine($"=============== Single Prediction - Result: {prediction.Area} ===============");
         }
 
         // Label all issues that are not labeled yet
-        public async Task LabelAllNewIssues()
+        public async Task LabelAllNewIssuesInGitHubRepo()
         {
             var newIssues = await GetNewIssues();
             foreach (var issue in newIssues.Where(issue => !issue.Labels.Any()))
@@ -73,7 +82,7 @@ namespace GitHubLabeler
                             .ToList();
         }
 
-        private string PredictLabel(Issue issue)
+        private string PredictLabel(Octokit.Issue issue)
         {
             var corefxIssue = new GitHubIssue
             {
@@ -88,11 +97,10 @@ namespace GitHubLabeler
         }
 
         public string Predict(GitHubIssue issue)
-        {           
-            var prediction = _engine.Predict(issue);
+        {          
+            var prediction = _modelScorer.PredictSingle(issue);
 
             return prediction.Area;
-            
         }
 
         private void ApplyLabel(Issue issue, string label)

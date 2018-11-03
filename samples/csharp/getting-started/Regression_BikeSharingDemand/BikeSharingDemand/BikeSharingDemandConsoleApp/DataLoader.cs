@@ -38,7 +38,7 @@ namespace BikeSharingDemand
                                                                 new TextLoader.Column("Count", DataKind.R4, 16)
                                                                 }
                                                 }
-            );
+                                               );
         }
 
         public IDataView GetDataView(string filePath)
