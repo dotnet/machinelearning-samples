@@ -238,8 +238,8 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
         let ySquare = y.[0] * y.[0]
 
         printfn "-------------------------------------------------"
-        printfn "Predicted : {FarePrediction.FareAmount}"
-        printfn "Actual:    {testData[i].FareAmount}"
+        printfn "Predicted : %f" farePrediction.FareAmount
+        printfn "Actual:    %f" testData.[i].FareAmount
         printfn "-------------------------------------------------"
 
     // Regression Line calculation explanation:
@@ -281,7 +281,7 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
     // Open Chart File In Microsoft Photos App (Or default app, like browser for .svg)
 
     printfn "Showing chart..."
-    let chartFileNamePath = @".\" + chartFileName
+    let chartFileNamePath = chartFileName
     let p = new Process(StartInfo=ProcessStartInfo(chartFileNamePath, UseShellExecute = true))
     p.Start() |> ignore
 
