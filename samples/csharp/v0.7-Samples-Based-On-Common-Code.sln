@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubLabeler", "end-to-end
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubIssuesLabeler", "GitHubIssuesLabeler", "{D3A3F9D2-CB3A-45BB-8D42-8E6646E24E97}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SentimentAnalysis", "SentimentAnalysis", "{B2B3D668-AFA4-4BC9-969E-1840D6C92FB6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysisConsoleApp", "getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis\SentimentAnalysisConsoleApp\SentimentAnalysisConsoleApp.csproj", "{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,10 @@ Global
 		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +56,7 @@ Global
 		{633CD965-51BB-4526-B30E-B73D2716982A} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
 		{8AC93D85-B280-470C-A78D-4CB49CF968A9} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
 		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840} = {D3A3F9D2-CB3A-45BB-8D42-8E6646E24E97}
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2} = {B2B3D668-AFA4-4BC9-969E-1840D6C92FB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
