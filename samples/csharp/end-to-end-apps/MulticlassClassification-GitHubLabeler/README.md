@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class  classification | SDCA multi-class classifier |
+| v0.7           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class  classification | SDCA multi-class classifier |
 
 
 This is a simple prototype application to demonstrate how to use [ML.NET](https://www.nuget.org/packages/Microsoft.ML/) APIs. The main focus is on creating, training, and using ML (Machine Learning) model that is implemented in Predictor.cs class.
@@ -20,9 +20,9 @@ This ML model is using multi-class classification algorithm (`SdcaMultiClassTrai
     To allow the app to label issues in your GitHub repository you need to provide the folloving data into the appsettings.json file.
     ```csharp
         {
-          "GitHubToken": "",
-          "GitHubRepoOwner": "",
-          "GitHubRepoName": ""
+          "GitHubToken": "YOUR-GUID-GITHUB-TOKEN",
+          "GitHubRepoOwner": "YOUR-REPO-USER-OWNER-OR-ORGANIZATION",
+          "GitHubRepoName": "YOUR-REPO-SINGLE-NAME"
         }
     ```
     Your user account (`GitHubToken`) should have write rights to the repository (`GitHubRepoName`).
@@ -41,26 +41,33 @@ This ML model is using multi-class classification algorithm (`SdcaMultiClassTrai
     * Title - issue's title
     * Description - issue's description
     
-    and add the file in `Data` folder. Update `Predictor.DataPath` field to match your file's name:
+    and add the file in `Data` folder. Update `DataSetLocation` field to match your file's name:
 ```csharp
-private static string DataPath => Path.Combine(AppPath, "Data", "corefx_issues.tsv");
+private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";
 ```
 
 ## Training 
-Training is a process of running an ML model through known examples (in our case - issues with labels) and teaching it how to label new issues. It is done by calling:
+Training is a process of running an ML model through known examples (in our case - issues with labels) and teaching it how to label new issues. In this sample it is done by calling this method at the console app:
 ```csharp
-await Predictor.TrainAsync();
+BuildAndTrainModel(DataSetLocation, ModelFilePathName);
 ```
-After the training is completed, the model is saved as a .zip file in `Models\Model.zip`.
+After the training is completed, the model is saved as a .zip file in `MLModels\GitHubLabelerModel.zip`.
 
 ## Labeling
-When the model is trained, it can be used for predicting new issue's label. It is done by calling:
+When the model is trained, it can be used for predicting new issue's label. 
+
+For a single test/demo without connecting to a real GitHub repo, call this method from the console app:
 ```csharp
-await Label();
+TestSingleLabelPrediction(ModelFilePathName);
 ```
 
-For testing convenience only load not labeled issues that were created in the past 10 minutes are subject to labeling:
+For accessing the real issues of a GitHub repo, you call this other method from the console app:
+```csharp
+await PredictLabelsAndUpdateGitHub(ModelFilePathName);
+```
+
+For testing convenience when reading issues from your GitHub repo, it will only load not labeled issues that were created in the past 10 minutes and are subject to be labeled. You can chenge that config, though:
 ```csharp
 Since = DateTime.Now.AddMinutes(-10)
 ```
-You can modify those settings. After predicting the label, the program updates the issue with the predicted label on GitHub.
+You can modify those settings. After predicting the label, the program updates the issue with the predicted label on your GitHub repo.
