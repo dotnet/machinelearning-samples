@@ -37,24 +37,25 @@ namespace CustomerSegmentation
                 DataLoader dataLoader = new DataLoader(mlContext);
                 var pivotDataView = dataLoader.GetDataView(pivotCsv);
 
-                //STEP 1: Process data transformations in pipeline
+                //STEP 2: Process data transformations in pipeline
                 var dataProcessor = new DataProcessor(mlContext, 2);
                 var dataProcessPipeline = dataProcessor.DataProcessPipeline;
 
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
-                Common.ConsoleHelper.PeekFeaturesColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
+                Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
-                // STEP 2: Create and train the model                
+                // STEP 3: Create and train the model                
                 var trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount: 3);
-                var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, dataProcessPipeline, trainer);
+                var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, dataProcessPipeline);
+                modelBuilder.AddTrainer(trainer);
                 var trainedModel = modelBuilder.Train(pivotDataView);
 
-                // STEP3: Evaluate accuracy of the model
+                // STEP4: Evaluate accuracy of the model
                 var metrics = modelBuilder.EvaluateClusteringModel(pivotDataView);
                 Common.ConsoleHelper.PrintClusteringMetrics("KMeansPlusPlus", metrics);
 
-                // STEP3: Save/persist the model as a .ZIP file
+                // STEP5: Save/persist the model as a .ZIP file
                 modelBuilder.SaveModelAsFile(modelZip);
 
                 Console.WriteLine("Press any key to exit..");

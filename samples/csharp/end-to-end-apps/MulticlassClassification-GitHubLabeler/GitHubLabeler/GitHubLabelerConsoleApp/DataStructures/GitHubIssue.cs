@@ -2,8 +2,9 @@
 
 #pragma warning disable 649 // We don't care about unsused fields here, because they are mapped with the input file.
 
-namespace GitHubLabeler
+namespace GitHubLabeler.DataStructures
 {
+    //The only purpose of this class is for peek data after transforming it with the pipeline
     internal class GitHubIssue
     {
         [Column(ordinal: "0")]

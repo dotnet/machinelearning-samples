@@ -45,6 +45,30 @@ namespace Common
             Console.WriteLine($"*************************************************");
         }
 
+        public static void PrintMulticlassClassificationFoldsAverageMetrics(
+                                         string algorithmName,
+                                         (MultiClassClassifierEvaluator.Result metrics,
+                                          ITransformer model,
+                                          IDataView scoredTestData)[] crossValResults
+                                                                           )
+        {
+            var metricsInMultipleFolds = crossValResults.Select(r => r.metrics);
+
+            var microAccuracies  = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
+            var macroAccuracies  = metricsInMultipleFolds.Select(m => m.AccuracyMacro);
+            var logLoss          = metricsInMultipleFolds.Select(m => m.LogLoss);
+            var logLossReduction = metricsInMultipleFolds.Select(m => m.LogLossReduction);
+
+            Console.WriteLine($"**************************************************************************");
+            Console.WriteLine($"*       Metrics for {algorithmName} Multi-class Classification model      ");
+            Console.WriteLine($"*-------------------------------------------------------------------------");
+            Console.WriteLine($"*       Average MicroAccuracy:    {microAccuracies.Average():0.##}");
+            Console.WriteLine($"*       Average MacroAccuracy:    {macroAccuracies.Average():0.##}");
+            Console.WriteLine($"*       Average LogLoss:          {logLoss.Average():#.##}");
+            Console.WriteLine($"*       Average LogLossReduction: {logLossReduction.Average():#.##}");
+            Console.WriteLine($"**************************************************************************");
+        }
+
         public static void PrintClusteringMetrics(string name, ClusteringEvaluator.Result metrics)
         {
             Console.WriteLine($"*************************************************");
@@ -58,7 +82,7 @@ namespace Common
         public static List<TObservation> PeekDataViewInConsole<TObservation>(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
             where TObservation : class, new()
         {
-            string msg = string.Format("Showing {0} rows with all the columns", numberOfRows.ToString());
+            string msg = string.Format("Peek data in DataView: Showing {0} rows with the columns specified by TObservation class", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
 
             //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
@@ -85,9 +109,9 @@ namespace Common
             return someRows;
         }
 
-        public static List<float[]> PeekFeaturesColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
+        public static List<float[]> PeekVectorColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
-            string msg = string.Format("Show {0} rows with just the '{1}' column", numberOfRows, columnName );
+            string msg = string.Format("Peek data in DataView: : Show {0} rows with just the '{1}' column", numberOfRows, columnName );
             ConsoleWriteHeader(msg);
 
             var transformedData = pipeline.Fit(dataView).Transform(dataView);

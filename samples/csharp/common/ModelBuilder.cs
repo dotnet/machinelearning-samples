@@ -8,26 +8,38 @@ using Microsoft.ML.Runtime.Data;
 
 namespace Common
 {
-    public class ModelBuilder<TObservation, TPrediction> 
+    public class ModelBuilder<TObservation, TPrediction>
                                     where TObservation : class
                                     where TPrediction : class, new()
     {
         private MLContext _mlcontext;
-        private IEstimator<ITransformer> _trainingPipeline;
+        public IEstimator<ITransformer> TrainingPipeline { get; private set; }
         public ITransformer TrainedModel { get; private set; }
 
         public ModelBuilder(
             MLContext mlContext,
-            IEstimator<ITransformer> dataProcessPipeline,
-            IEstimator<ITransformer> trainer)
+            IEstimator<ITransformer> dataProcessPipeline //, IEstimator<ITransformer> trainer
+                           )
         {
             _mlcontext = mlContext;
-            _trainingPipeline = dataProcessPipeline.Append(trainer);
+            TrainingPipeline = dataProcessPipeline;
+
+            //??? TrainingPipeline.Append(trainer);
         }
-        
+
+        public void AddTrainer(IEstimator<ITransformer> trainer)
+        {
+            TrainingPipeline = TrainingPipeline.Append(trainer);
+        }
+
+        public void AddEstimator(IEstimator<ITransformer> estimator)
+        {
+            TrainingPipeline = TrainingPipeline.Append(estimator);
+        }
+
         public ITransformer Train(IDataView trainingData)
         {
-            TrainedModel = _trainingPipeline.Fit(trainingData);            
+            TrainedModel = TrainingPipeline.Fit(trainingData);
             return TrainedModel;
         }
 
@@ -37,6 +49,19 @@ namespace Common
             var predictions = TrainedModel.Transform(testData);
             var metrics = _mlcontext.Regression.Evaluate(predictions, "Count", "Score");
             return metrics;
+        }
+
+        public (MultiClassClassifierEvaluator.Result metrics, 
+                ITransformer model, 
+                IDataView scoredTestData)[]
+            CrossValidateAndEvaluateMulticlassClassificationModel(IDataView data, int numFolds = 5, string labelColumn = "Label", string stratificationColumn = null)
+        {
+            //CrossValidation happens actually before training, so no check.
+            //...
+            var context = new MulticlassClassificationContext(_mlcontext);
+
+            var crossValidationResults = context.CrossValidate(data, TrainingPipeline, numFolds, labelColumn, stratificationColumn);
+            return crossValidationResults;
         }
 
         public ClusteringEvaluator.Result EvaluateClusteringModel(IDataView dataView)
