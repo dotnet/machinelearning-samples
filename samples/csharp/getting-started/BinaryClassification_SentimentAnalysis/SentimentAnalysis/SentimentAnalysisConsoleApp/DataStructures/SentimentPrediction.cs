@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Runtime.Api;
 
-namespace BinaryClassification_SentimentAnalysis
+namespace SentimentAnalysisConsoleApp.DataStructures
 {
     public class SentimentPrediction
     {
