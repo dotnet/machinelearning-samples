@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.Diagnostics
 
 open Microsoft.ML.Runtime.Learners
 open Microsoft.ML.Runtime.Data
@@ -9,8 +10,9 @@ open Microsoft.ML
 open Microsoft.ML.Core.Data
 open Microsoft.ML.Runtime.Api
 open Microsoft.ML.Legacy
+open Microsoft.ML.Core.FSharp
+
 open PLplot
-open System.Diagnostics
 
 
 let AppPath = Path.Combine(__SOURCE_DIRECTORY__, "../../../..")
@@ -35,31 +37,6 @@ type TaxiTripFarePrediction = {
         [<ColumnName("Score")>]
         FareAmount : float32
     }
-
-
-module Pipeline =
-    open Microsoft.ML.Core.Data
-
-    let private downcastEstimator (b : IEstimator<'a>) =
-        match b with
-        | :? IEstimator<ITransformer> as b -> b
-        | _ -> failwith "qwe"
-
-
-    let textTransform (inputColumn : string) outputColumn env =
-        TextTransform(env, inputColumn, outputColumn)
-
-    let concatEstimator name source env =
-        ConcatEstimator(env,name, source)
-
-    let append (estimator : IEstimator<'a>) (pipeline : IEstimator<'b>)  = 
-        match pipeline with
-        | :? IEstimator<ITransformer> as p -> 
-            p.Append estimator
-        | _ -> failwith "The pipeline has to be an instance of IEstimator<ITransformer>."
-
-    let fit (dataView : IDataView) (pipeline : EstimatorChain<'a>) =
-        pipeline.Fit dataView
 
 
 let createTaxiFareDataFileLoader mlcontext =
@@ -102,7 +79,7 @@ let buildAndTrain mlcontext =
         |> Pipeline.append(new Normalizer(mlcontext, "PassengerCount", Normalizer.NormalizerMode.MeanVariance))
         |> Pipeline.append(new Normalizer(mlcontext, "TripTime", Normalizer.NormalizerMode.MeanVariance))
         |> Pipeline.append(new Normalizer(mlcontext, "TripDistance", Normalizer.NormalizerMode.MeanVariance))
-        |> Pipeline.append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"));
+        |> Pipeline.append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"))
     
     // We apply our selected Trainer (SDCA Regression algorithm)
     let pipelineWithTrainer = 
@@ -212,19 +189,19 @@ let plotRegressionChart (model : ITransformer) testDataSetPath numberOfRecordsTo
     let xMaxLimit = 40. //Rides larger than $40 are not shown in the chart
     let yMinLimit = 0.
     let yMaxLimit = 40. //Rides larger than $40 are not shown in the chart
-    pl.env(xMinLimit, xMaxLimit, yMinLimit, yMaxLimit, AxesScale.Independent, AxisBox.BoxTicksLabelsAxes);
+    pl.env(xMinLimit, xMaxLimit, yMinLimit, yMaxLimit, AxesScale.Independent, AxisBox.BoxTicksLabelsAxes)
 
     // Set scaling for main title text 125% size of default
     pl.schr(0., 1.25)
 
     // The main title
-    pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction");
+    pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction")
 
     // plot using different colors
     // see http://plplot.sourceforge.net/examples.php?demo=02 for palette indices
     pl.col0 1
 
-    let totalNumber = numberOfRecordsToRead;
+    let totalNumber = numberOfRecordsToRead
     let testData = getDataFromCsv testDataSetPath totalNumber
 
     //This code is the symbol to paint
@@ -249,7 +226,7 @@ let plotRegressionChart (model : ITransformer) testDataSetPath numberOfRecordsTo
         let y = [| float farePrediction.FareAmount |]
 
         //Paint a dot
-        pl.poin(x, y, code);
+        pl.poin(x, y, code)
 
         xTotal <- xTotal + float x.[0]
         yTotal <- yTotal + float y.[0]
@@ -280,7 +257,7 @@ let plotRegressionChart (model : ITransformer) testDataSetPath numberOfRecordsTo
     let b = minY - (m * minX)
 
     //Generic function for Y for the regression line
-    // y = (m * x) + b;
+    // y = (m * x) + b
 
     let x1 = 1.
     //Function for Y1 in the line
