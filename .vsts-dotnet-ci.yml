@@ -29,7 +29,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build SentimentAnalysis (BinaryClassification)
     inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\BinaryClassification_SentimentAnalysis.sln'
+      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
 
 - phase: CustomerSegmentation
   queue: Hosted VS2017
