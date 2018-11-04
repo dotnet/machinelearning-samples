@@ -8,38 +8,44 @@ using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Learners;
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
+using Microsoft.ML.Transforms;
+using Microsoft.ML.Transforms.Categorical;
+using Microsoft.ML.Transforms.Normalizers;
+using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
+using Regression_TaxiFarePrediction.DataStructures;
 
 namespace Regression_TaxiFarePrediction
 {
     internal static class Program
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-        private static string TrainDataPath => Path.Combine(AppPath, "datasets", "taxi-fare-train.csv");
-        private static string TestDataPath => Path.Combine(AppPath, "datasets", "taxi-fare-test.csv");
-        private static string ModelPath => Path.Combine(AppPath, "TaxiFareModel.zip");
+
+        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string TrainDataPath = $"{BaseDatasetsLocation}/taxi-fare-train.csv";
+        private static string TestDataPath = $"{BaseDatasetsLocation}/taxi-fare-test.csv";
+
+        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string ModelPath = $"{BaseModelsPath}/TaxiFareModel.zip";
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
             //Create ML Context with seed for repeteable/deterministic results
-            LocalEnvironment mlcontext = new LocalEnvironment(seed: 0);
+            MLContext mlContext = new MLContext(seed: 0);
 
-            // STEP 1: Create and train a model
-            var model = BuildAndTrain(mlcontext);
+            // Create, Train, Evaluate and Save a model
+            BuildTrainEvaluateAndSaveModel(mlContext);
 
-            // STEP2: Evaluate accuracy of the model
-            Evaluate(mlcontext, TestDataPath, model);
+            // Make a single test prediction loding the model from .ZIP file
+            TestSinglePrediction(mlContext);
 
-            // STEP 3: Make a test prediction
-            TestSinglePrediction(mlcontext, model);
-
-            //STEP 4: Paint regression distribution chart for a number of elements read from a Test DataSet file
-            PlotRegressionChart(model, TestDataPath, 100, args);
+            // Paint regression distribution chart for a number of elements read from a Test DataSet file
+            PlotRegressionChart(mlContext, TestDataPath, 100, args);
 
             Console.WriteLine("Press any key to exit..");
             Console.ReadLine();
         }
 
-        private static TextLoader CreateTaxiFareDataFileLoader(LocalEnvironment mlcontext)
+        private static TextLoader CreateTaxiFareDataFileLoader(MLContext mlcontext)
         {
             return new TextLoader(mlcontext,
                                                       new TextLoader.Arguments()
@@ -59,73 +65,46 @@ namespace Regression_TaxiFarePrediction
                                                       });
         }
 
-        private static ITransformer BuildAndTrain(LocalEnvironment mlcontext)
+        private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
-            // Create the TextLoader by defining the data columns and where to find (column position) them in the text file.
-            TextLoader textLoader = CreateTaxiFareDataFileLoader(mlcontext);
+            // STEP 1: Common data loading configuration
+            DataLoader dataLoader = new DataLoader(mlContext);
+            var trainingDataView = dataLoader.GetDataView(TrainDataPath);
+            var testDataView = dataLoader.GetDataView(TestDataPath);
 
-            // Now read the file (remember though, readers are lazy, so the actual reading will happen when 'fitting').
-            IDataView dataView = textLoader.Read(new MultiFileSource(TrainDataPath));
+            // STEP 2: Common data process configuration with pipeline data transformations
+            var dataProcessor = new DataProcessor(mlContext);
+            var dataProcessPipeline = dataProcessor.DataProcessPipeline;
 
-            //Copy the Count column to the Label column 
+            // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
+            Common.ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);
+            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
-            // In our case, we will one-hot encode as categorical values the VendorId, RateCode and PaymentType
-            // Then concatenate that with the numeric columns.
-            var pipeline = new CopyColumnsEstimator(mlcontext, "FareAmount", "Label")
-                                    .Append(new CategoricalEstimator(mlcontext, "VendorId"))
-                                    .Append(new CategoricalEstimator(mlcontext, "RateCode"))
-                                    .Append(new CategoricalEstimator(mlcontext, "PaymentType"))
-                                    .Append(new Normalizer(mlcontext, "PassengerCount", Normalizer.NormalizerMode.MeanVariance))
-                                    .Append(new Normalizer(mlcontext, "TripTime", Normalizer.NormalizerMode.MeanVariance))
-                                    .Append(new Normalizer(mlcontext, "TripDistance", Normalizer.NormalizerMode.MeanVariance))
-                                    .Append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"));
-
+            // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
+            var modelBuilder = new Common.ModelBuilder<TaxiTrip, TaxiTripFarePrediction>(mlContext, dataProcessPipeline);
             // We apply our selected Trainer (SDCA Regression algorithm)
-            var pipelineWithTrainer = pipeline.Append(new SdcaRegressionTrainer(mlcontext, new SdcaRegressionTrainer.Arguments(),
-                                                                                "Features", "Label"));
+            var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
+            modelBuilder.AddTrainer(trainer);
 
-            // The pipeline is trained on the dataset that has been loaded and transformed.
-            Console.WriteLine("=============== Training model ===============");
-            var model = pipelineWithTrainer.Fit(dataView);
+            // STEP 4: Train the model fitting to the DataSet
+            //The pipeline is trained on the dataset that has been loaded and transformed.
+            Console.WriteLine("=============== Training the model ===============");
+            modelBuilder.Train(trainingDataView);
 
-            return model;
+            // STEP 5: Evaluate the model and show accuracy stats
+            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Label", "Score");
+            Common.ConsoleHelper.PrintRegressionMetrics("StochasticDualCoordinateAscent", metrics);
+
+            // STEP 6: Save/persist the trained model to a .ZIP file
+            Console.WriteLine("=============== Saving the model to a file ===============");
+            modelBuilder.SaveModelAsFile(ModelPath);
+
+            return modelBuilder.TrainedModel;
         }
 
-        private static RegressionEvaluator.Result Evaluate(LocalEnvironment mlcontext,
-                                                           string testDataLocation,
-                                                           ITransformer model
-                                                          )
+        private static void TestSinglePrediction(MLContext mlContext)
         {
-            //Create TextLoader with schema related to columns in the TESTING/EVALUATION data file
-            TextLoader textLoader = CreateTaxiFareDataFileLoader(mlcontext);
-
-            //Load evaluation/test data
-            IDataView testDataView = textLoader.Read(new MultiFileSource(testDataLocation));
-
-            Console.WriteLine("=============== Evaluating Model's accuracy with Test data===============");
-            var predictions = model.Transform(testDataView);
-
-            var regressionCtx = new RegressionContext(mlcontext);
-            var metrics = regressionCtx.Evaluate(predictions, "Label", "Score");
-            var algorithmName = "SdcaRegressionTrainer";
-            Console.WriteLine($"*************************************************");
-            Console.WriteLine($"*       Metrics for {algorithmName}          ");
-            Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
-            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
-            Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
-            Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
-            Console.WriteLine($"*************************************************");
-
-            return metrics;
-        }
-
-        private static void TestSinglePrediction(LocalEnvironment mlcontext, ITransformer model)
-        {
-            //Prediction test
-            // Create prediction engine and make prediction.
-            var engine = model.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlcontext);
-
             //Sample: 
             //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
             //VTS,1,1,1140,3.75,CRD,15.5
@@ -141,23 +120,23 @@ namespace Regression_TaxiFarePrediction
                 FareAmount = 0 // To predict. Actual/Observed = 15.5
             };
 
-            var prediction = engine.Predict(taxiTripSample);
-                Console.WriteLine($"**********************************************************************");
-                Console.WriteLine($"Predicted fare: {prediction.FareAmount:0.####}, actual fare: 29.5");
-                Console.WriteLine($"**********************************************************************");
+            var modelScorer = new Common.ModelScorer<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+            modelScorer.LoadModelFromZipFile(ModelPath);
+            var resultprediction = modelScorer.PredictSingle(taxiTripSample);
+            
+            Console.WriteLine($"**********************************************************************");
+            Console.WriteLine($"Predicted fare: {resultprediction.FareAmount:0.####}, actual fare: 15.5");
+            Console.WriteLine($"**********************************************************************");
         }
 
-        private static void PlotRegressionChart(ITransformer model,
+        private static void PlotRegressionChart(MLContext mlContext,                                               
                                                 string testDataSetPath,
                                                 int numberOfRecordsToRead,
                                                 string[] args)
         {
-            //Create the Prediction Function
-            var mlcontext = new LocalEnvironment();
-            // Create prediction engine 
-            var engine = model.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlcontext);
-            //var prediction = engine.Predict(taxiTripSample);
-
+            var modelScorer = new Common.ModelScorer<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+            modelScorer.LoadModelFromZipFile(ModelPath);
+            
 
             string chartFileName = "";
 
@@ -185,9 +164,9 @@ namespace Regression_TaxiFarePrediction
 
                 // set axis limits
                 const int xMinLimit = 0;
-                const int xMaxLimit = 40; //Rides larger than $40 are not shown in the chart
+                const int xMaxLimit = 35; //Rides larger than $35 are not shown in the chart
                 const int yMinLimit = 0;
-                const int yMaxLimit = 40;  //Rides larger than $40 are not shown in the chart
+                const int yMaxLimit = 35;  //Rides larger than $35 are not shown in the chart
                 pl.env(xMinLimit, xMaxLimit, yMinLimit, yMaxLimit, AxesScale.Independent, AxisBox.BoxTicksLabelsAxes);
 
                 // Set scaling for mail title text 125% size of default
@@ -222,7 +201,9 @@ namespace Regression_TaxiFarePrediction
                     var y = new double[1];
 
                     //Make Prediction
-                    var FarePrediction = engine.Predict(testData[i]);
+
+                    var FarePrediction = modelScorer.PredictSingle(testData[i]);
+                    //var FarePrediction = engine.Predict(testData[i]);
   
                     x[0] = testData[i].FareAmount;
                     y[0] = FarePrediction.FareAmount;
