@@ -62,11 +62,15 @@ namespace Common
                 IDataView scoredTestData)[]
             CrossValidateAndEvaluateMulticlassClassificationModel(IDataView data, int numFolds = 5, string labelColumn = "Label", string stratificationColumn = null)
         {
-            //CrossValidation happens actually before training, so no check.
-            //...
-            var context = new MulticlassClassificationContext(_mlcontext);
+            //CrossValidation happens actually before training, so no check here.
 
-            var crossValidationResults = context.CrossValidate(data, TrainingPipeline, numFolds, labelColumn, stratificationColumn);
+            //Cross validate
+            var crossValidationResults = _mlcontext.MulticlassClassification.CrossValidate(data, TrainingPipeline, numFolds, labelColumn, stratificationColumn);
+
+            //Another way to do it:
+            //var context = new MulticlassClassificationContext(_mlcontext);
+            //var crossValidationResults = context.CrossValidate(data, TrainingPipeline, numFolds, labelColumn, stratificationColumn);
+
             return crossValidationResults;
         }
 

@@ -57,7 +57,7 @@ namespace SentimentAnalysisConsoleApp
             var metrics = modelBuilder.EvaluateBinaryClassificationModel(testDataView);
             Common.ConsoleHelper.PrintBinaryClassificationMetrics("LinearClassificationTrainer", metrics);
 
-            // STEP 6: Save/persiste the trained model to a .ZIP file
+            // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
             modelBuilder.SaveModelAsFile(ModelPath);
 
