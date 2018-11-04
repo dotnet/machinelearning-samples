@@ -42,10 +42,10 @@ namespace SentimentAnalysisConsoleApp
             Common.ConsoleHelper.PeekDataViewInConsole<SentimentIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
             //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
 
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder                 
-            var trainer = new LinearClassificationTrainer(mlContext, "Features", "Label");
-            //(TBD) var trainer = mlContext.BinaryClassification.Trainers.???("Features", "Label");
+            // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
             var modelBuilder = new Common.ModelBuilder<SentimentIssue, SentimentPrediction>(mlContext, dataProcessPipeline);
+            var trainer = mlContext.BinaryClassification.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
+            //Other way: var trainer = new LinearClassificationTrainer(mlContext, "Features", "Label");
             modelBuilder.AddTrainer(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -55,7 +55,7 @@ namespace SentimentAnalysisConsoleApp
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var metrics = modelBuilder.EvaluateBinaryClassificationModel(testDataView);
-            Common.ConsoleHelper.PrintBinaryClassificationMetrics("LinearClassificationTrainer", metrics);
+            Common.ConsoleHelper.PrintBinaryClassificationMetrics("StochasticDualCoordinateAscent", metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
