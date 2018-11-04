@@ -54,7 +54,7 @@ namespace SentimentAnalysisConsoleApp
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var metrics = modelBuilder.EvaluateBinaryClassificationModel(testDataView);
+            var metrics = modelBuilder.EvaluateBinaryClassificationModel(testDataView, "Label", "Score");
             Common.ConsoleHelper.PrintBinaryClassificationMetrics("StochasticDualCoordinateAscent", metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file

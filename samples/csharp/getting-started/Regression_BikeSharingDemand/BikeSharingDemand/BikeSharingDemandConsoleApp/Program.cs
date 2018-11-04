@@ -58,12 +58,8 @@ namespace BikeSharingDemand
                 modelBuilder.AddTrainer(learner.value);
                 var trainedModel = modelBuilder.Train(trainingDataView);
 
-                Console.WriteLine("========= Predict a single data point ===============");
-                //var prediction = modelBuilder.PredictSingle(DemandObservationSample.SingleDemandSampleData);
-                //Common.ConsoleHelper.PrintPrediction(prediction.PredictedCount.ToString());
-
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-                var metrics = modelBuilder.EvaluateRegressionModel(testDataView);
+                var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Count", "Score");
                 Common.ConsoleHelper.PrintRegressionMetrics(learner.name, metrics);
 
                 //Save the model file that can be used by any application

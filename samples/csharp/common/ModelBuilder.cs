@@ -41,19 +41,19 @@ namespace Common
             return TrainedModel;
         }
 
-        public RegressionEvaluator.Result EvaluateRegressionModel(IDataView testData)
+        public RegressionEvaluator.Result EvaluateRegressionModel(IDataView testData, string label, string score)
         {
             CheckTrained();
             var predictions = TrainedModel.Transform(testData);
-            var metrics = _mlcontext.Regression.Evaluate(predictions, "Count", "Score");
+            var metrics = _mlcontext.Regression.Evaluate(predictions, label: label, score: score);
             return metrics;
         }
 
-        public BinaryClassifierEvaluator.Result EvaluateBinaryClassificationModel(IDataView testData)
+        public BinaryClassifierEvaluator.Result EvaluateBinaryClassificationModel(IDataView testData, string label, string score)
         {
             CheckTrained();
             var predictions = TrainedModel.Transform(testData);
-            var metrics = _mlcontext.BinaryClassification.Evaluate(predictions, "Label");
+            var metrics = _mlcontext.BinaryClassification.Evaluate(predictions, label:label, score:score);
             return metrics;
         }
 
