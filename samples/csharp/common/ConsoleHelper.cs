@@ -37,12 +37,23 @@ namespace Common
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} regression model      ");
             Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       LossFn: {metrics.LossFn:0.##}");
-            Console.WriteLine($"*       R2 Score: {metrics.RSquared:0.##}");
+            Console.WriteLine($"*       LossFn:        {metrics.LossFn:0.##}");
+            Console.WriteLine($"*       R2 Score:      {metrics.RSquared:0.##}");
             Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
-            Console.WriteLine($"*       Squared loss: {metrics.L2:#.##}");
-            Console.WriteLine($"*       RMS loss: {metrics.Rms:#.##}");
+            Console.WriteLine($"*       Squared loss:  {metrics.L2:#.##}");
+            Console.WriteLine($"*       RMS loss:      {metrics.Rms:#.##}");
             Console.WriteLine($"*************************************************");
+        }
+        
+        public static void PrintBinaryClassificationMetrics(string name, BinaryClassifierEvaluator.Result metrics)
+        {
+            Console.WriteLine($"************************************************************");
+            Console.WriteLine($"*       Metrics for {name} binary classification model      ");
+            Console.WriteLine($"*-----------------------------------------------------------");
+            Console.WriteLine($"*       Accuracy: {metrics.Accuracy:P2}");
+            Console.WriteLine($"*       Auc:      {metrics.Auc:P2}");
+            Console.WriteLine($"*       F1Score:  {metrics.F1Score:P2}");
+            Console.WriteLine($"************************************************************");
         }
 
         public static void PrintMulticlassClassificationFoldsAverageMetrics(
@@ -99,7 +110,12 @@ namespace Common
             someRows.ForEach(row =>
                                 {
                                     string lineToPrint = "Row--> ";
-                                    foreach (FieldInfo field in row.GetType().GetFields())
+
+                                    var fieldsInRow = row.GetType().GetFields(BindingFlags.Instance |
+                                                                              BindingFlags.Static |
+                                                                              BindingFlags.NonPublic |
+                                                                              BindingFlags.Public);
+                                    foreach (FieldInfo field in fieldsInRow)
                                     {
                                         lineToPrint += $"| {field.Name}: {field.GetValue(row)}";
                                     }

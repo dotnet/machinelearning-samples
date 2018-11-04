@@ -54,7 +54,7 @@ namespace GitHubLabeler
             DataLoader dataLoader = new DataLoader(mlContext);
             var trainingDataView = dataLoader.GetDataView(DataSetLocation);
 
-            // STEP 2: Common data pre-process configuration with pipeline data transformations
+            // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessor = new DataProcessor(mlContext);
             var dataProcessPipeline = dataProcessor.DataProcessPipeline;
 
@@ -64,7 +64,7 @@ namespace GitHubLabeler
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                 
             var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent("Label", "Features");
-            var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline); //, trainer);
+            var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline); 
             modelBuilder.AddTrainer(new SdcaMultiClassTrainer(mlContext, "Features", "Label"));
             modelBuilder.AddEstimator(new KeyToValueEstimator(mlContext, "PredictedLabel"));
 

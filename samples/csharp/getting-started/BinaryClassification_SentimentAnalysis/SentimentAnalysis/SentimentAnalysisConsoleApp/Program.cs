@@ -25,125 +25,56 @@ namespace SentimentAnalysisConsoleApp
 
         static void Main(string[] args)
         {
-            //1. Create MLContext to be shared across the model creation workflow objects 
-            // Set a random seed for repeatable/deterministic results across multiple trainings.
+            //Create MLContext to be shared across the model creation workflow objects 
+            //Set a random seed for repeatable/deterministic results across multiple trainings.
             var mlContext = new MLContext();
 
-            //2. Create DataReader with data schema mapped to file's columns
-            var reader = new TextLoader(mlContext,
-                                        new TextLoader.Arguments()
-                                        {
-                                            Separator = "tab",
-                                            HasHeader = true,
-                                            Column = new[]
-                                            {
-                                                new TextLoader.Column("Label", DataKind.Bool, 0),
-                                                new TextLoader.Column("Text", DataKind.Text, 1)
-                                            }
-                                        });
+            // STEP 1: Common data loading configuration
+            DataLoader dataLoader = new DataLoader(mlContext);
+            var trainingDataView = dataLoader.GetDataView(TrainDataPath);
+            var testDataView = dataLoader.GetDataView(TestDataPath);
 
-            //Load training data
-            IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
+            // STEP 2: Common data process configuration with pipeline data transformations
+            var dataProcessor = new DataProcessor(mlContext);
+            var dataProcessPipeline = dataProcessor.DataProcessPipeline;
 
+            // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
+            Common.ConsoleHelper.PeekDataViewInConsole<SentimentIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
+            //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
 
-            //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
-
-            var trainer = new LinearClassificationTrainer(mlContext,"Features","Label");
+            // STEP 3: Set the training algorithm, then create and config the modelBuilder                 
+            var trainer = new LinearClassificationTrainer(mlContext, "Features", "Label");
             //(TBD) var trainer = mlContext.BinaryClassification.Trainers.???("Features", "Label");
+            var modelBuilder = new Common.ModelBuilder<SentimentIssue, SentimentPrediction>(mlContext, dataProcessPipeline);
+            modelBuilder.AddTrainer(trainer);
 
-            var pipeline = new TextFeaturizingEstimator(mlContext, "Text", "Features")  //Convert the text column to numeric vectors (Features column)  
-                                        .Append(trainer);                                                                
-                                        
-            //4. Create and train the model            
-            Console.WriteLine("=============== Create and Train the Model ===============");
+            // STEP 4: Train the model fitting to the DataSet
+            Console.WriteLine("=============== Training the model ===============");
+            modelBuilder.Train(trainingDataView);
 
-            var model = pipeline.Fit(trainingDataView);
+            // STEP 5: Evaluate the model and show accuracy stats
+            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            var metrics = modelBuilder.EvaluateBinaryClassificationModel(testDataView);
+            Common.ConsoleHelper.PrintBinaryClassificationMetrics("LinearClassificationTrainer", metrics);
 
-            Console.WriteLine("=============== End of training ===============");
-            Console.WriteLine();
+            // STEP 6: Save/persiste the trained model to a .ZIP file
+            Console.WriteLine("=============== Saving the model to a file ===============");
+            modelBuilder.SaveModelAsFile(ModelPath);
 
+            // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
+            SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
+            var modelScorer = new Common.ModelScorer<SentimentIssue, SentimentPrediction>(mlContext);
+            modelScorer.LoadModelFromZipFile(ModelPath);
+            var resultprediction = modelScorer.PredictSingle(sampleStatement);
 
-            //5. Evaluate the model and show accuracy stats
-
-            //Load evaluation/test data
-            IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
-
-            Console.WriteLine("=============== Evaluating Model's accuracy with Test data===============");
-            var predictions = model.Transform(testDataView);
-
-            var binClassificationCtx = new BinaryClassificationContext(mlContext);
-            var metrics = binClassificationCtx.Evaluate(predictions, "Label");
-
-            Console.WriteLine();
-            Console.WriteLine("Model quality metrics evaluation");
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
-            Console.WriteLine($"Auc: {metrics.Auc:P2}");
-            Console.WriteLine($"F1Score: {metrics.F1Score:P2}");
-            Console.WriteLine("=============== End of Model's evaluation ===============");
-            Console.WriteLine();
-
-
-            //6. Test Sentiment Prediction with one sample text 
-            var predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction>(mlContext);
-
-            SentimentIssue sampleStatement = new SentimentIssue
-            {
-                Text = "This is a very rude movie"
-            };
-
-            var resultprediction = predictionFunct.Predict(sampleStatement);
-
-            Console.WriteLine();
-            Console.WriteLine("=============== Test of model with a sample ===============");
-
+            Console.WriteLine($"=============== Single Prediction  ===============");
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
+            Console.WriteLine($"==================================================");
+            //
 
-            // Save model to .ZIP file
-            SaveModelAsFile(mlContext, model);
-
-            // Predict again but now testing the model loading from the .ZIP file
-            PredictWithModelLoadedFromFile(sampleStatement);
-
-            Console.WriteLine("=============== End of process, hit any key to finish ===============");
+            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training process, hit any key to finish ===============");
             Console.ReadKey();
-            
+          
         }
-
-        private static void SaveModelAsFile(MLContext env, TransformerChain<BinaryPredictionTransformer<Microsoft.ML.Runtime.Internal.Internallearn.IPredictorWithFeatureWeights<float>>> model)
-        {
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                model.SaveTo(env, fs);
-
-            Console.WriteLine("The model is saved to {0}", ModelPath);
-        }
-
-        private static void PredictWithModelLoadedFromFile(SentimentIssue sampleStatement)
-        {
-            // Test with Loaded Model from .zip file
-
-            var env2 = new MLContext();
-            
-                ITransformer loadedModel;
-                using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    loadedModel = TransformerChain.LoadFrom(env2, stream);
-                }
-
-                // Create prediction engine and make prediction.
-
-                var engine = loadedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env2);
-
-                var predictionFromLoaded = engine.Predict(sampleStatement);
-
-                Console.WriteLine();
-                Console.WriteLine("=============== Test of model with a sample ===============");
-
-                Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(predictionFromLoaded.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {predictionFromLoaded.Probability} ");
-
-            
-        }
-
-
     }
 }

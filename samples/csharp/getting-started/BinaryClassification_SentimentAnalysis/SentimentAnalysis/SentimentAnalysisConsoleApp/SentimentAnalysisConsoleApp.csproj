@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\..\common\ModelBuilder.cs" Link="Common\ModelBuilder.cs" />
+    <Compile Include="..\..\..\..\common\ModelScorer.cs" Link="Common\ModelScorer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="0.7.0-preview-27031-8" />
   </ItemGroup>
 
@@ -17,6 +23,10 @@
     <None Update="datasets\wikipedia-detox-250-line-test.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

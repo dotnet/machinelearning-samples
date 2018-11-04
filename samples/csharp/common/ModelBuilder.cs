@@ -23,8 +23,6 @@ namespace Common
         {
             _mlcontext = mlContext;
             TrainingPipeline = dataProcessPipeline;
-
-            //??? TrainingPipeline.Append(trainer);
         }
 
         public void AddTrainer(IEstimator<ITransformer> trainer)
@@ -48,6 +46,14 @@ namespace Common
             CheckTrained();
             var predictions = TrainedModel.Transform(testData);
             var metrics = _mlcontext.Regression.Evaluate(predictions, "Count", "Score");
+            return metrics;
+        }
+
+        public BinaryClassifierEvaluator.Result EvaluateBinaryClassificationModel(IDataView testData)
+        {
+            CheckTrained();
+            var predictions = TrainedModel.Transform(testData);
+            var metrics = _mlcontext.BinaryClassification.Evaluate(predictions, "Label");
             return metrics;
         }
 
