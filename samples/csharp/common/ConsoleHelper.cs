@@ -131,7 +131,6 @@ namespace Common
             Console.WriteLine($"*------------------------------------------------");
             Console.WriteLine($"*       AvgMinScore: {metrics.AvgMinScore}");
             Console.WriteLine($"*       DBI is: {metrics.Dbi}");
-            Console.WriteLine($"*       NMI is: {metrics.Nmi}");
             Console.WriteLine($"*************************************************");
         }
 
