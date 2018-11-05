@@ -1,6 +1,6 @@
-﻿namespace Regression_TaxiFarePrediction
+﻿namespace Regression_TaxiFarePrediction.DataStructures
 {
-    internal class TestTaxiTrips
+    internal class SingleTaxiTripSample
     {
         internal static readonly TaxiTrip Trip1 = new TaxiTrip
         {

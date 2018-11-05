@@ -14,6 +14,7 @@ using Microsoft.ML.Transforms.Conversions;
 
 using Common;
 using GitHubLabeler.DataStructures;
+using Microsoft.ML.Trainers.Online;
 
 namespace GitHubLabeler
 {
@@ -54,7 +55,7 @@ namespace GitHubLabeler
             DataLoader dataLoader = new DataLoader(mlContext);
             var trainingDataView = dataLoader.GetDataView(DataSetLocation);
 
-            // STEP 2: Common data pre-process configuration with pipeline data transformations
+            // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessor = new DataProcessor(mlContext);
             var dataProcessPipeline = dataProcessor.DataProcessPipeline;
 
@@ -62,10 +63,10 @@ namespace GitHubLabeler
             Common.ConsoleHelper.PeekDataViewInConsole<GitHubIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
             //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
 
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder                 
+            // STEP 3: Set the selected training algorithm into the modelBuilder            
+            var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline);
             var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent("Label", "Features");
-            var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline); //, trainer);
-            modelBuilder.AddTrainer(new SdcaMultiClassTrainer(mlContext, "Features", "Label"));
+            modelBuilder.AddTrainer(trainer);
             modelBuilder.AddEstimator(new KeyToValueEstimator(mlContext, "PredictedLabel"));
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
@@ -78,7 +79,7 @@ namespace GitHubLabeler
             Console.WriteLine("=============== Training the model ===============");
             modelBuilder.Train(trainingDataView);
 
-            // STEP 6: Save/persiste the trained model to a .ZIP file
+            // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
             modelBuilder.SaveModelAsFile(ModelPath);
 

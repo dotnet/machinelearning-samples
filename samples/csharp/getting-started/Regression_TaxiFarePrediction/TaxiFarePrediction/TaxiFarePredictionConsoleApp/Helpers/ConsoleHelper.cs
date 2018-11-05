@@ -5,12 +5,14 @@ using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Core.Data;
 using System.Collections.Generic;
 using Microsoft.ML.Data;
+using Regression_TaxiFarePrediction.DataStructures;
+using Microsoft.ML;
 
 namespace Regression_TaxiFarePrediction.Helpers
 {
     public static class ConsoleHelper
     {
-        public static List<TaxiTrip> PeekDataViewInConsole(LocalEnvironment context, IDataView dataView, EstimatorChain<ITransformer> pipeline, int numberOfRows = 4)
+        public static List<TaxiTrip> PeekDataViewInConsole(MLContext context, IDataView dataView, EstimatorChain<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Show {0} rows with all the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
@@ -32,7 +34,7 @@ namespace Regression_TaxiFarePrediction.Helpers
             return someRows;
         }
 
-        public static List<float[]> PeekFeaturesColumnDataInConsole(string columnName, LocalEnvironment mlcontext, IDataView dataView, EstimatorChain<ITransformer> pipeline, int numberOfRows = 4)
+        public static List<float[]> PeekFeaturesColumnDataInConsole(string columnName, MLContext mlcontext, IDataView dataView, EstimatorChain<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Show {0} rows with just the '{1}' column", numberOfRows, columnName);
             ConsoleWriteHeader(msg);
