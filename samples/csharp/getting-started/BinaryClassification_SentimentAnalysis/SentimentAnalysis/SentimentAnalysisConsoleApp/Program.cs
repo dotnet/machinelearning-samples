@@ -45,8 +45,6 @@ namespace SentimentAnalysisConsoleApp
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
             var modelBuilder = new Common.ModelBuilder<SentimentIssue, SentimentPrediction>(mlContext, dataProcessPipeline);
             var trainer = mlContext.BinaryClassification.Trainers.FastTree(label: "Label", features: "Features");
-
-            //Other way: var trainer = new LinearClassificationTrainer(mlContext, "Features", "Label");
             modelBuilder.AddTrainer(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
