@@ -1,7 +1,7 @@
 ﻿using ImageClassification.ModelScorer;
 using Microsoft.ML.Runtime.Api;
 
-namespace ImageClassification.ImageData
+namespace ImageClassification.ImageDataStructures
 {
     public class ImageNetPrediction
     {

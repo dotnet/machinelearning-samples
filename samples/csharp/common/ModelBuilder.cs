@@ -57,6 +57,14 @@ namespace Common
             return metrics;
         }
 
+        public MultiClassClassifierEvaluator.Result EvaluateMultiClassClassificationModel(IDataView testData, string label="Label", string score="Score")
+        {
+            CheckTrained();
+            var predictions = TrainedModel.Transform(testData);
+            var metrics = _mlcontext.MulticlassClassification.Evaluate(predictions, label: label, score: score);
+            return metrics;
+        }
+
         public (MultiClassClassifierEvaluator.Result metrics, 
                 ITransformer model, 
                 IDataView scoredTestData)[]

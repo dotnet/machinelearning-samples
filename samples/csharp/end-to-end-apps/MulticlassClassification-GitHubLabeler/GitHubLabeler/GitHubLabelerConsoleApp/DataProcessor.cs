@@ -19,9 +19,9 @@ namespace GitHubLabeler
             // Configure data transformations in the Process pipeline
 
             DataProcessPipeline = new ValueToKeyMappingEstimator(mlContext, "Area", "Label")
-                                  .Append(new TextFeaturizingEstimator(mlContext, "Title", "TitleFeaturized"))
-                                  .Append(new TextFeaturizingEstimator(mlContext, "Description", "DescriptionFeaturized"))
-                                  .Append(new ColumnConcatenatingEstimator(mlContext, "Features", "TitleFeaturized", "DescriptionFeaturized"));
+                                  .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
+                                  .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
+                                  .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"));
         }
     }
 }
