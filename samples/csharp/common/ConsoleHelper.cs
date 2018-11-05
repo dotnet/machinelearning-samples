@@ -141,7 +141,8 @@ namespace Common
             ConsoleWriteHeader(msg);
 
             //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
-            var transformedData = pipeline.Fit(dataView).Transform(dataView);
+            var transformer = pipeline.Fit(dataView);
+            var transformedData = transformer.Transform(dataView);
 
             // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
             // Convert to an enumerable of user-defined type.
@@ -174,9 +175,10 @@ namespace Common
             string msg = string.Format("Peek data in DataView: : Show {0} rows with just the '{1}' column", numberOfRows, columnName );
             ConsoleWriteHeader(msg);
 
-            var transformedData = pipeline.Fit(dataView).Transform(dataView);
+            var transformer = pipeline.Fit(dataView);
+            var transformedData = transformer.Transform(dataView);
+
             // Extract the 'Features' column.
-            
             var someColumnData = transformedData.GetColumn<float[]>(mlContext, columnName)
                                                         .Take(numberOfRows).ToList();
 
