@@ -38,7 +38,7 @@ namespace Clustering_Iris
                                     }
                                 });
                 //Load training data
-                IDataView trainingDataView = reader.Read(new MultiFileSource(DataPath));
+                IDataView data = reader.Read(new MultiFileSource(DataPath));
 
                 // Transform your data and add a learner
                 // Add a learning algorithm to the pipeline. e.g.(What are characteristics of iris is this?)
@@ -49,10 +49,18 @@ namespace Clustering_Iris
                 // Create and train the model            
                 Console.WriteLine("=============== Create and Train the Model ===============");
 
-                var model = pipeline.Fit(trainingDataView);
+                var context = new ClusteringContext(env);
+                (IDataView trainData, IDataView testData) = context.TrainTestSplit(data, testFraction: 0.2);
+
+                var model = pipeline.Fit(trainData);
 
                 Console.WriteLine("=============== End of training ===============");
                 Console.WriteLine();
+
+                var metrics = context.Evaluate(model.Transform(testData), label: "Label", features: "Features");
+                Console.WriteLine("AverageMinScore: " + metrics.AvgMinScore);
+                Console.WriteLine("Normalized Mutual Information (NMI): " + metrics.Nmi);
+                Console.WriteLine("Davies-Bouldin Index (DBI): " + metrics.Dbi);
 
                 // Test with one sample text 
                 var sampleIrisData = new IrisData()
@@ -76,8 +84,6 @@ namespace Clustering_Iris
                 Console.WriteLine("=============== End of process, hit any key to finish ===============");
                 Console.ReadKey();
             }
-
-
         }
 
         private static void SaveModelAsFile(LocalEnvironment env, TransformerChain<ClusteringPredictionTransformer<KMeansPredictor>> model)
