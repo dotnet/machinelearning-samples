@@ -1,5 +1,5 @@
 ﻿
-namespace CustomerSegmentation.Train.DataStructures
+namespace CustomerSegmentation.DataStructures
 {
     public class PivotObservation
     {

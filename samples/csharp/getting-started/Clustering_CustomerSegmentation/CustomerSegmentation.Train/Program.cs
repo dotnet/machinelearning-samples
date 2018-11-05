@@ -1,12 +1,9 @@
 ﻿using System;
-using CustomerSegmentation.Model;
 using System.IO;
-using System.Threading.Tasks;
-using CustomerSegmentation.DataStructures;
-using Microsoft.ML.Runtime.Data;
+
 using Microsoft.ML;
-using CustomerSegmentation.Train.DataStructures;
-using Microsoft.ML.Trainers.KMeans;
+using CustomerSegmentation.DataStructures;
+
 
 namespace CustomerSegmentation
 {
@@ -57,9 +54,6 @@ namespace CustomerSegmentation
 
                 // STEP5: Save/persist the model as a .ZIP file
                 modelBuilder.SaveModelAsFile(modelZip);
-
-                Console.WriteLine("Press any key to exit..");
-                Console.ReadLine();
 
             } catch (Exception ex)
             {
