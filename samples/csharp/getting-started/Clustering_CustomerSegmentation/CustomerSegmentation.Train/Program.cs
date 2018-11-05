@@ -53,7 +53,7 @@ namespace CustomerSegmentation
 
                 // STEP4: Evaluate accuracy of the model
                 var metrics = modelBuilder.EvaluateClusteringModel(pivotDataView);
-                Common.ConsoleHelper.PrintClusteringMetrics("KMeansPlusPlus", metrics);
+                Common.ConsoleHelper.PrintClusteringMetrics("KMeans", metrics);
 
                 // STEP5: Save/persist the model as a .ZIP file
                 modelBuilder.SaveModelAsFile(modelZip);
