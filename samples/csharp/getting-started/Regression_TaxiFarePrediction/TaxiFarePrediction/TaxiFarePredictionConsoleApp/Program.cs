@@ -74,7 +74,7 @@ namespace Regression_TaxiFarePrediction
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Label", "Score");
-            Common.ConsoleHelper.PrintRegressionMetrics("StochasticDualCoordinateAscent", metrics);
+            Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");

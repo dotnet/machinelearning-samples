@@ -65,7 +65,7 @@ namespace MulticlassClassification_Iris
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var metrics = modelBuilder.EvaluateMultiClassClassificationModel(testDataView, "Label");
-            Common.ConsoleHelper.PrintMultiClassClassificationMetrics("StochasticDualCoordinateAscent", metrics);
+            Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
