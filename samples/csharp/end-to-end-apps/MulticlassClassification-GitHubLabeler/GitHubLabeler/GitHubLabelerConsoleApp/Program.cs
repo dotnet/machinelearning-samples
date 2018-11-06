@@ -14,7 +14,7 @@ using Microsoft.ML.Core.Data;
 
 using Common;
 using GitHubLabeler.DataStructures;
-
+using Microsoft.ML.Runtime.Data;
 
 namespace GitHubLabeler
 {
@@ -36,7 +36,7 @@ namespace GitHubLabeler
             SetupAppConfiguration();
 
             //1. ChainedBuilderExtensions and Train the model
-            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.OVAAveragedPerceptronTrainer);
+            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.SdcaMultiClassTrainer);
 
             //2. Try/test to predict a label for a single hard-coded Issue
             TestSingleLabelPrediction(ModelFilePathName);
@@ -66,19 +66,20 @@ namespace GitHubLabeler
             Common.ConsoleHelper.PeekDataViewInConsole<GitHubIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
             //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
 
-            // STEP 3: Set the selected training algorithm into the modelBuilder
-
+            // STEP 3: Create the selected training algorithm/trainer
             IEstimator<ITransformer> trainer = null; 
             switch(selectedStrategy)
             {
                 case MyTrainerStrategy.SdcaMultiClassTrainer:                 
-                     trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent("Label", "Features");
+                     trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, 
+                                                                                                          DefaultColumnNames.Features);
                      break;
                 case MyTrainerStrategy.OVAAveragedPerceptronTrainer:
                 {
                     // Create a binary classification trainer.
-                    var averagedPerceptronBinaryTrainer = mlContext.BinaryClassification.Trainers.AveragedPerceptron(numIterations: 10);
-
+                    var averagedPerceptronBinaryTrainer = mlContext.BinaryClassification.Trainers.AveragedPerceptron(DefaultColumnNames.Label,
+                                                                                                                     DefaultColumnNames.Features,
+                                                                                                                     numIterations: 10);
                     // Compose an OVA (One-Versus-All) trainer with the BinaryTrainer.
                     // In this strategy, a binary classification algorithm is used to train one classifier for each class, "
                     // which distinguishes that class from all other classes. Prediction is then performed by running these binary classifiers, "
@@ -90,6 +91,7 @@ namespace GitHubLabeler
                     break;
             }
 
+            //Set the trainer/algorithm
             var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline);           
             modelBuilder.AddTrainer(trainer);
             modelBuilder.AddEstimator(new KeyToValueEstimator(mlContext, "PredictedLabel"));
@@ -104,20 +106,18 @@ namespace GitHubLabeler
             Console.WriteLine("=============== Training the model ===============");
             modelBuilder.Train(trainingDataView);
 
+            // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
+            GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "WebSockets communication is slow in my machine", Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." };
+            var modelScorer = new ModelScorer<GitHubIssue, GitHubIssuePrediction>(mlContext, modelBuilder.TrainedModel);
+            var prediction = modelScorer.PredictSingle(issue);
+            Console.WriteLine($"=============== Single Prediction just-trained-model - Result: {prediction.Area} ===============");
+            //
+
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
             modelBuilder.SaveModelAsFile(ModelPath);
 
-            // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
-            GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "Entity Framework crashes", Description = "When connecting to the database, EF is crashing" };
-            var modelScorer = new ModelScorer<GitHubIssue, GitHubIssuePrediction>(mlContext);
-            modelScorer.LoadModelFromZipFile(ModelPath);
-            var prediction = modelScorer.PredictSingle(issue);
-            Console.WriteLine($"=============== Single Prediction - Result: {prediction.Area} ===============");
-            //
-
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
-
         }
 
         private static void TestSingleLabelPrediction(string modelFilePathName)

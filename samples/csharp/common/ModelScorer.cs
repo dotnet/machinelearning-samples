@@ -21,7 +21,15 @@ namespace Common
         public ModelScorer(MLContext mlContext, ITransformer trainedModel = null)
         {
             _mlContext = mlContext;
-            TrainedModel = trainedModel;
+
+            if(trainedModel != null)
+            {
+                //Keep the trainedModel passed through the constructor
+                TrainedModel = trainedModel;
+
+                // Create prediction engine related to the passed trained model
+                PredictionFunction = TrainedModel.MakePredictionFunction<TObservation, TPrediction>(_mlContext);
+            }          
         }
 
         public TPrediction PredictSingle(TObservation input)
