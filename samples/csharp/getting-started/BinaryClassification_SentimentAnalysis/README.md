@@ -2,12 +2,11 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | Dynamic API | Up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v0.7           | Dynamic API | README.md needs update | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+
+**NOTE:** Readme.md is outdated, need to be updated for v0.7.
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
-
-## API version: Static and Estimators-based API
-It is important to note that this sample uses the **static API with Estimators**, available since ML.NET v0.6.
 
 ## Problem
 This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use small wikipedia-detox-datasets (one dataset for training and a second dataset for model's accuracy evaluation) that were processed by humans and each comment has been assigned a sentiment label: 

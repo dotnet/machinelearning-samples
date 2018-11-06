@@ -29,7 +29,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build SentimentAnalysis (BinaryClassification)
     inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\BinaryClassification_SentimentAnalysis.sln'
+      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
 
 - phase: CustomerSegmentation
   queue: Hosted VS2017
@@ -69,7 +69,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build TaxiFarePrediction (Regression)
     inputs:
-      projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\Regression_TaxiFarePrediction.sln'
+      projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction.sln'
 
 - phase: GitHubLabeler
   queue: Hosted VS2017
@@ -77,7 +77,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build GitHubLabeler
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\github-labeler\GitHubLabeler.sln'
+      projects: '.\samples\csharp\end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler.sln'
 
 - phase: eShopDashboardML
   queue: Hosted VS2017

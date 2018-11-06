@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ImageClassification.ImageData;
-using static ImageClassification.ModelScorer.ConsoleHelpers;
-using static ImageClassification.ModelScorer.ModelHelpers;
+
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.ImageAnalytics;
 using Microsoft.ML.Transforms;
+using Microsoft.ML;
+
+using ImageClassification.ImageDataStructures;
+using static ImageClassification.ModelScorer.ConsoleHelpers;
+using static ImageClassification.ModelScorer.ModelHelpers;
 
 namespace ImageClassification.ModelScorer
 {
@@ -16,7 +19,7 @@ namespace ImageClassification.ModelScorer
         private readonly string imagesFolder;
         private readonly string modelLocation;
         private readonly string labelsLocation;
-        private readonly ConsoleEnvironment env;
+        private readonly MLContext mlContext;
 
         public TFModelScorer(string dataLocation, string imagesFolder, string modelLocation, string labelsLocation)
         {
@@ -24,7 +27,7 @@ namespace ImageClassification.ModelScorer
             this.imagesFolder = imagesFolder;
             this.modelLocation = modelLocation;
             this.labelsLocation = labelsLocation;
-            env = new ConsoleEnvironment();
+            mlContext = new MLContext();
         }
 
         public struct ImageNetSettings
@@ -63,7 +66,7 @@ namespace ImageClassification.ModelScorer
             Console.WriteLine($"Training file: {dataLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight}), image mean: {ImageNetSettings.mean}");
 
-            var loader = new TextLoader(env,
+            var loader = new TextLoader(mlContext,
                 new TextLoader.Arguments
                 {
                     Column = new[] {
@@ -73,14 +76,14 @@ namespace ImageClassification.ModelScorer
 
             var data = loader.Read(new MultiFileSource(dataLocation));
 
-            var pipeline = new ImageLoaderEstimator(env, imagesFolder, ("ImagePath", "ImageReal"))
-            .Append(new ImageResizerEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-            .Append(new ImagePixelExtractorEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-            .Append(new TensorFlowEstimator(env, modelLocation, new[] { "input" }, new[] { "softmax2" }));
+            var pipeline = ImageEstimatorsCatalog.LoadImages(catalog: mlContext.Transforms, imageFolder: imagesFolder, columns: ("ImagePath", "ImageReal"))
+                            .Append(ImageEstimatorsCatalog.Resize(mlContext.Transforms, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+                            .Append(ImageEstimatorsCatalog.ExtractPixels(mlContext.Transforms, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+                            .Append(new TensorFlowEstimator(mlContext, modelLocation, new[] { "input" }, new[] { "softmax2" }));
 
             var modeld = pipeline.Fit(data);
 
-            var predictionFunction = modeld.MakePredictionFunction<ImageNetData, ImageNetPrediction>(env);
+            var predictionFunction = modeld.MakePredictionFunction<ImageNetData, ImageNetPrediction>(mlContext);
 
             return predictionFunction;
         }

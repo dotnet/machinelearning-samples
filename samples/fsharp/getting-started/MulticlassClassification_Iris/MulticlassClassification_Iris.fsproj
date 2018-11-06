@@ -10,6 +10,7 @@
     <Folder Include="datasets\" />
     <None Include="..\..\..\..\datasets\iris-test.txt" Link="datasets\iris-test.txt" />
     <None Include="..\..\..\..\datasets\iris-train.txt" Link="datasets\iris-train.txt" />
+    <None Include="README.md" />
   </ItemGroup>
 
   <ItemGroup>

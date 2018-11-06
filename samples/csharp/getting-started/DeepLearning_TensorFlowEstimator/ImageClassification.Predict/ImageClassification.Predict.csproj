@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ImageClassification.Train\ImageData\ImageNetData.cs" Link="ImageData\ImageNetData.cs" />
+    <Compile Include="..\ImageClassification.Train\ImageData\ImageNetPrediction.cs" Link="ImageData\ImageNetPrediction.cs" />
+    <Compile Include="..\ImageClassification.Train\Model\ConsoleHelpers.cs" Link="Model\ConsoleHelpers.cs" />
+    <Compile Include="..\ImageClassification.Train\Model\ModelHelpers.cs" Link="Model\ModelHelpers.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="0.7.0-preview-27031-8" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="0.7.0-preview-27031-8" />
+    <PackageReference Include="Microsoft.ML.TensorFlow" Version="0.7.0-preview-27031-8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\outputs\" />
+    <Folder Include="ImageData\" />
+  </ItemGroup>
+
+</Project>

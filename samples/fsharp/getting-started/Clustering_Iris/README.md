@@ -2,15 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | LearningPipeline API | Needs update to  Dynamic API: [Contribute](/CONTRIBUTING.md) | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
-
-------------------------------------
-
-**Important**: This F# sample needs to be updated to the new dynamic API available since ML.NET 0.6. It currently uses the deprecated LearningPipeline API.
-
-Contribution from the community will be welcomed! 
-
-------------------------------------
+| v0.6           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -38,44 +30,59 @@ To solve this problem, first we will build and train an ML model. Then we will u
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnConcatenator`), and choosing a learning algorithm (`KMeansPlusPlusClusterer`). All of those steps are stored in a `LearningPipeline`:
-
+Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ConcatEstimator`), and choosing a learning algorithm (`KMeansPlusPlusTrainer`). All of those steps are stored in a `EstimatorChain`:
 ```fsharp
-// LearningPipeline holds all steps of the learning process: data, transforms, learners.
-let pipeline = LearningPipeline()
-// The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-// all the column names and their types.
-pipeline.Add(TextLoader(DataPath).CreateFrom<IrisData>(useHeader=true))
+	// LearningPipeline holds all steps of the learning process: data, transforms, learners.
+    
+	//1. Create ML.NET context/environment
+    use env = new LocalEnvironment()
 
-// ColumnConcatenator concatenates all columns into Features column
-pipeline.Add(ColumnConcatenator("Features",
-                "SepalLength",
-                "SepalWidth",
-                "PetalLength",
-                "PetalWidth"))
+    //2. Create DataReader with data schema mapped to file's columns
+    let reader = 
+        TextLoader(
+            env, 
+            TextLoader.Arguments(
+                Separator = "tab", 
+                HasHeader = true, 
+                Column = 
+                    [|
+                        TextLoader.Column("Label", Nullable DataKind.R4, 0)
+                        TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
+                        TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
+                        TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
+                        TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
+                    |]
+                )
+            )
 
-// KMeansPlusPlusClusterer is an algorithm that will be used to build clusters. We set the number of clusters to 3.
-pipeline.Add(KMeansPlusPlusClusterer(K = 3))
+    //Load training data
+    let trainingDataView = MultiFileSource(DataPath) |> reader.Read
 ```
-
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on the given data. It is implemented in the `Train()` API. To perform training we just call the method and provide our data object  `IrisData` and  prediction object `ClusterPrediction`.
-
+Training the model is a process of running the chosen algorithm on the given data. It is implemented in the `Fit()` method from the Estimator object. To perform training we just call the method and provide our data.
 ```fsharp
-let model = pipeline.Train<IrisData, ClusterPrediction>()
-```
+    let model = 
+        env
+        |> Pipeline.concatEstimator "Features" [| "SepalLength"; "SepalWidth"; "PetalLength"; "PetalWidth" |]
+        |> Pipeline.append (KMeansPlusPlusTrainer(env, "Features", clustersCount = 3))
+        |> Pipeline.fit trainingDataView
 
+```
 ### 3. Consume model
 After the model is build and trained, we can use the `Predict()` API to predict the cluster for an iris flower and calculate the distance from given flower parameters to each cluster (each centroid of a cluster).
 
 ```fsharp
-let prediction1 = model.Predict(TestIrisData.Setosa1)
+    let sampleIrisData = 
+        { 
+            SepalLength = 3.3f
+            SepalWidth = 1.6f
+            PetalLength = 0.2f
+            PetalWidth = 5.1f 
+        }
+
+    let predictionFunc = loadedModel.MakePredictionFunction<IrisData, IrisPrediction> env
+    let prediction = predictionFunc.Predict sampleIrisData
+
+    printfn "Clusters assigned for setosa flowers: %d" prediction.SelectedClusterId
 ```
-
-Where `TestIrisData.Setosa1` stores the information about a setosa iris flower.
-
-```fsharp
-module TestIrisData = 
-    let Setosa1 = IrisData(SepalLength = 5.1, SepalWidth = 3.3, PetalLength = 1.6, PetalWidth = 0.2)
-    ...
 ```

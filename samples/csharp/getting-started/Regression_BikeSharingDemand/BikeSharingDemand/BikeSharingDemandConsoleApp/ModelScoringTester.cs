@@ -11,25 +11,25 @@ using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Learners;
 
 using BikeSharingDemand.DataStructures;
+using Common;
 
 namespace BikeSharingDemand
 {
     public static class ModelScoringTester
     {
-        public static void VisualizeSomePredictions(string modelName, string testDataLocation, ITransformer model, int numberOfPredictions)
+        public static void VisualizeSomePredictions(MLContext mlContext,
+                                                    string modelName, 
+                                                    string testDataLocation, 
+                                                    ModelScorer<DemandObservation, DemandPrediction> modelScorer, 
+                                                    int numberOfPredictions)
         {
-            //Prediction test
-            var mlcontext = new MLContext();
-
-            // Create prediction engine 
-            var engine = model.MakePredictionFunction<DemandObservation, DemandPrediction>(mlcontext); 
-
+            //Make a few prediction tests 
             // Make the provided number of predictions and compare with observed data from the test dataset
             var testData = ReadSampleDataFromCsvFile(testDataLocation, numberOfPredictions);
 
             for (int i = 0; i < numberOfPredictions; i++)
             {
-                var prediction = engine.Predict(testData[i]);
+                var prediction = modelScorer.PredictSingle(testData[i]);
 
                 Common.ConsoleHelper.PrintRegressionPredictionVersusObserved(prediction.PredictedCount.ToString(), 
                                                             testData[i].Count.ToString());
