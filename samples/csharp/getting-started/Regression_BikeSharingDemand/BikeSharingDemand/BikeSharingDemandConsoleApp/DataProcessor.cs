@@ -25,7 +25,8 @@ namespace BikeSharingDemand
                 // Copy the Count column to the Label column
                 new CopyColumnsEstimator(mlContext, "Count", "Label")
                     // Concatenate all the numeric columns into a single features column
-                    .Append(new ColumnConcatenatingEstimator(mlContext, "Features", _featureColumns));
+                    .Append(mlContext.Transforms.Concatenate("Features", _featureColumns));
+                    //Another way: .Append(new ColumnConcatenatingEstimator(mlContext, "Features", _featureColumns));
         }
     }
 }
