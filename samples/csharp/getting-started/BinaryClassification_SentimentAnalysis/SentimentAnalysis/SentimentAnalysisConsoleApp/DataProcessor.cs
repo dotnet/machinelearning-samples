@@ -18,7 +18,8 @@ namespace SentimentAnalysisConsoleApp
         {
             // Configure data transformations in the Process pipeline
 
-            DataProcessPipeline = new TextFeaturizingEstimator(mlContext, "Text", "Features");
+            DataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features");
+                                  //Another way: new TextFeaturizingEstimator(mlContext, "Text", "Features");
                                          //You can add additional transformations here with Appends()
                                          //.Append(new YourSelectedEstimator(mlContext, YOUR_REQUIRED_PARAMETERS))                     
         }

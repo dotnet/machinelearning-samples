@@ -27,7 +27,7 @@ namespace Common
 
         public void AddTrainer(IEstimator<ITransformer> trainer)
         {
-            TrainingPipeline = TrainingPipeline.Append(trainer);
+            this.AddEstimator(trainer);
         }
 
         public void AddEstimator(IEstimator<ITransformer> estimator)
