@@ -4,12 +4,13 @@ using CreditCardFraudDetection.Common.DataModels;
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Data.IO;
-using Microsoft.ML.Runtime.FastTree;
+using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using static Microsoft.ML.Runtime.Api.GenerateCodeCommand;
 
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.ML.Runtime;
 
 namespace CreditCardFraudDetection.Trainer
 {
@@ -23,24 +24,21 @@ namespace CreditCardFraudDetection.Trainer
         private TextLoader _reader;
         private IDataView _trainData;
         private IDataView _testData;
-        private LocalEnvironment _env;
+        private MLContext _mlContext;
 
-        public ModelBuilder(string assetsPath, string dataSetFile)
+        public ModelBuilder(MLContext mlContext, string assetsPath, string dataSetFile)
         {
+            _mlContext = mlContext;
             _assetsPath = assetsPath ?? throw new ArgumentNullException(nameof(assetsPath));
             _dataSetFile = dataSetFile ?? throw new ArgumentNullException(nameof(dataSetFile));
             _outputPath = Path.Combine(_assetsPath, "output");
         }
 
 
-        public ModelBuilder Build(int? seed = 1)
+        public ModelBuilder PreProcessData(MLContext mlContext)
         {
-            // Create a new environment for ML.NET operations.
-            // It can be used for exception tracking and logging, 
-            // as well as the source of randomness.
-            // Seed set to any number so you have a deterministic environment
-            _env = new LocalEnvironment(seed);
-            (_context, _reader, _trainData, _testData) = PrepareData(_env);
+             
+            (_context, _reader, _trainData, _testData) = PrepareData(_mlContext);
 
             return this;
         }
@@ -50,21 +48,25 @@ namespace CreditCardFraudDetection.Trainer
                                                 Action<Arguments> advancedSettings = null)
         {
 
-            var logMeanVarNormalizer =   new Normalizer(_env,Normalizer.NormalizerMode.MeanVariance ,("Features", "FeaturesNormalizedByMeanVar"));
+            //DELETE, code line not used
+            //var logMeanVarNormalizer =   new Normalizer(_mlContext, Normalizer.NormalizerMode.MeanVariance ,("Features", "FeaturesNormalizedByMeanVar"));
+
+            //.Append(mlContext.Transforms.Normalize(inputName: "PassengerCount", mode:NormalizerMode.MeanVariance))
 
             //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
-            var pipeline = new ConcatEstimator(_env, "Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",
+
+            var pipeline = _mlContext.Transforms.Concatenate("Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",
                                                                           "V7", "V8", "V9", "V10", "V11", "V12",
                                                                           "V13", "V14", "V15", "V16", "V17", "V18",
                                                                           "V19", "V20", "V21", "V22", "V23", "V24",
-                                                                          "V25", "V26", "V27", "V28" })                      
-                        .Append(new Normalizer(_env, Normalizer.NormalizerMode.MeanVariance, ("Features", "FeaturesNormalizedByMeanVar")))
-                        .Append(new FastTreeBinaryClassificationTrainer(_env, "Label", "Features",
-                                                    
-                                                    numLeaves: 20,
-                                                    numTrees: 100,
-                                                    minDocumentsInLeafs : 10,
-                                                    learningRate: 0.2));
+                                                                          "V25", "V26", "V27", "V28" })
+                            .Append(_mlContext.Transforms.Normalize(inputName: "Features", outputName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
+                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(label: "Label", 
+                                                                                      features: "Features",
+                                                                                      numLeaves: 20,
+                                                                                      numTrees: 100,
+                                                                                      minDatapointsInLeafs: 10,
+                                                                                      learningRate: 0.2));
 
             var model = pipeline.Fit(_trainData);
 
@@ -74,12 +76,12 @@ namespace CreditCardFraudDetection.Trainer
             Console.WriteLine("Acuracy: " + metrics.Accuracy);
             metrics.ToConsole();
 
-            model.SaveModel(_env, Path.Combine(_outputPath, "fastTree.zip"));
+            model.SaveModel(_mlContext, Path.Combine(_outputPath, "fastTree.zip"));
             Console.WriteLine("Saved model to " + Path.Combine(_outputPath, "fastTree.zip"));
         }
 
         private (BinaryClassificationContext context, TextLoader, IDataView trainData, IDataView testData) 
-                    PrepareData(LocalEnvironment env)
+                    PrepareData(MLContext mlContext)
         {
 
             IDataView data = null;
@@ -89,7 +91,7 @@ namespace CreditCardFraudDetection.Trainer
             // Step one: read the data as an IDataView.
             // Create the reader: define the data columns 
             // and where to find them in the text file.
-            var reader = new TextLoader(env, new TextLoader.Arguments
+            var reader = new TextLoader(mlContext, new TextLoader.Arguments
             {
                 Column = new[] {
                     // A boolean column depicting the 'label'.
@@ -135,7 +137,7 @@ namespace CreditCardFraudDetection.Trainer
             // so we create a Binary Classification context:
             // it will give us the algorithms we need,
             // as well as the evaluation procedure.
-            var classification = new BinaryClassificationContext(env);
+            var classification = new BinaryClassificationContext(mlContext);
 
             if (!File.Exists(Path.Combine(_outputPath, "testData.idv")) &&
                 !File.Exists(Path.Combine(_outputPath, "trainData.idv"))){
@@ -143,49 +145,50 @@ namespace CreditCardFraudDetection.Trainer
 
                 data = reader.Read(new MultiFileSource(_dataSetFile));
                 ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (source)");
-                ConsoleHelpers.InspectData(env, data, 4);
+                ConsoleHelpers.InspectData(mlContext, data, 4);
 
 
 
-                // Can't do stratification when column type is a boolean
+                // Can't do stratification when column type is a boolean, is this an issue?
                 //(trainData, testData) = classification.TrainTestSplit(data, testFraction: 0.2, stratificationColumn: "Label");
                 (trainData, testData) = classification.TrainTestSplit(data, testFraction: 0.2);
 
                 // save test split
+                IHostEnvironment env = (IHostEnvironment)mlContext;
                 using (var ch = env.Start("SaveData"))
                 using (var file = env.CreateOutputFile(Path.Combine(_outputPath, "testData.idv")))
                 {
-                    var saver = new BinarySaver(env, new BinarySaver.Arguments());
+                    var saver = new BinarySaver(mlContext, new BinarySaver.Arguments());
                     DataSaverUtils.SaveDataView(ch, saver, testData, file);
                 }
 
                 // save train split
-                using (var ch = env.Start("SaveData"))
+                using (var ch = ((IHostEnvironment)env).Start("SaveData"))
                 using (var file = env.CreateOutputFile(Path.Combine(_outputPath, "trainData.idv")))
                 {
-                    var saver = new BinarySaver(env, new BinarySaver.Arguments());
+                    var saver = new BinarySaver(mlContext, new BinarySaver.Arguments());
                     DataSaverUtils.SaveDataView(ch, saver, trainData, file);
                 }
 
             }
             else {
                 // Load splited data
-                var binTrainData = new BinaryLoader(env, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "trainData.idv")));
+                var binTrainData = new BinaryLoader(mlContext, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "trainData.idv")));
                 var trainRoles = new RoleMappedData(binTrainData, roles: TransactionObservation.Roles());
                 trainData = trainRoles.Data;
 
 
-                var binTestData = new BinaryLoader(env, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "testData.idv")));
+                var binTestData = new BinaryLoader(mlContext, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "testData.idv")));
                 var testRoles = new RoleMappedData(binTestData, roles: TransactionObservation.Roles());
                 testData = testRoles.Data;
 
             }
 
             ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (traindata)");
-            ConsoleHelpers.InspectData(env, trainData, 4);
+            ConsoleHelpers.InspectData(mlContext, trainData, 4);
 
             ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (testData)");
-            ConsoleHelpers.InspectData(env, testData, 4);
+            ConsoleHelpers.InspectData(mlContext, testData, 4);
 
             return (classification, reader, trainData, testData);
         }

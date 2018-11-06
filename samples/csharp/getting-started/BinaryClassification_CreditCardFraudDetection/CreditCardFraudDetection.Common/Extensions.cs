@@ -1,4 +1,5 @@
-﻿using Microsoft.ML.Core.Data;
+﻿using Microsoft.ML;
+using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
 using System;
 using System.Collections.Generic;
@@ -49,16 +50,16 @@ namespace CreditCardFraudDetection.Common
             Console.WriteLine($"R scuared: {result.RSquared}");
         }
 
-        public static IEnumerable<string> GetColumnNames(this ISchema schema)
-        {
-            for (int i = 0; i < schema.ColumnCount; i++)
-            {
-                if (!schema.IsHidden(i))
-                    yield return schema.GetColumnName(i);
-            }
-        }
+        //public static IEnumerable<string> GetColumnNames(this ISchema schema)
+        //{
+        //    for (int i = 0; i < schema.ColumnCount; i++)
+        //    {
+        //        if (!schema.IsHidden(i))
+        //            yield return schema.GetColumnName(i);
+        //    }
+        //}
 
-        public static void SaveModel(this ITransformer model, LocalEnvironment env, string modelSavePath)
+        public static void SaveModel(this ITransformer model, MLContext env, string modelSavePath)
         {
             using (var stream = File.Create(modelSavePath))
             {
@@ -67,7 +68,7 @@ namespace CreditCardFraudDetection.Common
             }
         }
 
-        public static ITransformer ReadModel(this LocalEnvironment env, string modelLocation)
+        public static ITransformer ReadModel(this MLContext env, string modelLocation)
         {
             ITransformer model;
             using (var file = File.OpenRead(@modelLocation))
