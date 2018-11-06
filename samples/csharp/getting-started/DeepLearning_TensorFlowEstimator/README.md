@@ -26,7 +26,10 @@ toaster.jpg	toaster
 toaster2.png	toaster
 ```
 The training and testing images are located in the assets folders. These images belong to Wikimedia Commons.
-> *Wikimedia Commons, the free media repository.* Retrieved 10:48, October 17, 2018 from https://commons.wikimedia.org/w/index.php?title=Main_Page&oldid=313158208.
+> *[Wikimedia Commons](https://commons.wikimedia.org/w/index.php?title=Main_Page&oldid=313158208), the free media repository.* Retrieved 10:48, October 17, 2018 from:  
+> https://commons.wikimedia.org/wiki/Pizza  
+> https://commons.wikimedia.org/wiki/Toaster  
+> https://commons.wikimedia.org/wiki/Teddy_bear  
 
 ## ML Task - [Image Classification](https://en.wikipedia.org/wiki/Outline_of_object_recognition)
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to classify a new image.

@@ -3,6 +3,38 @@
 ## Problem
 Image classification is a common case in many business scenarios. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
 
+## DataSet
+There are two data sources: the `tsv` file and the image files.  The [tsv file](./ImageClassification/assets/inputs/images/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
+```tsv
+broccoli.jpg	broccoli
+broccoli.png	broccoli
+canoe2.jpg	canoe
+canoe3.jpg	canoe
+canoe4.jpg	canoe
+coffeepot.jpg	coffeepot
+coffeepot2.jpg	coffeepot
+coffeepot3.jpg	coffeepot
+coffeepot4.jpg	coffeepot
+pizza.jpg	pizza
+pizza2.jpg	pizza
+pizza3.jpg	pizza
+teddy1.jpg	teddy bear
+teddy2.jpg	teddy bear
+teddy3.jpg	teddy bear
+teddy4.jpg	teddy bear
+teddy6.jpg	teddy bear
+toaster.jpg	toaster
+toaster2.png	toaster
+toaster3.jpg	toaster
+```
+The training and testing images are located in the assets folders. These images belong to Wikimedia Commons.
+> *[Wikimedia Commons](https://commons.wikimedia.org/w/index.php?title=Main_Page&oldid=313158208), the free media repository.* Retrieved 10:48, October 17, 2018 from:  
+> https://commons.wikimedia.org/wiki/Pizza  
+> https://commons.wikimedia.org/wiki/Coffee_pot  
+> https://commons.wikimedia.org/wiki/Toaster  
+> https://commons.wikimedia.org/wiki/Category:Canoes  
+> https://commons.wikimedia.org/wiki/Teddy_bear  
+
 ## Pre-trained model
 There are multiple models are pre-trained for classifying images. In this case, we will use a model based on an Inception topology, and trained with images from Image.Net. This model can be downloaded from https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip, but it's also available at `/ src / ImageClassification / assets /inputs / inception / tensorflow_inception_graph.pb`.
 
