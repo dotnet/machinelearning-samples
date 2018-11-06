@@ -1,16 +1,8 @@
-# Iris flowers classification (F#)
+# Iris Classification
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | LearningPipeline API | Needs update to  Dynamic API: [Contribute](/CONTRIBUTING.md) | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
-
-------------------------------------
-
-**Important**: This F# sample needs to be updated to the new dynamic API available since ML.NET 0.6. It currently uses the deprecated LearningPipeline API.
-
-Contribution from the community will be welcomed! 
-
-------------------------------------
+| v0.6           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -43,74 +35,86 @@ The common feature for all those examples is that the parameter we want to predi
 ## Solution
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict an iris type.
 
-![Build -> Train -> Evaluate -> Consume](../../../../../master/samples/csharp/getting-started/shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-train.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnConcatenator`), and choosing a learning algorithm (`StochasticDualCoordinateAscentClassifier`). All of those steps are stored in a `LearningPipeline`:
+Building a model includes: 
+* Uploading data (`iris-train.txt`) with `DataReader`)
+* Transforming the data so it can be used effectively by an ML algorithm (with `ConcatEstimator`)
+* Choosing a learning algorithm (`SdcaMultiClassTrainer`). 
+
+
+The initial code is similar to the following:
 ```fsharp
-// LearningPipeline holds all steps of the learning process: data, transforms, learners.
-let pipeline = LearningPipeline()
+    //1. Create ML.NET context/environment
+    use env = new LocalEnvironment()
 
-// The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-// all the column names and their types.
-pipeline.Add(TextLoader(TrainDataPath).CreateFrom<IrisData>())
+    //2. Create DataReader with data schema mapped to file's columns
+    let reader = 
+        TextLoader(
+            env, 
+            TextLoader.Arguments(
+                Separator = "tab", 
+                HasHeader = true, 
+                Column = 
+                    [|
+                        TextLoader.Column("Label", Nullable DataKind.R4, 0)
+                        TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
+                        TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
+                        TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
+                        TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
+                    |]
+                )
+            )
 
-//When ML model starts training, it looks for two columns: Label and //Features.
-// Transforms
-//              like in this example, no extra actions required.
-// Label:   values that should be predicted. If you have a field named Label in your data type,
-//          If you don’t have it, copy the column you want to predict with ColumnCopier transform:
-//              new ColumnCopier(("FareAmount", "Label"))
-// Features: all data used for prediction. At the end of all transforms you need to concatenate
-//              all columns except the one you want to predict into Features column with
-//              ColumnConcatenator transform:
-pipeline.Add(ColumnConcatenator("Features",
-                "SepalLength",
-                "SepalWidth",
-                "PetalLength",
-                "PetalWidth"))
-// StochasticDualCoordinateAscentClassifier is an algorithm that will be used to train the model.
-pipeline.Add(StochasticDualCoordinateAscentClassifier())
+    //Load training data
+    let trainingDataView = MultiFileSource(TrainDataPath) |> reader.Read
+
+    //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
+    let pipeline = 
+        env
+        |> Pipeline.concatEstimator "Features" [| "SepalLength"; "SepalWidth"; "PetalLength"; "PetalWidth" |]
+        |> Pipeline.append (SdcaMultiClassTrainer(env, SdcaMultiClassTrainer.Arguments(), "Features", "Label"))
 ```
-
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known iris types) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide our data object  `IrisData` and  prediction object `IrisPrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known iris types) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
 
+To perform training we just call the method providing the training dataset (iris-train.txt file) in a DataView object.
 ```fsharp
-let model = pipeline.Train<IrisData, IrisPrediction>()
+	pipeline
+	|> Pipeline.fit trainingDataView
 ```
-
 ### 3. Evaluate model
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `ClassificationEvaluator` calculates the difference between known types and values predicted by the model in various metrics.
-
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `MulticlassClassificationContext.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
 ```fsharp
-let testData = TextLoader(TestDataPath).CreateFrom<IrisData>()
+    let testDataView = new MultiFileSource(TestDataPath) |> reader.Read
 
-let evaluator = ClassificationEvaluator(OutputTopKAcc=3.0)
-let metrics = evaluator.Evaluate(model, testData)
+    let predictions = model.Transform testDataView
+
+    let multiClassificationCtx = MulticlassClassificationContext env
+    let metrics = multiClassificationCtx.Evaluate(predictions, "Label")
 ```
-
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
 If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
-
 ### 4. Consume model
-
 After the model is trained, we can use the `Predict()` API to predict the probability that this flower belongs to each iris type. 
 
 ```fsharp
-let prediction1 = model.Predict(TestIrisData.Iris1)
-Console.WriteLine(sprintf "Actual: setosa.     Predicted probability: setosa:      %0.4f" prediction1.Score.[0])
-Console.WriteLine(sprintf "                                           versicolor:  %0.4f" prediction1.Score.[1])
-Console.WriteLine(sprintf "                                           virginica:   %0.4f" prediction1.Score.[2])
-Console.WriteLine()
+    //6. Test Sentiment Prediction with one sample text 
+    let predictionFunct = model.MakePredictionFunction<IrisData, IrisPrediction> env
+
+    let prediction = predictionFunct.Predict TestIrisData.Iris1
+    printfn "Actual: setosa.     Predicted probability: setosa:      %.4f"prediction.Score.[0]
+    printfn "                                           versicolor:  %.4f"prediction.Score.[1]
+    printfn "                                           virginica:   %.4f"prediction.Score.[2]
+    printfn ""
+
 ```
-
 Where `TestIrisData.Iris1` stores the information about the flower we'd like to predict the type for.
-
 ```fsharp
-module TestIrisData = 
-    let Iris1 = IrisData(SepalLength = 5.1, SepalWidth = 3.3, PetalLength = 1.6, PetalWidth= 0.2)
-    ...
+module TestIrisData =
+    let Iris1 = { IrisData.Empty with SepalLength = 5.1f; SepalWidth = 3.3f; PetalLength = 1.6f; PetalWidth= 0.2f}
+    (...)
 ```
