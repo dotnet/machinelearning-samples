@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clustering_Iris", "Clusteri
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BinaryClassification_SentimentAnalysis", "BinaryClassification_SentimentAnalysis\BinaryClassification_SentimentAnalysis.fsproj", "{7AE870E2-3C28-45F6-840B-FBCC3234FFE4}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Microsoft.ML.Core.FSharp", "Microsoft.ML.Core.FSharp\Microsoft.ML.Core.FSharp.fsproj", "{FE227631-1E97-4D25-BAB1-96097C90E9C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7AE870E2-3C28-45F6-840B-FBCC3234FFE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AE870E2-3C28-45F6-840B-FBCC3234FFE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AE870E2-3C28-45F6-840B-FBCC3234FFE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE227631-1E97-4D25-BAB1-96097C90E9C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE227631-1E97-4D25-BAB1-96097C90E9C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE227631-1E97-4D25-BAB1-96097C90E9C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE227631-1E97-4D25-BAB1-96097C90E9C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
