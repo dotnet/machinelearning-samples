@@ -25,11 +25,10 @@ namespace Regression_TaxiFarePrediction
                         //.Append(new CategoricalEstimator(mlcontext, "RateCode", "RateCodeEncoded"))
                         .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
                         //.Append(new CategoricalEstimator(mlcontext, "PaymentType", "PaymentTypeEncoded"))
-                        .Append(mlContext.Transforms.Normalize(inputName: "PassengerCount", mode:NormalizerMode.MeanVariance))
-                        .Append(mlContext.Transforms.Normalize(inputName: "TripTime", mode:NormalizerMode.MeanVariance))
-                        .Append(mlContext.Transforms.Normalize(inputName: "TripDistance", mode:NormalizerMode.MeanVariance))
-                        .Append(new ColumnConcatenatingEstimator(mlContext, "Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"));
-         
+                        .Append(mlContext.Transforms.Normalize(inputName: "PassengerCount", mode: NormalizerMode.MeanVariance))
+                        .Append(mlContext.Transforms.Normalize(inputName: "TripTime", mode: NormalizerMode.MeanVariance))
+                        .Append(mlContext.Transforms.Normalize(inputName: "TripDistance", mode: NormalizerMode.MeanVariance))
+                        .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"));                       
         }
     }
 }
