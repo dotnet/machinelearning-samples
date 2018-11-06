@@ -1,5 +1,4 @@
 ﻿using CustomerSegmentation.DataStructures;
-using CustomerSegmentation.Train.DataStructures;
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
@@ -23,7 +22,8 @@ namespace Common
             for (int k = 2; k <= maxK; k++)
             {
                 var trainer = new KMeansPlusPlusTrainer(mlContext, "Features", clustersCount: k);
-                var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, DataProcessPipeline, trainer);
+                var modelBuilder = new ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, DataProcessPipeline);
+                modelBuilder.AddTrainer(trainer);
                 var trainedModel = modelBuilder.Train(pivotDataView);
                 Console.WriteLine($"Building model for k={k}");
                 var metrics = modelBuilder.EvaluateClusteringModel(pivotDataView);

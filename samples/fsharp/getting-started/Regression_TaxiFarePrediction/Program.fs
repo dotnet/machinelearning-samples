@@ -1,153 +1,153 @@
-﻿module Regression_TaxiFarePrediction
+﻿module MulticlassClassification_Iris
 
-open Microsoft.ML.Runtime.Api
 open System
-open System.Diagnostics
 open System.IO
-open System.Linq
+open System.Diagnostics
 
-open Microsoft.ML.Legacy;
-open Microsoft.ML.Legacy.Models;
-open Microsoft.ML.Legacy.Data;
-open Microsoft.ML.Legacy.Transforms;
-open Microsoft.ML.Legacy.Trainers;
+open Microsoft.ML.Runtime.Learners
+open Microsoft.ML.Runtime.Data
+open Microsoft.ML
+open Microsoft.ML.Core.Data
+open Microsoft.ML.Runtime.Api
+open Microsoft.ML.Legacy
+open Microsoft.ML.Core.FSharp
 
 open PLplot
+
 
 let AppPath = Path.Combine(__SOURCE_DIRECTORY__, "../../../..")
 let TrainDataPath= Path.Combine(AppPath, "datasets", "taxi-fare-train.csv")
 let TestDataPath= Path.Combine(AppPath, "datasets", "taxi-fare-test.csv")
 let ModelPath= Path.Combine(AppPath, "TaxiFareModel.zip")
 
-[<CLIMutable>]
-type TaxiTrip = {
-    [<Column("0")>] VendorId : string
-    [<Column("1")>] RateCode : string
-    [<Column("2")>] PassengerCount : float32
-    [<Column("3")>] TripTime : float32
-    [<Column("4")>] TripDistance : float32
-    [<Column("5")>] PaymentType : string
-    [<Column("6")>] FareAmount : float32
-} with static member Empty = {
-            VendorId  = ""
-            RateCode = ""
-            PassengerCount = 0.0f
-            TripTime = 0.0f
-            TripDistance = 0.0f
-            PaymentType = ""
-            FareAmount = 0.0f
-        }
 
 [<CLIMutable>]
-type TaxiTripFarePrediction = {
+type TaxiTrip = {
+    VendorId : string
+    RateCode : string
+    PassengerCount : float32
+    TripTime : float32
+    TripDistance : float32
+    PaymentType : string
     FareAmount : float32
 }
 
-// type TaxiTrip() =
-//     [<Column("0")>]
-//     member val VendorId: string = "" with get, set
-
-//     [<Column("1")>]
-//     member val RateCode: string = "" with get, set
-
-//     [<Column("2")>]
-//     member val PassengerCount: float32 = 0.0f with get, set
-
-//     [<Column("3")>]
-//     member val TripTime: float32 = 0.0f with get, set
-
-//     [<Column("4")>]
-//     member val TripDistance: float32 = 0.0f with get, set
-
-//     [<Column("5")>]
-//     member val PaymentType: string = "" with get, set
-
-//     [<Column("6")>]
-//     member val FareAmount: float32 = 0.0f with get,set
-
-// type TaxiTripFarePrediction() =
-//     [<ColumnName("Score")>]
-//     member val FareAmount: float32 = 0.0f with get, set
-
-module TestTaxiTrips =
-    let Trip1 = { TaxiTrip.Empty with
-                        VendorId = "VTS"
-                        RateCode = "1"
-                        PassengerCount = 1.0f
-                        TripDistance = 10.33f
-                        PaymentType = "CSH"
-                        FareAmount = 0.0f // predict it. actual = 29.5
-                }
+[<CLIMutable>]
+type TaxiTripFarePrediction = {
+        [<ColumnName("Score")>]
+        FareAmount : float32
+    }
 
 
-let Train() =
-    // LearningPipeline holds all steps of the learning process: data, transforms, learners.
-    let pipeline = LearningPipeline()
+let createTaxiFareDataFileLoader mlcontext =
+    TextLoader(
+        mlcontext, 
+        TextLoader.Arguments(
+            Separator = ",", 
+            HasHeader = true, 
+            Column = 
+                [|
+                    TextLoader.Column("VendorId", Nullable DataKind.Text, 0)
+                    TextLoader.Column("RateCode", Nullable DataKind.Text, 1)
+                    TextLoader.Column("PassengerCount", Nullable DataKind.R4, 2)
+                    TextLoader.Column("TripTime", Nullable DataKind.R4, 3)
+                    TextLoader.Column("TripDistance", Nullable DataKind.R4, 4)
+                    TextLoader.Column("PaymentType", Nullable DataKind.Text, 5)
+                    TextLoader.Column("FareAmount", Nullable DataKind.R4, 6)
+                |]
+            )
+        )
 
-    // The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-    // all the column names and their types.
-    pipeline.Add (TextLoader(TrainDataPath).CreateFrom<TaxiTrip>(separator=','))
+let buildAndTrain mlcontext =
 
-    // Transforms
-    // When ML model starts training, it looks for two columns: Label and Features.
-    // Label:   values that should be predicted. If you have a field named Label in your data type,
-    //              no extra actions required.
-    //          If you don't have it, like in this example, copy the column you want to predict with
-    //              ColumnCopier transform:
-    pipeline.Add(ColumnCopier(struct ("FareAmount", "Label")))
+    // Create the TextLoader by defining the data columns and where to find (column position) them in the text file.
+    let textLoader = createTaxiFareDataFileLoader mlcontext
 
-    // CategoricalOneHotVectorizer transforms categorical (string) values into 0/1 vectors
-    pipeline.Add(CategoricalOneHotVectorizer("VendorId", "RateCode", "PaymentType"))
+    // Now read the file (remember though, readers are lazy, so the actual reading will happen when 'fitting').
+    let dataView = MultiFileSource(TrainDataPath) |> textLoader.Read
 
-    // Features: all data used for prediction. At the end of all transforms you need to concatenate
-    //              all columns except the one you want to predict into Features column with
-    //              ColumnConcatenator transform:
-    pipeline.Add(ColumnConcatenator("Features",
-                    "VendorId",
-                    "RateCode",
-                    "PassengerCount",
-                    "TripDistance",
-                    "PaymentType"))
-        //FastTreeRegressor is an algorithm that will be used to train the model.
-    pipeline.Add(FastTreeRegressor())
+    //Copy the Count column to the Label column 
 
-    printfn "=============== Training model ==============="
+
+    // In our case, we will one-hot encode as categorical values the VendorId, RateCode and PaymentType
+    // Then concatenate that with the numeric columns.
+    let pipeline = 
+        CopyColumnsEstimator(mlcontext, "FareAmount", "Label")
+        |> Pipeline.append(new CategoricalEstimator(mlcontext, "VendorId"))
+        |> Pipeline.append(new CategoricalEstimator(mlcontext, "RateCode"))
+        |> Pipeline.append(new CategoricalEstimator(mlcontext, "PaymentType"))
+        |> Pipeline.append(new Normalizer(mlcontext, "PassengerCount", Normalizer.NormalizerMode.MeanVariance))
+        |> Pipeline.append(new Normalizer(mlcontext, "TripTime", Normalizer.NormalizerMode.MeanVariance))
+        |> Pipeline.append(new Normalizer(mlcontext, "TripDistance", Normalizer.NormalizerMode.MeanVariance))
+        |> Pipeline.append(new ConcatEstimator(mlcontext, "Features", "VendorId", "RateCode", "PassengerCount", "TripTime", "TripDistance", "PaymentType"))
+    
+    // We apply our selected Trainer (SDCA Regression algorithm)
+    let pipelineWithTrainer = 
+        pipeline
+        |> Pipeline.append(new SdcaRegressionTrainer(mlcontext, new SdcaRegressionTrainer.Arguments(), "Features", "Label"))
+
     // The pipeline is trained on the dataset that has been loaded and transformed.
-    let model = pipeline.Train<TaxiTrip, TaxiTripFarePrediction>()
+    printfn "=============== Training model ==============="
 
-    // Saving the model as a .zip file.
-    model.WriteAsync(ModelPath) |> Async.AwaitTask |> Async.RunSynchronously
-
-    printfn "=============== End training ==============="
-    printfn "The model is saved to %s" ModelPath
+    let model = pipelineWithTrainer.Fit dataView
 
     model
 
-let Evaluate(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>) =
+let evaluate mlcontext testDataLocation (model : ITransformer)=
+    
+    //Create TextLoader with schema related to columns in the TESTING/EVALUATION data file
+    let textLoader = createTaxiFareDataFileLoader mlcontext
 
-    // To evaluate how good the model predicts values, it is run against new set
-    // of data (test data) that was not involved in training.
-    let testData = TextLoader(TestDataPath).CreateFrom<TaxiTrip>(separator=',')
+    //Load evaluation/test data
+    let testDataView = MultiFileSource testDataLocation |> textLoader.Read
 
-    // RegressionEvaluator calculates the differences (in various metrics) between predicted and actual
-    // values in the test dataset.
-    let evaluator = RegressionEvaluator()
+    printfn "=============== Evaluating Model's accuracy with Test data==============="
 
-    printfn "=============== Evaluating model ==============="
+    let predictions = model.Transform testDataView 
 
-    let metrics = evaluator.Evaluate(model, testData)
+    let regressionCtx = RegressionContext mlcontext
+    let metrics = regressionCtx.Evaluate(predictions, "Label", "Score")
+    let algorithmName = "SdcaRegressionTrainer"
+    printfn "*************************************************"
+    printfn "*       Metrics for %s" algorithmName
+    printfn "*------------------------------------------------"
+    printfn "*       R2 Score: %.2f" metrics.RSquared
+    printfn "*       RMS loss: %.2f" metrics.Rms
+    printfn "*       Absolute loss: %.2f" metrics.L1
+    printfn "*       Squared loss: %.2f" metrics.L2
+    printfn "*************************************************"
 
-    printfn "Rms = {metrics.Rms}, ideally should be around 2.8, can be improved with larger dataset"
-    printfn "RSquared = {metrics.RSquared}, a value between 0 and 1, the closer to 1, the better"
-    printfn "=============== End evaluating ==============="
-    printfn ""
+    metrics
 
-let GetDataFromCsv(dataLocation: string, numMaxRecords: int) =
+let testSinglePrediction  mlcontext (model : ITransformer) =
+    //Prediction test
+    // Create prediction engine and make prediction.
+    let engine = model.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction> mlcontext
+
+    //Sample: 
+    //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
+    //VTS,1,1,1140,3.75,CRD,15.5
+    let taxiTripSample = {
+            VendorId = "VTS"
+            RateCode = "1"
+            PassengerCount = 1.0f
+            TripTime = 1140.0f
+            TripDistance = 3.75f
+            PaymentType = "CRD"
+            FareAmount = 0.0f // To predict. Actual/Observed = 15.5
+        }
+
+    let prediction = engine.Predict taxiTripSample
+    printfn "**********************************************************************"
+    printfn "Predicted fare: %.4f, actual fare: 29.5" prediction.FareAmount
+    printfn "**********************************************************************"
+
+let getDataFromCsv dataLocation numMaxRecords =
     File.ReadAllLines(dataLocation)
-        .Skip(1)
-        .Select(fun x -> x.Split(','))
-        .Select(fun x ->
-            { TaxiTrip.Empty with
+    |> Array.skip 1
+    |> Array.map(fun x -> x.Split(','))
+    |> Array.map(fun x ->
+            {
                 VendorId = x.[0]
                 RateCode = x.[1]
                 PassengerCount = Single.Parse(x.[2])
@@ -157,69 +157,71 @@ let GetDataFromCsv(dataLocation: string, numMaxRecords: int) =
                 FareAmount = Single.Parse(x.[6])
             }
         )
-        .Take(numMaxRecords)
+    |> Array.take numMaxRecords
 
-let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
-               testDataSetPath: string,
-               numberOfRecordsToRead: int,
-               args: string[]) =
+let plotRegressionChart (model : ITransformer) testDataSetPath numberOfRecordsToRead (args : string array )=
+    //Create the Prediction Function
+    use mlcontext = new LocalEnvironment()
+
+    // Create prediction engine 
+    let engine = model.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction> mlcontext
 
     use pl = new PLStream()
     // use SVG backend and write to SineWaves.svg in current directory
     let chartFileName =
-        if (args.Length = 1 && args.[0] = "svg") then
-            pl.sdev("svg")
-            let chartFileName = "TaxiRegressionDistribution.svg"
-            pl.sfnam(chartFileName)
-            chartFileName
-        else
-            pl.sdev("pngcairo")
-            let chartFileName = "TaxiRegressionDistribution.png"
-            pl.sfnam(chartFileName)
-            chartFileName
+        match args with
+        | [| "svg" |] ->
+            pl.sdev "svg"
+            "TaxiRegressionDistribution.svg"
+        | _ ->
+            pl.sdev "pngcairo"
+            "TaxiRegressionDistribution.png"
+    pl.sfnam chartFileName
 
     // use white background with black foreground
-    pl.spal0("cmap0_alternate.pal")
+    pl.spal0 "cmap0_alternate.pal"
 
     // Initialize plplot
-    pl.init()
+    pl.init ()
 
     // set axis limits
-    let xMinLimit = 0.0
-    let xMaxLimit = 40.0 //Rides larger than $40 are not shown in the chart
-    let yMinLimit = 0.0
-    let yMaxLimit = 40.0  //Rides larger than $40 are not shown in the chart
+    let xMinLimit = 0.
+    let xMaxLimit = 40. //Rides larger than $40 are not shown in the chart
+    let yMinLimit = 0.
+    let yMaxLimit = 40. //Rides larger than $40 are not shown in the chart
     pl.env(xMinLimit, xMaxLimit, yMinLimit, yMaxLimit, AxesScale.Independent, AxisBox.BoxTicksLabelsAxes)
 
-    // Set scaling for mail title text 125% size of default
-    pl.schr(0.0, 1.25)
+    // Set scaling for main title text 125% size of default
+    pl.schr(0., 1.25)
 
     // The main title
     pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction")
 
-    // plot open different colors
+    // plot using different colors
     // see http://plplot.sourceforge.net/examples.php?demo=02 for palette indices
-    pl.col0(1)
+    pl.col0 1
 
     let totalNumber = numberOfRecordsToRead
-    let testData = GetDataFromCsv(testDataSetPath, totalNumber).ToList()
+    let testData = getDataFromCsv testDataSetPath totalNumber
 
     //This code is the symbol to paint
     let code = (char)9
 
-    // plot open other color
-    //pl.col0(9) //Light Green
-    //pl.col0(4) //Red
-    pl.col0(2) //Blue
+    // plot using other color
+    //pl.col0 9   //Light Green
+    //pl.col0 4   //Red
+    pl.col0 2     //Blue
 
-    let mutable yTotal = 0.0
-    let mutable xTotal = 0.0
-    let mutable xyMultiTotal = 0.0
-    let mutable xSquareTotal = 0.0
+    let mutable yTotal = 0.
+    let mutable xTotal = 0.
+    let mutable xyMultiTotal = 0.
+    let mutable xSquareTotal = 0.
 
-    for i in 0 .. testData.Count-1 do
-        let farePrediction = model.Predict(testData.[i])
+    for i in 0 .. testData.Length - 1 do
 
+        //Make Prediction
+        let farePrediction = engine.Predict testData.[i]
+  
         let x = [| float testData.[i].FareAmount |]
         let y = [| float farePrediction.FareAmount |]
 
@@ -238,8 +240,8 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
         let ySquare = y.[0] * y.[0]
 
         printfn "-------------------------------------------------"
-        printfn "Predicted : {FarePrediction.FareAmount}"
-        printfn "Actual:    {testData[i].FareAmount}"
+        printfn "Predicted : %.5f" farePrediction.FareAmount
+        printfn "Actual:     %.2f" testData.[i].FareAmount
         printfn "-------------------------------------------------"
 
     // Regression Line calculation explanation:
@@ -257,18 +259,18 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
     //Generic function for Y for the regression line
     // y = (m * x) + b
 
-    let x1 = 1.0
+    let x1 = 1.
     //Function for Y1 in the line
     let y1 = (m * x1) + b
 
-    let x2 = 39.0
+    let x2 = 39.
     //Function for Y2 in the line
     let y2 = (m * x2) + b
 
     let xArray = [| x1; x2 |]
     let yArray = [| y1; y2 |]
 
-    pl.col0(4)
+    pl.col0 4
     pl.line(xArray, yArray)
 
     // end page (writes output to disk)
@@ -277,28 +279,37 @@ let PaintChart(model: PredictionModel<TaxiTrip, TaxiTripFarePrediction>,
     // output version of PLplot
     let verText = pl.gver()
     printfn "PLplot version %s" verText
+ 
+
 
     // Open Chart File In Microsoft Photos App (Or default app, like browser for .svg)
-
     printfn "Showing chart..."
     let chartFileNamePath = @".\" + chartFileName
     let p = new Process(StartInfo=ProcessStartInfo(chartFileNamePath, UseShellExecute = true))
     p.Start() |> ignore
 
 
-// STEP 1: Create a model
-let model = Train()
+[<EntryPoint>]
+let main argv =
 
-// STEP2: Test accuracy
-Evaluate(model)
+    //1. Create ML.NET context/environment
+    let mlcontext = new LocalEnvironment(seed = Nullable 0)
 
-// STEP 3: Make a test prediction
-let prediction = model.Predict(TestTaxiTrips.Trip1)
-printfn "Predicted fare: {prediction.FareAmount:0.####}, actual fare: 29.5"
+    // STEP 1: Create and train a model
+    let model = buildAndTrain mlcontext
 
-//STEP 4: Paint regression distribution chart for a number of elements read from a Test DataSet file
-let args = Environment.GetCommandLineArgs().[1..]
-PaintChart(model, TestDataPath, 100, args)
+    // STEP2: Evaluate accuracy of the model
+    evaluate mlcontext TestDataPath model |> ignore
 
-printfn "Press any key to exit.."
-Console.ReadLine() |> ignore
+    // STEP 3: Make a test prediction
+    testSinglePrediction mlcontext model
+
+
+    //STEP 4: Paint regression distribution chart for a number of elements read from a Test DataSet file
+    plotRegressionChart model TestDataPath 100 argv
+
+
+    printfn "Press any key to exit.."
+    Console.ReadLine() |> ignore
+
+    0

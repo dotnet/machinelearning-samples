@@ -12,7 +12,7 @@ namespace CreditCardFraudDetection.Predictor
 
 
             if (!File.Exists(Path.Combine(trainOutput, "testData.idv")) ||
-                !File.Exists(Path.Combine(trainOutput, "cv-fastTree.zip"))){
+                !File.Exists(Path.Combine(trainOutput, "fastTree.zip"))){
                 ConsoleHelpers.ConsoleWriteWarning("YOU SHOULD RUN TRAIN PROJECT FIRST");
                 ConsoleHelpers.ConsolePressAnyKey();
                 return;
@@ -31,7 +31,7 @@ namespace CreditCardFraudDetection.Predictor
             }
 
             var dataSetFile = Path.Combine(assetsPath,"input", "testData.idv");
-            var modelFile = Path.Combine(assetsPath, "input", "cv-fastTree.zip");
+            var modelFile = Path.Combine(assetsPath, "input", "fastTree.zip");
 
             var modelEvaluator = new Predictor(modelFile,dataSetFile);
 

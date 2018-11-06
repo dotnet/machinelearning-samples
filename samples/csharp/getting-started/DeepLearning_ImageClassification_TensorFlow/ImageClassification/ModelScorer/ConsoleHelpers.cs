@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageClassification.ImageDataStructures;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -45,7 +46,7 @@ namespace ImageClassification.ModelScorer
             }
         }
 
-        public static void ConsoleWrite(this ImageData.ImageNetDataProbability self)
+        public static void ConsoleWrite(this ImageNetDataProbability self)
         {
             var defaultForeground = Console.ForegroundColor;
             var labelColor = ConsoleColor.Magenta;
