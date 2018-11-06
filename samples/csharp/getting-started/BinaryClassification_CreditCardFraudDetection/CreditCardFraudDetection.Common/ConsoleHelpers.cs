@@ -1,4 +1,5 @@
 ﻿using CreditCardFraudDetection.Common.DataModels;
+using Microsoft.ML;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 using System;
@@ -96,19 +97,19 @@ namespace CreditCardFraudDetection.Common
             return location;
         }
 
-        public static void InspectData(LocalEnvironment env, IDataView data, int records)
+        public static void InspectData(MLContext env, IDataView data, int records)
         {
             ShowObservations(env, data, label: true, count: records);
             ShowObservations(env, data, label: false, count: records);
         }
 
-        public static void InspectScoredData(LocalEnvironment env, IDataView data, int records)
+        public static void InspectScoredData(MLContext env, IDataView data, int records)
         {
             ShowPredictions(env, data, label: true, count: records);
             ShowPredictions(env, data, label: false, count: records);
         }
 
-        public static void ShowObservations(LocalEnvironment env, IDataView data, bool label = true, int count = 2)
+        public static void ShowObservations(MLContext env, IDataView data, bool label = true, int count = 2)
         {
             data
                // Convert to an enumerable of user-defined type. 
@@ -121,7 +122,7 @@ namespace CreditCardFraudDetection.Common
                .ForEach(row => { row.PrintToConsole(); });
         }
 
-        public static void ShowPredictions(LocalEnvironment env, IDataView data, bool label = true, int count = 2)
+        public static void ShowPredictions(MLContext env, IDataView data, bool label = true, int count = 2)
         {
             data
                // Convert to an enumerable of user-defined type. 

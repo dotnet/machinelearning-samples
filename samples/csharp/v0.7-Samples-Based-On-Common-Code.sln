@@ -37,6 +37,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowScorer.Solution",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Score", "getting-started\DeepLearning_ImageClassification_TensorFlow\ImageClassification\ImageClassification.Score.csproj", "{F8050923-1B16-486A-8C1F-04EA3E589BE4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreditCardFraudDetection.Solution", "CreditCardFraudDetection.Solution", "{D447649D-768F-44E8-8ECA-C711CD882DBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Common", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Common\CreditCardFraudDetection.Common.csproj", "{798F5626-A790-4592-8077-1C251BE2DB04}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Trainer", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\CreditCardFraudDetection.Trainer.csproj", "{5523CE78-5C1A-4022-B25B-B6F693E683BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Predictor", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Predictor\CreditCardFraudDetection.Predictor.csproj", "{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +87,18 @@ Global
 		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +113,9 @@ Global
 		{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC} = {8999FDCC-9EEF-43E3-AE55-4E3F85B245C4}
 		{DED7B815-0B02-4308-B654-6F570E5CF3F9} = {ABAB9675-956E-4F6C-8467-6E0231C454E2}
 		{F8050923-1B16-486A-8C1F-04EA3E589BE4} = {256EED4C-79DE-46E5-8673-0991C630C6BD}
+		{798F5626-A790-4592-8077-1C251BE2DB04} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
