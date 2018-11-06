@@ -71,6 +71,7 @@ namespace CreditCardFraudDetection.Trainer
             var metrics = _context.Evaluate(model.Transform(_testData), "Label");
 
             ConsoleHelpers.ConsoleWriteHeader($"Test Metrics:");
+            Console.WriteLine("Acuracy: " + metrics.Accuracy);
             metrics.ToConsole();
 
             model.SaveModel(_env, Path.Combine(_outputPath, "fastTree.zip"));

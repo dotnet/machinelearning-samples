@@ -130,7 +130,7 @@ namespace Common
             Console.WriteLine($"*       Metrics for {name} clustering model      ");
             Console.WriteLine($"*------------------------------------------------");
             Console.WriteLine($"*       AvgMinScore: {metrics.AvgMinScore}");
-            Console.WriteLine($"*       Dbi is: {metrics.Dbi}");
+            Console.WriteLine($"*       DBI is: {metrics.Dbi}");
             Console.WriteLine($"*************************************************");
         }
 
