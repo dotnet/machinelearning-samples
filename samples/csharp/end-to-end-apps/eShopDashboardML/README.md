@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | Dynamic API | *Evolving* | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v0.6           | Dynamic API | Needs to be upgraded to ML.NET v0.7 | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).

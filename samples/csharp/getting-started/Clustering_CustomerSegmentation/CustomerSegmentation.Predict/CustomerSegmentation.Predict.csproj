@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="0.7.0-preview-27031-8" />
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
   </ItemGroup>
 

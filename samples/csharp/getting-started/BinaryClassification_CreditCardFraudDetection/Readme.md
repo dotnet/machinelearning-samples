@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | Dynamic API | Needs update to 0.7 and README.md | Two console apps | .csv file | Fraud Detection | Two-class  classification | FastTree Binary  Classification |
+| v0.7           | Dynamic API | Needs update to 0.7 and README.md | Two console apps | .csv file | Fraud Detection | Two-class  classification | FastTree Binary  Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 

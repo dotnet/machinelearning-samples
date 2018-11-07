@@ -3,7 +3,7 @@ using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Transforms;
 using Microsoft.ML.Transforms.Categorical;
-using Microsoft.ML.Transforms.PCA;
+using Microsoft.ML.Transforms.Projections;
 using System;
 using System.Collections.Generic;
 using System.Text;

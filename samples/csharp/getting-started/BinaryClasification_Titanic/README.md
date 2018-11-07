@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | Learning Pipeline | Needs update to  Dynamic API: [Contribute](/CONTRIBUTING.md) | Console app | .csv file | Survival prediction | Two-class  classification | FastTree Binary  Classifier |
+| v0.7           | Learning Pipeline | Readme.MD needs update to v0.7 | Console app | .csv file | Survival prediction | Two-class  classification | FastTree Binary  Classifier |
 
 ------------------------------------
 

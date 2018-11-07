@@ -1,6 +1,6 @@
 using Microsoft.ML.Runtime.Api;
 
-namespace BinaryClasification_TitanicSurvivalPrediction
+namespace TitanicSurvivalConsoleApp.DataStructures
 {
     public class TitanicPrediction
     {
