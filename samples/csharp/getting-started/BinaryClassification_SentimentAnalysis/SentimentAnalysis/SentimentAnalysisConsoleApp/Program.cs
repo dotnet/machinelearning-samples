@@ -27,8 +27,22 @@ namespace SentimentAnalysisConsoleApp
         {
             //Create MLContext to be shared across the model creation workflow objects 
             //Set a random seed for repeatable/deterministic results across multiple trainings.
-            var mlContext = new MLContext();
+            var mlContext = new MLContext(seed: 1);
 
+            // Create, Train, Evaluate and Save a model
+            BuildTrainEvaluateAndSaveModel(mlContext);
+            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training processh ===============");
+
+            // Make a single test prediction loding the model from .ZIP file
+            TestSinglePrediction(mlContext);
+
+            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of process, hit any key to finish ===============");
+            Console.ReadKey();
+
+        }
+
+        private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
+        {
             // STEP 1: Common data loading configuration
             DataLoader dataLoader = new DataLoader(mlContext);
             var trainingDataView = dataLoader.GetDataView(TrainDataPath);
@@ -60,6 +74,11 @@ namespace SentimentAnalysisConsoleApp
             Console.WriteLine("=============== Saving the model to a file ===============");
             modelBuilder.SaveModelAsFile(ModelPath);
 
+            return modelBuilder.TrainedModel;
+        }
+
+        private static void TestSinglePrediction(MLContext mlContext)
+        {
             // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
             var modelScorer = new Common.ModelScorer<SentimentIssue, SentimentPrediction>(mlContext);
@@ -70,10 +89,6 @@ namespace SentimentAnalysisConsoleApp
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
             Console.WriteLine($"==================================================");
             //
-
-            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training process, hit any key to finish ===============");
-            Console.ReadKey();
-          
         }
     }
 }

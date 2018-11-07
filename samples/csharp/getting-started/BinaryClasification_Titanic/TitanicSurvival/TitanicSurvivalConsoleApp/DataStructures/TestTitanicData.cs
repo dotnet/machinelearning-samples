@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 
-namespace BinaryClasification_TitanicSurvivalPrediction
+
+namespace TitanicSurvivalConsoleApp.DataStructures
 {
     internal class TestTitanicData
     {

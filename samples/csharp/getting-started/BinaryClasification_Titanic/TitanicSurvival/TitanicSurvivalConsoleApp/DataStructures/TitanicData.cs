@@ -1,14 +1,14 @@
 using Microsoft.ML.Runtime.Api;
 
-namespace BinaryClasification_TitanicSurvivalPrediction
+namespace TitanicSurvivalConsoleApp.DataStructures
 {
     public class TitanicData
     {
         [Column("0")]
         public float PassengerId;
 
-        [Column(ordinal: "1", name: "Label")]
-        public float Survived;
+        [Column(ordinal: "1")]
+        public float Label;   //If "Survived" or not
 
         [Column("2")]
         public float Pclass;

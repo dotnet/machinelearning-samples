@@ -2,9 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="datasets\**" />
+    <EmbeddedResource Remove="datasets\**" />
+    <None Remove="datasets\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
@@ -13,20 +19,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="datasets\wikipedia-detox-250-line-data.tsv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="datasets\wikipedia-detox-250-line-test.tsv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="Common\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <None Include="..\Data\titanic-test.csv" Link="Data\titanic-test.csv" />
+    <None Include="..\Data\titanic-train.csv" Link="Data\titanic-train.csv" />
   </ItemGroup>
-  
+
 </Project>
