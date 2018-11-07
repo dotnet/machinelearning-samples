@@ -45,10 +45,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Tr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Predictor", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Predictor\CreditCardFraudDetection.Predictor.csproj", "{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Titanic.Solution", "Titanic.Solution", "{D9CAA8C0-AE2B-4F1E-A8F9-66BAF0C4B2EF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TitanicSurvivalConsoleApp", "getting-started\BinaryClasification_Titanic\TitanicSurvival\TitanicSurvivalConsoleApp\TitanicSurvivalConsoleApp.csproj", "{F062D56D-31FD-47E3-85C3-87A7E2DC6A6D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowEstimator.Solution", "TensorFlowEstimator.Solution", "{BB78093B-4EEE-401F-95E2-4BE7C5C420D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Train", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Train\ImageClassification.Train.csproj", "{A76877EE-052E-462F-BBD1-0DA8A3303099}"
@@ -109,10 +105,6 @@ Global
 		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F062D56D-31FD-47E3-85C3-87A7E2DC6A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F062D56D-31FD-47E3-85C3-87A7E2DC6A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F062D56D-31FD-47E3-85C3-87A7E2DC6A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F062D56D-31FD-47E3-85C3-87A7E2DC6A6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -138,7 +130,6 @@ Global
 		{798F5626-A790-4592-8077-1C251BE2DB04} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{5523CE78-5C1A-4022-B25B-B6F693E683BB} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
-		{F062D56D-31FD-47E3-85C3-87A7E2DC6A6D} = {D9CAA8C0-AE2B-4F1E-A8F9-66BAF0C4B2EF}
 		{A76877EE-052E-462F-BBD1-0DA8A3303099} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
 		{73558A6A-9EDD-457A-A504-1F5A55D02016} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
 	EndGlobalSection
