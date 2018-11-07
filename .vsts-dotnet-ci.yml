@@ -47,6 +47,22 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
 
+- phase: TensorFlowScorer
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: TensorFlow Scorer (Image Classification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TF.Model.Scorer.sln'
+
+- phase: TensorFlowFeaturizerEstimator
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: TensorFlow Featurizer Estimator (Image Classification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TF.Featurizer.Estimator.sln'
+
 - phase: IrisMultiClass
   queue: Hosted VS2017
   steps:
