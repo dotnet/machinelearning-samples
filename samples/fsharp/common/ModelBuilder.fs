@@ -37,6 +37,11 @@ module ModelBuilder =
         let predictions = trainedModel.Transform dataView
         mlContext.Clustering.Evaluate(predictions, score = "Score", features = "Features")
 
+    let evaluateBinaryClassificationModel (testData : IDataView) label score (trainedModel : ITransformer) (mlContext : MLContext, pipeline : IEstimator<'a>) =
+        checkTrained trainedModel
+        let predictions = trainedModel.Transform testData
+        mlContext.BinaryClassification.Evaluate(predictions, label, score)
+
     let saveModelAsFile persistedModelPath (trainedModel : ITransformer, (mlContext : MLContext, _)) =
         checkTrained trainedModel
 

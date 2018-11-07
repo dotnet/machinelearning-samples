@@ -11,9 +11,12 @@
     <Compile Include="..\..\..\..\common\ModelScorer.fs" Link="Common\ModelScorer.fs" />
     <Compile Include="..\..\..\..\common\Pipeline.fs" Link="Common\Pipeline.fs" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Compile Include="DataStructures\DataStructures.fs" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -22,13 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="datasets\iris-full.txt">
+    <None Update="datasets\wikipedia-detox-250-line-data.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+    <None Update="datasets\wikipedia-detox-250-line-test.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
 
 </Project>
