@@ -56,16 +56,6 @@ The datasets are provided under the original terms that Microsoft received such 
 >More details on current and past projects on related topics are available on http://mlg.ulb.ac.be/BruFence and http://mlg.ulb.ac.be/ARTML
 >
 
-### Titanic survival dataset
-
->
->Redistributing the "Processed Dataset" datasets with attribution:
->
->Data obtained from http://biostat.mc.vanderbilt.edu/DataSets
->
->Original source: http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic.html
->
-
 ### Corefx Issues
 
 >
