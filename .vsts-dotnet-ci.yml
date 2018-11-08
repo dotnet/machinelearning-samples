@@ -5,7 +5,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build F# GettingStarted samples
     inputs:
-      projects: '.\samples\fsharp\getting-started\GettingStarted.sln'
+      projects: '.\samples\fsharp\getting-started\v0.7-All-Samples.sln'
 
 - phase: CreditCardFraudDetection
   queue: Hosted VS2017
