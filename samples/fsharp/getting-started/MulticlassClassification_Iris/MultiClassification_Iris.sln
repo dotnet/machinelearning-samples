@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2050
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MulticlassClassification_Iris", "IrisClassification\IrisClassificationConsoleApp\MulticlassClassification_Iris.fsproj", "{656C89CB-0495-4C81-8992-F8671506E27F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{656C89CB-0495-4C81-8992-F8671506E27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{656C89CB-0495-4C81-8992-F8671506E27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{656C89CB-0495-4C81-8992-F8671506E27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{656C89CB-0495-4C81-8992-F8671506E27F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA4B641D-AD97-405B-9FE0-58211A056091}
+	EndGlobalSection
+EndGlobal
