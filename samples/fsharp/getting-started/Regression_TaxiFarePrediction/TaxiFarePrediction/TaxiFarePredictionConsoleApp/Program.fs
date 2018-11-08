@@ -80,8 +80,8 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
     let metrics = 
-        modelBuilder
-        |> Common.ModelBuilder.evaluateRegressionModel testDataView "Label" "Score" trainedModel
+        (trainedModel, modelBuilder)
+        |> Common.ModelBuilder.evaluateRegressionModel testDataView "Label" "Score"
 
     Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metrics
 

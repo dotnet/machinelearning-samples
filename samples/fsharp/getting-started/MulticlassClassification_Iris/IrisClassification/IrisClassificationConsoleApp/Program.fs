@@ -71,8 +71,8 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
     let metrics = 
-        modelBuilder
-        |> Common.ModelBuilder.evaluateMultiClassClassificationModel testDataView "Label" "Score" trainedModel
+        (trainedModel, modelBuilder)
+        |> Common.ModelBuilder.evaluateMultiClassClassificationModel testDataView "Label" "Score"
 
     Common.ConsoleHelper.printMultiClassClassificationMetrics (trainer.ToString()) metrics
 

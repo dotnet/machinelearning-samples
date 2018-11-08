@@ -64,8 +64,8 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
     let metrics = 
-        modelBuilder
-        |> Common.ModelBuilder.evaluateBinaryClassificationModel testDataView "Label" "Score" trainedModel
+        (trainedModel, modelBuilder)
+        |> Common.ModelBuilder.evaluateBinaryClassificationModel testDataView "Label" "Score"
 
     Common.ConsoleHelper.printBinaryClassificationMetrics (trainer.ToString()) metrics
 
@@ -100,12 +100,12 @@ let main argv =
 
     // Create, Train, Evaluate and Save a model
     buildTrainEvaluateAndSaveModel mlContext
-    Common.ConsoleHelper.consoleWriteHeader [| "=============== End of training processh ===============" |]
+    Common.ConsoleHelper.consoleWriteHeader "=============== End of training processh ==============="
 
     // Make a single test prediction loding the model from .ZIP file
     testSinglePrediction mlContext
 
-    Common.ConsoleHelper.consoleWriteHeader [| "=============== End of process, hit any key to finish ===============" |]
+    Common.ConsoleHelper.consoleWriteHeader "=============== End of process, hit any key to finish ==============="
     Common.ConsoleHelper.consolePressAnyKey()
 
     0 // return an integer exit code

@@ -67,8 +67,8 @@ let main argv =
 
     // STEP4: Evaluate accuracy of the model
     let metrics = 
-        modelBuilder
-        |> Common.ModelBuilder.evaluateClusteringModel testingDataView trainedModel
+        (trainedModel, modelBuilder)
+        |> Common.ModelBuilder.evaluateClusteringModel testingDataView
     Common.ConsoleHelper.printClusteringMetrics (trainer.ToString()) metrics
 
     // STEP5: Save/persist the model as a .ZIP file

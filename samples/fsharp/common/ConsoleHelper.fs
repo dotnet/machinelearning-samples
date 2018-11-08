@@ -104,13 +104,12 @@ module ConsoleHelper =
         printfn "*       DBI is: %.4f" metrics.Dbi
         printfn "*************************************************"
 
-    let consoleWriteHeader (lines : string array) =
+    let consoleWriteHeader line =
         let defaultColor = Console.ForegroundColor
         Console.ForegroundColor <- ConsoleColor.Yellow
         printfn " "
-        for line in lines do
-            printfn "%s" line
-        let maxLength = lines |> Array.map(fun x -> x.Length) |> Array.max
+        printfn "%s" line
+        let maxLength = line.Length
         printfn "%s" (new string('#', maxLength))
         Console.ForegroundColor <- defaultColor
 
@@ -123,7 +122,7 @@ module ConsoleHelper =
     let peekDataViewInConsole<'TObservation when 'TObservation : (new : unit -> 'TObservation) and 'TObservation : not struct> (mlContext : MLContext) (dataView : IDataView) (pipeline : IEstimator<ITransformer>) numberOfRows =
         
         let msg = sprintf "Peek data in DataView: Showing %d rows with the columns specified by TObservation class" numberOfRows
-        consoleWriteHeader [| msg |]
+        consoleWriteHeader msg
 
         //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
         let transformer = pipeline.Fit dataView
@@ -153,7 +152,7 @@ module ConsoleHelper =
 
     let peekVectorColumnDataInConsole (mlContext : MLContext) columnName (dataView : IDataView) (pipeline : IEstimator<ITransformer>) numberOfRows =
         let msg = sprintf "Peek data in DataView: : Show %d rows with just the '%s' column" numberOfRows columnName
-        consoleWriteHeader [| msg |]
+        consoleWriteHeader msg
 
         let transformer = pipeline.Fit dataView
         let transformedData = transformer.Transform dataView
