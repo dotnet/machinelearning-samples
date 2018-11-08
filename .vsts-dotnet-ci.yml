@@ -7,14 +7,6 @@ phases:
     inputs:
       projects: '.\samples\fsharp\getting-started\GettingStarted.sln'
 
-- phase: Titanic
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Titanic (BinaryClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
-
 - phase: CreditCardFraudDetection
   queue: Hosted VS2017
   steps:
