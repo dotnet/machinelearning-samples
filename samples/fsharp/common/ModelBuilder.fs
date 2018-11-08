@@ -47,6 +47,11 @@ module ModelBuilder =
         let predictions = trainedModel.Transform testData
         mlContext.MulticlassClassification.Evaluate(predictions, label, score)
 
+    let evaluateRegressionModel (testData : IDataView) label score (trainedModel : ITransformer) (mlContext : MLContext, pipeline : IEstimator<'a>) =
+        checkTrained trainedModel
+        let predictions = trainedModel.Transform testData
+        mlContext.Regression.Evaluate(predictions, label, score)
+
     let saveModelAsFile persistedModelPath (trainedModel : ITransformer, (mlContext : MLContext, _)) =
         checkTrained trainedModel
 

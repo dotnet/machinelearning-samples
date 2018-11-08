@@ -114,6 +114,12 @@ module ConsoleHelper =
         printfn "%s" (new string('#', maxLength))
         Console.ForegroundColor <- defaultColor
 
+    let downcastPipeline (pipeline : IEstimator<'a>) =
+        match pipeline with
+        | :? IEstimator<ITransformer> as p -> p
+        | _ -> failwith "The pipeline has to be an instance of IEstimator<ITransformer>."
+
+
     let peekDataViewInConsole<'TObservation when 'TObservation : (new : unit -> 'TObservation) and 'TObservation : not struct> (mlContext : MLContext) (dataView : IDataView) (pipeline : IEstimator<ITransformer>) numberOfRows =
         
         let msg = sprintf "Peek data in DataView: Showing %d rows with the columns specified by TObservation class" numberOfRows
