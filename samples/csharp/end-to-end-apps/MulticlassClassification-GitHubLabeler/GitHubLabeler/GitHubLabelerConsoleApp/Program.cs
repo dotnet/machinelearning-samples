@@ -93,7 +93,7 @@ namespace GitHubLabeler
             //Set the trainer/algorithm
             var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline);           
             modelBuilder.AddTrainer(trainer);
-            modelBuilder.AddEstimator(new KeyToValueEstimator(mlContext, "PredictedLabel"));
+            modelBuilder.AddEstimator(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
