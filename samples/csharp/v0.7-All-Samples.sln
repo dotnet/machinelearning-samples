@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysisConsoleApp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaxiFarePrediction.Solution", "TaxiFarePrediction.Solution", "{885A3FD5-8413-42ED-AF7D-1C7B5685563C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Regression_TaxiFarePrediction", "getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction\TaxiFarePredictionConsoleApp\Regression_TaxiFarePrediction.csproj", "{93F80743-6655-4038-B08A-4DECA2DA9169}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction\TaxiFarePredictionConsoleApp\TaxiFarePrediction.csproj", "{93F80743-6655-4038-B08A-4DECA2DA9169}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrisClustering.Solution", "IrisClustering.Solution", "{8999FDCC-9EEF-43E3-AE55-4E3F85B245C4}"
 EndProject
