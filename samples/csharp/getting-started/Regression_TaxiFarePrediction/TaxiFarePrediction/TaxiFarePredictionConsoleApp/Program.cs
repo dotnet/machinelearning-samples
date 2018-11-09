@@ -48,13 +48,12 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            DataLoader dataLoader = new DataLoader(mlContext);
-            var trainingDataView = dataLoader.GetDataView(TrainDataPath);
-            var testDataView = dataLoader.GetDataView(TestDataPath);
+            var textLoader = TaxiFareTextLoaderFactory.CreateTextLoader(mlContext);
+            var trainingDataView = textLoader.Read(TrainDataPath);
+            var testDataView = textLoader.Read(TestDataPath);
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessor = new DataProcessor(mlContext);
-            var dataProcessPipeline = dataProcessor.DataProcessPipeline;
+            var dataProcessPipeline = TaxiFareDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
 
             // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             Common.ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);

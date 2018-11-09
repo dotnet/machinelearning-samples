@@ -22,7 +22,7 @@ namespace ImageClassification.Model
         private readonly string imagesFolder;
         private readonly string inputModelLocation;
         private readonly string outputModelLocation;
-        private readonly IHostEnvironment env;
+        private readonly MLContext mlContext;
 
         public ModelBuilder(string dataLocation, string imagesFolder, string inputModelLocation, string outputModelLocation)
         {
@@ -30,7 +30,7 @@ namespace ImageClassification.Model
             this.imagesFolder = imagesFolder;
             this.inputModelLocation = inputModelLocation;
             this.outputModelLocation = outputModelLocation;
-            env = new ConsoleEnvironment(seed: 1);
+            mlContext = new MLContext(seed: 1);
         }
 
         private struct ImageNetSettings
@@ -54,7 +54,7 @@ namespace ImageClassification.Model
 
 
 
-            var loader = new TextLoader(env,
+            var loader = new TextLoader(mlContext,
                 new TextLoader.Arguments
                 {
                     Column = new[] {
@@ -63,15 +63,13 @@ namespace ImageClassification.Model
                     }
                 });
 
-
-
-            var pipeline = new ValueToKeyMappingEstimator(env, "Label", "LabelTokey")
-                        .Append(new ImageLoadingEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
-                        .Append(new ImageResizingEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-                        .Append(new ImagePixelExtractingEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-                        .Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
-                        .Append(new SdcaMultiClassTrainer(env, "softmax2_pre_activation", "LabelTokey"))
-                        .Append(new KeyToValueEstimator(env, ("PredictedLabel", "PredictedLabelValue")));
+            var pipeline = mlContext.Transforms.Categorical.MapValueToKey("Label", "LabelTokey")
+                            .Append(new ImageLoadingEstimator(mlContext, imagesFolder, ("ImagePath", "ImageReal")))
+                            .Append(new ImageResizingEstimator(mlContext, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+                            .Append(new ImagePixelExtractingEstimator(mlContext, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+                            .Append(new TensorFlowEstimator(mlContext, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
+                            .Append(new SdcaMultiClassTrainer(mlContext, "softmax2_pre_activation", "LabelTokey"))
+                            .Append(new KeyToValueEstimator(mlContext, ("PredictedLabel", "PredictedLabelValue")));
 
             // Train the pipeline
             ConsoleWriteHeader("Training classification model");
@@ -82,11 +80,11 @@ namespace ImageClassification.Model
             // This is an optional step, but it's useful for debugging issues
             var trainData = model.Transform(data);
             var loadedModelOutputColumnNames = trainData.Schema.GetColumnNames();
-            var trainData2 = trainData.AsEnumerable<ImageNetPipeline>(env, false, true).ToList();
+            var trainData2 = trainData.AsEnumerable<ImageNetPipeline>(mlContext, false, true).ToList();
             trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
             // Get some performance metric on the model using training data            
-            var sdcaContext = new MulticlassClassificationContext(env);
+            var sdcaContext = new MulticlassClassificationContext(mlContext);
             ConsoleWriteHeader("Classification metrics");
             var metrics = sdcaContext.Evaluate(trainData, label: "LabelTokey", predictedLabel: "PredictedLabel");
             Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
@@ -96,7 +94,7 @@ namespace ImageClassification.Model
             ConsoleWriteHeader("Save model to local file");
             ModelHelpers.DeleteAssets(outputModelLocation);
             using (var f = new FileStream(outputModelLocation, FileMode.Create))
-                model.SaveTo(env, f);
+                model.SaveTo(mlContext, f);
             Console.WriteLine($"Model saved: {outputModelLocation}");
         }
 

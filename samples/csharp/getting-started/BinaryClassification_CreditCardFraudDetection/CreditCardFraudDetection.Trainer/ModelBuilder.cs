@@ -47,12 +47,6 @@ namespace CreditCardFraudDetection.Trainer
                                                 int minDocumentsInLeafs = 10, double learningRate = 0.2,
                                                 Action<Arguments> advancedSettings = null)
         {
-
-            //DELETE, code line not used
-            //var logMeanVarNormalizer =   new Normalizer(_mlContext, Normalizer.NormalizerMode.MeanVariance ,("Features", "FeaturesNormalizedByMeanVar"));
-
-            //.Append(mlContext.Transforms.Normalize(inputName: "PassengerCount", mode:NormalizerMode.MeanVariance))
-
             //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
 
             var pipeline = _mlContext.Transforms.Concatenate("Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",

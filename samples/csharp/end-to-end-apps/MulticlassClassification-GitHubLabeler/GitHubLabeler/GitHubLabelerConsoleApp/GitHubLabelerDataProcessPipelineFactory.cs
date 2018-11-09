@@ -7,15 +7,13 @@ using Microsoft.ML.Transforms.Text;
 
 namespace GitHubLabeler
 {
-    public class DataProcessor
+    public class GitHubLabelerDataProcessPipelineFactory
     {
-        public IEstimator<ITransformer> DataProcessPipeline { get; private set; }
-
-        public DataProcessor(MLContext mlContext)
+        public static IEstimator<ITransformer> CreateDataProcessPipeline(MLContext mlContext)
         {
             // Configure data transformations in the Process pipeline
 
-            DataProcessPipeline = new ValueToKeyMappingEstimator(mlContext, "Area", "Label")
+            return mlContext.Transforms.Categorical.MapValueToKey("Area", "Label")
                                   .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
                                   .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
                                   .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"));

@@ -23,15 +23,14 @@ namespace Clustering_Iris
             //Create the MLContext to share across components for deterministic results
             MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
-            //STEP 1: Common data loading
-            DataLoader dataLoader = new DataLoader(mlContext);
-            var fullData = dataLoader.GetDataView(DataPath);
+            // STEP 1: Common data loading configuration
+            var textLoader = IrisTextLoaderFactory.CreateTextLoader(mlContext);
+            var fullData = textLoader.Read(DataPath);
 
             (IDataView trainingDataView, IDataView testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction: 0.2);
 
             //STEP 2: Process data transformations in pipeline
-            var dataProcessor = new DataProcessor(mlContext);
-            var dataProcessPipeline = dataProcessor.DataProcessPipeline;
+            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth");
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole<IrisData>(mlContext, trainingDataView, dataProcessPipeline, 10);
