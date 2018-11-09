@@ -44,17 +44,12 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            DataLoader dataLoader = new DataLoader(mlContext);
-            var trainingDataView = dataLoader.GetDataView(TrainDataPath);
-            var testDataView = dataLoader.GetDataView(TestDataPath);
+            var textLoader = SentimentAnalysysTextLoaderFactory.CreateTextLoader(mlContext);
+            var trainingDataView = textLoader.Read(TrainDataPath);
+            var testDataView = textLoader.Read(TestDataPath);
 
-            // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessor = new DataProcessor(mlContext);
-            var dataProcessPipeline = dataProcessor.DataProcessPipeline;
-
-            // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            Common.ConsoleHelper.PeekDataViewInConsole<SentimentIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
-            //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
+            // STEP 2: Common data process configuration with pipeline data transformations          
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features");
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
             var modelBuilder = new Common.ModelBuilder<SentimentIssue, SentimentPrediction>(mlContext, dataProcessPipeline);

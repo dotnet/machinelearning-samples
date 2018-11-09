@@ -55,12 +55,11 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 0);
 
             // STEP 1: Common data loading configuration
-            DataLoader dataLoader = new DataLoader(mlContext);
-            var trainingDataView = dataLoader.GetDataView(DataSetLocation);
+            var textLoader = GitHubLabelerTextLoaderFactory.CreateTextLoader(mlContext);
+            var trainingDataView = textLoader.Read(DataSetLocation);
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessor = new DataProcessor(mlContext);
-            var dataProcessPipeline = dataProcessor.DataProcessPipeline;
+            var dataProcessPipeline = GitHubLabelerDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             Common.ConsoleHelper.PeekDataViewInConsole<GitHubIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
