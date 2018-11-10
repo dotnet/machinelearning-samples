@@ -335,3 +335,5 @@ SentimentModel.zip
 IrisModel.zip
 samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiRegressionDistribution.png
 TaxiFareModel.zip
+
+**/MLModels/*.zip

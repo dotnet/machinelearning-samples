@@ -1,0 +1,139 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeSharingDemand", "getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\BikeSharingDemand.csproj", "{DD5EBF32-C310-405A-BD8D-507A35F0C204}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BikeSharingDemand.Solution", "BikeSharingDemand.Solution", "{820E8AF2-A47D-4AB8-A4AF-5CDFF97EBCDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerSegmentation.Solution", "CustomerSegmentation.Solution", "{9E916E68-E9C5-4A06-96FA-EE9E57DAF368}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerSegmentation.Train", "getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.Train\CustomerSegmentation.Train.csproj", "{633CD965-51BB-4526-B30E-B73D2716982A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerSegmentation.Predict", "getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.Predict\CustomerSegmentation.Predict.csproj", "{8AC93D85-B280-470C-A78D-4CB49CF968A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubLabeler", "end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler\GitHubLabelerConsoleApp\GitHubLabeler.csproj", "{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubIssuesLabeler.Solution", "GitHubIssuesLabeler.Solution", "{D3A3F9D2-CB3A-45BB-8D42-8E6646E24E97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SentimentAnalysis.Solution", "SentimentAnalysis.Solution", "{B2B3D668-AFA4-4BC9-969E-1840D6C92FB6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysisConsoleApp", "getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis\SentimentAnalysisConsoleApp\SentimentAnalysisConsoleApp.csproj", "{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaxiFarePrediction.Solution", "TaxiFarePrediction.Solution", "{885A3FD5-8413-42ED-AF7D-1C7B5685563C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction\TaxiFarePredictionConsoleApp\TaxiFarePrediction.csproj", "{93F80743-6655-4038-B08A-4DECA2DA9169}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrisClustering.Solution", "IrisClustering.Solution", "{8999FDCC-9EEF-43E3-AE55-4E3F85B245C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clustering_Iris", "getting-started\Clustering_Iris\IrisClustering\IrisClusteringConsoleApp\Clustering_Iris.csproj", "{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrisClassification.Solution", "IrisClassification.Solution", "{ABAB9675-956E-4F6C-8467-6E0231C454E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticlassClassification_Iris", "getting-started\MulticlassClassification_Iris\IrisClassification\IrisClassificationConsoleApp\MulticlassClassification_Iris.csproj", "{DED7B815-0B02-4308-B654-6F570E5CF3F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowScorer.Solution", "TensorFlowScorer.Solution", "{256EED4C-79DE-46E5-8673-0991C630C6BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Score", "getting-started\DeepLearning_ImageClassification_TensorFlow\ImageClassification\ImageClassification.Score.csproj", "{F8050923-1B16-486A-8C1F-04EA3E589BE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreditCardFraudDetection.Solution", "CreditCardFraudDetection.Solution", "{D447649D-768F-44E8-8ECA-C711CD882DBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Common", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Common\CreditCardFraudDetection.Common.csproj", "{798F5626-A790-4592-8077-1C251BE2DB04}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Trainer", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\CreditCardFraudDetection.Trainer.csproj", "{5523CE78-5C1A-4022-B25B-B6F693E683BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Predictor", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Predictor\CreditCardFraudDetection.Predictor.csproj", "{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowEstimator.Solution", "TensorFlowEstimator.Solution", "{BB78093B-4EEE-401F-95E2-4BE7C5C420D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Train", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Train\ImageClassification.Train.csproj", "{A76877EE-052E-462F-BBD1-0DA8A3303099}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Predict", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Predict\ImageClassification.Predict.csproj", "{73558A6A-9EDD-457A-A504-1F5A55D02016}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD5EBF32-C310-405A-BD8D-507A35F0C204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5EBF32-C310-405A-BD8D-507A35F0C204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5EBF32-C310-405A-BD8D-507A35F0C204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5EBF32-C310-405A-BD8D-507A35F0C204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{633CD965-51BB-4526-B30E-B73D2716982A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{633CD965-51BB-4526-B30E-B73D2716982A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{633CD965-51BB-4526-B30E-B73D2716982A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{633CD965-51BB-4526-B30E-B73D2716982A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AC93D85-B280-470C-A78D-4CB49CF968A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AC93D85-B280-470C-A78D-4CB49CF968A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AC93D85-B280-470C-A78D-4CB49CF968A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AC93D85-B280-470C-A78D-4CB49CF968A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F80743-6655-4038-B08A-4DECA2DA9169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F80743-6655-4038-B08A-4DECA2DA9169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F80743-6655-4038-B08A-4DECA2DA9169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F80743-6655-4038-B08A-4DECA2DA9169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED7B815-0B02-4308-B654-6F570E5CF3F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED7B815-0B02-4308-B654-6F570E5CF3F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED7B815-0B02-4308-B654-6F570E5CF3F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED7B815-0B02-4308-B654-6F570E5CF3F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8050923-1B16-486A-8C1F-04EA3E589BE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{798F5626-A790-4592-8077-1C251BE2DB04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76877EE-052E-462F-BBD1-0DA8A3303099}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD5EBF32-C310-405A-BD8D-507A35F0C204} = {820E8AF2-A47D-4AB8-A4AF-5CDFF97EBCDF}
+		{633CD965-51BB-4526-B30E-B73D2716982A} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
+		{8AC93D85-B280-470C-A78D-4CB49CF968A9} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
+		{0FFF29B8-AF32-4340-80B5-FFD21ABEF840} = {D3A3F9D2-CB3A-45BB-8D42-8E6646E24E97}
+		{E0B6A50C-BE64-47B6-8781-F0B233F5F6E2} = {B2B3D668-AFA4-4BC9-969E-1840D6C92FB6}
+		{93F80743-6655-4038-B08A-4DECA2DA9169} = {885A3FD5-8413-42ED-AF7D-1C7B5685563C}
+		{3F4FC8DE-4545-43D8-91B2-5BD4B711C6EC} = {8999FDCC-9EEF-43E3-AE55-4E3F85B245C4}
+		{DED7B815-0B02-4308-B654-6F570E5CF3F9} = {ABAB9675-956E-4F6C-8467-6E0231C454E2}
+		{F8050923-1B16-486A-8C1F-04EA3E589BE4} = {256EED4C-79DE-46E5-8673-0991C630C6BD}
+		{798F5626-A790-4592-8077-1C251BE2DB04} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
+		{5523CE78-5C1A-4022-B25B-B6F693E683BB} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
+		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
+		{A76877EE-052E-462F-BBD1-0DA8A3303099} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
+		{73558A6A-9EDD-457A-A504-1F5A55D02016} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
+	EndGlobalSection
+EndGlobal

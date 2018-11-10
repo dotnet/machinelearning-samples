@@ -19,10 +19,17 @@ namespace CreditCardFraudDetection.Trainer
 
             try
             {
+                //Unzip datasets as they are significantly large, too large for GitHub if not zipped
                 ConsoleHelpers.UnZipDataSet(zipDataSet, dataSetFile);
 
-                var modelBuilder = new ModelBuilder(assetsPath, dataSetFile);
-                modelBuilder.Build();
+                // Create a common ML.NET context.
+                // Seed set to any number so you have a deterministic environment for repeateable results
+                MLContext mlContext = new MLContext(seed:1);
+
+                var modelBuilder = new ModelBuilder(mlContext, assetsPath, dataSetFile);
+                modelBuilder.PreProcessData(mlContext);
+
+                ConsoleHelpers.ConsoleWriteHeader("Creating and training the model");
                 modelBuilder.TrainFastTreeAndSaveModels();
             }
             catch (Exception e)

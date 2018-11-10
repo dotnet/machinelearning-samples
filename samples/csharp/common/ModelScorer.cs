@@ -18,18 +18,29 @@ namespace Common
         public ITransformer TrainedModel { get; private set; }
         public PredictionFunction<TObservation, TPrediction> PredictionFunction;
 
-        public ModelScorer(MLContext mlContext)
+        public ModelScorer(MLContext mlContext, ITransformer trainedModel = null)
         {
             _mlContext = mlContext;
+
+            if(trainedModel != null)
+            {
+                //Keep the trainedModel passed through the constructor
+                TrainedModel = trainedModel;
+
+                // Create prediction engine related to the passed trained model
+                PredictionFunction = TrainedModel.MakePredictionFunction<TObservation, TPrediction>(_mlContext);
+            }          
         }
 
         public TPrediction PredictSingle(TObservation input)
         {
+            CheckTrainedModelIsLoaded();
             return PredictionFunction.Predict(input);
         }
 
         public IEnumerable<TPrediction> PredictBatch(IDataView inputDataView)
         {
+            CheckTrainedModelIsLoaded();
             var predictions = TrainedModel.Transform(inputDataView);
             return predictions.AsEnumerable<TPrediction>(_mlContext, reuseRowObject: false);
         }
@@ -45,6 +56,12 @@ namespace Common
             PredictionFunction = TrainedModel.MakePredictionFunction<TObservation, TPrediction>(_mlContext);
 
             return TrainedModel;
+        }
+
+        private void CheckTrainedModelIsLoaded()
+        {
+            if (TrainedModel == null)
+                throw new InvalidOperationException("Need to have a model before scoring. Call LoadModelFromZipFile(modelPath) first or provided a model through the constructor.");
         }
     }
 
