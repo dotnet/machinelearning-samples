@@ -62,7 +62,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h4>Price prediction &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
       <h4>Sales forecast &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/eShopDashboardML">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
+      <a href="https://github.com/dotnet/machinelearning-samples/tree/features/eshopdashboard20/samples/csharp/end-to-end-apps/eShopDashboardML">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
       <h4>Demand prediction &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
