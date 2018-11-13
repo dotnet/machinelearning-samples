@@ -87,10 +87,3 @@ phases:
     inputs:
       projects: '.\samples\csharp\end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler.sln'
 
-- phase: eShopDashboardML
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build eShopDashboardML (Regression)
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\eShopDashboardML\eShopDashboardML.sln'
