@@ -61,6 +61,52 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 ![](https://raw.githubusercontent.com/dotnet/machinelearning-samples/features/samples-new-api/samples/csharp/getting-started/shared_content/modelpipeline.png)
 
+#####  Calculate Best K
+
+There is only one problem. How do we know how many clusters our data should have? This is a real problem for which there is no perfect solution. In this sample we used the Elbow method [paper](http://web.stanford.edu/~hastie/Papers/gap.pdf).
+
+![elbow plot](./CustomerSegmentation.Train/assets/outputs/elbow.svg)
+
+As you can see, at k=5 the graph begins to flatten significantly. This point where the graph starts to smooth out is the prophesied “elbow” for which we have been looking.
+
+```csharp
+    
+ public static void CalculateK(MLContext mlContext, IEstimator<ITransformer> DataProcessPipeline, IDataView pivotDataView, string plotLocation, int maxK = 30)
+ {
+     Common.ConsoleHelper.ConsoleWriteHeader("Calculate best K value");
+     var kValues = new Dictionary<int, double>();
+     for (int k = 2; k <= maxK; k++)
+     {
+         var trainer = new KMeansPlusPlusTrainer(mlContext, "Features", clustersCount: 3);
+         var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, DataProcessPipeline, trainer);
+         var trainedModel = modelBuilder.Train(pivotDataView);
+         Console.WriteLine($"Building model for k={k}");
+         var metrics = modelBuilder.EvaluateClusteringModel(pivotDataView);
+         Console.WriteLine($"Building model for k={k}");
+         var loss = metrics.AvgMinScore;
+         kValues.Add(k, loss);
+     }
+     PlotKValues(kValues, plotLocation);
+}
+
+ public static void PlotKValues(Dictionary<int, double> kValues, string plotLocation)
+ {
+     Console.Out.WriteLine("Plot Customer Segmentation");
+     var plot = new PlotModel { Title = "elbow method", IsLegendVisible = true };
+     var lineSeries = new LineSeries() { Title = $"kValues ({kValues.Keys.Max()})" };
+     foreach (var item in kValues)
+     lineSeries.Points.Add(new DataPoint(item.Key, item.Value));
+     plot.Series.Add(lineSeries);
+     plot.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = -0.1, Title = "k" });
+     plot.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = -0.1, Title = "loss" });
+     var exporter = new SvgExporter { Width = 600, Height = 400 };
+     using (var fs = new FileStream(plotLocation, System.IO.FileMode.Create))
+     {
+         exporter.Export(plot, fs);
+     }
+ }
+```
+
 ### 1. Build Model
 
 #### Data Pre-Process

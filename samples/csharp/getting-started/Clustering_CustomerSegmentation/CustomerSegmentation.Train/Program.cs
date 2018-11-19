@@ -22,6 +22,7 @@ namespace CustomerSegmentation
             var offersCsv = Path.Combine(assetsPath, "inputs", "offers.csv");
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
             var modelZip = Path.Combine(assetsPath, "outputs", "retailClustering.zip");
+            var elbowPlot = Path.Combine(assetsPath, "outputs", "elbow.svg");
 
             try
             {
@@ -43,6 +44,7 @@ namespace CustomerSegmentation
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
+                Common.ElbowMethod.CalculateK(mlContext, dataProcessPipeline, pivotDataView, elbowPlot);
 
                 // STEP 3: Create and train the model                
                 var trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount: 3);
