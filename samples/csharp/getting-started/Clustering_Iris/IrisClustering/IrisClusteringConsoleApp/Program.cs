@@ -84,8 +84,6 @@ namespace Clustering_Iris
                 PetalWidth = 5.1f,
             };
 
-            //Create the clusters: Create data files and plot a chart
-
             ///
             ITransformer model;
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
