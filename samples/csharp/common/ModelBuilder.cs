@@ -85,7 +85,7 @@ namespace Common
         public ClusteringEvaluator.Result EvaluateClusteringModel(IDataView dataView)
         {
             CheckTrained();
-            var predictions = TrainedModel.Transform(dataView);
+            IDataView predictions = TrainedModel.Transform(dataView);
 
             var metrics = _mlcontext.Clustering.Evaluate(predictions, score:"Score", features: "Features");
             return metrics;
@@ -97,7 +97,6 @@ namespace Common
 
             using (var fs = new FileStream(persistedModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 _mlcontext.Model.Save(TrainedModel, fs);
-            Console.WriteLine("The model is saved to {0}", persistedModelPath);
         }
 
         private void CheckTrained()

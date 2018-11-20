@@ -13,6 +13,7 @@ using Microsoft.ML.Transforms.Categorical;
 using Microsoft.ML.Transforms.Normalizers;
 using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using Regression_TaxiFarePrediction.DataStructures;
+using Common;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -48,19 +49,19 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var textLoader = TaxiFareTextLoaderFactory.CreateTextLoader(mlContext);
-            var trainingDataView = textLoader.Read(TrainDataPath);
-            var testDataView = textLoader.Read(TestDataPath);
+            TextLoader textLoader = TaxiFareTextLoaderFactory.CreateTextLoader(mlContext);
+            IDataView trainingDataView = textLoader.Read(TrainDataPath);
+            IDataView testDataView = textLoader.Read(TestDataPath);
 
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = TaxiFareDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
 
             // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            Common.ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);
-            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var modelBuilder = new Common.ModelBuilder<TaxiTrip, TaxiTripFarePrediction>(mlContext, dataProcessPipeline);
+            var modelBuilder = new ModelBuilder<TaxiTrip, TaxiTripFarePrediction>(mlContext, dataProcessPipeline);
             // We apply our selected Trainer (SDCA Regression algorithm)
             var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
             modelBuilder.AddTrainer(trainer);

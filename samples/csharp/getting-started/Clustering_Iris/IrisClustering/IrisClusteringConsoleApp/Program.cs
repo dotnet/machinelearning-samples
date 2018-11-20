@@ -24,8 +24,8 @@ namespace Clustering_Iris
             MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
             // STEP 1: Common data loading configuration
-            var textLoader = IrisTextLoaderFactory.CreateTextLoader(mlContext);
-            var fullData = textLoader.Read(DataPath);
+            TextLoader textLoader = IrisTextLoaderFactory.CreateTextLoader(mlContext);
+            IDataView fullData = textLoader.Read(DataPath);
 
             (IDataView trainingDataView, IDataView testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction: 0.2);
 

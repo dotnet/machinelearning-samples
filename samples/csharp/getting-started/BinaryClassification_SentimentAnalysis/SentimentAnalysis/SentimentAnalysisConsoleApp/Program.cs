@@ -8,6 +8,7 @@ using Microsoft.ML.Trainers;
 
 using SentimentAnalysisConsoleApp.DataStructures;
 using Microsoft.ML.Transforms.Text;
+using Common;
 
 namespace SentimentAnalysisConsoleApp
 {
@@ -44,15 +45,19 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var textLoader = SentimentAnalysysTextLoaderFactory.CreateTextLoader(mlContext);
-            var trainingDataView = textLoader.Read(TrainDataPath);
-            var testDataView = textLoader.Read(TestDataPath);
+            TextLoader textLoader = SentimentAnalysysTextLoaderFactory.CreateTextLoader(mlContext);
+            IDataView trainingDataView = textLoader.Read(TrainDataPath);
+            IDataView testDataView = textLoader.Read(TestDataPath);
 
             // STEP 2: Common data process configuration with pipeline data transformations          
             var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features");
 
+            // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
+            Common.ConsoleHelper.PeekDataViewInConsole<SentimentIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
+            //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
+
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var modelBuilder = new Common.ModelBuilder<SentimentIssue, SentimentPrediction>(mlContext, dataProcessPipeline);
+            var modelBuilder = new ModelBuilder<SentimentIssue, SentimentPrediction>(mlContext, dataProcessPipeline);
             var trainer = mlContext.BinaryClassification.Trainers.FastTree(label: "Label", features: "Features");
             modelBuilder.AddTrainer(trainer);
 
@@ -66,15 +71,15 @@ namespace SentimentAnalysisConsoleApp
             Common.ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            Console.WriteLine("=============== Saving the model to a file ===============");
             modelBuilder.SaveModelAsFile(ModelPath);
+            Console.WriteLine("The model is saved to {0}", ModelPath);
 
             return modelBuilder.TrainedModel;
         }
 
+        // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
         {
-            // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
             var modelScorer = new Common.ModelScorer<SentimentIssue, SentimentPrediction>(mlContext);
             modelScorer.LoadModelFromZipFile(ModelPath);
