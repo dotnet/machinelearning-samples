@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="..\..\..\common\ModelBuilder.cs" Link="Common\ModelBuilder.cs" />
   </ItemGroup>
 
   <ItemGroup>
