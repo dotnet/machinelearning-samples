@@ -31,7 +31,12 @@ namespace BikeSharingDemand
             var testDataView = textLoader.Read(TestDataLocation);
 
             // 2. Common data pre-process with pipeline data transformations
-            var dataProcessPipeline = BikeSharingDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
+            var dataProcessPipeline = mlContext.Transforms.CopyColumns("Count", "Label")
+                        // Concatenate all the numeric columns into a single features column
+                        .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
+                                                                            "Hour", "Holiday", "Weekday",
+                                                                            "Weather", "Temperature", "NormalizedTemperature",
+                                                                            "Humidity", "Windspeed"));
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataProcessPipeline, 10);

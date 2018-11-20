@@ -49,7 +49,7 @@ namespace Common
         {
             using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                TrainedModel = TransformerChain.LoadFrom(_mlContext, stream);
+                TrainedModel = _mlContext.Model.Load(stream);
             }
 
             // Create prediction engine related to the loaded trained model

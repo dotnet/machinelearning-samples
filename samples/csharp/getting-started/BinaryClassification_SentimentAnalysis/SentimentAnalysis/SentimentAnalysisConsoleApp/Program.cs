@@ -101,7 +101,7 @@ namespace SentimentAnalysisConsoleApp
             ITransformer trainedModel;
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                trainedModel = TransformerChain.LoadFrom(mlContext, stream);
+                trainedModel = mlContext.Model.Load(stream);
             }
 
             // Create prediction engine related to the loaded trained model

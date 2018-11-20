@@ -90,7 +90,7 @@ namespace Clustering_Iris
             ITransformer model;
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                model = TransformerChain.LoadFrom(mlContext, stream);
+                model = mlContext.Model.Load(stream);
             }
 
             // Create prediction engine related to the loaded trained model
