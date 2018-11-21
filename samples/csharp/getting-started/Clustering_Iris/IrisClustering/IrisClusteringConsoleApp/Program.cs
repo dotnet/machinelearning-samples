@@ -60,16 +60,11 @@ namespace Clustering_Iris
             IDataView predictions = trainedModel.Transform(testingDataView);
             var metrics = mlContext.Clustering.Evaluate(predictions, score: "Score", features: "Features");
 
-            //(CDLTLL)
-            //var metrics = modelBuilder.EvaluateClusteringModel(testingDataView);
-
             ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
             // STEP5: Save/persist the model as a .ZIP file
             using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
-
-            //(CDLTLL) modelBuilder.SaveModelAsFile(ModelPath);
 
             Console.WriteLine("=============== End of training process ===============");
 
@@ -97,11 +92,6 @@ namespace Clustering_Iris
             //Score
             var resultprediction = predFunction.Predict(sampleIrisData);
             ///
-
-            //(CDLTLL)
-            //var modelScorer = new ModelScorer<IrisData, IrisPrediction>(mlContext);
-            //modelScorer.LoadModelFromZipFile(ModelPath);
-            //var prediction = modelScorer.PredictSingle(sampleIrisData);
 
             Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
 

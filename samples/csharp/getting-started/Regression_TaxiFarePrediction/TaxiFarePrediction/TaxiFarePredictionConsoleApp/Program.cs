@@ -96,7 +96,6 @@ namespace Regression_TaxiFarePrediction
 
             IDataView predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, label: "Label", score: "Score");
-            //(CDLTLL) var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Label", "Score");
 
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
@@ -140,13 +139,6 @@ namespace Regression_TaxiFarePrediction
             var resultprediction = predFunction.Predict(taxiTripSample);
             ///
 
-            //(CDLTLL)
-            //var modelScorer = new Common.ModelScorer<TaxiTrip, TaxiTripFarePrediction>(mlContext);
-            //modelScorer.LoadModelFromZipFile(ModelPath);
-            //Score
-            //var resultprediction = modelScorer.PredictSingle(taxiTripSample);
-            ///
-
             Console.WriteLine($"**********************************************************************");
             Console.WriteLine($"Predicted fare: {resultprediction.FareAmount:0.####}, actual fare: 15.5");
             Console.WriteLine($"**********************************************************************");
@@ -166,13 +158,7 @@ namespace Regression_TaxiFarePrediction
             // Create prediction engine related to the loaded trained model
             var predFunction = trainedModel.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlContext);
 
-            //(CDLTLL)
-            //var modelScorer = new Common.ModelScorer<TaxiTrip, TaxiTripFarePrediction>(mlContext);
-            //modelScorer.LoadModelFromZipFile(ModelPath);
-
-
             string chartFileName = "";
-
             using (var pl = new PLStream())
             {
                 // use SVG backend and write to SineWaves.svg in current directory

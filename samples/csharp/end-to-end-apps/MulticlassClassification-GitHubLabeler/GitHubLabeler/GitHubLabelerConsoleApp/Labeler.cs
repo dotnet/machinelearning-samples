@@ -21,7 +21,8 @@ namespace GitHubLabeler
         private readonly string _modelPath;
         private readonly MLContext _mlContext;
 
-        private readonly ModelScorer<GitHubIssue, GitHubIssuePrediction> _modelScorer;
+        private readonly PredictionFunction<GitHubIssue, GitHubIssuePrediction> _predFunction;
+        private readonly ITransformer _trainedModel;
 
         public Labeler(string modelPath, string repoOwner = "", string repoName = "", string accessToken = "")
         {
@@ -31,9 +32,15 @@ namespace GitHubLabeler
            
             _mlContext = new MLContext(seed:1);
 
-            //Load file model into ModelScorer
-            _modelScorer = new ModelScorer<GitHubIssue, GitHubIssuePrediction>(_mlContext);
-            _modelScorer.LoadModelFromZipFile(_modelPath);
+            //Load model from file
+            
+            using (var stream = new FileStream(_modelPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                _trainedModel = _mlContext.Model.Load(stream);
+            }
+
+            // Create prediction engine related to the loaded trained model
+            _predFunction = _trainedModel.MakePredictionFunction<GitHubIssue, GitHubIssuePrediction>(_mlContext);
 
             //Configure Client to access a GitHub repo
             if (accessToken != string.Empty)
@@ -51,7 +58,8 @@ namespace GitHubLabeler
             GitHubIssue singleIssue = new GitHubIssue() { ID = "Any-ID", Title = "Entity Framework crashes", Description = "When connecting to the database, EF is crashing" };
 
             //Predict label for single hard-coded issue
-            var prediction = _modelScorer.PredictSingle(singleIssue);
+            //Score
+            var prediction = _predFunction.Predict(singleIssue);
             Console.WriteLine($"=============== Single Prediction - Result: {prediction.Area} ===============");
         }
 
@@ -98,7 +106,7 @@ namespace GitHubLabeler
 
         public string Predict(GitHubIssue issue)
         {          
-            var prediction = _modelScorer.PredictSingle(issue);
+            var prediction = _predFunction.Predict(issue);
 
             return prediction.Area;
         }

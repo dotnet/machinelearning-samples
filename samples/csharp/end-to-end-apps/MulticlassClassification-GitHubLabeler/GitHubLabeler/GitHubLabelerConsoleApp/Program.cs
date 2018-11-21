@@ -55,11 +55,26 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 0);
 
             // STEP 1: Common data loading configuration
-            var textLoader = GitHubLabelerTextLoaderFactory.CreateTextLoader(mlContext);
+            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+                                    {
+                                        Separator = "tab",
+                                        HasHeader = true,
+                                        Column = new[]
+                                                    {
+                                                        new TextLoader.Column("ID", DataKind.Text, 0),
+                                                        new TextLoader.Column("Area", DataKind.Text, 1),
+                                                        new TextLoader.Column("Title", DataKind.Text, 2),
+                                                        new TextLoader.Column("Description", DataKind.Text, 3),
+                                                    }
+                                    });
+
             var trainingDataView = textLoader.Read(DataSetLocation);
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = GitHubLabelerDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
+            var dataProcessPipeline = mlContext.Transforms.Categorical.MapValueToKey("Area", "Label")
+                            .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
+                            .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
+                            .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             Common.ConsoleHelper.PeekDataViewInConsole<GitHubIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
@@ -90,31 +105,34 @@ namespace GitHubLabeler
                     break;
             }
 
-            //Set the trainer/algorithm
-            var modelBuilder = new Common.ModelBuilder<GitHubIssue, GitHubIssuePrediction>(mlContext, dataProcessPipeline);           
-            modelBuilder.AddTrainer(trainer);
-            modelBuilder.AddEstimator(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+            //Set the trainer/algorithm and map label to value (original readable state)
+            var trainingPipeline = dataProcessPipeline.Append(trainer)
+                    .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValResults = modelBuilder.CrossValidateAndEvaluateMulticlassClassificationModel(trainingDataView, 6, "Label");
-            ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValResults);
+
+            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn:"Label");
+            ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
-            modelBuilder.Train(trainingDataView);
+            var trainedModel = trainingPipeline.Fit(trainingDataView);
 
             // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
             GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "WebSockets communication is slow in my machine", Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." };
-            var modelScorer = new ModelScorer<GitHubIssue, GitHubIssuePrediction>(mlContext, modelBuilder.TrainedModel);
-            var prediction = modelScorer.PredictSingle(issue);
+            // Create prediction engine related to the loaded trained model
+            var predFunction = trainedModel.MakePredictionFunction<GitHubIssue, GitHubIssuePrediction>(mlContext);
+            //Score
+            var prediction = predFunction.Predict(issue);
             Console.WriteLine($"=============== Single Prediction just-trained-model - Result: {prediction.Area} ===============");
             //
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
-            modelBuilder.SaveModelAsFile(ModelPath);
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                mlContext.Model.Save(trainedModel, fs);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
         }
