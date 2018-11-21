@@ -36,7 +36,7 @@ namespace CustomerSegmentation.Model
         {
             using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                _trainedModel = TransformerChain.LoadFrom(_mlContext, stream);
+                _trainedModel = _mlContext.Model.Load(stream);
             }
 
             return _trainedModel;
