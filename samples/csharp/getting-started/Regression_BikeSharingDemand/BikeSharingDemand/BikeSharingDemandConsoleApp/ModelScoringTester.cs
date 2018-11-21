@@ -21,7 +21,6 @@ namespace BikeSharingDemand
                                                     string modelName, 
                                                     string testDataLocation,
                                                     PredictionFunction<DemandObservation, DemandPrediction> predFunction,
-                                                    //(CDLTLL) ModelScorer<DemandObservation, DemandPrediction> modelScorer, 
                                                     int numberOfPredictions)
         {
             //Make a few prediction tests 
@@ -32,7 +31,6 @@ namespace BikeSharingDemand
             {
                 //Score
                 var resultprediction = predFunction.Predict(testData[i]);
-                //(CDLTLL)var prediction = modelScorer.PredictSingle(testData[i]);
 
                 Common.ConsoleHelper.PrintRegressionPredictionVersusObserved(resultprediction.PredictedCount.ToString(), 
                                                             testData[i].Count.ToString());

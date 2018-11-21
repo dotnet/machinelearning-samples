@@ -75,20 +75,6 @@ namespace BikeSharingDemand
                     mlContext.Model.Save(trainedModel, fs);
 
                 Console.WriteLine("The model is saved to {0}", modelPath);
-
-                //(CDLTLL-Using-Common-code)
-
-                //Console.WriteLine("================== Training the current model ==================");
-                //var modelBuilder = new ModelBuilder<DemandObservation,DemandPrediction>(mlContext, dataProcessPipeline);
-                //modelBuilder.AddTrainer(learner.value);
-                //var trainedModel = modelBuilder.Train(trainingDataView);
-
-                //Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-                //var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Count", "Score");
-                //ConsoleHelper.PrintRegressionMetrics(learner.name, metrics);
-
-                ////Save the model file that can be used by any application
-                //modelBuilder.SaveModelAsFile($"{ModelsLocation}/{learner.name}Model.zip");
             }
 
             // 4. Try/test Predictions with the created models
@@ -107,12 +93,6 @@ namespace BikeSharingDemand
 
                 // Create prediction engine related to the loaded trained model
                 var predFunction = trainedModel.MakePredictionFunction<DemandObservation, DemandPrediction>(mlContext);
-
-                //(CDLTLL-Using-Common-code)
-
-                //Load current model from .ZIP file
-                //var modelScorer = new ModelScorer<DemandObservation, DemandPrediction>(mlContext);
-                //modelScorer.LoadModelFromZipFile($"{ModelsLocation}/{learner.name}Model.zip");
 
                 Console.WriteLine($"================== Visualize/test 10 predictions for model {learner.name}Model.zip ==================");
                 //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
