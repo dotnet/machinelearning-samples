@@ -11,7 +11,7 @@ namespace CreditCardFraudDetection.Predictor
             var trainOutput = ConsoleHelpers.GetAssetsPath(@"..\..\..\..\CreditCardFraudDetection.Trainer\assets\output");
 
 
-            if (!File.Exists(Path.Combine(trainOutput, "testData.idv")) ||
+            if (!File.Exists(Path.Combine(trainOutput, "testData.csv")) ||
                 !File.Exists(Path.Combine(trainOutput, "fastTree.zip"))){
                 ConsoleHelpers.ConsoleWriteWarning("YOU SHOULD RUN TRAIN PROJECT FIRST");
                 ConsoleHelpers.ConsolePressAnyKey();
@@ -30,8 +30,9 @@ namespace CreditCardFraudDetection.Predictor
                 File.Copy(file, Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file)));
             }
 
-            var dataSetFile = Path.Combine(assetsPath,"input", "testData.idv");
+            var dataSetFile = Path.Combine(assetsPath,"input", "testData.csv");
             var modelFile = Path.Combine(assetsPath, "input", "fastTree.zip");
+
 
             var modelEvaluator = new Predictor(modelFile,dataSetFile);
 
