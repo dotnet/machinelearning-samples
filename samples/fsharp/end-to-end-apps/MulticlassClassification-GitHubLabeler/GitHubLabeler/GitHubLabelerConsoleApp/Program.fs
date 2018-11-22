@@ -40,16 +40,31 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     let mlContext = MLContext(seed = Nullable 0)
 
     // STEP 1: Common data loading configuration
-    let trainingDataView = 
-        mlContext
-        |> GitHubLabelerTextLoaderFactory.createTextLoader 
-        |> GitHubLabelerTextLoaderFactory.read dataSetLocation
+    let textLoader =
+        mlContext.Data.TextReader(
+            TextLoader.Arguments(
+                Separator = "tab",
+                HasHeader = true,
+                Column = 
+                    [|
 
+                        TextLoader.Column("ID", Nullable DataKind.Text, 0)
+                        TextLoader.Column("Area", Nullable DataKind.Text, 1)
+                        TextLoader.Column("Title", Nullable DataKind.Text, 2)
+                        TextLoader.Column("Description", Nullable DataKind.Text, 3)
+                    |]
+            )
+        )
+
+    let trainingDataView = textLoader.Read([| dataSetLocation |])
+       
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
-        mlContext
-        |> GitHubLabelerDataProcessPipelineFactory.createDataProcessPipeline
-
+        mlContext.Transforms.Categorical.MapValueToKey("Area", "Label")
+            |> Common.ModelBuilder.append (mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
+            |> Common.ModelBuilder.append (mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
+            |> Common.ModelBuilder.append (mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"))
+            |> Common.ModelBuilder.downcastPipeline
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<DataStructures.GitHubIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore

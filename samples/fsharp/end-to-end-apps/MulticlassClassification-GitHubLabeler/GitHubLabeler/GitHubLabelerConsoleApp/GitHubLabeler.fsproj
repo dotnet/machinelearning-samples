@@ -16,9 +16,6 @@
     <Folder Include="Data\" />
     <None Include="..\Data\corefx-issues-train.tsv" Link="Data\corefx-issues-train.tsv" />
     <Compile Include="DataStructures\DataStructures.fs" />
-    <Compile Include="GitHubLabelerTextLoaderFactory.fs" />
-    <Compile Include="GitHubLabelerDataProcessPipelineFactory.fs" />
-    <Compile Include="GitHubClientFacade.fs" />
     <Compile Include="Labeler.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
