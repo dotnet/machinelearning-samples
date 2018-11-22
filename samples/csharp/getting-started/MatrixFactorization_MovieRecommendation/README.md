@@ -86,8 +86,8 @@ var metrics = mlcontext.Regression.Evaluate(prediction, label: "Label", score: "
 ### 4. Consume model
 After the model is trained, you can use the `Predict()` API to predict the rating for a particular movie/user combination. 
 ```CSharp    
-      var predictionengine = model.MakePredictionFunction<MovieRating, MovieRatingPrediction>(mlcontext);
-      var movieratingprediction = predictionengine.Predict(
+var predictionengine = model.MakePredictionFunction<MovieRating, MovieRatingPrediction>(mlcontext);
+var movieratingprediction = predictionengine.Predict(
                 new MovieRating()
                 {
                     //Example rating prediction for userId = 6, movieId = 10 (GoldenEye)
@@ -95,8 +95,8 @@ After the model is trained, you can use the `Predict()` API to predict the ratin
                     movieId = predictionmovieId
                 }
             );
-       Console.WriteLine("For userId:" + predictionuserId + " movie rating prediction (1 - 5 stars) for movie:" +  
-                         movieService.Get(predictionmovieId).movieTitle + " is:" + Math.Round(movieratingprediction.Score,1));
+ Console.WriteLine("For userId:" + predictionuserId + " movie rating prediction (1 - 5 stars) for movie:" +  
+                   movieService.Get(predictionmovieId).movieTitle + " is:" + Math.Round(movieratingprediction.Score,1));
        
 ```
 Please note this is one approach for performing movie recommendations with Matrix Factorization. There are other scenarios for recommendation as well which we will build samples for as well. 
