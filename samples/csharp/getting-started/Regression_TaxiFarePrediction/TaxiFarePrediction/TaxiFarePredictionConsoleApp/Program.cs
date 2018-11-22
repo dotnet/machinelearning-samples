@@ -100,8 +100,9 @@ namespace Regression_TaxiFarePrediction
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
+
+            using (var fs = File.Create(ModelPath))
+                trainedModel.SaveTo(mlContext, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
