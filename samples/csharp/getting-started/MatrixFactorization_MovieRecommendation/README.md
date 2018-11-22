@@ -53,13 +53,51 @@ Here's the code which will be used to build the model:
                 }
             });
 
- IDataView trainingDataView = reader.Read
-                    (new MultiFileSource(TrainingDataLocation));
+ IDataView trainingDataView = reader.Read(new MultiFileSource(TrainingDataLocation));
 
-var pipeline = mlcontext.Transforms.Categorical.MapValueToKey   
-                               ("userId", "userIdEncoded")
-             .Append(mlcontext.Transforms.Categorical.MapValueToKey                     ("movieId", "movieIdEncoded")
-            .Append(new MatrixFactorizationTrainer(mlcontext, "Label",                    "userIdEncoded", "movieIdEncoded")));
-
-
+ var pipeline = mlcontext.Transforms.Categorical.MapValueToKey("userId", "userIdEncoded")
+                                   .Append(mlcontext.Transforms.Categorical.MapValueToKey("movieId", "movieIdEncoded")
+                                   .Append(new MatrixFactorizationTrainer(mlcontext, "Label","userIdEncoded", "movieIdEncoded")));
 ```
+
+
+### 2. Train model
+Training the model is a process of running the chosen algorithm on a training data (with known movie and user ratings) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
+
+To perform training you need to call the `Fit()` method while providing the training dataset (`wikipedia-detox-250-line-data.tsv` file) in a DataView object.
+
+```CSharp    
+var model = pipeline.Fit(trainingDataView);
+```
+Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
+
+### 3. Evaluate model
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`recommendation-ratings-test.csv`). 
+
+Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
+
+```CSharp 
+Console.WriteLine("=============== Evaluating the model ===============");
+IDataView testDataView = reader.Read(new MultiFileSource(TestDataLocation));
+var prediction = model.Transform(testDataView);
+var metrics = mlcontext.Regression.Evaluate(prediction, label: "Label", score: "Score");
+```
+
+### 4. Consume model
+After the model is trained, you can use the `Predict()` API to predict the rating for a particular movie/user combination. 
+```CSharp    
+      var predictionengine = model.MakePredictionFunction<MovieRating, MovieRatingPrediction>(mlcontext);
+      var movieratingprediction = predictionengine.Predict(
+                new MovieRating()
+                {
+                    //Example rating prediction for userId = 6, movieId = 10 (GoldenEye)
+                    userId = predictionuserId,
+                    movieId = predictionmovieId
+                }
+            );
+       Console.WriteLine("For userId:" + predictionuserId + " movie rating prediction (1 - 5 stars) for movie:" +  
+                         movieService.Get(predictionmovieId).movieTitle + " is:" + Math.Round(movieratingprediction.Score,1));
+       
+```
+Please note this is one approach for performing movie recommendations with Matrix Factorization. There are other scenarios for recommendation as well which we will build samples for as well. 
+
