@@ -64,7 +64,7 @@ Here's the code which will be used to build the model:
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known movie and user ratings) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
 
-To perform training you need to call the `Fit()` method while providing the training dataset (`wikipedia-detox-250-line-data.tsv` file) in a DataView object.
+To perform training you need to call the `Fit()` method while providing the training dataset (`recommendation-ratings-train.csv` file) in a DataView object.
 
 ```CSharp    
 var model = pipeline.Fit(trainingDataView);
