@@ -76,9 +76,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
   Recommender systems are typically based on content based and collaborative filtering methods. A collaborative method predicts what items/products a user might like based on his past actions/likes/ratings compared to other users. 
   </td>
   <td>
-      <h4>Product recommender &nbsp;&nbsp;&nbsp;
-      Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
       <h4>Movie recommender &nbsp;&nbsp;&nbsp;
+       <a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-           type-e2e.png" alt="End-to-end app icon"></h4>
+      <h4>Product recommender &nbsp;&nbsp;&nbsp;
       Coming soon  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
   </td>
  </tr>
