@@ -1,0 +1,90 @@
+﻿@using movierecommender.Models
+@model Profile
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    Profile profile = Model;
+    var WatchedMovie = (List<Movie>)ViewData["watchedmovies"];
+
+}
+
+
+<div class="row">
+    <div class="col-sm-9">
+
+        <h1><span class="glyphicon glyphicon-film"></span> Movie Recommender</h1>
+    </div>
+
+    <div class="col-sm-3">
+        <img src="~/images/@profile.ProfileImageName" width="50" height="50" align="bottom" class="img-rounded" title="@profile.ProfileName profile" />
+        <h4> @profile.ProfileName </h4>
+    </div>
+</div>
+<hr />
+
+<br />
+<h3 style="color:brown"><b>Your Recently Watched Movies</h3>
+<div class="row">
+    @foreach (var movie in WatchedMovie)
+    {
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-block">
+                    <h3 class="card-title">@movie.MovieName</h3>
+                    @{
+                        bool thumbsup = false;
+                        foreach (Tuple<int, int> tuple in profile.ProfileMovieRatings)
+                        {
+                            if (tuple.Item1 == movie.MovieID)
+                            {
+                                if (tuple.Item2 >= 4)
+                                {
+                                    thumbsup = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    @if (thumbsup)
+                    {
+                        <span class="glyphicon glyphicon-thumbs-up" />
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-thumbs-down" />
+                    }
+                    <a href="@Url.Action("Watch", "Movies")" class="btn-xs btn-primary">Watch Again</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+<h3 style="color:brown"><b>All-Time Top Box-Office movies</h3>
+<div class="row">
+    @{
+        var TrendingMovie = (List<Movie>)ViewData["trendingmovies"];
+    }
+    @foreach (var movie in TrendingMovie)
+    {
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-block">
+                    <h3 class="card-title">@movie.MovieName</h3>
+                    <a href="@Url.Action("Watch", "Movies")" class="btn-xs btn-primary">Play Movie</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<br />
+<hr />
+<button type="button" class="btn breadcrumb" id="select" onclick="location.href='@Url.Action("Recommend", "Movies", new {id = profile.ProfileID})'">
+    <span class="glyphicon glyphicon-fire"></span> Recommended
+</button>
+<button type="button" class="btn breadcrumb" id="select" onclick="location.href='@Url.Action("Profiles", "Movies")'">
+    <span class="glyphicon glyphicon-dashboard"></span> Switch Profiles
+</button>
