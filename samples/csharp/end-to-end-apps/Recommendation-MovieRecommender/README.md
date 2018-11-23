@@ -1,73 +1,82 @@
-# GitHub Labeler
+# Movie Recommender 
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class  classification | SDCA multi-class classifier |
-
-
-This is a simple prototype application to demonstrate how to use [ML.NET](https://www.nuget.org/packages/Microsoft.ML/) APIs. The main focus is on creating, training, and using ML (Machine Learning) model that is implemented in Predictor.cs class.
+|v0.7| Dynamic API | Up-to-date | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
 
 ## Overview
-GitHubLabeler is a .NET Core console application that:
-* trains ML model on your labeled GitHub issues to teach the model what label should be assigned for a new issue. (As an example, you can use `corefx-issues-train.tsv` file that contains issues from public [corefx](https://github.com/dotnet/corefx) repository)
-* labeles a new issue. The application will get all unlabeled open issues from the GitHub repository specified at the `appsettings.json` file and label them using the trained ML model created on the step above.  
+MovieRecommender is a simple application which both builds and consumes a recommendation model. 
 
-This ML model is using multi-class classification algorithm (`SdcaMultiClassTrainer`) from [ML.NET](https://www.nuget.org/packages/Microsoft.ML/).
+This is an end-end sample on how you can enhance your existing ASP.NET apps with recommendations. 
 
-## Enter you GitHub configuration data
-1. **Provide your GitHub data** in the `appsettings.json` file:
+The sample takes insipiration from the popular Netflix application. Even though this sample focuses on movie recommendations, learnings can be easily applied to any style of product recommendations. 
 
-    To allow the app to label issues in your GitHub repository you need to provide the folloving data into the appsettings.json file.
-    ```csharp
-        {
-          "GitHubToken": "YOUR-GUID-GITHUB-TOKEN",
-          "GitHubRepoOwner": "YOUR-REPO-USER-OWNER-OR-ORGANIZATION",
-          "GitHubRepoName": "YOUR-REPO-SINGLE-NAME"
-        }
-    ```
-    Your user account (`GitHubToken`) should have write rights to the repository (`GitHubRepoName`).
+## Features
+* Wep app 
+    * This is an end-end ASP.NET app which presents three user profiles 'Ankit', 'Cesar', 'Gal'. It then provides these three users 
+      recommendations using a ML.NET recommendation model.   
 
-    Check out here [how to create a Github Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
+* Recommendation Model 
+    * The application builds a recommendation model using the MovieLens dataset. The model training code shows 
+      uses colloborative filtering based recommendation approach. 
 
-    `GitHubRepoOwner` can be a GitHub user ID (i.e. "MyUser") or it can also be a GitHub Organization (i.e. "dotnet")
+## How does it work?
 
-2. **Provide training file**
+## Model Training 
+There are multiple ways to build recommendation models for your application. Choose the best example for the task based upon your scenario. With ML.NET we support the following three recommendation scenarios, depending upon your scenario you can pick either of the three from the list below.
 
-    a.  You can use existing `corefx_issues.tsv` data file for experimenting  with the program. In this case the predicted labels will be chosen among labels from [corefx](https://github.com/dotnet/corefx) repository. No changes required.
-    
-    b. To work with labels from your GitHub repository, you will need to train the model on your data. To do so, export GitHub issues from your repository in `.tsv` file with the following columns:
-    * ID - issue's ID
-    * Area - issue's label (named this way to avoid confusion with the Label concept in ML.NET)
-    * Title - issue's title
-    * Description - issue's description
-    
-    and add the file in `Data` folder. Update `DataSetLocation` field to match your file's name:
-```csharp
-private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";
-```
+With ML.NET we support the following three recommendation scenarios, depending upon your scenario you can pick either of the three from the list below. 
 
-## Training 
-Training is a process of running an ML model through known examples (in our case - issues with labels) and teaching it how to label new issues. In this sample it is done by calling this method at the console app:
-```csharp
-BuildAndTrainModel(DataSetLocation, ModelFilePathName);
-```
-After the training is completed, the model is saved as a .zip file in `MLModels\GitHubLabelerModel.zip`.
+| Scenario | Algorithm | Link To Sample
+| --- | --- | --- | 
+| You want to use more attributes (features) beyond UserId, ProductId and Ratings like Product Description, Product Price etc. for your recommendation engine | Field Aware Factorization Machines | This sample | 
+| You have  UserId, ProductId and Ratings available to you for what users bought and rated.| Matrix Factorization | <a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">Matrix Factorization based Recommendation</a>| 
+| You only have UserId and ProductId's the user bought available to you but not ratings. This is  common in datasets from online stores where you might only have access to purchase history for your customers. With this style of recommendation you can build a recommendation engine which recommends frequently bought items. | One Class Matrix Factorization | Coming Soon | 
 
-## Labeling
-When the model is trained, it can be used for predicting new issue's label. 
+For this sample we make use of the http://files.grouplens.org/datasets/movielens/ml-latest-small.zip dataset. 
 
-For a single test/demo without connecting to a real GitHub repo, call this method from the console app:
-```csharp
-TestSingleLabelPrediction(ModelFilePathName);
-```
+## Model Consumption
+The model is consumed in the MoviesController Recommend method using the following piece of code. 
 
-For accessing the real issues of a GitHub repo, you call this other method from the console app:
-```csharp
-await PredictLabelsAndUpdateGitHub(ModelFilePathName);
-```
+```CSharp
 
-For testing convenience when reading issues from your GitHub repo, it will only load not labeled issues that were created in the past 10 minutes and are subject to be labeled. You can chenge that config, though:
-```csharp
-Since = DateTime.Now.AddMinutes(-10)
-```
-You can modify those settings. After predicting the label, the program updates the issue with the predicted label on your GitHub repo.
+            // 1. Create the local environment
+            var ctx = new MLContext();
+            
+            //2. Load the MoviesRecommendation Model
+            ITransformer loadedModel;
+            using (var stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                loadedModel = ctx.Model.Load(stream);
+            }
+
+            //3. Create a prediction function
+            var predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
+            
+            List<Tuple<int, float>> ratings = new List<Tuple<int, float>>();
+            List<Tuple<int, int>> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+            List<Movie> WatchedMovies = new List<Movie>();
+
+            foreach (Tuple<int, int> tuple in MovieRatings)
+            {
+                WatchedMovies.Add(_movieService.Get(tuple.Item1));
+            }
+
+            // 3. Create an Rating Prediction Output Class
+            RatingPrediction prediction = null;
+            foreach (var movie in _movieService._trendingMovies)
+            {
+            //4. Call the Rating Prediction for each movie prediction
+             prediction = predictionfunction.Predict(new RatingData { userId = id.ToString(), movieId = movie.MovieID.ToString()});
+              
+            //5. Normalize the prediction scores for the "ratings" b/w 0 - 100
+             var normalizedscore = Sigmoid(prediction.Score);
+
+            //6. Add the score for recommendation of each movie in the trending movie list
+             ratings.Add(Tuple.Create(movie.MovieID, normalizedscore));
+            }
+
+
+
+
+
