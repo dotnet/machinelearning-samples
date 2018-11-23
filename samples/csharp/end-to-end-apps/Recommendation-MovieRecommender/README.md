@@ -4,7 +4,12 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 |v0.7| Dynamic API | Up-to-date | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
 
+![Alt Text]()
+
 ## Overview
+
+![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender/movierecommender/wwwroot/images/movierecommender.gif)
+
 MovieRecommender is a simple application which both builds and consumes a recommendation model. 
 
 This is an end-end sample on how you can enhance your existing ASP.NET apps with recommendations. 
