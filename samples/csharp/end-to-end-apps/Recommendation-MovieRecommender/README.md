@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Up-to-date | End-End app | .csv files for movies and ratings | Movie Recommendation | Recommendation | FieldAwareFactorizationMachines |
+| v0.7 | Dynamic API | Up-to-date | End-End app | .csv | Movie Recommendation | Recommendation | FieldAwareFactorizationMachines |
 
 This is an end-end sample on how you can enhance your existing ASP.NET apps with recommendations. 
 
