@@ -10,7 +10,16 @@ In this sample, you can see how to use ML.NET to build a movie recommendation en
 ## Problem
 For this tutorial we will use the MovieLens dataset which comes with movie ratings, titles, genres and more.  In terms of an approach for building our movie recommendation engine we will use Factorization Machines which uses a colloborative filtering approach. 
 
-‘Collaborative filtering’ operates under the underlying assumption that if a person A has the same opinion as a person B on an issue, A is more likely to have B’s opinion on a different issue than that of a randomly chosen person.
+‘Collaborative filtering’ operates under the underlying assumption that if a person A has the same opinion as a person B on an issue, A is more likely to have B’s opinion on a different issue than that of a randomly chosen person. 
+
+With ML.NET we support the following three recommendation scenarios, depending upon your scenario you can pick either of the three from the list below. 
+
+| Scenario | Algorithm | Link To Sample
+| --- | --- | --- | 
+| You have  UserId, ProductId and Ratings available to you for what users bought and rated.| Matrix Factorization. | This sample | 
+| You only have UserId and ProductId's the user bought available to you but not ratings. This is  common in datasets from online stores where you might only have access to purchase history for your customers| One Class Matrix Factorization. | Coming Soon | 
+| You want to use more attributes (features) beyond UserId, ProductId and Ratings like Product Description, Product Price etc. for your recommendation engine | Field Aware Factorization Machines | Coming Soon | 
+
 
 ## DataSet
 The original data comes from MovieLens Dataset:
