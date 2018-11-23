@@ -4,11 +4,19 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 |v0.7| Dynamic API | Up-to-date | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
 
-This is an end-end sample on how you can enhance your existing ASP.NET apps with recommendations. 
-
 ## Overview
+MovieRecommender is a simple application which both builds and consumes a recommendation model. This is an end-end sample on how you can enhance your existing ASP.NET apps with recommendations. The sample takes insipiration from the popular Netflix application. Even though this sample focuses on movie recommendations, learnings can be easily applied to any style of product recommendations. 
 
+## Features
+* Wep app 
+    * This is an end-end ASP.NET app which presents three user profiles 'Ankit', 'Cesar', 'Gal'. It then provides these three users 
+      recommendations using a ML.NET recommendation model.   
 
+* Recommendation Model 
+    * The application builds a recommendation model using the MovieLens dataset. The model training code shows 
+      uses colloborative filtering based recommendation approach. 
+
+# How does it work?
 
 ## Model Training 
 There are multiple ways to build recommendation models for your application. Choose the best example for the task based upon your scenario. With ML.NET we support the following three recommendation scenarios, depending upon your scenario you can pick either of the three from the list below.
