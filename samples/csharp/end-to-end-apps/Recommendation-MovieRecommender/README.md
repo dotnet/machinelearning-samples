@@ -12,7 +12,7 @@ MovieRecommender is a simple application which both builds and consumes a recomm
 
 This is an end-end sample on how you can enhance your existing ASP.NET apps with recommendations. 
 
-The sample takes insipiration from the popular Netflix application. Even though this sample focuses on movie recommendations, learnings can be easily applied to any style of product recommendations. 
+The sample takes insipiration from the popular Netflix application and even though this sample focuses on movie recommendations, learnings can be easily applied to any style of product recommendations. 
 
 ## Features
 * Wep app 
@@ -33,54 +33,66 @@ The underlying assumption with Colloborative filtering is that if a person A (e.
 
 For this sample we make use of the http://files.grouplens.org/datasets/movielens/ml-latest-small.zip dataset. 
 
-The model training code can be found in the ![MovieRecommender_Model](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model).
+The model training code can be found in the [MovieRecommender_Model](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model).
 
 Model training follows the following four steps for building the model. You can traverse the code and follow along. 
 
 ![Build -> Train -> Evaluate -> Consume](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/shared_content/modelpipeline.png)
 
 ## Model Consumption
-The trained model is consumed in the MoviesController Recommend method using the following piece of code. 
+
+The trained model is consumed in the [Controller](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender/movierecommender/Controllers/MoviesController.cs#L60) using the following steps. 
+
+### 1. Create the ML.NET environment and load the already trained model
 
 ```CSharp
 
-            // 1. Create the local environment
-            var ctx = new MLContext();
+   // 1. Create the ML.NET environment and load the MoviesRecommendation Model
+   var ctx = new MLContext();
             
-            //2. Load the MoviesRecommendation Model
-            ITransformer loadedModel;
-            using (var stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                loadedModel = ctx.Model.Load(stream);
-            }
+   ITransformer loadedModel;
+   using (var stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
+   {
+   loadedModel = ctx.Model.Load(stream);
+   }
+ ```
+### 2. Create a prediction function to predict a set of movie recommendations 
 
-            //3. Create a prediction function
-            var predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
+```CSharp
+   //3. Create a prediction function
+   var predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
             
-            List<Tuple<int, float>> ratings = new List<Tuple<int, float>>();
-            List<Tuple<int, int>> MovieRatings = _profileService.GetProfileWatchedMovies(id);
-            List<Movie> WatchedMovies = new List<Movie>();
+   List<Tuple<int, float>> ratings = new List<Tuple<int, float>>();
+   List<Tuple<int, int>> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+   List<Movie> WatchedMovies = new List<Movie>();
 
-            foreach (Tuple<int, int> tuple in MovieRatings)
-            {
-                WatchedMovies.Add(_movieService.Get(tuple.Item1));
-            }
-
-            // 3. Create an Rating Prediction Output Class
-            RatingPrediction prediction = null;
-            foreach (var movie in _movieService._trendingMovies)
-            {
-            //4. Call the Rating Prediction for each movie prediction
-             prediction = predictionfunction.Predict(new RatingData { userId = id.ToString(), movieId = movie.MovieID.ToString()});
+   foreach (Tuple<int, int> tuple in MovieRatings)
+   {
+   WatchedMovies.Add(_movieService.Get(tuple.Item1));
+   }
+   
+   RatingPrediction prediction = null;
+   
+   foreach (var movie in _movieService._trendingMovies)
+   {
+   // Call the Rating Prediction for each movie prediction
+      prediction = predictionfunction.Predict(new RatingData { userId = id.ToString(), movieId = movie.MovieID.ToString()});
               
-            //5. Normalize the prediction scores for the "ratings" b/w 0 - 100
-             var normalizedscore = Sigmoid(prediction.Score);
+   // Normalize the prediction scores for the "ratings" b/w 0 - 100
+      var normalizedscore = Sigmoid(prediction.Score);
 
-            //6. Add the score for recommendation of each movie in the trending movie list
-             ratings.Add(Tuple.Create(movie.MovieID, normalizedscore));
-            }
+   // Add the score for recommendation of each movie in the trending movie list
+      ratings.Add(Tuple.Create(movie.MovieID, normalizedscore));
+   }
+ ```
 
+### 3. Provide rating predictions to the view to be displayed
 
+   ViewData["watchedmovies"] = WatchedMovies;
+   ViewData["ratings"] = ratings;
+   ViewData["trendingmovies"] = _movieService._trendingMovies;
+   return View(activeprofile);
 
+## Alternate Approaches 
 
 
