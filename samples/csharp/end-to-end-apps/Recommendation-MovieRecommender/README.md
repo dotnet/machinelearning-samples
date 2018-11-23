@@ -33,11 +33,11 @@ The underlying assumption with Colloborative filtering is that if a person A (e.
 
 For this sample we make use of the http://files.grouplens.org/datasets/movielens/ml-latest-small.zip dataset. 
 
-The model training code can be found in the [a link](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model).
+The model training code can be found in the ![MovieRecommender_Model](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model).
 
 Model training follows the following four steps for building the model. You can traverse the code and follow along. 
 
-![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/shared_content/modelpipeline.png)
 
 ## Model Consumption
 The trained model is consumed in the MoviesController Recommend method using the following piece of code. 
