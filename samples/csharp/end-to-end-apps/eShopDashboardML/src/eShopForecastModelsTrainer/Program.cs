@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ML;
+using System;
 using System.Threading.Tasks;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
 
@@ -6,15 +7,17 @@ namespace eShopForecastModelsTrainer
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                ProductModelHelper.TrainAndSaveModel("data/products.stats.csv");
-                ProductModelHelper.TestPrediction();
+                MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
-                CountryModelHelper.TrainAndSaveModel("data/countries.stats.csv");
-                CountryModelHelper.TestPrediction();
+                ProductModelHelper.TrainAndSaveModel(mlContext, "data/products.stats.csv");
+                ProductModelHelper.TestPrediction(mlContext);
+
+                CountryModelHelper.TrainAndSaveModel(mlContext, "data/countries.stats.csv");
+                CountryModelHelper.TestPrediction(mlContext);
             } catch(Exception ex)
             {
                 ConsoleWriteException(ex.Message);

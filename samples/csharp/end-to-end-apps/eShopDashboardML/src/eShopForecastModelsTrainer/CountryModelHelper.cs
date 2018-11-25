@@ -3,10 +3,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.FastTree;
-using Microsoft.ML.Trainers;
 using Microsoft.ML.Core.Data;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
+using Common;
 
 namespace eShopForecastModelsTrainer
 {
@@ -17,14 +16,14 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <param name="outputModelPath">Trained model path</param>
-        public static void TrainAndSaveModel(string dataPath, string outputModelPath = "country_month_fastTreeTweedie.zip")
+        public static void TrainAndSaveModel(MLContext mlContext, string dataPath, string outputModelPath = "country_month_fastTreeTweedie.zip")
         {
             if (File.Exists(outputModelPath))
             {
                 File.Delete(outputModelPath);
             }
 
-            CreateCountryModel(dataPath, outputModelPath);
+            CreateCountryModel(mlContext, dataPath, outputModelPath);
         }
 
         /// <summary>
@@ -32,58 +31,50 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <returns></returns>
-        private static void CreateCountryModel(string dataPath, string outputModelPath)
+        private static void CreateCountryModel(MLContext mlContext, string dataPath, string outputModelPath)
         {
-            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
-            var ctx = new RegressionContext(env);
-
             ConsoleWriteHeader("Training country forecasting model");
 
-            var reader = new TextLoader(env, new TextLoader.Arguments
-            {
-                Column = new[] {
-                    new TextLoader.Column("next", DataKind.R4, 0 ),
-                    new TextLoader.Column("country", DataKind.Text, 1 ),
-                    new TextLoader.Column("year", DataKind.R4, 2 ),
-                    new TextLoader.Column("month", DataKind.R4, 3 ),
-                    new TextLoader.Column("max", DataKind.R4, 4 ),
-                    new TextLoader.Column("min", DataKind.R4, 5 ),
-                    new TextLoader.Column("std", DataKind.R4, 6 ),
-                    new TextLoader.Column("count", DataKind.R4, 7 ),
-                    new TextLoader.Column("sales", DataKind.R4, 8 ),
-                    new TextLoader.Column("med", DataKind.R4, 9 ),
-                    new TextLoader.Column("prev", DataKind.R4, 10 )
-                },
-                HasHeader = true,
-                Separator = ","
-            });
-            
-            var pipeline = new ConcatEstimator(env, "NumFeatures", new[] { "year", "month", "max", "min", "std", "count", "sales", "med", "prev" })
-                .Append(new CategoricalEstimator(env, "CatFeatures", "country"))
-                .Append(new ConcatEstimator(env, "Features", new[] { "NumFeatures", "CatFeatures" }))
-                .Append(new CopyColumnsEstimator(env, "next", "Label"))
-                .Append(new FastTreeTweedieTrainer(env, "Label", "Features"));
+            var textLoader = mlContext.Data.TextReader(new TextLoader.Arguments
+                                        {
+                                            Column = new[] {
+                                                new TextLoader.Column("next", DataKind.R4, 0 ),
+                                                new TextLoader.Column("country", DataKind.Text, 1 ),
+                                                new TextLoader.Column("year", DataKind.R4, 2 ),
+                                                new TextLoader.Column("month", DataKind.R4, 3 ),
+                                                new TextLoader.Column("max", DataKind.R4, 4 ),
+                                                new TextLoader.Column("min", DataKind.R4, 5 ),
+                                                new TextLoader.Column("std", DataKind.R4, 6 ),
+                                                new TextLoader.Column("count", DataKind.R4, 7 ),
+                                                new TextLoader.Column("sales", DataKind.R4, 8 ),
+                                                new TextLoader.Column("med", DataKind.R4, 9 ),
+                                                new TextLoader.Column("prev", DataKind.R4, 10 )
+                                            },
+                                            HasHeader = true,
+                                            Separator = ","
+                                        });
 
-            var datasource = reader.Read(new MultiFileSource(dataPath));
+            var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
 
-            var cvResults = ctx.CrossValidate(datasource, pipeline, labelColumn: "Label", numFolds: 5);
+            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumn: "NumFeatures", "year", "month", "max", "min", "std", "count", "sales", "med", "prev")
+                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(inputColumn:"country", outputColumn:"CatFeatures"))
+                        .Append(mlContext.Transforms.Concatenate(outputColumn:"Features", "NumFeatures", "CatFeatures"))
+                        .Append(mlContext.Transforms.CopyColumns("next", "Label"))
+                        .Append(trainer);
 
-            var L1 = cvResults.Select(r => r.metrics.L1);
-            var L2 = cvResults.Select(r => r.metrics.L2);
-            var RMS = cvResults.Select(r => r.metrics.L1);
-            var lossFunction = cvResults.Select(r => r.metrics.LossFn);
-            var R2 = cvResults.Select(r => r.metrics.RSquared);
+            var trainingDataView = textLoader.Read(dataPath);
 
-            var model = pipeline.Fit(datasource);
+            // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
+            // in order to evaluate and get the model's accuracy metrics
+            Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
+            var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn: "Label");
+            ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
-            Console.WriteLine("Average L1 Loss: " + L1.Average());
-            Console.WriteLine("Average L2 Loss: " + L2.Average());
-            Console.WriteLine("Average RMS: " + RMS.Average());
-            Console.WriteLine("Average Loss Function: " + lossFunction.Average());
-            Console.WriteLine("Average R-squared: " + R2.Average());
+            // Create and Train the model
+            var model = trainingPipeline.Fit(trainingDataView);
 
             using (var file = File.OpenWrite(outputModelPath))
-                model.SaveTo(env, file);
+                model.SaveTo(mlContext, file);
         }
 
         /// <summary>
@@ -91,19 +82,24 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="outputModelPath">Model file path</param>
         /// <returns></returns>
-        public static void TestPrediction(string outputModelPath = "country_month_fastTreeTweedie.zip")
+        public static void TestPrediction(MLContext mlContext, string outputModelPath = "country_month_fastTreeTweedie.zip")
         {
             ConsoleWriteHeader("Testing Country Sales Forecast model");
 
-            var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
-            ITransformer model;
-            using (var file = File.OpenRead(outputModelPath))
+            ITransformer trainedModel;
+            using (var stream = File.OpenRead(outputModelPath))
             {
-                model = TransformerChain
-                    .LoadFrom(env, file);
+                trainedModel = mlContext.Model.Load(stream);
             }
 
-            var predictor = model.MakePredictionFunction<CountryData, CountrySalesPrediction>(env);
+            //ITransformer trainedModel;
+            //using (var file = File.OpenRead(outputModelPath))
+            //{
+            //    trainedModel = TransformerChain
+            //        .LoadFrom(mlContext, file);
+            //}
+
+            var predictionFunct = trainedModel.MakePredictionFunction<CountryData, CountrySalesPrediction>(mlContext);
 
             Console.WriteLine("** Testing Country 1 **");
 
@@ -122,7 +118,7 @@ namespace eShopForecastModelsTrainer
                 sales = 873612.9F,
             };
             // Predict sample data
-            var prediction = predictor.Predict(dataSample);
+            var prediction = predictionFunct.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(6.0084501F, 10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score, 10)}");
 
             dataSample = new CountryData()
@@ -138,7 +134,7 @@ namespace eShopForecastModelsTrainer
                 count = 2387,
                 sales = 1019647.67F,
             };
-            prediction = predictor.Predict(dataSample);
+            prediction = predictionFunct.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score, 10)}");
 
             Console.WriteLine(" ");
@@ -157,7 +153,7 @@ namespace eShopForecastModelsTrainer
                 count = 10,
                 sales = 5322.56F
             };
-            prediction = predictor.Predict(dataSample);
+            prediction = predictionFunct.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(3.805769F, 10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score, 10)}");
 
             dataSample = new CountryData()
@@ -173,7 +169,7 @@ namespace eShopForecastModelsTrainer
                 count = 11,
                 sales = 6393.96F,
             };
-            prediction = predictor.Predict(dataSample);
+            prediction = predictionFunct.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score, 10)}");
         }
     }
