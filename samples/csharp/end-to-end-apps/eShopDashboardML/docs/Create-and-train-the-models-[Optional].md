@@ -1,6 +1,6 @@
 # Create and Train the models [optional]
 
-The dashboard app comes with pre-trained model files, but you can train your own models based in your own data or with the provided datasets just so learn how to build and train a custom model with ML.NET. 
+The end-user dashboard web app comes with pre-trained model files (.ZIP files), but you can train your own models based on your own data or with the provided datasets so you learn how to build and train a custom model with ML.NET. That code is precisely what's explained in the main README.MD of this sample.
 
 The console application project `eShopForecastModelsTrainer` can be used to generate the country and product forecasting models. You need to follow next steps in order to generate these models:
 
@@ -18,6 +18,6 @@ Then copy/move those files generated from Swagger UI into the `eShopForecastMode
 4) **Run the training model console app:** Hit F5 in Visual Studio. At the end of the execution, the output will be similar to this screenshot:
 ![image](./images/training.png)
 
-5) **Copy the model files into the Dashboard app folder:** When the execution finishes, you can find the built models in the bin folder. These files are named `country_month_fastTreeTweedle.zip` and `product_month_fastTreeTweedle.zip`
+5) **Copy the just created .ZIP model files into the end-user Dashboard web app folder for models named "ModelFiles":** When the execution finishes, you can find the built models in the bin folder. These files are named `country_month_fastTreeTweedle.zip` and `product_month_fastTreeTweedle.zip`
 
-The model files should be copied/pasted into the dashboard folder Models (`eShopDashboard/Forecast/Models`) using the same names.
+The model files should be copied/pasted into the dashboard web app folder Models (`eShopDashboard/Forecast/ModelFiles`) using the same file names.

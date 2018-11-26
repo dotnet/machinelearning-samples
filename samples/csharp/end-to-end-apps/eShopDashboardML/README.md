@@ -2,13 +2,11 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.6           | Dynamic API | Needs to be upgraded to ML.NET v0.7 | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v0.7           | Dynamic API | Update-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
 
-## API version: New Dynamic/Estimators API
-It is important to note that this sample uses the **dynamic API with Estimators**, available since ML.NET v0.6.
 
 # Overview
 
@@ -44,12 +42,12 @@ This problem is centered around country and product forecasting based on previus
 
 ### DataSet
 
-To solve this problem, we will build an ML model that takes as inputs:  
+To solve this problem, you build two independent ML models that take the following datasets as input:  
 
 | Data Set | columns |
 |----------|--------|
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev      |
-| **products stats**  | next, country, year, month, max, min, std, count, sales, med, prev   |
+| **country stats**  | next, country, year, month, max, min, std, count, sales, med, prev   |
 
 ### ML task - [Regression](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#regression)
 
@@ -57,116 +55,124 @@ The ML Task for this sample is a Regression, which is a supervised machine learn
 
 ### Solution
 
-To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and finally we'll consume the model to predict sales.
+To solve this problem, first we will build the ML models while training each model on existing data, evaluate how good it is, and finally you consume the model to predict sales.
 
-![Build -> Train -> Evaluate -> Consume](./../../getting-started/shared_content/modelpipeline.png)
+Note that the sample implements two independent models:
+- Model to predict product's demand forecast for the next period (month)
+- Model to predict country's sales forecast for the next period (month)
+
+However, when learning/researching the sample, you can focus just on one of the scenarios/models.
+
+![Build -> Train -> Evaluate -> Consume](docs/images/modelpipeline.png)
 
 #### 1. Build Model
 
-Next, the model's pipeline is built
-
-Then, you need to apply some transformations to the data:
-- Concat current features to a new Column named NumFeatures
-- Tramsform  productId using [one-hot](https://en.wikipedia.org/wiki/One-hot)
-- Concat all generated fetures in one column
-- Copy next colmun to rename it to label
-- Add Fast Tree Tweedie Trainer
-
-Add a KMeansPlusPlusTrainer; main parameter to use with this learner is clustersCount, that specifies the number of clusters
+The first step you need to implement is to define the data columns to be loaded from the dataset files, like in the following code:
 
 [Model build and train](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
 
 ```csharp
- var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
- var ctx = new RegressionContext(env);
-
-
- var reader = new TextLoader(env, new TextLoader.Arguments
- {
-     Column = new[] {
-         new TextLoader.Column("next", DataKind.R4, 0 ),
-         new TextLoader.Column("productId", DataKind.Text, 1 ),
-         new TextLoader.Column("year", DataKind.R4, 2 ),
-         new TextLoader.Column("month", DataKind.R4, 3 ),
-         new TextLoader.Column("units", DataKind.R4, 4 ),
-         new TextLoader.Column("avg", DataKind.R4, 5 ),
-         new TextLoader.Column("count", DataKind.R4, 6 ),
-         new TextLoader.Column("max", DataKind.R4, 7 ),
-         new TextLoader.Column("min", DataKind.R4, 8 ),
-         new TextLoader.Column("prev", DataKind.R4, 9 )
-     },
-     HasHeader = true,
-     Separator = ","
- });
-
-
- var pipeline = new ConcatEstimator(env, "NumFeatures", new[] { "year", "month", "units", "avg", "count", "max", "min", "prev" })
-     .Append(new CategoricalEstimator(env, "CatFeatures", "productId"))
-     .Append(new ConcatEstimator(env, "Features", new[] { "NumFeatures", "CatFeatures" }))
-     .Append(new CopyColumnsEstimator(env, "next", "Label"))
-     .Append(new FastTreeTweedieTrainer(env, "Label", "Features"));
-
+var textLoader = mlContext.Data.TextReader(new TextLoader.Arguments
+                        {
+                            Column = new[] {
+                                new TextLoader.Column("next", DataKind.R4, 0 ),
+                                new TextLoader.Column("productId", DataKind.Text, 1 ),
+                                new TextLoader.Column("year", DataKind.R4, 2 ),
+                                new TextLoader.Column("month", DataKind.R4, 3 ),
+                                new TextLoader.Column("units", DataKind.R4, 4 ),
+                                new TextLoader.Column("avg", DataKind.R4, 5 ),
+                                new TextLoader.Column("count", DataKind.R4, 6 ),
+                                new TextLoader.Column("max", DataKind.R4, 7 ),
+                                new TextLoader.Column("min", DataKind.R4, 8 ),
+                                new TextLoader.Column("prev", DataKind.R4, 9 )
+                            },
+                            HasHeader = true,
+                            Separator = ","
+                        });
 ```
+
+Then, the next step is to build the pipeline transformations and to specify what trainer/algorithm you are going to use.
+In this case you are doing the following transformations:
+- Concat current features to a new Column named NumFeatures
+- Tramsform  productId using [one-hot encoding](https://en.wikipedia.org/wiki/One-hot)
+- Concat all generated fetures in one column named 'Features'
+- Copy next colmun to rename it to "Label"
+- Specify the "Fast Tree Tweedie" Trainer as the algorithm to apply to the model
+
+After designing the pipeline, you can load the dataset into the DataView, although this step is just configuration, it is lazy and won't be loaded until training the model in the next step.
+
+```csharp
+var trainingPipeline = mlContext.Transforms.Concatenate(outputColumn: "NumFeatures", "year", "month", "units", "avg", "count", "max", "min", "prev" )
+    .Append(mlContext.Transforms.Categorical.OneHotEncoding(inputColumn:"productId", outputColumn:"CatFeatures"))
+    .Append(mlContext.Transforms.Concatenate(outputColumn: "Features", "NumFeatures", "CatFeatures"))
+    .Append(mlContext.Transforms.CopyColumns("next", "Label"))
+    .Append(trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features"));
+
+var trainingDataView = textLoader.Read(dataPath);
+```
+
 
 #### 2. Train model
 
-After building the pipeline, we train the forecast model by fitting or using the training data with the selected algorithm:
+After building the pipeline, we train the forecast model by fitting or using the training data with the selected algorithm. In that step, the model is built, trained and returned as an object:
 
 ```csharp
- var model = pipeline.Fit(datasource);
+var model = trainingPipeline.Fit(trainingDataView);
 ```
 
 #### 3. Evaluate model
 
-We evaluate the accuracy of the model. Evaluate model with a sample products
+In this case, the evaluation of the model is performed before training the model with a cross-validation approach, so you obtain metrics telling you how good is the accuracy of the model. 
 
 ```csharp
- // Read the model that has been previously saved by the method SaveModel
- var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
- ITransformer model;
- using (var file = File.OpenRead(outputModelPath))
- {
-     model = TransformerChain
-         .LoadFrom(env, file);
- }
-
- var predictor = model.MakePredictionFunction<ProductData, ProductUnitPrediction>(env);
- // Build sample data
- ProductData dataSample = new ProductData()
- {
-     productId = "263",
-     month = 10,
-     year = 2017,
-     avg = 91,
-     max = 370,
-     min = 1,
-     count = 10,
-     prev = 1675,
-     units = 910
- };
-
- //model.Predict() predicts the nextperiod/month forecast to the one provided
- ProductUnitPrediction prediction = predictor.Predict(dataSample);
- Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
+var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn: "Label");
+            
+ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 ```
 
+#### 4. Save the model for later comsumption from end-user apps
 
-#### 4. Consume the model
+Once the model is created and evaluated, you can save it into a .ZIP file which could be consumed by any end-user application with the following code:
 
-Basically, we load the model, then the data file and finally we make a prediction function.
+```csharp            
+using (var file = File.OpenWrite(outputModelPath))
+    model.SaveTo(mlContext, file);
+```
 
-- [Country sales prediction](./src/eShopDashboard/Forecast/CountrySales.cs##L66)
-- [Product sales sales prediction](./src/eShopDashboard/Forecast/ProductSales.cs##L66)
+#### 5. Try the model with a simple test prediction
+
+Basically, you  can load the model from the .ZIP file create some sample data, create the "prediction function" and finally you make a prediction.
+
 
 ```csharp
- var env = new LocalEnvironment(seed: 1);  //Seed set to any number so you have a deterministic environment
- ITransformer model;
- using (var file = File.OpenRead(modelPath))
- {
-     model = TransformerChain
-         .LoadFrom(env, file);
- }
- return model.MakePredictionFunction<ProductData, ProductUnitPrediction>(env);
+ITransformer trainedModel;
+using (var stream = File.OpenRead(outputModelPath))
+{
+    trainedModel = mlContext.Model.Load(stream);
+}
+
+var predictionFunct = trainedModel.MakePredictionFunction<ProductData, ProductUnitPrediction>(mlContext);
+
+Console.WriteLine("** Testing Product 1 **");
+
+// Build sample data
+ProductData dataSample = new ProductData()
+{
+    productId = "263",
+    month = 10,
+    year = 2017,
+    avg = 91,
+    max = 370,
+    min = 1,
+    count = 10,
+    prev = 1675,
+    units = 910
+};
+
+//model.Predict() predicts the nextperiod/month forecast to the one provided
+ProductUnitPrediction prediction = predictionFunct.Predict(dataSample);
+Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
+
 ```
 
 ## Citation
