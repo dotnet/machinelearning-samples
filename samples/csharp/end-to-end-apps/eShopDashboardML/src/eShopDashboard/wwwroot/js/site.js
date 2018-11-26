@@ -270,8 +270,9 @@ function getCountryData(country) {
 
 function getCountryForecast(st) {
     // next,country,year,month,max,min,std,count,sales,med,prev
-    var url = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&prev=${st.prev}&count=${st.count}&med=${st.med}&sales=${st.sales}&std=${st.std}`;
-    return $.getJSON(`${apiUri.forecasting}/country/${st.country}/unitdemandestimation${url}`);
+    var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&prev=${st.prev}&count=${st.count}&med=${st.med}&sales=${st.sales}&std=${st.std}`;
+    var fullUrl = `${apiUri.countrysalesforecast}/country/${st.country}/salesforecast${surl}`;
+    return $.getJSON(fullUrl);
 }
 
 function plotLineChartCountry(forecast, historyItems, country) {
