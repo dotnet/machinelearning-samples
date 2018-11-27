@@ -142,6 +142,14 @@ The official ML.NET samples are divided in multiple categories depending on the 
 
 -------------------------------------------------------
 
+## Additional Community Samples
+
+In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community shocased in this separated page:
+[ML.NET Community Samples](https://github.com/dotnet/machinelearning-samples/blob/master/docs/COMMUNITY-SAMPLES.md)
+
+Those Community Samples are not maintained by Microsoft but by their owners.
+If you have created any cool ML.NET sample, please, add its info into this [REQUEST issue](https://github.com/dotnet/machinelearning-samples/issues/86) and we'll publish its information in the mentioned page, eventually.
+
 ## Learn more
 
 See [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) for detailed information on tutorials, ML basics, etc.
