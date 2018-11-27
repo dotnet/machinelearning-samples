@@ -25,7 +25,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Binary classification</h3>
-      <img src="images/Binary Classification.png" alt="Binary classification chart" width="100" height="100">
+      <img src="images/Binary Classification.png" alt="Binary classification chart" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
@@ -41,7 +41,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Multi-class classification</h3>
-      <img src="images/Multiple Classification.png" alt="Multi-class classification" width="100" height="100">
+      <img src="images/Multiple Classification.png" alt="Multi-class classification" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Task of classifying instances into one of three or more classes, predicting which group each one belongs to.
@@ -55,7 +55,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Regression</h3>
-      <img src="images/Regression.png" alt="regression icon" width="100" height="100">
+      <img src="images/Regression.png" alt="regression icon" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   The task is to predict a numeric value with given input variable data. It is widely used for forecasting and 'how much / how many' predictions.
@@ -72,7 +72,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Recommendation</h3>
-      <img src="images/Recommendation.png" alt="Recommendations icon">
+      <img src="images/Recommendation.png" alt="Recommendations icon" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Recommender systems are typically based on content based and collaborative filtering methods. A collaborative method predicts what items/products a user might like based on his past actions/likes/ratings compared to other users. 
@@ -87,7 +87,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Clustering</h3>
-      <img src="images/Clustering.png" alt="Clustering plotting">
+      <img src="images/Clustering.png" alt="Clustering plotting" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   ML task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar to each other than to those in other groups. It is an exploratory task. It does not classify items across particular labels.
@@ -102,7 +102,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Anomaly detection</h3>
-      <img src="images/Anomaly Detection.png" alt="anomaly detection chart">
+      <img src="images/Anomaly Detection.png" alt="anomaly detection chart" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
@@ -114,7 +114,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Ranking</h3>
-      <img src="images/Ranking.png" alt="Ranking logo">
+      <img src="images/Ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/deslike, context, interests, etc.
@@ -126,7 +126,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Deep Learning</h3>
-      <img src="images/Deep Learning.png" alt="DeepLearning logo">
+      <img src="images/Deep Learning.png" alt="DeepLearning logo" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Deep learning is a subset of machine learning. Deep learning architectures such as deep neural networks, are usually applied to fields such as computer vision (object detection, image classification, style transfer), speech recognition, natural language processing and audio recognition. 
