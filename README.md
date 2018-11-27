@@ -25,7 +25,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Binary classification</h3>
-      <img src="images/Binary Classification.png" alt="Binary classification chart">
+      <img src="images/Binary Classification.png" alt="Binary classification chart" width="100" height="100">
   </td>
   <td width="35%">
   Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
@@ -41,7 +41,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Multi-class classification</h3>
-      <img src="images/Multiple Classification.png" alt="Multi-class classification">
+      <img src="images/Multiple Classification.png" alt="Multi-class classification" width="100" height="100">
   </td>
   <td width="35%">
   Task of classifying instances into one of three or more classes, predicting which group each one belongs to.
@@ -55,7 +55,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Regression</h3>
-      <img src="images/Regression.png" alt="regression icon">
+      <img src="images/Regression.png" alt="regression icon" width="100" height="100">
   </td>
   <td width="35%">
   The task is to predict a numeric value with given input variable data. It is widely used for forecasting and 'how much / how many' predictions.
