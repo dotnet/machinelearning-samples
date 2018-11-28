@@ -51,7 +51,7 @@ namespace MulticlassClassification_Iris
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
             var modelBuilder = new Common.ModelBuilder<IrisData, IrisPrediction>(mlContext, dataProcessPipeline);
             // We apply our selected Trainer 
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
             modelBuilder.AddTrainer(trainer);
 
             // STEP 4: Train the model fitting to the DataSet

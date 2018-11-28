@@ -71,7 +71,7 @@ namespace GitHubLabeler
             var trainingDataView = textLoader.Read(DataSetLocation);
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Categorical.MapValueToKey("Area", "Label")
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Area", "Label")
                             .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
                             .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
                             .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"));
@@ -98,7 +98,8 @@ namespace GitHubLabeler
                     // In this strategy, a binary classification algorithm is used to train one classifier for each class, "
                     // which distinguishes that class from all other classes. Prediction is then performed by running these binary classifiers, "
                     // and choosing the prediction with the highest confidence score.
-                    trainer = new Ova(mlContext, averagedPerceptronBinaryTrainer);
+                    trainer = mlContext.MulticlassClassification.Trainers.OneVersusAll(averagedPerceptronBinaryTrainer);
+                        
                     break;
                 }
                 default:
