@@ -13,10 +13,10 @@ namespace Clustering_Iris
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string DataPath = $"{BaseDatasetsLocation}/iris-full.txt";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/IrisModel.zip";
 
         private static void Main(string[] args)

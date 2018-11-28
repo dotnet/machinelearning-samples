@@ -13,9 +13,9 @@ namespace BikeSharingDemand
 {
     internal static class Program
     {
-        private static string ModelsLocation = @"../../../../MLModels";
+        private static string ModelsLocation = @"../MLModels";
 
-        private static string DatasetsLocation = @"../../../../Data";
+        private static string DatasetsLocation = @"../Data";
         private static string TrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
         private static string TestDataLocation = $"{DatasetsLocation}/hour_test.csv";
         

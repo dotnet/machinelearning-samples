@@ -12,11 +12,11 @@ namespace MulticlassClassification_Iris
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string TrainDataPath = $"{BaseDatasetsLocation}/iris-train.txt";
         private static string TestDataPath = $"{BaseDatasetsLocation}/iris-test.txt";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/IrisClassificationModel.zip";
 
         private static void Main(string[] args)

@@ -21,11 +21,11 @@ namespace Regression_TaxiFarePrediction
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string TrainDataPath = $"{BaseDatasetsLocation}/taxi-fare-train.csv";
         private static string TestDataPath = $"{BaseDatasetsLocation}/taxi-fare-test.csv";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/TaxiFareModel.zip";
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart

@@ -12,8 +12,8 @@ namespace MovieRecommendation
     class Program
     {
         // Using the ml-latest-small.zip as dataset from https://grouplens.org/datasets/movielens/. 
-        private static string ModelsLocation = @"../../../../MLModels";
-        public static string DatasetsLocation = @"../../../../Data";
+        private static string ModelsLocation = @"../MLModels";
+        public static string DatasetsLocation = @"../Data";
         private static string TrainingDataLocation = $"{DatasetsLocation}/recommendation-ratings-train.csv";
         private static string TestDataLocation = $"{DatasetsLocation}/recommendation-ratings-test.csv";
         private static string MoviesDataLocation = $"{DatasetsLocation}/movies.csv";
@@ -62,7 +62,7 @@ namespace MovieRecommendation
             //STEP 7:  Try/test a single prediction by predicting a single movie rating for a specific user
             var predictionengine = model.MakePredictionFunction<MovieRating, MovieRatingPrediction>(mlcontext);
             /* Make a single movie rating prediction, the scores are for a particular user and will range from 1 - 5. 
-               The higher the score the higher the likelyhood of a user liking a particular movie.
+               The higher the score the higher the likelihood of a user liking a particular movie.
                You can recommend a movie to a user if say rating > 3.5.*/
             var movieratingprediction = predictionengine.Predict(
                 new MovieRating()
@@ -75,6 +75,8 @@ namespace MovieRecommendation
 
            Movie movieService = new Movie();
            Console.WriteLine("For userId:" + predictionuserId + " movie rating prediction (1 - 5 stars) for movie:" + movieService.Get(predictionmovieId).movieTitle + " is:" + Math.Round(movieratingprediction.Score,1));
+
+            Console.ReadKey();
         }
 
     }
