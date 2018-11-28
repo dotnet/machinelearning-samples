@@ -95,10 +95,18 @@ phases:
     inputs:
       projects: '.\samples\csharp\end-to-end-apps\Regression-SalesForecast\eShopDashboardML.sln'
 
-- phase: MovieRecommender
+- phase: MovieRecommender-End-to-End-App
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build MovieRecommender (Recommendation)
+    displayName: Build MovieRecommender End-to-End-App (Recommendation)
     inputs:
       projects: '.\samples\csharp\end-to-end-apps\Recommendation-MovieRecommender\Recommendation_MovieRecommenderApp.sln'
+
+- phase: MovieRecommender-MatrixFactorization
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build MovieRecommender MatrixFactorization (Recommendation)
+    inputs:
+      projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'
