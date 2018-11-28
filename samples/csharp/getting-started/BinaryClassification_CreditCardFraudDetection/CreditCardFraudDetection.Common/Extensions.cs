@@ -68,12 +68,12 @@ namespace CreditCardFraudDetection.Common
             }
         }
 
-        public static ITransformer ReadModel(this MLContext env, string modelLocation)
+        public static ITransformer ReadModel(this MLContext mlContext, string modelLocation)
         {
             ITransformer model;
             using (var file = File.OpenRead(@modelLocation))
             {
-                model = TransformerChain.LoadFrom(env, file);
+                model = mlContext.Model.Load(file);
             }
             return model;
         }

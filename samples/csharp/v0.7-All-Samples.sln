@@ -51,6 +51,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Train",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Predict", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Predict\ImageClassification.Predict.csproj", "{73558A6A-9EDD-457A-A504-1F5A55D02016}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MovieRecommendation.Solution", "MovieRecommendation.Solution", "{74A614C0-E1E2-4FB0-A246-96F04A654528}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieRecommendation", "getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation\MovieRecommendation.csproj", "{6055D04F-E888-4A9F-87F1-D151EF0A2912}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SalesForecast.Solution", "SalesForecast.Solution", "{A56C7785-F74C-41F4-92C7-E98CB2287B90}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopForecastModelsTrainer", "end-to-end-apps\Regression-SalesForecast\src\eShopForecastModelsTrainer\eShopForecastModelsTrainer.csproj", "{E9FEF7EC-8A3F-4E17-954E-9FD3800613D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopDashboard", "end-to-end-apps\Regression-SalesForecast\src\eShopDashboard\eShopDashboard.csproj", "{650E5870-3C5D-417D-BDF3-6F913055BAD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{6C9D3087-970B-4751-8C26-6D89CC428611}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scripts.Cli", "end-to-end-apps\Regression-SalesForecast\scripts\Scripts.Cli\Scripts.Cli.csproj", "{A15C90DC-5687-46ED-AFC0-4BFE58401AC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +127,22 @@ Global
 		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73558A6A-9EDD-457A-A504-1F5A55D02016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6055D04F-E888-4A9F-87F1-D151EF0A2912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6055D04F-E888-4A9F-87F1-D151EF0A2912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6055D04F-E888-4A9F-87F1-D151EF0A2912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6055D04F-E888-4A9F-87F1-D151EF0A2912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9FEF7EC-8A3F-4E17-954E-9FD3800613D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9FEF7EC-8A3F-4E17-954E-9FD3800613D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9FEF7EC-8A3F-4E17-954E-9FD3800613D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9FEF7EC-8A3F-4E17-954E-9FD3800613D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{650E5870-3C5D-417D-BDF3-6F913055BAD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{650E5870-3C5D-417D-BDF3-6F913055BAD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{650E5870-3C5D-417D-BDF3-6F913055BAD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{650E5870-3C5D-417D-BDF3-6F913055BAD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15C90DC-5687-46ED-AFC0-4BFE58401AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15C90DC-5687-46ED-AFC0-4BFE58401AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15C90DC-5687-46ED-AFC0-4BFE58401AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15C90DC-5687-46ED-AFC0-4BFE58401AC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +162,11 @@ Global
 		{6685EFF2-132A-47A2-BBA3-3E0C850D21D4} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{A76877EE-052E-462F-BBD1-0DA8A3303099} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
 		{73558A6A-9EDD-457A-A504-1F5A55D02016} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
+		{6055D04F-E888-4A9F-87F1-D151EF0A2912} = {74A614C0-E1E2-4FB0-A246-96F04A654528}
+		{E9FEF7EC-8A3F-4E17-954E-9FD3800613D2} = {A56C7785-F74C-41F4-92C7-E98CB2287B90}
+		{650E5870-3C5D-417D-BDF3-6F913055BAD4} = {A56C7785-F74C-41F4-92C7-E98CB2287B90}
+		{6C9D3087-970B-4751-8C26-6D89CC428611} = {A56C7785-F74C-41F4-92C7-E98CB2287B90}
+		{A15C90DC-5687-46ED-AFC0-4BFE58401AC0} = {6C9D3087-970B-4751-8C26-6D89CC428611}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}

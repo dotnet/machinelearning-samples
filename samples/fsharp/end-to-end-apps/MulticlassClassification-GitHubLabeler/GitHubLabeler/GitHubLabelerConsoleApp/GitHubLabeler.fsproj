@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+    <Compile Include="..\..\..\..\common\ModelBuilder.fs" Link="Common\ModelBuilder.fs" />
+    <Compile Include="..\..\..\..\common\ModelScorer.fs" Link="Common\ModelScorer.fs" />
+    <Compile Include="..\..\..\..\common\Pipeline.fs" Link="Common\Pipeline.fs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <None Include="..\Data\corefx-issues-train.tsv" Link="Data\corefx-issues-train.tsv" />
+    <Compile Include="DataStructures\DataStructures.fs" />
+    <Compile Include="Labeler.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+  
+  <ItemGroup />
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Octokit" Version="0.29.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup />
+
+</Project>

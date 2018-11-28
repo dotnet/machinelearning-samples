@@ -19,8 +19,8 @@ namespace BikeSharingDemand
     {
         public static void VisualizeSomePredictions(MLContext mlContext,
                                                     string modelName, 
-                                                    string testDataLocation, 
-                                                    ModelScorer<DemandObservation, DemandPrediction> modelScorer, 
+                                                    string testDataLocation,
+                                                    PredictionFunction<DemandObservation, DemandPrediction> predFunction,
                                                     int numberOfPredictions)
         {
             //Make a few prediction tests 
@@ -29,9 +29,10 @@ namespace BikeSharingDemand
 
             for (int i = 0; i < numberOfPredictions; i++)
             {
-                var prediction = modelScorer.PredictSingle(testData[i]);
+                //Score
+                var resultprediction = predFunction.Predict(testData[i]);
 
-                Common.ConsoleHelper.PrintRegressionPredictionVersusObserved(prediction.PredictedCount.ToString(), 
+                Common.ConsoleHelper.PrintRegressionPredictionVersusObserved(resultprediction.PredictedCount.ToString(), 
                                                             testData[i].Count.ToString());
             }
 

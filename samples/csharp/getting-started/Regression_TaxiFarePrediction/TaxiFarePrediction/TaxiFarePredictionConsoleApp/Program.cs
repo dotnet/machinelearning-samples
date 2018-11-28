@@ -13,6 +13,7 @@ using Microsoft.ML.Transforms.Categorical;
 using Microsoft.ML.Transforms.Normalizers;
 using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using Regression_TaxiFarePrediction.DataStructures;
+using Common;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -48,38 +49,64 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var textLoader = TaxiFareTextLoaderFactory.CreateTextLoader(mlContext);
-            var trainingDataView = textLoader.Read(TrainDataPath);
-            var testDataView = textLoader.Read(TestDataPath);
+            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+                                            {
+                                                Separator = ",",
+                                                HasHeader = true,
+                                                Column = new[]
+                                                            {
+                                                                new TextLoader.Column("VendorId", DataKind.Text, 0),
+                                                                new TextLoader.Column("RateCode", DataKind.Text, 1),
+                                                                new TextLoader.Column("PassengerCount", DataKind.R4, 2),
+                                                                new TextLoader.Column("TripTime", DataKind.R4, 3),
+                                                                new TextLoader.Column("TripDistance", DataKind.R4, 4),
+                                                                new TextLoader.Column("PaymentType", DataKind.Text, 5),
+                                                                new TextLoader.Column("FareAmount", DataKind.R4, 6)
+                                                            }
+                                            });
+
+            IDataView trainingDataView = textLoader.Read(TrainDataPath);
+            IDataView testDataView = textLoader.Read(TestDataPath);
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = TaxiFareDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
+            var dataProcessPipeline = mlContext.Transforms.CopyColumns("FareAmount", "Label")
+                            .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId", "VendorIdEncoded"))
+                            .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode", "RateCodeEncoded"))
+                            .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
+                            .Append(mlContext.Transforms.Normalize(inputName: "PassengerCount", mode: NormalizerMode.MeanVariance))
+                            .Append(mlContext.Transforms.Normalize(inputName: "TripTime", mode: NormalizerMode.MeanVariance))
+                            .Append(mlContext.Transforms.Normalize(inputName: "TripDistance", mode: NormalizerMode.MeanVariance))
+                            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"));
 
             // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            Common.ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);
-            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var modelBuilder = new Common.ModelBuilder<TaxiTrip, TaxiTripFarePrediction>(mlContext, dataProcessPipeline);
-            // We apply our selected Trainer (SDCA Regression algorithm)
+            // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
             var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
-            modelBuilder.AddTrainer(trainer);
+            var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
             //The pipeline is trained on the dataset that has been loaded and transformed.
             Console.WriteLine("=============== Training the model ===============");
-            modelBuilder.Train(trainingDataView);
+            var trainedModel = trainingPipeline.Fit(trainingDataView);
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Label", "Score");
+
+            IDataView predictions = trainedModel.Transform(testDataView);
+            var metrics = mlContext.Regression.Evaluate(predictions, label: "Label", score: "Score");
+
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            Console.WriteLine("=============== Saving the model to a file ===============");
-            modelBuilder.SaveModelAsFile(ModelPath);
 
-            return modelBuilder.TrainedModel;
+            using (var fs = File.Create(ModelPath))
+                trainedModel.SaveTo(mlContext, fs);
+
+            Console.WriteLine("The model is saved to {0}", ModelPath);
+
+            return trainedModel;
         }
 
         private static void TestSinglePrediction(MLContext mlContext)
@@ -99,10 +126,20 @@ namespace Regression_TaxiFarePrediction
                 FareAmount = 0 // To predict. Actual/Observed = 15.5
             };
 
-            var modelScorer = new Common.ModelScorer<TaxiTrip, TaxiTripFarePrediction>(mlContext);
-            modelScorer.LoadModelFromZipFile(ModelPath);
-            var resultprediction = modelScorer.PredictSingle(taxiTripSample);
-            
+            ///
+            ITransformer trainedModel;
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                trainedModel = mlContext.Model.Load(stream);
+            }
+
+            // Create prediction engine related to the loaded trained model
+            var predFunction = trainedModel.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+
+            //Score
+            var resultprediction = predFunction.Predict(taxiTripSample);
+            ///
+
             Console.WriteLine($"**********************************************************************");
             Console.WriteLine($"Predicted fare: {resultprediction.FareAmount:0.####}, actual fare: 15.5");
             Console.WriteLine($"**********************************************************************");
@@ -113,12 +150,16 @@ namespace Regression_TaxiFarePrediction
                                                 int numberOfRecordsToRead,
                                                 string[] args)
         {
-            var modelScorer = new Common.ModelScorer<TaxiTrip, TaxiTripFarePrediction>(mlContext);
-            modelScorer.LoadModelFromZipFile(ModelPath);
-            
+            ITransformer trainedModel;
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                trainedModel = mlContext.Model.Load(stream);
+            }
+
+            // Create prediction engine related to the loaded trained model
+            var predFunction = trainedModel.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlContext);
 
             string chartFileName = "";
-
             using (var pl = new PLStream())
             {
                 // use SVG backend and write to SineWaves.svg in current directory
@@ -180,10 +221,8 @@ namespace Regression_TaxiFarePrediction
                     var y = new double[1];
 
                     //Make Prediction
+                    var FarePrediction = predFunction.Predict(testData[i]);
 
-                    var FarePrediction = modelScorer.PredictSingle(testData[i]);
-                    //var FarePrediction = engine.Predict(testData[i]);
-  
                     x[0] = testData[i].FareAmount;
                     y[0] = FarePrediction.FareAmount;
 

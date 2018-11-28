@@ -5,6 +5,9 @@ using Microsoft.ML.Runtime;
 using Microsoft.ML.Runtime.Api;
 
 using BikeSharingDemand.DataStructures;
+using Microsoft.ML.Runtime.Data;
+using Common;
+using System.IO;
 
 namespace BikeSharingDemand
 {
@@ -28,7 +31,12 @@ namespace BikeSharingDemand
             var testDataView = textLoader.Read(TestDataLocation);
 
             // 2. Common data pre-process with pipeline data transformations
-            var dataProcessPipeline = BikeSharingDataProcessPipelineFactory.CreateDataProcessPipeline(mlContext);
+            var dataProcessPipeline = mlContext.Transforms.CopyColumns("Count", "Label")
+                        // Concatenate all the numeric columns into a single features column
+                        .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
+                                                                            "Hour", "Holiday", "Weekday",
+                                                                            "Weather", "Temperature", "NormalizedTemperature",
+                                                                            "Humidity", "Windspeed"));
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataProcessPipeline, 10);
@@ -52,17 +60,21 @@ namespace BikeSharingDemand
             // Per each regression trainer: Train, Evaluate, and Save a different model
             foreach (var learner in regressionLearners)
             {
-                Console.WriteLine("================== Training model ==================");
-                var modelBuilder = new Common.ModelBuilder<DemandObservation,DemandPrediction>(mlContext, dataProcessPipeline);
-                modelBuilder.AddTrainer(learner.value);
-                var trainedModel = modelBuilder.Train(trainingDataView);
+                Console.WriteLine("=============== Training the current model ===============");
+                var trainingPipeline = dataProcessPipeline.Append(learner.value);
+                var trainedModel = trainingPipeline.Fit(trainingDataView);
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-                var metrics = modelBuilder.EvaluateRegressionModel(testDataView, "Count", "Score");
-                Common.ConsoleHelper.PrintRegressionMetrics(learner.name, metrics);
+                IDataView predictions = trainedModel.Transform(testDataView);
+                var metrics = mlContext.Regression.Evaluate(predictions, label: "Count", score: "Score");               
+                ConsoleHelper.PrintRegressionMetrics(learner.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
-                modelBuilder.SaveModelAsFile($"{ModelsLocation}/{learner.name}Model.zip");
+                string modelPath = $"{ModelsLocation}/{learner.name}Model.zip";
+                using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                    mlContext.Model.Save(trainedModel, fs);
+
+                Console.WriteLine("The model is saved to {0}", modelPath);
             }
 
             // 4. Try/test Predictions with the created models
@@ -71,13 +83,20 @@ namespace BikeSharingDemand
             // For each trained model, test 10 predictions           
             foreach (var learner in regressionLearners)
             {
-                //Load current model
-                var modelScorer = new Common.ModelScorer<DemandObservation, DemandPrediction>(mlContext);
-                modelScorer.LoadModelFromZipFile($"{ModelsLocation}/{learner.name}Model.zip");
+                //Load current model from .ZIP file
+                ITransformer trainedModel;
+                string modelPath = $"{ModelsLocation}/{learner.name}Model.zip";
+                using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    trainedModel = mlContext.Model.Load(stream);
+                }
+
+                // Create prediction engine related to the loaded trained model
+                var predFunction = trainedModel.MakePredictionFunction<DemandObservation, DemandPrediction>(mlContext);
 
                 Console.WriteLine($"================== Visualize/test 10 predictions for model {learner.name}Model.zip ==================");
                 //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
-                ModelScoringTester.VisualizeSomePredictions(mlContext ,learner.name, TestDataLocation, modelScorer, 10);
+                ModelScoringTester.VisualizeSomePredictions(mlContext ,learner.name, TestDataLocation, predFunction, 10);
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();

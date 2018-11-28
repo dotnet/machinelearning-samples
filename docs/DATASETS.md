@@ -17,8 +17,8 @@ The datasets are provided under the original terms that Microsoft received such 
 |  Online Retail Data Set   |  [Original](http://archive.ics.uci.edu/ml/datasets/online+retail)  |   [Processed](http://TBD)   |   [Product recommender](http://TBD)    |  APPROVED |
 |  Bike Sharing Dataset  |  [Original](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_BikeSharingDemand/BikeSharingDemandConsoleApp/data)   |   [Regression_BikeSharingDemand](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Regression_BikeSharingDemand)    |  APPROVED |
 |  TBD Movies-Dataset  |  [Original](http://TBD)  |   [Processed](http://TBD)   |   [Movie recommender](http://TBD)    |  PENDING |
-|  WineKMC  |  [Original](https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip) [Related Download 1](http://blog.yhat.com/static/misc/data/WineKMC.xlsx ) [Related Info](http://blog.yhat.com/posts/customer-segmentation-using-python.html) |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/inputs)   |   [Clustering_CustomerSegmentation](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation)    |  PENDING |
-|  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  APPROVED but add license link per image in a file |
+|  WineKMC  |  [Original](https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip) [Related Download 1](http://blog.yhat.com/static/misc/data/WineKMC.xlsx ) [Related Info](http://blog.yhat.com/posts/customer-segmentation-using-python.html) |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/inputs)   |   [Clustering_CustomerSegmentation](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation)    |  APPROVED |
+|  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  APPROVED |
 |  SMS Spam Collection Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection)  |   [Processed](http://TBD)   |   [Spam Filter TBD](http://TBD)    |  PENDING until de-identify, cleaned-up |
 
 
@@ -106,6 +106,9 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 > Original source:  John Foreman's book Data Smart: http://www.john-foreman.com/data-smart-book.html
 >
+> Dataset copyright
+> Copyright © 2000-2018 by John Wiley & Sons, Inc., or related companies. All rights reserved.
+>
 > https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip
 > 
 
@@ -115,6 +118,9 @@ The datasets are provided under the original terms that Microsoft received such 
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
 > Original source: https://commons.wikimedia.org/wiki/Category:Images
+>
+> Specific licenses per images used in samples
+> https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/wikimedia.md
 >
 
 

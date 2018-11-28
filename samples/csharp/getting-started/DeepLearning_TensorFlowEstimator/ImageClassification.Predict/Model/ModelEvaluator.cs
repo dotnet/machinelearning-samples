@@ -9,14 +9,14 @@ using static ImageClassification.Model.ConsoleHelpers;
 
 namespace ImageClassification.Model
 {
-    public class ModelEvaluator
+    public class ModelScorer
     {
         private readonly string dataLocation;
         private readonly string imagesFolder;
         private readonly string modelLocation;
         private readonly IHostEnvironment env;
 
-        public ModelEvaluator(string dataLocation, string imagesFolder, string modelLocation)
+        public ModelScorer(string dataLocation, string imagesFolder, string modelLocation)
         {
             this.dataLocation = dataLocation;
             this.imagesFolder = imagesFolder;
@@ -24,7 +24,7 @@ namespace ImageClassification.Model
             env = new ConsoleEnvironment( seed: 1);
         }
 
-        public void EvaluateStaticApi()
+        public void ClassifyImages()
         {
             ConsoleWriteHeader("Loading model");
             Console.WriteLine($"Model loaded: {modelLocation}");

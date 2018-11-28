@@ -5,6 +5,7 @@ using Microsoft.ML;
 using Common;
 using Clustering_Iris.DataStructures;
 using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Core.Data;
 
 namespace Clustering_Iris
 {
@@ -24,9 +25,23 @@ namespace Clustering_Iris
             MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
             // STEP 1: Common data loading configuration
-            var textLoader = IrisTextLoaderFactory.CreateTextLoader(mlContext);
-            var fullData = textLoader.Read(DataPath);
+            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+                                            {
+                                                Separator = "\t",
+                                                HasHeader = true,
+                                                Column = new[]
+                                                            {
+                                                                new TextLoader.Column("Label", DataKind.R4, 0),
+                                                                new TextLoader.Column("SepalLength", DataKind.R4, 1),
+                                                                new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                                                                new TextLoader.Column("PetalLength", DataKind.R4, 3),
+                                                                new TextLoader.Column("PetalWidth", DataKind.R4, 4),
+                                                            }
+                                            });
 
+            IDataView fullData = textLoader.Read(DataPath);
+
+            //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
             (IDataView trainingDataView, IDataView testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction: 0.2);
 
             //STEP 2: Process data transformations in pipeline
@@ -36,18 +51,20 @@ namespace Clustering_Iris
             Common.ConsoleHelper.PeekDataViewInConsole<IrisData>(mlContext, trainingDataView, dataProcessPipeline, 10);
             Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 10);
 
-            // STEP 3: Create and train the model                
-            var modelBuilder = new ModelBuilder<IrisData, IrisPrediction>(mlContext, dataProcessPipeline);
+            // STEP 3: Create and train the model     
             var trainer = mlContext.Clustering.Trainers.KMeans(features: "Features", clustersCount: 3);
-            modelBuilder.AddTrainer(trainer);
-            var trainedModel = modelBuilder.Train(trainingDataView);
+            var trainingPipeline = dataProcessPipeline.Append(trainer);
+            var trainedModel = trainingPipeline.Fit(trainingDataView);
 
             // STEP4: Evaluate accuracy of the model
-            var metrics = modelBuilder.EvaluateClusteringModel(testingDataView);
-            Common.ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
+            IDataView predictions = trainedModel.Transform(testingDataView);
+            var metrics = mlContext.Clustering.Evaluate(predictions, score: "Score", features: "Features");
+
+            ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
             // STEP5: Save/persist the model as a .ZIP file
-            modelBuilder.SaveModelAsFile(ModelPath);
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("=============== End of training process ===============");
 
@@ -62,23 +79,25 @@ namespace Clustering_Iris
                 PetalWidth = 5.1f,
             };
 
-            //Create the clusters: Create data files and plot a chart
-            var modelScorer = new ModelScorer<IrisData, IrisPrediction>(mlContext);
-            modelScorer.LoadModelFromZipFile(ModelPath);
+            ///
+            ITransformer model;
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                model = mlContext.Model.Load(stream);
+            }
 
-            var prediction = modelScorer.PredictSingle(sampleIrisData);
+            // Create prediction engine related to the loaded trained model
+            var predFunction = trainedModel.MakePredictionFunction<IrisData, IrisPrediction>(mlContext);
 
-            Console.WriteLine($"Cluster assigned for setosa flowers:"+prediction.SelectedClusterId);
+            //Score
+            var resultprediction = predFunction.Predict(sampleIrisData);
+            ///
+
+            Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();           
         }
     }
-
-
-
-
-
-
 
 }

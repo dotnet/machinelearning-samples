@@ -9,6 +9,7 @@ using Microsoft.ML.Transforms.Categorical;
 using Microsoft.ML.Transforms.Projections;
 
 using CustomerSegmentation.DataStructures;
+using Common;
 
 namespace CustomerSegmentation
 {
@@ -16,7 +17,7 @@ namespace CustomerSegmentation
     {
         static void Main(string[] args)
         {
-            var assetsPath = ModelHelpers.GetAssetsPath(@"..\..\..\assets");
+            var assetsPath = PathHelper.GetAssetsPath(@"..\..\..\assets");
 
             var transactionsCsv = Path.Combine(assetsPath, "inputs", "transactions.csv");
             var offersCsv = Path.Combine(assetsPath, "inputs", "offers.csv");
@@ -32,7 +33,17 @@ namespace CustomerSegmentation
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
                 // STEP 1: Common data loading configuration
-                var textLoader = CustomerSegmentationTextLoaderFactory.CreateTextLoader(mlContext);
+                TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+                                        {
+                                            Separator = ",",
+                                            HasHeader = true,
+                                            Column = new[]
+                                                        {
+                                                        new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
+                                                        new TextLoader.Column("LastName", DataKind.Text, 32)
+                                                        }
+                                        });
+
                 var pivotDataView = textLoader.Read(pivotCsv);
 
                 //STEP 2: Configure data transformations in pipeline
@@ -44,20 +55,28 @@ namespace CustomerSegmentation
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
-                // STEP 3: Create and train the model                
+                //STEP 3: Create the training pipeline                
                 var trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount: 3);
-                var modelBuilder = new Common.ModelBuilder<PivotObservation, ClusteringPrediction>(mlContext, dataProcessPipeline);
-                modelBuilder.AddTrainer(trainer);
-                var trainedModel = modelBuilder.Train(pivotDataView);
+                var trainingPipeline = dataProcessPipeline.Append(trainer);
 
-                // STEP4: Evaluate accuracy of the model
-                var metrics = modelBuilder.EvaluateClusteringModel(pivotDataView);
-                Common.ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
+                //STEP 4: Train the model fitting to the pivotDataView
+                Console.WriteLine("=============== Training the model ===============");
+                ITransformer trainedModel = trainingPipeline.Fit(pivotDataView);
 
-                // STEP5: Save/persist the model as a .ZIP file
-                modelBuilder.SaveModelAsFile(modelZip);
+                //STEP 5: Evaluate the model and show accuracy stats
+                Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+                var predictions = trainedModel.Transform(pivotDataView);
+                var metrics = mlContext.Clustering.Evaluate(predictions, score: "Score", features: "Features");
 
-            } catch (Exception ex)
+                ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
+
+                //STEP 6: Save/persist the trained model to a .ZIP file
+                using (var fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write))
+                    mlContext.Model.Save(trainedModel, fs);
+
+                Console.WriteLine("The model is saved to {0}", modelZip);
+            }
+            catch (Exception ex)
             {
                 Common.ConsoleHelper.ConsoleWriteException(ex.Message);
             }

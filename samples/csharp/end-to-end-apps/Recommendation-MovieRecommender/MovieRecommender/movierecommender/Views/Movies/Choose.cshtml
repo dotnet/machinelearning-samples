@@ -1,0 +1,33 @@
+﻿@using movierecommender.Models
+@model IEnumerable<Movie>
+@{
+    ViewBag.Title = "Choose";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1><span class="glyphicon glyphicon-film"></span> Movie Recommender</h1>
+
+<h3>Pick the movie you best liked in the past?</h3>
+
+<div class="row">
+    @foreach (var movie in Model)
+    {
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-block">
+                    <h3 class="card-title">@movie.MovieName</h3>
+                    <a href="@Url.Action("Recommend", "Movies", new { id = movie.MovieID })" class="btn btn-primary">Choose me</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+<div class="form-row">
+    <button type="button" class="btn btn-info" id="select" onclick="location.href='@Url.Action("Choose", "Movies")'">
+        <span class="glyphicon glyphicon-ok"></span> Recommend Movies
+    </button>
+</div>
+
+
