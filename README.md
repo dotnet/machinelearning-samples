@@ -140,6 +140,12 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  </table>
 
+NOTE ABOUT NUGET FEED: Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such us 0.7, 0.8, 0.9 etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.8.0-preview-27128-1), not available in the regular NuGet feed.
+
+If that is the case, please use this MyGet feed in Visual Studio:
+
+https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+
 -------------------------------------------------------
 
 ## Additional Community Samples
