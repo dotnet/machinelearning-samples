@@ -6,6 +6,7 @@ using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Data.IO;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace CreditCardFraudDetection.Predictor
@@ -73,8 +74,14 @@ namespace CreditCardFraudDetection.Predictor
             ConsoleHelpers.InspectData(mlContext, dataTest, numberOfTransactions);
 
             ConsoleHelpers.ConsoleWriteHeader($"Predictions from saved model:");
-                ITransformer model = mlContext.ReadModel(_modelfile);
-                var predictionFunc = model.MakePredictionFunction<TransactionObservation, TransactionFraudPrediction>(mlContext);
+
+            ITransformer model;
+            using (var file = File.OpenRead(_modelfile))
+            {
+                model = mlContext.Model.Load(file);
+            }
+
+            var predictionFunc = model.MakePredictionFunction<TransactionObservation, TransactionFraudPrediction>(mlContext);
                 ConsoleHelpers.ConsoleWriterSection($"Test {numberOfTransactions} transactions, from the test datasource, that should be predicted as fraud (true):");
                 dataTest.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject: false)
                         .Where(x => x.Label == true)

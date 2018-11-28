@@ -5,7 +5,6 @@ using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Runtime.Data.IO;
 using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
-using static Microsoft.ML.Runtime.Api.GenerateCodeCommand;
 
 using System;
 using System.IO;
@@ -44,8 +43,7 @@ namespace CreditCardFraudDetection.Trainer
         }
 
         public void TrainFastTreeAndSaveModels( int cvNumFolds = 2, int numLeaves= 20 , int numTrees = 100,
-                                                int minDocumentsInLeafs = 10, double learningRate = 0.2,
-                                                Action<Arguments> advancedSettings = null)
+                                                int minDocumentsInLeafs = 10, double learningRate = 0.2)
         {
             //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
 
@@ -55,11 +53,11 @@ namespace CreditCardFraudDetection.Trainer
                                                                           "V19", "V20", "V21", "V22", "V23", "V24",
                                                                           "V25", "V26", "V27", "V28" })
                             .Append(_mlContext.Transforms.Normalize(inputName: "Features", outputName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
-                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(label: "Label", 
-                                                                                      features: "Features",
+                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
+                                                                                      featureColumn: "Features",
                                                                                       numLeaves: 20,
                                                                                       numTrees: 100,
-                                                                                      minDatapointsInLeafs: 10,
+                                                                                      minDatapointsInLeaves: 10,
                                                                                       learningRate: 0.2));
 
             var model = pipeline.Fit(_trainData);
@@ -70,7 +68,9 @@ namespace CreditCardFraudDetection.Trainer
             Console.WriteLine("Acuracy: " + metrics.Accuracy);
             metrics.ToConsole();
 
-            model.SaveModel(_mlContext, Path.Combine(_outputPath, "fastTree.zip"));
+            using (var fs = new FileStream(Path.Combine(_outputPath, "fastTree.zip"), FileMode.Create, FileAccess.Write, FileShare.Write))
+                _mlContext.Model.Save(model, fs);
+
             Console.WriteLine("Saved model to " + Path.Combine(_outputPath, "fastTree.zip"));
         }
 
