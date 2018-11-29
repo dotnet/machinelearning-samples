@@ -9,8 +9,8 @@ open System.Linq
 [<CLIMutable>]
 type ClusteringPrediction = {
     [<ColumnName("PredictedLabel")>] SelectedClusterId : uint32
-    [<ColumnName("Score")>] Distance : float []
-    [<ColumnName("PCAFeatures")>] Location : float []
+    [<ColumnName("Score")>] Distance : float32 []
+    [<ColumnName("PCAFeatures")>] Location : float32 []
     [<ColumnName("LastName")>] LastName : string
 }
 
@@ -78,38 +78,38 @@ type ClusterData = {
 
 [<CLIMutable>]
 type PivotData = {
-    C1 : float
-    C2 : float
-    C3 : float
-    C4 : float
-    C5 : float
-    C6 : float
-    C7 : float
-    C8 : float
-    C9 : float
-    C10 : float
-    C11 : float
-    C12 : float
-    C13 : float
-    C14 : float
-    C15 : float
-    C16 : float
-    C17 : float
-    C18 : float
-    C19 : float
-    C20 : float
-    C21 : float
-    C22 : float
-    C23 : float
-    C24 : float
-    C25 : float
-    C26 : float
-    C27 : float
-    C28 : float
-    C29 : float
-    C30 : float
-    C31 : float
-    C32 : float
+    C1 : float32
+    C2 : float32
+    C3 : float32
+    C4 : float32
+    C5 : float32
+    C6 : float32
+    C7 : float32
+    C8 : float32
+    C9 : float32
+    C10 : float32
+    C11 : float32
+    C12 : float32
+    C13 : float32
+    C14 : float32
+    C15 : float32
+    C16 : float32
+    C17 : float32
+    C18 : float32
+    C19 : float32
+    C20 : float32
+    C21 : float32
+    C22 : float32
+    C23 : float32
+    C24 : float32
+    C25 : float32
+    C26 : float32
+    C27 : float32
+    C28 : float32
+    C29 : float32
+    C30 : float32
+    C31 : float32
+    C32 : float32
     LastName : string
 } with 
     override x.ToString() = 
@@ -167,38 +167,38 @@ module DataHelper =
                                             )
                     select {
                         LastName = gcs.Key
-                        C1 = lookup.["1"].Sum() |> float
-                        C2 = lookup.["2"].Sum() |> float
-                        C3 = lookup.["3"].Sum() |> float
-                        C4 = lookup.["4"].Sum() |> float
-                        C5 = lookup.["5"].Sum() |> float
-                        C6 = lookup.["6"].Sum() |> float
-                        C7 = lookup.["7"].Sum() |> float
-                        C8 = lookup.["8"].Sum() |> float
-                        C9 = lookup.["9"].Sum() |> float
-                        C10 = lookup.["10"].Sum() |> float
-                        C11 = lookup.["11"].Sum() |> float
-                        C12 = lookup.["12"].Sum() |> float
-                        C13 = lookup.["13"].Sum() |> float
-                        C14 = lookup.["14"].Sum() |> float
-                        C15 = lookup.["15"].Sum() |> float
-                        C16 = lookup.["16"].Sum() |> float
-                        C17 = lookup.["17"].Sum() |> float
-                        C18 = lookup.["18"].Sum() |> float
-                        C19 = lookup.["19"].Sum() |> float
-                        C20 = lookup.["20"].Sum() |> float
-                        C21 = lookup.["21"].Sum() |> float
-                        C22 = lookup.["22"].Sum() |> float
-                        C23 = lookup.["23"].Sum() |> float
-                        C24 = lookup.["24"].Sum() |> float
-                        C25 = lookup.["25"].Sum() |> float
-                        C26 = lookup.["26"].Sum() |> float
-                        C27 = lookup.["27"].Sum() |> float
-                        C28 = lookup.["28"].Sum() |> float
-                        C29 = lookup.["29"].Sum() |> float
-                        C30 = lookup.["30"].Sum() |> float
-                        C31 = lookup.["31"].Sum() |> float
-                        C32 = lookup.["23"].Sum() |> float
+                        C1 = lookup.["1"].Sum() |> float32
+                        C2 = lookup.["2"].Sum() |> float32
+                        C3 = lookup.["3"].Sum() |> float32
+                        C4 = lookup.["4"].Sum() |> float32
+                        C5 = lookup.["5"].Sum() |> float32
+                        C6 = lookup.["6"].Sum() |> float32
+                        C7 = lookup.["7"].Sum() |> float32
+                        C8 = lookup.["8"].Sum() |> float32
+                        C9 = lookup.["9"].Sum() |> float32
+                        C10 = lookup.["10"].Sum() |> float32
+                        C11 = lookup.["11"].Sum() |> float32
+                        C12 = lookup.["12"].Sum() |> float32
+                        C13 = lookup.["13"].Sum() |> float32
+                        C14 = lookup.["14"].Sum() |> float32
+                        C15 = lookup.["15"].Sum() |> float32
+                        C16 = lookup.["16"].Sum() |> float32
+                        C17 = lookup.["17"].Sum() |> float32
+                        C18 = lookup.["18"].Sum() |> float32
+                        C19 = lookup.["19"].Sum() |> float32
+                        C20 = lookup.["20"].Sum() |> float32
+                        C21 = lookup.["21"].Sum() |> float32
+                        C22 = lookup.["22"].Sum() |> float32
+                        C23 = lookup.["23"].Sum() |> float32
+                        C24 = lookup.["24"].Sum() |> float32
+                        C25 = lookup.["25"].Sum() |> float32
+                        C26 = lookup.["26"].Sum() |> float32
+                        C27 = lookup.["27"].Sum() |> float32
+                        C28 = lookup.["28"].Sum() |> float32
+                        C29 = lookup.["29"].Sum() |> float32
+                        C30 = lookup.["30"].Sum() |> float32
+                        C31 = lookup.["31"].Sum() |> float32
+                        C32 = lookup.["23"].Sum() |> float32
                     }  
             } |> Seq.toArray
 

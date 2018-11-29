@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Program.fs" />
     <Compile Include="..\..\..\common\ConsoleHelper.fs">
       <Link>common\ConsoleHelper.fs</Link>
     </Compile>
@@ -19,6 +18,11 @@
     <Compile Include="..\..\..\common\Pipeline.fs">
       <Link>common\Pipeline.fs</Link>
     </Compile>
+    <Compile Include="..\CustomerSegmentation.Train\DataStructures.fs">
+      <Link>DataStructures.fs</Link>
+    </Compile>
+    <Compile Include="ClusteringModelScorer.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
