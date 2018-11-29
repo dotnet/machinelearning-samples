@@ -47,11 +47,14 @@ namespace CreditCardFraudDetection.Trainer
         {
             //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
 
-            var pipeline = _mlContext.Transforms.Concatenate("Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",
-                                                                          "V7", "V8", "V9", "V10", "V11", "V12",
-                                                                          "V13", "V14", "V15", "V16", "V17", "V18",
-                                                                          "V19", "V20", "V21", "V22", "V23", "V24",
-                                                                          "V25", "V26", "V27", "V28" })
+            //Get all the column names for the Features (All except the Label and the StratificationColumn)
+            var featureColumnNames = _trainData.Schema.GetColumns()
+                .Select(tuple => tuple.column.Name) // Get the column names
+                .Where(name => name != "Label") // Do not include the Label column
+                .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
+                .ToArray();
+
+            var pipeline = _mlContext.Transforms.Concatenate("Features", featureColumnNames)
                             .Append(_mlContext.Transforms.Normalize(inputName: "Features", outputName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
                             .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
                                                                                       featureColumn: "Features",
