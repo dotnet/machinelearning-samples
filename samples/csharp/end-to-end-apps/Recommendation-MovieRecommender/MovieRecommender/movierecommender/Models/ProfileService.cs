@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace movierecommender.Models
 {
@@ -10,9 +7,9 @@ namespace movierecommender.Models
     {
         public List<Profile> _profile = new List<Profile>(LoadProfileData());
 
-        public int _activeprofileid = -1;       
+        public int _activeprofileid = -1;
 
-        public List<Tuple<int, int>> GetProfileWatchedMovies(int id)
+        public List<(int movieId, int movieRating)> GetProfileWatchedMovies(int id)
         {
             foreach(var Profile in _profile)
             {
@@ -42,8 +39,8 @@ namespace movierecommender.Models
         {
             var result = new List<Profile>();
 
-            Stream fileReader = File.OpenRead("Content/Profiles.csv");
-            StreamReader reader = new StreamReader(fileReader);
+            var fileReader = File.OpenRead("Content/Profiles.csv");
+            var reader = new StreamReader(fileReader);
             try
             {
                 bool header = true;
@@ -57,15 +54,25 @@ namespace movierecommender.Models
                         header = false;
                     }
                     line = reader.ReadLine();
-                    string[] fields = line.Split(',');
-                    int ProfileID = Int32.Parse(fields[0].ToString().TrimStart(new char[] { '0' }));
-                    String ProfileImageName = fields[1].ToString();
-                    string ProfileName = fields[2].ToString();
-                    List<Tuple<int, int>> ratings = new List<Tuple<int, int>>();
-                    for (int i = 3; i < fields.Length; i+=2) {
-                    ratings.Add(Tuple.Create(Int32.Parse(fields[i]), Int32.Parse(fields[i+1])));
+
+                    var fields = line.Split(',');
+                    var ProfileID = int.Parse(fields[0].TrimStart(new char[] { '0' }));
+                    var ProfileImageName = fields[1];
+                    var ProfileName = fields[2];
+
+                    var ratings = new List<(int movieId, int movieRating)>();
+
+                    for (int i = 3; i < fields.Length; i+=2)
+                    {
+                        ratings.Add((int.Parse(fields[i]), int.Parse(fields[i+1])));
                     }
-                    result.Add(new Profile() { ProfileID = ProfileID, ProfileImageName= ProfileImageName, ProfileName = ProfileName, ProfileMovieRatings = ratings });
+                    result.Add(new Profile()
+                    {
+                        ProfileID = ProfileID,
+                        ProfileImageName = ProfileImageName,
+                        ProfileName = ProfileName,
+                        ProfileMovieRatings = ratings
+                    });
                     index++;
                 }
             }
