@@ -2,9 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | README.md needs update | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
-
-**NOTE:** Readme.md is outdated, need to be updated for v0.7.
+| v0.7           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -35,39 +33,33 @@ Building a model includes:
 
 * Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
 
-* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `TextTransform`)
+* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `FeaturizeText`)
 
-* Choosing a trainer/learning algorithm (such as `LinearClassificationTrainer`) to train the model with. 
+* Choosing a trainer/learning algorithm (such as `FastTree`) to train the model with. 
 
 The initial code is similar to the following:
 
 ```CSharp
-//1. Create ML.NET context/environment
-using (var env = new LocalEnvironment())
-{
-    //2. Create DataReader with data schema mapped to file's columns
-    var reader = new TextLoader(env,
-                                new TextLoader.Arguments()
-                                {
-                                    Separator = "tab",
-                                    HasHeader = true,
-                                    Column = new[]
-                                    {
-                                        new TextLoader.Column("Label", DataKind.Bool, 0),
-                                        new TextLoader.Column("Text", DataKind.Text, 1)
-                                    }
-                                });
+// STEP 1: Common data loading configuration
+TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+                                        {
+                                            Separator = "tab",
+                                            HasHeader = true,
+                                            Column = new[]
+                                                        {
+                                                        new TextLoader.Column("Label", DataKind.Bool, 0),
+                                                        new TextLoader.Column("Text", DataKind.Text, 1)
+                                                        }
+                                        });
+IDataView trainingDataView = textLoader.Read(TrainDataPath);
+IDataView testDataView = textLoader.Read(TestDataPath);
 
-    //Load training data
-    IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
+// STEP 2: Common data process configuration with pipeline data transformations          
+var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features");
 
-
-    //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
-
-    var pipeline = new TextTransform(env, "Text", "Features")  //Convert the text column to numeric vectors (Features column)   
-                                .Append(new LinearClassificationTrainer(env, "Features", "Label")); //(Simpler in ML.NET v0.7)
-
-}
+// STEP 3: Set the training algorithm, then create and config the modelBuilder                            
+var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", featureColumn: "Features");
+var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
 ### 2. Train model
@@ -76,7 +68,7 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training you need to call the `Fit()` method while providing the training dataset (`wikipedia-detox-250-line-data.tsv` file) in a DataView object.
 
 ```CSharp
-var model = pipeline.Fit(trainingDataView);
+ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
 ```
 
 Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
@@ -88,16 +80,10 @@ We need this step to conclude how accurate our model operates on new data. To do
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 ```CSharp
-IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
+var predictions = trainedModel.Transform(testDataView);
+var metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score");
 
-var predictions = model.Transform(testDataView);
-
-var binClassificationCtx = new BinaryClassificationContext(env);
-var metrics = binClassificationCtx.Evaluate(predictions, "Label");
-
-Console.WriteLine("Model quality metrics evaluation");
-Console.WriteLine("------------------------------------------");
-Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
+ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 ```
 
 If you are not satisfied with the quality of the model, you can try to improve it by providing larger training datasets and by choosing different training algorithms with different hyper-parameters for each algorithm.
@@ -109,16 +95,11 @@ If you are not satisfied with the quality of the model, you can try to improve i
 After the model is trained, you can use the `Predict()` API to predict the sentiment for new sample text. 
 
 ```CSharp
-// Create the prediction function 
-var predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction>(env);
+// Create prediction engine related to the loaded trained model
+var predFunction= trainedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction>(mlContext);
 
-var resultprediction = predictionFunct.Predict(new SentimentIssue	
-                                              {	
-                                                 text = "This is a very rude movie"	
-                                              });
-
-Console.WriteLine($"Text: {sampleStatement.text} | Prediction: {(resultprediction.PredictionLabel ? "Negative" : "Positive")} sentiment");
-
+//Score
+var resultprediction = predFunction.Predict(sampleStatement);
 ```
 
-Where in `resultprediction.PredictionLabel` will be either 1 or 0 depending if it is a positive or negative predicted sentiment.
+Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a negative or positive predicted sentiment.
