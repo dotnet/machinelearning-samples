@@ -117,7 +117,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <img src="images/Ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
-  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/deslike, context, interests, etc.
+  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/dislike, context, interests, etc.
   </td>
   <td>
       <h4>Coming soon</h4>
