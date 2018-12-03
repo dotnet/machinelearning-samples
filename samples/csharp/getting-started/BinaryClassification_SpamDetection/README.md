@@ -54,8 +54,6 @@ var data = reader.Read(new MultiFileSource(TrainDataPath));
 var estimator = mlContext.Transforms.CustomMapping<MyInput, MyOutput>(MyLambda.MyAction, "MyLambda")
     .Append(mlContext.Transforms.Text.FeaturizeText("Message", "Features"))
     .Append(mlContext.BinaryClassification.Trainers.StochasticDualCoordinateAscent());
-
-}
 ```
 
 ### 2. Evaluate model
