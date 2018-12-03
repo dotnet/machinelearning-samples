@@ -55,7 +55,7 @@ namespace CustomerSegmentation.Model
                     Separator = ","
                 });
 
-            var data = reader.Read(new MultiFileSource(_pivotDataLocation));
+            var data = reader.Read(_pivotDataLocation);
 
             //Apply data transformation to create predictions/clustering
             var predictions = _trainedModel.Transform(data)
@@ -68,7 +68,6 @@ namespace CustomerSegmentation.Model
             //Plot/paint the clusters in a chart and open it with the by-default image-tool in Windows
             SaveCustomerSegmentationPlotChart(predictions, _plotLocation);
             OpenChartInDefaultWindow(_plotLocation);
-
         }
 
         private static void SaveCustomerSegmentationCSV(IEnumerable<ClusteringPrediction> predictions, string csvlocation)
