@@ -10,11 +10,19 @@ The style of recommendation in this sample is based upon the co-purchase scenari
 bought together which means it will recommend customers a set of products based upon their order purchase
 history. 
 
+![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/frequentlyboughttogether.png)
+
+In this example, the highlighted products are being recommended based upon a frequently bought together learning model. 
+
 
 ## Problem
 For this tutorial we will use the Amazon product co-purchasing network dataset.  
 
-In terms of an approach for building our product recommender we will use One-Class Factorization Machines which uses a colloborative filtering approach. The difference between one-class and other Factorization Machines approach we covered is that in this dataset we only have information on order purchase history.
+In terms of an approach for building our product recommender we will use One-Class Factorization Machines which uses a colloborative filtering approach. 
+
+
+The difference between one-class and other Factorization Machines approach we covered is that in this dataset we only have information on order purchase history.
+
 We do not have ratings or other details like product description etc. available to us. 
 
 Matrix Factorization relies on ‘Collaborative filtering’ which operates under the underlying assumption that if a person A has the same opinion as a person B on an issue, A is more likely to have B’s opinion on a different issue than that of a randomly chosen person.
