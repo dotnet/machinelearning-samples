@@ -39,7 +39,7 @@ namespace MovieRecommendation
             });
 
             //STEP 3: Read the training data which will be used to train the movie recommendation model
-            IDataView trainingDataView = reader.Read(new MultiFileSource(TrainingDataLocation));
+            IDataView trainingDataView = reader.Read(TrainingDataLocation);
 
             //STEP 4: Transform your data by encoding the two features userId and movieID. These encoded features will be provided as input
             //        to our MatrixFactorizationTrainer.
@@ -53,7 +53,7 @@ namespace MovieRecommendation
 
             //STEP 6: Evaluate the model performance 
             Console.WriteLine("=============== Evaluating the model ===============");
-            IDataView testDataView = reader.Read(new MultiFileSource(TestDataLocation));
+            IDataView testDataView = reader.Read(TestDataLocation);
             var prediction = model.Transform(testDataView);
             var metrics = mlcontext.Regression.Evaluate(prediction, label: "Label", score: "Score");
             //Console.WriteLine("The model evaluation metrics rms:" + Math.Round(float.Parse(metrics.Rms.ToString()), 1));
