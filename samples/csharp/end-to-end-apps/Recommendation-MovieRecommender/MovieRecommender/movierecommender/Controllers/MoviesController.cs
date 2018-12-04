@@ -39,24 +39,24 @@ namespace movierecommender.Controllers
 
         public ActionResult Recommend(int id)
         {
-            var activeprofile = _profileService.GetProfileByID(id);
+            Profile activeprofile = _profileService.GetProfileByID(id);
 
             // 1. Create the local environment
-            var ctx = new MLContext();
+            MLContext ctx = new MLContext();
 
             //2. Load the MoviesRecommendation Model
             ITransformer loadedModel;
-            using (var stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 loadedModel = ctx.Model.Load(stream);
             }
 
             //3. Create a prediction function
-            var predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
+            PredictionFunction<RatingData, RatingPrediction> predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
 
-            var ratings = new List<(int movieId, float normalizedScore)>();
-            var MovieRatings = _profileService.GetProfileWatchedMovies(id);
-            var WatchedMovies = new List<Movie>();
+            List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
+            List<(int movieId, int movieRating)> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+            List<Movie> WatchedMovies = new List<Movie>();
 
             foreach ((int movieId, int movieRating) in MovieRatings)
             {
@@ -65,7 +65,7 @@ namespace movierecommender.Controllers
 
             // 3. Create an Rating Prediction Output Class
             RatingPrediction prediction = null;
-            foreach (var movie in _movieService._trendingMovies)
+            foreach (Movie movie in _movieService._trendingMovies)
             {
                 //4. Call the Rating Prediction for each movie prediction
                  prediction = predictionfunction.Predict(new RatingData
@@ -75,7 +75,7 @@ namespace movierecommender.Controllers
                  });
 
                 //5. Normalize the prediction scores for the "ratings" b/w 0 - 100
-                 var normalizedscore = Sigmoid(prediction.Score);
+                float normalizedscore = Sigmoid(prediction.Score);
 
                 //6. Add the score for recommendation of each movie in the trending movie list
                  ratings.Add((movie.MovieID, normalizedscore));
@@ -100,15 +100,15 @@ namespace movierecommender.Controllers
 
         public ActionResult Profiles()
         {
-            var profiles = _profileService._profile;
+            List<Profile> profiles = _profileService._profile;
             return View(profiles);
         }
 
         public ActionResult Watched(int id)
         {
-            var activeprofile = _profileService.GetProfileByID(id);
-            var MovieRatings = _profileService.GetProfileWatchedMovies(id);
-            var WatchedMovies = new List<Movie>();
+            Profile activeprofile = _profileService.GetProfileByID(id);
+            List<(int movieId, int movieRating)> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+            List<Movie> WatchedMovies = new List<Movie>();
 
             foreach ((int movieId, float normalizedScore) in MovieRatings)
             {
@@ -147,7 +147,5 @@ namespace movierecommender.Controllers
 
             public float Score;
         }
-
     }
-
 }

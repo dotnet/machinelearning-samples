@@ -29,11 +29,11 @@ namespace MovieRecommenderModel
             //Call the following piece of code for splitting the ratings.csv into ratings_train.csv and ratings.test.csv.
             // Program.dataprep();
 
-            //STEP 1: Create MLContext to be shared across the model creation workflow objects 
-            var ctx = new MLContext();
+            //STEP 1: Create MLContext to be shared across the model creation workflow objects
+            MLContext ctx = new MLContext();
 
             //STEP 2: Create a reader by defining the schema for reading the movie recommendation datasets
-            var reader = ctx.Data.TextReader(new TextLoader.Arguments()
+            TextLoader reader = ctx.Data.TextReader(new TextLoader.Arguments()
             {
                 Separator = ",",
                 HasHeader = true,
@@ -49,26 +49,26 @@ namespace MovieRecommenderModel
             IDataView trainingDataView = reader.Read(new MultiFileSource(TrainingDataLocation));
             IDataView testDataView = reader.Read(new MultiFileSource(TestDataLocation));
 
-            //STEP 4: Transform your data by encoding the two features userId and movieID. 
+            //STEP 4: Transform your data by encoding the two features userId and movieID.
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
-            var pipeline = ctx.Transforms.Categorical.OneHotEncoding("userId", "userIdEncoded").
+            EstimatorChain<TransformerChain<Microsoft.ML.Runtime.FactorizationMachine.FieldAwareFactorizationMachinePredictionTransformer>> pipeline = ctx.Transforms.Categorical.OneHotEncoding("userId", "userIdEncoded").
                                           Append(ctx.Transforms.Categorical.OneHotEncoding("movieId", "movieIdEncoded").
                                           Append(ctx.Transforms.Concatenate("Features", "userIdEncoded", "movieIdEncoded")).
                                           Append(ctx.BinaryClassification.Trainers.FieldAwareFactorizationMachine(label:"Label", features:new string[] {
                                                                                                                                       "Features"})));
-            //STEP 5: Train the model fitting to the DataSet  
+            //STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
-            var model = pipeline.Fit(trainingDataView);
+            TransformerChain<TransformerChain<Microsoft.ML.Runtime.FactorizationMachine.FieldAwareFactorizationMachinePredictionTransformer>> model = pipeline.Fit(trainingDataView);
 
-            //STEP 6: Evaluate the model performance 
+            //STEP 6: Evaluate the model performance
             Console.WriteLine("=============== Evaluating the model ===============");
-            var prediction = model.Transform(testDataView);
-            var metrics = ctx.BinaryClassification.Evaluate(prediction, label: "Label", score:"Score", predictedLabel:"PredictedLabel");
+            IDataView prediction = model.Transform(testDataView);
+            BinaryClassifierEvaluator.CalibratedResult metrics = ctx.BinaryClassification.Evaluate(prediction, label: "Label", score:"Score", predictedLabel:"PredictedLabel");
             Console.WriteLine("Evaluation Metrics: acc:" + Math.Round(metrics.Accuracy, 2) + " auc:" + Math.Round(metrics.Auc,2));
-            
+
             //STEP 7:  Try/test a single prediction by predicting a single movie rating for a specific user
-            var predictionengine = model.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
-            var movieratingprediction = predictionengine.Predict(
+            PredictionFunction<RatingData, RatingPrediction> predictionengine = model.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
+            RatingPrediction movieratingprediction = predictionengine.Predict(
                             new RatingData()
                             {
                                 //Example rating prediction for userId = 6, movieId = 10 (GoldenEye)
@@ -77,9 +77,9 @@ namespace MovieRecommenderModel
                             }
                         );
 
-            //STEP 8:  Save model to disk 
+            //STEP 8:  Save model to disk
             Console.WriteLine("=============== Writing model to disk ===============");
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (FileStream fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 ctx.Model.Save(model, fs);
       }
 
@@ -88,11 +88,11 @@ namespace MovieRecommenderModel
          * The dataprep method performs two tasks:
          * 1. It goes through all the ratings and replaces the ratings > 3 as 1, suggesting a movie is recommended and ratings < 3 as 0, suggesting
               a movie is not recommended
-           2. This piece of code also splits the ratings.csv into rating-train.csv and ratings-test.csv used for model training and testing respectively. 
+           2. This piece of code also splits the ratings.csv into rating-train.csv and ratings-test.csv used for model training and testing respectively.
          */
         //public static void dataprep()
         //{
-            
+
         //    string[] dataset = File.ReadAllLines(@".\Data\ratings.csv");
 
         //    string[] new_dataset = new string[dataset.Length];
@@ -136,7 +136,7 @@ namespace MovieRecommenderModel
     public class RatingPrediction
     {
         [ColumnName("PredictedLabel")]
-        public bool predictedLabel; 
+        public bool predictedLabel;
 
         public float Score;
     }
