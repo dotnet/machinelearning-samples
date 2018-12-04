@@ -17,7 +17,7 @@ With ML.NET we support the following three recommendation scenarios, depending u
 | Scenario | Algorithm | Link To Sample
 | --- | --- | --- | 
 | You have  UserId, ProductId and Ratings available to you for what users bought and rated.| Matrix Factorization | This sample | 
-| You only have UserId and ProductId's the user bought available to you but not ratings. This is  common in datasets from online stores where you might only have access to purchase history for your customers. With this style of recommendation you can build a recommendation engine which recommends frequently bought items. | One Class Matrix Factorization | Coming Soon | 
+| You only have UserId and ProductId's the user bought available to you but not ratings. This is  common in datasets from online stores where you might only have access to purchase history for your customers. With this style of recommendation you can build a recommendation engine which recommends frequently bought items. | One Class Matrix Factorization | (https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation) | 
 | You want to use more attributes (features) beyond UserId, ProductId and Ratings like Product Description, Product Price etc. for your recommendation engine | Field Aware Factorization Machines | [Movie Recommender with Factorization Machines](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model) | 
 
 
