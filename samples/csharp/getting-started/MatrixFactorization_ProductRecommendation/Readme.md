@@ -1,4 +1,4 @@
-# Movie Recommendation - Matrix Factorization problem sample
+# Product Recommendation - Matrix Factorization problem sample
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
