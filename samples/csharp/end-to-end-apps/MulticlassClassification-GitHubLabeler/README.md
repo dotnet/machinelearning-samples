@@ -66,7 +66,7 @@ For accessing the real issues of a GitHub repo, you call this other method from 
 await PredictLabelsAndUpdateGitHub(ModelFilePathName);
 ```
 
-For testing convenience when reading issues from your GitHub repo, it will only load not labeled issues that were created in the past 10 minutes and are subject to be labeled. You can chenge that config, though:
+For testing convenience when reading issues from your GitHub repo, it will only load not labeled issues that were created in the past 10 minutes and are subject to be labeled. You can change that config, though:
 ```csharp
 Since = DateTime.Now.AddMinutes(-10)
 ```
