@@ -102,7 +102,7 @@ This sample shows one of many recommendation approaches that can be used with ML
 | --- | --- | --- | 
 | You want to use attributes (features) like UserId, ProductId, Ratings, Product Description, Product Price etc. for your  recommendation engine. In such a scenario Field Aware Factorization Machine is a generalized approach you can use to build your recommendation engine | Field Aware Factorization Machines | This sample | 
 | You have  UserId, ProductId and Ratings available to you for what users bought and rated. For this scenario you should use the Matrix Factorization approach | Matrix Factorization | [Matrix Factorization - Recommendation](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/MatrixFactorization_MovieRecommendation)| 
-| You only have UserId and ProductId's the user bought available to you but not ratings. This is  common in datasets from online stores where you might only have access to purchase history for your customers. With this style of recommendation you can build a recommendation engine which recommends frequently bought items. | One Class Matrix Factorization | Coming Soon | 
+| You only have UserId and ProductId's the user bought available to you but not ratings. This is  common in datasets from online stores where you might only have access to purchase history for your customers. With this style of recommendation you can build a recommendation engine which recommends frequently bought items. | One Class Matrix Factorization | [Product Recommender](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation) | 
 
 
 
