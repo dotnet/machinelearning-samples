@@ -38,11 +38,12 @@ To solve this problem, you build and train an ML model on existing training data
 
 Building a model includes: 
 
-* Define the data's schema maped to the datasets to read (`recommendation-ratings-train.csv` and `recommendation-ratings-test.csv`) with a DataReader
+* Download and copy the dataset Amazon0302.txt file from https://snap.stanford.edu/data/amazon0302.html. 
 
-* Matrix Factorization requires the two features userId, movieId to be encoded
+* Replace the column names with only these instead:  ProductID	ProductID_Copurchased
 
-* Matrix Factorization trainer then takes these two encoded features (userId, movieId) as input 
+* Given in the reader we already provide a KeyRange and product ID's are already encoded all we need to do is
+  call the MatrixFactorizationTrainer with a few extra parameters. 
 
 Here's the code which will be used to build the model:
 ```CSharp
@@ -57,7 +58,7 @@ Here's the code which will be used to build the model:
                 Separator = "tab",
                 HasHeader = true,
                 Column = new[]
-{
+            {
                     new TextLoader.Column("Label", DataKind.R4, 0),
                     new TextLoader.Column("ProductID", DataKind.U4, new [] { new TextLoader.Range(0) }, new KeyRange(0, 262110)),
                     new TextLoader.Column("CoPurchaseProductID", DataKind.U4, new [] { new TextLoader.Range(1) }, new KeyRange(0, 262110))
@@ -90,9 +91,9 @@ This will return a trained model.
 
 ```CSharp
 
-            //STEP 5: Train the model fitting to the DataSet
-            //Please add Amazon0302.txt dataset from https://snap.stanford.edu/data/amazon0302.html to Data folder if FileNotFoundException is thrown.
-            var model = est.Fit(traindata);
+    //STEP 5: Train the model fitting to the DataSet
+    //Please add Amazon0302.txt dataset from https://snap.stanford.edu/data/amazon0302.html to Data folder if FileNotFoundException is thrown.
+    var model = est.Fit(traindata);
 
 ```
 
@@ -103,31 +104,31 @@ We will perform predictions for this model by creating a prediction engine/funct
 The prediction engine creation takes in as input the following two classes. 
 
 ```CSharp
-        public class Copurchase_prediction
-        {
-            public float Score { get; set; }
-        }
+    public class Copurchase_prediction
+    {
+        public float Score { get; set; }
+    }
 
-        public class ProductEntry
-        {
-            [KeyType(Contiguous = true, Count = 262111, Min = 0)]
-            public uint ProductID { get; set; }
+    public class ProductEntry
+    {
+        [KeyType(Contiguous = true, Count = 262111, Min = 0)]
+        public uint ProductID { get; set; }
 
-            [KeyType(Contiguous = true, Count = 262111, Min = 0)]
-            public uint CoPurchaseProductID { get; set; }
+        [KeyType(Contiguous = true, Count = 262111, Min = 0)]
+        public uint CoPurchaseProductID { get; set; }
         }
 ```
 
 Once the prediction engine has been created you can predict scores of two products being co-purchased. 
 
 ```CSharp
-        //STEP 6: Create prediction engine and predict the score for Product 63 being co-purchased with Product 3.
-            //        The higher the score the higher the probability for this particular productID being co-purchased 
-            var predictionengine = model.MakePredictionFunction<ProductEntry, Copurchase_prediction>(ctx);
-            var prediction = predictionengine.Predict(
-                new ProductEntry()
-                {
-                    ProductID = 3,
-                    CoPurchaseProductID = 63
-                });
+    //STEP 6: Create prediction engine and predict the score for Product 63 being co-purchased with Product 3.
+    //        The higher the score the higher the probability for this particular productID being co-purchased 
+    var predictionengine = model.MakePredictionFunction<ProductEntry, Copurchase_prediction>(ctx);
+    var prediction = predictionengine.Predict(
+                             new ProductEntry()
+                             {
+                             ProductID = 3,
+                             CoPurchaseProductID = 63
+                             });
 ```
