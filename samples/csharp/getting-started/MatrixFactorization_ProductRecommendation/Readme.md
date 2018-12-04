@@ -48,30 +48,32 @@ Building a model includes:
 Here's the code which will be used to build the model:
 ```CSharp
  
- //STEP 1: Create MLContext to be shared across the model creation workflow objects 
-            var ctx = new MLContext();
+    //STEP 1: Create MLContext to be shared across the model creation workflow objects 
+    var ctx = new MLContext();
 
-            //STEP 2: Create a reader by defining the schema for reading the product co-purchase dataset
-            //        Do remember to replace amazon0302.txt with dataset from https://snap.stanford.edu/data/amazon0302.html
-            var reader = ctx.Data.TextReader(new TextLoader.Arguments()
-            {
-                Separator = "tab",
-                HasHeader = true,
-                Column = new[]
-            {
-                    new TextLoader.Column("Label", DataKind.R4, 0),
-                    new TextLoader.Column("ProductID", DataKind.U4, new [] { new TextLoader.Range(0) }, new KeyRange(0, 262110)),
-                    new TextLoader.Column("CoPurchaseProductID", DataKind.U4, new [] { new TextLoader.Range(1) }, new KeyRange(0, 262110))
-                }
-            });
+    //STEP 2: Create a reader by defining the schema for reading the product co-purchase dataset
+    //        Do remember to replace amazon0302.txt with dataset from 
+              https://snap.stanford.edu/data/amazon0302.html
+    var reader = ctx.Data.TextReader(new TextLoader.Arguments()
+    {
+        Separator = "tab",
+        HasHeader = true,
+        Column = new[]
+        {
+                new TextLoader.Column("Label", DataKind.R4, 0),
+                new TextLoader.Column("ProductID", DataKind.U4, new [] { new TextLoader.Range(0) }, new KeyRange(0, 262110)),
+                new TextLoader.Column("CoPurchaseProductID", DataKind.U4, new [] { new TextLoader.Range(1) }, new KeyRange(0, 262110))
+            }
+        });
 
-            //STEP 3: Read the training data which will be used to train the movie recommendation model
-            var traindata = reader.Read(new MultiFileSource(TrainingDataLocation));
+        //STEP 3: Read the training data which will be used to train the movie recommendation model
+        var traindata = reader.Read(new MultiFileSource(TrainingDataLocation));
 
 
-            //STEP 4: Your data is already encoded so all you need to do is call the MatrixFactorization Trainer with a few extra hyperparameters
-            //        LossFunction, Alpa, Lambda and a few others like K and C as shown below. 
-            var est = ctx.Recommendation().Trainers.MatrixFactorization("ProductID", "CoPurchaseProductID", labelColumn: "Label",
+        //STEP 4: Your data is already encoded so all you need to do is call the MatrixFactorization Trainer with a few extra hyperparameters:
+        //        LossFunction, Alpa, Lambda and a few others like K and C as shown below. 
+        var est = ctx.Recommendation().Trainers.MatrixFactorization("ProductID", "CoPurchaseProductID",  
+                                     labelColumn: "Label",
                                      advancedSettings: s =>
                                      {
                                          s.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
