@@ -126,14 +126,12 @@ namespace MovieRecommenderModel
 
         public string movieId;
 
-        [ColumnName("Label")]
         public float Label;
     }
 
     public class RatingPrediction
     {
-        [ColumnName("PredictedLabel")]
-        public bool predictedLabel; 
+        public bool PredictedLabel; 
 
         public float Score;
     }
