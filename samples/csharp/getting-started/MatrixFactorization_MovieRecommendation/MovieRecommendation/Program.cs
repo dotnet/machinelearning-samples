@@ -45,7 +45,8 @@ namespace MovieRecommendation
             //        to our MatrixFactorizationTrainer.
             var pipeline = mlcontext.Transforms.Categorical.MapValueToKey("userId", "userIdEncoded")
                                     .Append(mlcontext.Transforms.Categorical.MapValueToKey("movieId", "movieIdEncoded")
-                                    .Append(new MatrixFactorizationTrainer(mlcontext, "Label", "userIdEncoded", "movieIdEncoded")));
+                                    .Append(new MatrixFactorizationTrainer(mlcontext, "Label", "userIdEncoded", "movieIdEncoded",
+                                    advancedSettings: s => { s.NumIterations = 20; s.K = 100; })));
 
             //STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
