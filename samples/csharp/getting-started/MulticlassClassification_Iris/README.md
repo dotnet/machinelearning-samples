@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | README.md needs update | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+| v0.7           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -41,58 +41,62 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 Building a model includes: 
 * Uploading data (`iris-train.txt`) with `DataReader`)
-* Transforming the data so it can be used effectively by an ML algorithm (with `ConcatEstimator`)
-* Choosing a learning algorithm (`SdcaMultiClassTrainer`). 
+* Create an Estimator and transform the data to one column so it can be used effectively by an ML algorithm (with `Concatenate`)
+* Choosing a learning algorithm (`StochasticDualCoordinateAscent`). 
 
 
 The initial code is similar to the following:
 ```CSharp
-    //1. Create ML.NET context/environment
-    using (var env = new LocalEnvironment())
-    {
-        //2. Create DataReader with data schema mapped to file's columns
-        var reader = new TextLoader(env,
-                                    new TextLoader.Arguments()
-                                    {
-                                        Separator = "tab",
-                                        HasHeader = true,
-                                        Column = new[]
-                                        {
-                                            new TextLoader.Column("Label", DataKind.R4, 0),
-                                            new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                            new TextLoader.Column("SepalWidth", DataKind.R4, 2),
-                                            new TextLoader.Column("PetalLength", DataKind.R4, 3),
-                                            new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                        }
-                                    });
-                
-        //Load training data
-        IDataView trainingDataView = reader.Read(new MultiFileSource(TrainDataPath));
+// Create MLContext to be shared across the model creation workflow objects 
+// Set a random seed for repeatable/deterministic results across multiple trainings.
+var mlContext = new MLContext(seed: 0);
 
-        //3.Create a flexible pipeline (composed by a chain of estimators) for creating/traing the model.
-        var pipeline = 
-            new ConcatEstimator(env, "Features", new[] { "SepalLength", "SepalWidth", "PetalLength", "PetalWidth" })
-                    .Append(new SdcaMultiClassTrainer(env, new SdcaMultiClassTrainer.Arguments { NumThreads = 1, Shuffle = false },
-                                                            "Features",
-                                                            "Label"));
-    }
+// STEP 1: Common data loading configuration
+var textLoader = IrisTextLoaderFactory.CreateTextLoader(mlContext);
+var trainingDataView = textLoader.Read(TrainDataPath);
+var testDataView = textLoader.Read(TestDataPath);
+
+// STEP 2: Common data process configuration with pipeline data transformations
+var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
+                                                                       "SepalWidth",
+                                                                       "PetalLength",
+                                                                       "PetalWidth" );
+
+// STEP 3: Set the training algorithm, then create and config the modelBuilder                            
+var modelBuilder = new Common.ModelBuilder<IrisData, IrisPrediction>(mlContext, dataProcessPipeline);
+// We apply our selected Trainer 
+var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
+modelBuilder.AddTrainer(trainer);
 ```
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known iris types) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
 
 To perform training we just call the method providing the training dataset (iris-train.txt file) in a DataView object.
 ```CSharp
-var model = pipeline.Fit(trainingDataView);
+// STEP 4: Train the model fitting to the DataSet            
+modelBuilder.Train(trainingDataView);
+
+[...]
+public ITransformer Train(IDataView trainingData)
+{
+    TrainedModel = TrainingPipeline.Fit(trainingData);
+    return TrainedModel;
+}
 ```
 ### 3. Evaluate model
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `MulticlassClassificationContext.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `MulticlassClassification.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
 ```CSharp
-    IDataView testDataView = reader.Read(new MultiFileSource(TestDataPath));
-
-    var predictions = model.Transform(testDataView);
-
-    var multiClassificationCtx = new MulticlassClassificationContext(env);
-    var metrics = multiClassificationCtx.Evaluate(predictions, "Label");
+var metrics = modelBuilder.EvaluateMultiClassClassificationModel(testDataView, "Label");
+Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
+    
+[...]
+public MultiClassClassifierEvaluator.Result EvaluateMultiClassClassificationModel(IDataView testData, string label="Label", string score="Score")
+{
+    CheckTrained();
+    var predictions = TrainedModel.Transform(testData);
+    var metrics = _mlcontext.MulticlassClassification.Evaluate(predictions, label: label, score: score);
+    return metrics;
+}
 ```
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
@@ -101,14 +105,20 @@ If you are not satisfied with the quality of the model, there are a variety of w
 After the model is trained, we can use the `Predict()` API to predict the probability that this flower belongs to each iris type. 
 
 ```CSharp
-//6. Test Sentiment Prediction with one sample text 
-var predictionFunct = model.MakePredictionFunction<IrisData, IrisPrediction>(env);
+var modelScorer = new Common.ModelScorer<IrisData, IrisPrediction>(mlContext);
+modelScorer.LoadModelFromZipFile(ModelPath);
 
-var prediction = predictionFunct.Predict(TestIrisData.Iris1);
+var prediction = modelScorer.PredictSingle(SampleIrisData.Iris1);
 Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {prediction.Score[0]:0.####}");
 Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
 Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
 
+[...]
+public TPrediction PredictSingle(TObservation input)
+{
+    CheckTrainedModelIsLoaded();
+    return PredictionFunction.Predict(input);
+}
 ```
 Where `TestIrisData.Iris1` stores the information about the flower we'd like to predict the type for.
 ```CSharp
