@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7   | Dynamic API | Up-to date | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
+| v0.7   | Dynamic API | Needs to update to v0.8 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
 
 In this sample, you can see how to use ML.NET to build a movie recommendation engine. 
 
