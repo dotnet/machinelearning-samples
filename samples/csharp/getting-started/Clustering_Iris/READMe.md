@@ -1,8 +1,8 @@
-﻿# Clustering Iris Data
+# Clustering Iris Data
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | README.md needs update | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v0.7           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -30,46 +30,39 @@ To solve this problem, first we will build and train an ML model. Then we will u
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ColumnConcatenator`), and choosing a learning algorithm (`KMeansPlusPlusClusterer`). All of those steps are stored in a `LearningPipeline`:
+Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `Concatenate`), and choosing a learning algorithm (`KMeans`). All of those steps are stored in `trainingPipeline`:
 ```CSharp
-// LearningPipeline holds all steps of the learning process: data, transforms, learners.
-using (var env = new LocalEnvironment())
-            {
-                // Create DataReader with data schema mapped to file's columns
-                var reader = new TextLoader(env,
-                                new TextLoader.Arguments()
+//Create the MLContext to share across components for deterministic results
+MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
+
+// STEP 1: Common data loading configuration
+TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
                                 {
                                     Separator = "\t",
                                     HasHeader = true,
                                     Column = new[]
-                                    {
-                                     new TextLoader.Column("Label", DataKind.R4, 0),
-                                     new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),
-                                     new TextLoader.Column("PetalLength", DataKind.R4, 3),
-                                     new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-
-                                    }
+                                                {
+                                                    new TextLoader.Column("Label", DataKind.R4, 0),
+                                                    new TextLoader.Column("SepalLength", DataKind.R4, 1),
+                                                    new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                                                    new TextLoader.Column("PetalLength", DataKind.R4, 3),
+                                                    new TextLoader.Column("PetalWidth", DataKind.R4, 4),
+                                                }
                                 });
-                //Load training data
-                IDataView trainingDataView = reader.Read(new MultiFileSource(DataPath));
 
-            }
+IDataView fullData = textLoader.Read(DataPath);
+
+//STEP 2: Process data transformations in pipeline
+var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth");
+
+// STEP 3: Create and train the model     
+var trainer = mlContext.Clustering.Trainers.KMeans(features: "Features", clustersCount: 3);
+var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on the given data. It is implemented in the `Train()` API. To perform training we just call the method and provide our data object  `IrisData` and  prediction object `ClusterPrediction`.
+Training the model is a process of running the chosen algorithm on the given data. To perform training you need to call the Fit() method.
 ```CSharp
-                // Transform your data and add a learner
-                // Add a learning algorithm to the pipeline. e.g.(What are characteristics of iris is this?)
-                // Convert the Label back into original text (after converting to number in step 3)
-                var pipeline = new ConcatEstimator(env, "Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
-                       .Append(new KMeansPlusPlusTrainer(env, "Features",clustersCount:3));
-
-                // Create and train the model            
-                Console.WriteLine("=============== Create and Train the Model ===============");
-
-                var model = pipeline.Fit(trainingDataView);
-
+var trainedModel = trainingPipeline.Fit(trainingDataView);
 ```
 ### 3. Consume model
 After the model is build and trained, we can use the `Predict()` API to predict the cluster for an iris flower and calculate the distance from given flower parameters to each cluster (each centroid of a cluster).
@@ -84,22 +77,11 @@ After the model is build and trained, we can use the `Predict()` API to predict 
                     PetalWidth = 5.1f,
                 };
 
-                var prediction = model.MakePredictionFunction<IrisData, IrisPrediction>(env).Predict(
-                    sampleIrisData);
+                // Create prediction engine related to the loaded trained model
+                var predFunction = trainedModel.MakePredictionFunction<IrisData, IrisPrediction>(mlContext);
 
-                Console.WriteLine($"Clusters assigned for setosa flowers:"+prediction.SelectedClusterId);
-```
-Where `TestIrisData.Setosa1` stores the information about a setosa iris flower.
-```CSharp
-internal class TestIrisData
-{
-    internal static readonly IrisData Setosa1 = new IrisData()
-    {
-        SepalLength = 3.3f,
-        SepalWidth = 1.6f,
-        PetalLength = 0.2f,
-        PetalWidth = 5.1f,
-    };
-    (...)
-}
+                //Score
+                var resultprediction = predFunction.Predict(sampleIrisData);
+                
+                Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
 ```
