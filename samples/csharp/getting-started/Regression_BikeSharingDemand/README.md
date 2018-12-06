@@ -35,6 +35,7 @@ However, in this example we trains multiple models (instead of a single one), ea
 The following list are the trainers/algorithms used and compared:
 
 - Fast Tree
-- SDCA (Stochastic Dual Coordinate Ascent) Regressor
 - Poisson Regressor
+- SDCA (Stochastic Dual Coordinate Ascent) Regressor
+- FastTreeTweedie
 
