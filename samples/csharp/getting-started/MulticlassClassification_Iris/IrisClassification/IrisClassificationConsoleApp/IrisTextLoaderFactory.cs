@@ -12,19 +12,21 @@ namespace MulticlassClassification_Iris
     {
         public static TextLoader CreateTextLoader(MLContext mlContext)
         {
-            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                                            {
-                                                                Separator = "\t",
-                                                                HasHeader = true,
-                                                                Column = new[]
-                                                                            {
-                                                                                new TextLoader.Column("Label", DataKind.R4, 0),
-                                                                                new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                                                                new TextLoader.Column("SepalWidth", DataKind.R4, 2),
-                                                                                new TextLoader.Column("PetalLength", DataKind.R4, 3),
-                                                                                new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                                                            }
-                                                            });
+            TextLoader textLoader = mlContext.Data.TextReader(
+                new TextLoader.Arguments()
+                {
+                    Separator = "\t",
+                    HasHeader = true,
+                    Column = new[]
+                    {
+                        new TextLoader.Column("Label", DataKind.R4, 0),
+                        new TextLoader.Column("SepalLength", DataKind.R4, 1),
+                        new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                        new TextLoader.Column("PetalLength", DataKind.R4, 3),
+                        new TextLoader.Column("PetalWidth", DataKind.R4, 4),
+                    }
+                });
+
             return textLoader;
         }
     }

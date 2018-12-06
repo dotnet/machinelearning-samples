@@ -76,10 +76,10 @@ namespace ImageClassification.ModelScorer
 
             var data = loader.Read(new MultiFileSource(dataLocation));
 
-            var pipeline = ImageEstimatorsCatalog.LoadImages(catalog: mlContext.Transforms, imageFolder: imagesFolder, columns: ("ImagePath", "ImageReal"))
-                            .Append(ImageEstimatorsCatalog.Resize(mlContext.Transforms, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-                            .Append(ImageEstimatorsCatalog.ExtractPixels(mlContext.Transforms, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-                            .Append(new TensorFlowEstimator(mlContext, modelLocation, new[] { "input" }, new[] { "softmax2" }));
+            var pipeline = mlContext.Transforms.LoadImages(imageFolder: imagesFolder, columns: ("ImagePath", "ImageReal"))
+                            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+                            .Append(mlContext.Transforms.ExtractPixels(new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation, new[] { "input" }, new[] { "softmax2" }));
 
             var modeld = pipeline.Fit(data);
 
