@@ -1,4 +1,11 @@
-# Sentiment Analysis for User Reviews
+# Sentiment Analysis for User Reviews (F#)
+
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.7           | Dynamic API | README.md needs update | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+
+------------------------------------
+
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
 ## Problem
@@ -20,53 +27,85 @@ The common feature for all those examples is that the parameter we want to predi
 ## Solution
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
 
-![Build -> Train -> Evaluate -> Consume](https://github.com/dotnet/machinelearning-samples/raw/master/samples/getting-started/shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](../../../../../master/samples/csharp/getting-started/shared_content/modelpipeline.png)
 
 ### 1. Build model
 
-Building a model includes: uploading data (`sentiment-imdb-train.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `TextFeaturizer`), and choosing a learning algorithm (`FastTreeBinaryClassifier`). All of those steps are stored in a `LearningPipeline`:
+Building a model includes: 
+
+* Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
+
+* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `TextTransform`)
+
+* Choosing a trainer/learning algorithm (such as `LinearClassificationTrainer`) to train the model with. 
+
+The initial code is similar to the following:
+
 ```fsharp
-// LearningPipeline holds all steps of the learning process: data, transforms, learners.  
-let pipeline = LearningPipeline()
-// The TextLoader loads a dataset. The schema of the dataset is specified by passing a class containing
-// all the column names and their types.
-pipeline.Add(TextLoader(TrainDataPath).CreateFrom<SentimentData>())
-// TextFeaturizer is a transform that will be used to featurize an input column to format and clean the data.
-pipeline.Add(TextFeaturizer("Features", "SentimentText"))
-// FastTreeBinaryClassifier is an algorithm that will be used to train the model.
-// It has three hyperparameters for tuning decision tree performance. 
-pipeline.Add(FastTreeBinaryClassifier(NumLeaves = 5, NumTrees = 5, MinDocumentsInLeafs = 2)
+    //1. Create ML.NET context/environment
+    use env = new LocalEnvironment()
+
+    //2. Create DataReader with data schema mapped to file's columns
+    let reader = 
+        TextLoader(
+            env, 
+            TextLoader.Arguments(
+                Separator = "tab", 
+                HasHeader = true, 
+                Column = 
+                    [|
+                        TextLoader.Column("Label", Nullable DataKind.Bool, 0)
+                        TextLoader.Column("Text", Nullable DataKind.Text, 1)
+                    |]
+                )
+            )
+
+    //Load training data
+    let trainingDataView = MultiFileSource(TrainDataPath) |> reader.Read
+
+    printfn "=============== Create and Train the Model ==============="
+
+    let pipeline = 
+        env
+        |> Pipeline.textTransform "Text" "Features"
+        |> Pipeline.append (LinearClassificationTrainer(env, LinearClassificationTrainer.Arguments(), "Features", "Label"))
 ```
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Train()` API. To perform training we just call the method and provide the types for our data object `SentimentData` and  prediction object `SentimentPrediction`.
+Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. To perform training you need to call the Fit() method while providing the training dataset (wikipedia-detox-250-line-data.tsv file) in a DataView object.
 ```fsharp
-let model = pipeline.Train<SentimentData, SentimentPrediction>()
+    let model = 
+        pipeline          
+        |> Pipeline.fit trainingDataView
 ```
 ### 3. Evaluate model
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`sentiment-yelp-test.txt`). This dataset also contains known sentiments. `BinaryClassificationEvaluator` calculates the difference between known fares and values predicted by the model in various metrics.
-```fsharp
-    let testData = TextLoader(TestDataPath).CreateFrom<SentimentData>()
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments.
 
-    let evaluator = BinaryClassificationEvaluator()
-    let metrics = evaluator.Evaluate(model, testData)
+`Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
+
+```fsharp
+    //5. Evaluate the model and show accuracy stats
+    let testDataView = MultiFileSource(TestDataPath) |> reader.Read
+
+    let predictions = model.Transform testDataView
+    let binClassificationCtx = env |> BinaryClassificationContext
+    let metrics = binClassificationCtx.Evaluate(predictions, "Label")
+
+    printfn "Model quality metrics evaluation"
+    printfn "------------------------------------------"
+    printfn "Accuracy: %.2f%%" (metrics.Accuracy * 100.)
 ```
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
-If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
+If you are not satisfied with the quality of the model, you can try to improve it by providing larger training datasets and by choosing different training algorithms with different hyper-parameters for each algorithm.
 
->*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size for performance purposes. You can use bigger labeled sentiment datasets available online to significantly improve the quality.*
+>*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size so the training is quick. You should use bigger labeled sentiment datasets to significantly improve the quality of your models.*
 
 ### 4. Consume model
 After the model is trained, we can use the `Predict()` API to predict the sentiment for new reviews. 
 
 ```fsharp
-let predictions = model.Predict(sentiments)
+    let predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction> env
+    let sampleStatement = { Label = false; Text = "This is a very rude movie" }
+    let resultprediction = predictionFunct.Predict sampleStatement
 ```
-Where `sentiments` contains new user reviews that we want to analyze.
-
-```fsharp
-let sentiments = 
-   [| SentimentData(SentimentText = "Contoso's 11 is a wonderful experience", Sentiment = 1.0)
-      SentimentData(SentimentText = "The acting in this movie is very bad", Sentiment = 0.0)
-      SentimentData(SentimentText = "Joe versus the Volcano Coffee Company is a great film.", Sentiment = 1.0) |]
-```
+Where in `resultprediction.PredictionLabel` will be either 1 or 0 depending if it is a positive or negative predicted sentiment.

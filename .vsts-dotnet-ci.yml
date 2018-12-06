@@ -1,27 +1,83 @@
 phases:
-- phase: CSharpGettingStarted
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build C# GettingStarted
-    inputs:
-      projects: '.\samples\csharp\getting-started\GettingStarted.sln'
-
 - phase: FSharpGettingStarted
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build F# GettingStarted
+    displayName: Build F# GettingStarted samples
     inputs:
-      projects: '.\samples\fsharp\getting-started\GettingStarted.sln'
+      projects: '.\samples\fsharp\v0.7-All-Samples.sln'
 
-- phase: BinaryClasification_Titanic
+- phase: CreditCardFraudDetection
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build BinaryClasification_Titanic
+    displayName: Build CreditCardFraudDetection (BinaryClassification)
     inputs:
-      projects: '.\samples\csharp\examples\BinaryClasification_Titanic\BinaryClasification_Titanic.sln'
+      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
+
+- phase: SentimentAnalysis
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build SentimentAnalysis (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
+
+- phase: CustomerSegmentation
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build CustomerSegmentation (Clustering)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.sln'
+
+- phase: IrisClustering
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Iris (Clustering)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
+
+- phase: TensorFlowScorer
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: TensorFlow Scorer (Image Classification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TF.Model.Scorer.sln'
+
+- phase: TensorFlowFeaturizerEstimator
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: TensorFlow Featurizer Estimator (Image Classification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TF.Featurizer.Estimator.sln'
+
+- phase: IrisMultiClass
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Iris (MulticlassClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\MulticlassClassification_Iris\MulticlassClassification_Iris.sln'
+
+- phase: BikeSharingDemand
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build BikeSharingDemand (Regression)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand.sln'
+
+- phase: TaxiFarePrediction
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build TaxiFarePrediction (Regression)
+    inputs:
+      projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction.sln'
 
 - phase: GitHubLabeler
   queue: Hosted VS2017
@@ -29,4 +85,28 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build GitHubLabeler
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\github-labeler\GitHubLabeler.sln'
+      projects: '.\samples\csharp\end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler.sln'
+
+- phase: eShopDashboardML
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build eShopDashboardML (Regression)
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\Regression-SalesForecast\eShopDashboardML.sln'
+
+- phase: MovieRecommenderE2E
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build MovieRecommender E2E (Recommendation)
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\Recommendation-MovieRecommender\Recommendation_MovieRecommenderApp.sln'
+
+- phase: MovieRecommenderMF
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build MovieRecommender MF (Recommendation)
+    inputs:
+      projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'
