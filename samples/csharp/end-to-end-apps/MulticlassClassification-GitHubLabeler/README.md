@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class  classification | SDCA multi-class classifier |
+| v0.7           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class classification | SDCA multi-class classifier |
 
 
 This is a simple prototype application to demonstrate how to use [ML.NET](https://www.nuget.org/packages/Microsoft.ML/) APIs. The main focus is on creating, training, and using ML (Machine Learning) model that is implemented in Predictor.cs class.
@@ -10,7 +10,7 @@ This is a simple prototype application to demonstrate how to use [ML.NET](https:
 ## Overview
 GitHubLabeler is a .NET Core console application that:
 * trains ML model on your labeled GitHub issues to teach the model what label should be assigned for a new issue. (As an example, you can use `corefx-issues-train.tsv` file that contains issues from public [corefx](https://github.com/dotnet/corefx) repository)
-* labeles a new issue. The application will get all unlabeled open issues from the GitHub repository specified at the `appsettings.json` file and label them using the trained ML model created on the step above.  
+* labels a new issue. The application will get all unlabeled open issues from the GitHub repository specified at the `appsettings.json` file and label them using the trained ML model created on the step above.  
 
 This ML model is using multi-class classification algorithm (`SdcaMultiClassTrainer`) from [ML.NET](https://www.nuget.org/packages/Microsoft.ML/).
 
@@ -66,7 +66,7 @@ For accessing the real issues of a GitHub repo, you call this other method from 
 await PredictLabelsAndUpdateGitHub(ModelFilePathName);
 ```
 
-For testing convenience when reading issues from your GitHub repo, it will only load not labeled issues that were created in the past 10 minutes and are subject to be labeled. You can chenge that config, though:
+For testing convenience when reading issues from your GitHub repo, it will only load not labeled issues that were created in the past 10 minutes and are subject to be labeled. You can change that config, though:
 ```csharp
 Since = DateTime.Now.AddMinutes(-10)
 ```
