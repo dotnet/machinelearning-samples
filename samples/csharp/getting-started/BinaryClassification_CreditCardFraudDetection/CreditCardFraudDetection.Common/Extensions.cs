@@ -50,24 +50,6 @@ namespace CreditCardFraudDetection.Common
             Console.WriteLine($"R scuared: {result.RSquared}");
         }
 
-        //public static IEnumerable<string> GetColumnNames(this ISchema schema)
-        //{
-        //    for (int i = 0; i < schema.ColumnCount; i++)
-        //    {
-        //        if (!schema.IsHidden(i))
-        //            yield return schema.GetColumnName(i);
-        //    }
-        //}
-
-        public static void SaveModel(this ITransformer model, MLContext env, string modelSavePath)
-        {
-            using (var stream = File.Create(modelSavePath))
-            {
-                // Saving and loading happens to 'dynamic' models, so the static typing is lost in the process.
-                model.SaveTo(env, stream);
-            }
-        }
-
         public static ITransformer ReadModel(this MLContext mlContext, string modelLocation)
         {
             ITransformer model;

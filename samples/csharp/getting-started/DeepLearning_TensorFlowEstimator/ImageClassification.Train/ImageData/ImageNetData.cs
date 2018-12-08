@@ -8,10 +8,8 @@ namespace ImageClassification.ImageData
 {
     public class ImageNetData
     {
-        [Column("0")]
         public string ImagePath;
 
-        [Column("1")]
         public string Label;
 
         public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)

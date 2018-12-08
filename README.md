@@ -81,7 +81,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h4>Movie recommender &nbsp;&nbsp;&nbsp;
         <a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon">
         <a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"> </h4>
-       <h4>Product recommender  Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
+       <h4>Product recommender &nbsp;&nbsp;&nbsp;
+        <a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
@@ -117,7 +118,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <img src="images/Ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
-  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/deslike, context, interests, etc.
+  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/dislike, context, interests, etc.
   </td>
   <td>
       <h4>Coming soon</h4>
@@ -140,9 +141,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  </table>
 
-NOTE ABOUT NUGET FEED: Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such us 0.7, 0.8, 0.9 etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.8.0-preview-27128-1), not available in the regular NuGet feed.
+**NuGet feed configuration:** Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such as 0.8, 0.9 etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.8.0-preview-27128-1), not available in the regular NuGet feed.
 
-If that is the case, please use this MyGet feed in Visual Studio:
+If that is the case, please use this MyGet feed in Visual Studio or your NuGet feed configuration:
 
 https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
 

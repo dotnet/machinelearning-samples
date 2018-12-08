@@ -36,7 +36,7 @@ namespace GitHubLabeler
             SetupAppConfiguration();
 
             //1. ChainedBuilderExtensions and Train the model
-            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.SdcaMultiClassTrainer);
+            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.OVAAveragedPerceptronTrainer);
 
             //2. Try/test to predict a label for a single hard-coded Issue
             TestSingleLabelPrediction(ModelFilePathName);
@@ -71,10 +71,12 @@ namespace GitHubLabeler
             var trainingDataView = textLoader.Read(DataSetLocation);
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Categorical.MapValueToKey("Area", "Label")
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Area", "Label")
                             .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
                             .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
-                            .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"));
+                            .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"))
+                            //Sample Caching the DataView so estimators iterating over the data multiple times, instead of always reading from file, using the cache might get better performance
+                            .AppendCacheCheckpoint(mlContext);  //In this sample, only when using OVA (Not SDCA) the cache improves the training time, since OVA works multiple times/iterations over the same data
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             Common.ConsoleHelper.PeekDataViewInConsole<GitHubIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
@@ -98,7 +100,8 @@ namespace GitHubLabeler
                     // In this strategy, a binary classification algorithm is used to train one classifier for each class, "
                     // which distinguishes that class from all other classes. Prediction is then performed by running these binary classifiers, "
                     // and choosing the prediction with the highest confidence score.
-                    trainer = new Ova(mlContext, averagedPerceptronBinaryTrainer);
+                    trainer = mlContext.MulticlassClassification.Trainers.OneVersusAll(averagedPerceptronBinaryTrainer);
+                        
                     break;
                 }
                 default:
@@ -111,6 +114,7 @@ namespace GitHubLabeler
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
+            //(CDLTLL-UNDO)
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
 
             var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn:"Label");
@@ -118,7 +122,16 @@ namespace GitHubLabeler
 
             // STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
+
+            //Measure training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             var trainedModel = trainingPipeline.Fit(trainingDataView);
+
+            //Stop measuring time
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+
 
             // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
             GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "WebSockets communication is slow in my machine", Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." };

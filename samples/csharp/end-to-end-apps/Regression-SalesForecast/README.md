@@ -17,7 +17,7 @@ This end-to-end sample app highlights the usage of ML.NET API by showing the fol
 2. How to predict the next month of Sales Forecasts by using the trained ML model 
    - Implemented as a single, monolithic [web app](src\eShopDashboard) using [ASP.NET Core Razor](https://docs.microsoft.com/aspnet/core/tutorials/razor-pages/). 
 
-The app is also using a SQL Server database for regular product catalog and orders info, as many typical web apps using SQL Server. In this case, since it is an example, it is, by default, using a localdb SQL database so there's no need to setup a real SQL Server. The localdb database will be created, along with with sample populated data, the first time you run the web app.
+The app is also using a SQL Server database for regular product catalog and orders info, as many typical web apps using SQL Server. In this case, since it is an example, it is, by default, using a localdb SQL database so there's no need to setup a real SQL Server. The localdb database will be created, along with sample populated data, the first time you run the web app.
 
 If you want to use a real SQL Server or Azure SQL Database, you just need to change the connection string in the app.
 
@@ -38,7 +38,7 @@ Learn how to set it up in Visual Studio plus further explanations on the code:
 
 ### Problem
 
-This problem is centered around country and product forecasting based on previus sales
+This problem is centered around country and product forecasting based on previous sales
 
 ### DataSet
 
@@ -94,9 +94,9 @@ var textLoader = mlContext.Data.TextReader(new TextLoader.Arguments
 Then, the next step is to build the pipeline transformations and to specify what trainer/algorithm you are going to use.
 In this case you are doing the following transformations:
 - Concat current features to a new Column named NumFeatures
-- Tramsform  productId using [one-hot encoding](https://en.wikipedia.org/wiki/One-hot)
+- Transform  productId using [one-hot encoding](https://en.wikipedia.org/wiki/One-hot)
 - Concat all generated fetures in one column named 'Features'
-- Copy next colmun to rename it to "Label"
+- Copy next column to rename it to "Label"
 - Specify the "Fast Tree Tweedie" Trainer as the algorithm to apply to the model
 
 After designing the pipeline, you can load the dataset into the DataView, although this step is just configuration, it is lazy and won't be loaded until training the model in the next step.
@@ -141,7 +141,7 @@ using (var file = File.OpenWrite(outputModelPath))
 
 #### 5. Try the model with a simple test prediction
 
-Basically, you  can load the model from the .ZIP file create some sample data, create the "prediction function" and finally you make a prediction.
+Basically, you can load the model from the .ZIP file create some sample data, create the "prediction function" and finally you make a prediction.
 
 
 ```csharp

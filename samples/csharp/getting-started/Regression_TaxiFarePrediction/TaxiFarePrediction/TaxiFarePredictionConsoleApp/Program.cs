@@ -14,6 +14,7 @@ using Microsoft.ML.Transforms.Normalizers;
 using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using Regression_TaxiFarePrediction.DataStructures;
 using Common;
+using Microsoft.ML.Data;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -65,8 +66,13 @@ namespace Regression_TaxiFarePrediction
                                                             }
                                             });
 
-            IDataView trainingDataView = textLoader.Read(TrainDataPath);
+            IDataView baseTrainingDataView = textLoader.Read(TrainDataPath);
             IDataView testDataView = textLoader.Read(TestDataPath);
+
+            //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
+            var cnt = baseTrainingDataView.GetColumn<float>(mlContext, "FareAmount").Count();
+            IDataView trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, "FareAmount", lowerBound: 1, upperBound: 150);
+            var cnt2 = trainingDataView.GetColumn<float>(mlContext, "FareAmount").Count();
 
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.CopyColumns("FareAmount", "Label")
@@ -83,7 +89,7 @@ namespace Regression_TaxiFarePrediction
             ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-            var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
+            var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet

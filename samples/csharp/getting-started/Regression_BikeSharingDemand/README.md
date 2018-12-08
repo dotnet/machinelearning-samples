@@ -2,13 +2,9 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7-Preview   | Dynamic API | README.md needs update | Console app | .csv files | Demand prediction | Regression | Fast Tree regressor compared to additional regression algorithms|
+| v0.7 | Dynamic API | Up-to-date | Console app | .csv files | Demand prediction | Regression | Fast Tree regressor compared to additional regression algorithms|
 
 In this sample, you can see how to use ML.NET to predict the demand of bikes. Since you are trying to predict specific numeric values based on past observed data, in machine learning this type of method for prediction is known as regression.
-
-**Note**: This sample is being evolving and currently needs to use ML.NET v0.7 (currently in Preview) so you need to use the latest NuGet preview (nightly build) package available at MyGet instead of NuGet.
-The MyGet feed URL you need to configure in Visual Studio is the following:
-https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
 
 ## Problem
 
@@ -35,6 +31,7 @@ However, in this example we trains multiple models (instead of a single one), ea
 The following list are the trainers/algorithms used and compared:
 
 - Fast Tree
-- SDCA (Stochastic Dual Coordinate Ascent) Regressor
 - Poisson Regressor
+- SDCA (Stochastic Dual Coordinate Ascent) Regressor
+- FastTreeTweedie
 
