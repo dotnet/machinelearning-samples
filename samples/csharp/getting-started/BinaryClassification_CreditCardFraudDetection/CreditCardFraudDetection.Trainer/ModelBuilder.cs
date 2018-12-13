@@ -163,7 +163,7 @@ namespace CreditCardFraudDetection.Trainer
                 // save train split 
                 using (var fileStream = File.Create(Path.Combine(_outputPath, "trainData.csv")))
                 {
-                    mlContext.Data.SaveAsText(testData, fileStream, separator: ',', headerRow: true, schema: true);
+                    mlContext.Data.SaveAsText(trainData, fileStream, separator: ',', headerRow: true, schema: true);
                 }
 
             }
