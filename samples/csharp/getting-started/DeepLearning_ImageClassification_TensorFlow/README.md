@@ -36,7 +36,7 @@ The training and testing images are located in the assets folders. These images 
 > https://commons.wikimedia.org/wiki/Teddy_bear  
 
 ## Pre-trained model
-There are multiple models are pre-trained for classifying images. In this case, we will use a model based on an Inception topology, and trained with images from Image.Net. This model can be downloaded from https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip, but it's also available at `/ src / ImageClassification / assets /inputs / inception / tensorflow_inception_graph.pb`.
+There are multiple models which are pre-trained for classifying images. In this case, we will use a model based on an Inception topology, and trained with images from Image.Net. This model can be downloaded from https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip, but it's also available at `/ src / ImageClassification / assets /inputs / inception / tensorflow_inception_graph.pb`.
 
 ##  Solution
 The console application project `ImageClassification.Score` can be used to classify sample images based on the pre-trained Inception-v3 TensorFlow model. 
