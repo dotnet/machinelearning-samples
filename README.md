@@ -157,6 +157,9 @@ In addition to the ML.NET samples provided by Microsoft, we're also highlighting
 Those Community Samples are not maintained by Microsoft but by their owners.
 If you have created any cool ML.NET sample, please, add its info into this [REQUEST issue](https://github.com/dotnet/machinelearning-samples/issues/86) and we'll publish its information in the mentioned page, eventually.
 
+## Translations of Samples:
+- [Chinese Simplified](https://github.com/feiyun0112/machinelearning-samples.zh-cn)
+
 ## Learn more
 
 See [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) for detailed information on tutorials, ML basics, etc.

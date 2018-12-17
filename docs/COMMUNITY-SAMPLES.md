@@ -1,4 +1,4 @@
-# Communtiy Samples
+# Community Samples
 
 This is an ever-evolving page where samples and content from the ML.NET community are highlighted, so anyone in the community can also take advantage of these additional samples.
 
