@@ -78,22 +78,18 @@ namespace Clustering_Iris
                 PetalLength = 0.2f,
                 PetalWidth = 5.1f,
             };
-
-            ///
-            ITransformer model;
+            
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                model = mlContext.Model.Load(stream);
+                ITransformer model = mlContext.Model.Load(stream);
+                // Create prediction engine related to the loaded trained model
+                var predFunction = model.MakePredictionFunction<IrisData, IrisPrediction>(mlContext);
+
+                //Score
+                var resultprediction = predFunction.Predict(sampleIrisData);
+
+                Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
             }
-
-            // Create prediction engine related to the loaded trained model
-            var predFunction = trainedModel.MakePredictionFunction<IrisData, IrisPrediction>(mlContext);
-
-            //Score
-            var resultprediction = predFunction.Predict(sampleIrisData);
-            ///
-
-            Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();           
