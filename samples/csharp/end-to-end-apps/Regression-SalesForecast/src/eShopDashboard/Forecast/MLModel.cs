@@ -1,25 +1,21 @@
 ﻿using Microsoft.ML.Core.Data;
 using Microsoft.ML.Runtime.Data;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-
-using Microsoft.ML.Legacy;
-using Microsoft.ML.Runtime.Api;
 using Microsoft.ML;
 using Microsoft.Extensions.Configuration;
 
 namespace eShopDashboard.Forecast
 {
-    public class CountrySalesModel
+    public class MLModel<TData, TPrediction> 
+                        where TData : class
+                        where TPrediction : class, new()
     {
         private readonly MLContext _mlContext;
         private readonly ITransformer _model;
-        private ObjectPool<PredictionFunction<CountryData, CountrySalesPrediction>> _predictionEnginePool;
+        private readonly ObjectPool<PredictionFunction<TData, TPrediction>> _predictionEnginePool;
 
         //MLContext is injected through DI/IoC
-        public CountrySalesModel(MLContext mlContext, IConfiguration configuration)
+        public MLModel(MLContext mlContext, IConfiguration configuration)
         {
             _mlContext = mlContext;
             string modelFolder = configuration["ForecastModelsPath"];
@@ -31,7 +27,7 @@ namespace eShopDashboard.Forecast
             }
 
             //Create PredictionEngine Object Pool
-            _predictionEnginePool = new ObjectPool<PredictionFunction<CountryData, CountrySalesPrediction>>(() => _model.MakePredictionFunction<CountryData, CountrySalesPrediction>(_mlContext));
+            _predictionEnginePool = new ObjectPool<PredictionFunction<TData, TPrediction>>(() => _model.MakePredictionFunction<TData, TPrediction>(_mlContext));
         }
 
         /// <summary>
