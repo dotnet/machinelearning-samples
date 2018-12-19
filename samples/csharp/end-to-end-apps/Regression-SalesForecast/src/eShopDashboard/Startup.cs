@@ -61,7 +61,7 @@ namespace eShopDashboard
                 MLContext mlContext = ctx.GetRequiredService<MLContext>();
                 string modelFolder = Configuration["ForecastModelsPath"];
                 string modelFilePathName = $"{modelFolder}/country_month_fastTreeTweedie.zip";
-                return new MLModel<CountryData, CountrySalesPrediction>(mlContext, modelFilePathName, minPredictionEngineObjectsInPool:15);
+                return new MLModel<CountryData, CountrySalesPrediction>(mlContext, modelFilePathName, minPredictionEngineObjectsInPool:50);
             });
 
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));

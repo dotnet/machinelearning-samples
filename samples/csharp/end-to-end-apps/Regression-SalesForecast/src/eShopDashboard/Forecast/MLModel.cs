@@ -14,9 +14,10 @@ namespace eShopDashboard.Forecast
         private readonly ITransformer _model;
         private readonly ObjectPool<PredictionFunction<TData, TPrediction>> _predictionEnginePool;
         private readonly int _minPredictionEngineObjectsInPool;
+        private readonly int _maxPredictionEngineObjectsInPool;
 
         //Constructor with modelFilePathName to load
-        public MLModel(MLContext mlContext, string modelFilePathName, int minPredictionEngineObjectsInPool = 10)
+        public MLModel(MLContext mlContext, string modelFilePathName, int minPredictionEngineObjectsInPool = 10, int maxPredictionEngineObjectsInPool = 1000)
         {
             _mlContext = mlContext;
 
@@ -27,17 +28,19 @@ namespace eShopDashboard.Forecast
             }
 
             _minPredictionEngineObjectsInPool = minPredictionEngineObjectsInPool;
+            _maxPredictionEngineObjectsInPool = maxPredictionEngineObjectsInPool;
 
             //Create PredictionEngine Object Pool
             _predictionEnginePool = CreatePredictionEngineObjectPool();
         }
 
         //Constructor with ITransformer model already created
-        public MLModel(MLContext mlContext, ITransformer model, int minPredictionEngineObjectsInPool = 10)
+        public MLModel(MLContext mlContext, ITransformer model, int minPredictionEngineObjectsInPool = 10, int maxPredictionEngineObjectsInPool = 1000)
         {
             _mlContext = mlContext;
             _model = model;
             _minPredictionEngineObjectsInPool = minPredictionEngineObjectsInPool;
+            _maxPredictionEngineObjectsInPool = maxPredictionEngineObjectsInPool;
 
             //Create PredictionEngine Object Pool
             _predictionEnginePool = CreatePredictionEngineObjectPool();
@@ -45,7 +48,9 @@ namespace eShopDashboard.Forecast
 
         private ObjectPool<PredictionFunction<TData, TPrediction>> CreatePredictionEngineObjectPool()
         {
-            return new ObjectPool<PredictionFunction<TData, TPrediction>>(() => _model.MakePredictionFunction<TData, TPrediction>(_mlContext), _minPredictionEngineObjectsInPool);
+            return new ObjectPool<PredictionFunction<TData, TPrediction>>(() => _model.MakePredictionFunction<TData, TPrediction>(_mlContext), 
+                                                                          _minPredictionEngineObjectsInPool, 
+                                                                          _maxPredictionEngineObjectsInPool);
         }
 
         public TPrediction Predict(TData dataSample)
