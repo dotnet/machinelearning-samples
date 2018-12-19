@@ -2,11 +2,11 @@
 using Microsoft.ML.Runtime.Data;
 using System.IO;
 using Microsoft.ML;
-using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Configuration;
 
-namespace eShopDashboard.Forecast
+namespace Common
 {
-    public class MLModel<TData, TPrediction> 
+    public class MLModelEngine<TData, TPrediction> 
                         where TData : class
                         where TPrediction : class, new()
     {
@@ -16,8 +16,13 @@ namespace eShopDashboard.Forecast
         private readonly int _minPredictionEngineObjectsInPool;
         private readonly int _maxPredictionEngineObjectsInPool;
 
+        public int CurrentPredictionEnginePoolSize
+        {
+            get { return _predictionEnginePool.CurrentPoolSize; }
+        }
+
         //Constructor with modelFilePathName to load
-        public MLModel(MLContext mlContext, string modelFilePathName, int minPredictionEngineObjectsInPool = 10, int maxPredictionEngineObjectsInPool = 1000)
+        public MLModelEngine(MLContext mlContext, string modelFilePathName, int minPredictionEngineObjectsInPool = 5, int maxPredictionEngineObjectsInPool = 1000)
         {
             _mlContext = mlContext;
 
@@ -35,7 +40,7 @@ namespace eShopDashboard.Forecast
         }
 
         //Constructor with ITransformer model already created
-        public MLModel(MLContext mlContext, ITransformer model, int minPredictionEngineObjectsInPool = 10, int maxPredictionEngineObjectsInPool = 1000)
+        public MLModelEngine(MLContext mlContext, ITransformer model, int minPredictionEngineObjectsInPool = 5, int maxPredictionEngineObjectsInPool = 1000)
         {
             _mlContext = mlContext;
             _model = model;

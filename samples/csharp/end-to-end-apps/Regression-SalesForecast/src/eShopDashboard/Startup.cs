@@ -13,6 +13,8 @@ using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
 using Serilog;
 
+using Common;
+
 namespace eShopDashboard
 {
     public class Startup
@@ -48,20 +50,20 @@ namespace eShopDashboard
                 return new MLContext(seed: 1);
             });
 
-            services.AddSingleton <MLModel<ProductData, ProductUnitPrediction>>((ctx) =>
+            services.AddSingleton <MLModelEngine<ProductData, ProductUnitPrediction>>((ctx) =>
             {
                 MLContext mlContext = ctx.GetRequiredService<MLContext>();
                 string modelFolder = Configuration["ForecastModelsPath"];
                 string modelFilePathName = $"{modelFolder}/product_month_fastTreeTweedie.zip";
-                return new MLModel<ProductData, ProductUnitPrediction>(mlContext, modelFilePathName);
+                return new MLModelEngine<ProductData, ProductUnitPrediction>(mlContext, modelFilePathName);
             });
 
-            services.AddSingleton<MLModel<CountryData, CountrySalesPrediction>>((ctx) =>
+            services.AddSingleton<MLModelEngine<CountryData, CountrySalesPrediction>>((ctx) =>
             {
                 MLContext mlContext = ctx.GetRequiredService<MLContext>();
                 string modelFolder = Configuration["ForecastModelsPath"];
                 string modelFilePathName = $"{modelFolder}/country_month_fastTreeTweedie.zip";
-                return new MLModel<CountryData, CountrySalesPrediction>(mlContext, modelFilePathName, minPredictionEngineObjectsInPool:50);
+                return new MLModelEngine<CountryData, CountrySalesPrediction>(mlContext, modelFilePathName, minPredictionEngineObjectsInPool:50);
             });
 
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));

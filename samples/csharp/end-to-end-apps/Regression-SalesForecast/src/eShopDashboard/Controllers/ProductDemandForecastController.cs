@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.ML.Runtime.Data;
 using Serilog;
 
+using Common;
+
 namespace eShopDashboard.Controllers
 {
     [Produces("application/json")]
@@ -17,10 +19,10 @@ namespace eShopDashboard.Controllers
     public class ProductDemandForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly MLModel<ProductData, ProductUnitPrediction> productSalesModel;
+        private readonly MLModelEngine<ProductData, ProductUnitPrediction> productSalesModel;
 
         public ProductDemandForecastController(IOptionsSnapshot<AppSettings> appSettings,
-                                               MLModel<ProductData, ProductUnitPrediction> productSalesModel)
+                                               MLModelEngine<ProductData, ProductUnitPrediction> productSalesModel)
         {
             this.appSettings = appSettings.Value;
 

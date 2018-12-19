@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace eShopDashboard.Forecast
+namespace Common
 {
     public class ObjectPool<T>
     {
@@ -12,7 +12,12 @@ namespace eShopDashboard.Forecast
         private Func<T> _objectGenerator;
         private int _maxPoolSize;
 
-        public ObjectPool(Func<T> objectGenerator, int minPoolSize = 5, int maxPoolSize = 5000)
+        public int CurrentPoolSize
+        {
+            get { return _objects.Count; }
+        }
+
+        public ObjectPool(Func<T> objectGenerator, int minPoolSize = 5, int maxPoolSize = 50000)
         {
             if (objectGenerator == null) throw new ArgumentNullException("objectGenerator");
             _objects = new ConcurrentBag<T>();

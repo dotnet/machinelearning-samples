@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.ML.Runtime.Data;
 using Serilog;
 
+using Common;
+
 namespace eShopDashboard.Controllers
 {
     [Produces("application/json")]
@@ -18,11 +20,11 @@ namespace eShopDashboard.Controllers
     public class CountrySalesForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly MLModel<CountryData, CountrySalesPrediction> countrySalesModel;
+        private readonly MLModelEngine<CountryData, CountrySalesPrediction> countrySalesModel;
         private readonly ILogger<CountrySalesForecastController> logger;
 
         public CountrySalesForecastController(IOptionsSnapshot<AppSettings> appSettings,
-                                              MLModel<CountryData, CountrySalesPrediction> countrySalesModel,                                             
+                                              MLModelEngine<CountryData, CountrySalesPrediction> countrySalesModel,                                             
                                               ILogger<CountrySalesForecastController> logger)
         {
             this.appSettings = appSettings.Value;
