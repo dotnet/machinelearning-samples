@@ -53,9 +53,22 @@ namespace Common
 
         private ObjectPool<PredictionFunction<TData, TPrediction>> CreatePredictionEngineObjectPool()
         {
-            return new ObjectPool<PredictionFunction<TData, TPrediction>>(() => _model.MakePredictionFunction<TData, TPrediction>(_mlContext), 
-                                                                          _minPredictionEngineObjectsInPool, 
-                                                                          _maxPredictionEngineObjectsInPool);
+            return new ObjectPool<PredictionFunction<TData, TPrediction>>(objectGenerator:() =>
+                                                                              {
+                                                                                  //Measure PredictionEngine creation
+                                                                                  var watch = System.Diagnostics.Stopwatch.StartNew();
+
+                                                                                  //Make PredictionEngine
+                                                                                  var predEngine = _model.MakePredictionFunction<TData, TPrediction>(_mlContext);
+
+                                                                                  //Stop measuring time
+                                                                                  watch.Stop();
+                                                                                  long elapsedMs = watch.ElapsedMilliseconds;
+                                                                                  
+                                                                                  return predEngine;
+                                                                              }, 
+                                                                          minPoolSize: _minPredictionEngineObjectsInPool,
+                                                                          maxPoolSize: _maxPredictionEngineObjectsInPool);
         }
 
         public TPrediction Predict(TData dataSample)
@@ -63,8 +76,15 @@ namespace Common
             //Get PredictionEngine object from the Object Pool
             PredictionFunction<TData, TPrediction> predictionEngine = _predictionEnginePool.GetObject();
 
+            //Measure Predict() execution time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             //Predict
             TPrediction prediction = predictionEngine.Predict(dataSample);
+
+            //Stop measuring time
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
 
             //Release used PredictionEngine object into the Object Pool
             _predictionEnginePool.PutObject(predictionEngine);
