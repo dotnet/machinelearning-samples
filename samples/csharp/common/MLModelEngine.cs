@@ -15,14 +15,22 @@ namespace Common
         private readonly ObjectPool<PredictionFunction<TData, TPrediction>> _predictionEnginePool;
         private readonly int _minPredictionEngineObjectsInPool;
         private readonly int _maxPredictionEngineObjectsInPool;
+        private readonly double _expirationTime;
 
         public int CurrentPredictionEnginePoolSize
         {
             get { return _predictionEnginePool.CurrentPoolSize; }
         }
 
-        //Constructor with modelFilePathName to load
-        public MLModelEngine(MLContext mlContext, string modelFilePathName, int minPredictionEngineObjectsInPool = 5, int maxPredictionEngineObjectsInPool = 1000)
+        /// <summary>
+        /// Constructor with modelFilePathName to load
+        /// </summary>
+        /// <param name="mlContext">MLContext to use</param>
+        /// <param name="modelFilePathName">Model .ZIP file path name</param>
+        /// <param name="minPredictionEngineObjectsInPool">Minimum number of PredictionEngineObjects in pool, as goal. Could be less but eventually it'll tend to that number</param>
+        /// <param name="maxPredictionEngineObjectsInPool">Maximum number of PredictionEngineObjects in pool</param>
+        /// <param name="expirationTime">Expiration Time (mlSecs) of PredictionEngineObject since added to the pool</param>
+        public MLModelEngine(MLContext mlContext, string modelFilePathName, int minPredictionEngineObjectsInPool = 5, int maxPredictionEngineObjectsInPool = 1000, double expirationTime = 30000)
         {
             _mlContext = mlContext;
 
@@ -34,18 +42,27 @@ namespace Common
 
             _minPredictionEngineObjectsInPool = minPredictionEngineObjectsInPool;
             _maxPredictionEngineObjectsInPool = maxPredictionEngineObjectsInPool;
+            _expirationTime = expirationTime;
 
             //Create PredictionEngine Object Pool
             _predictionEnginePool = CreatePredictionEngineObjectPool();
         }
 
-        //Constructor with ITransformer model already created
-        public MLModelEngine(MLContext mlContext, ITransformer model, int minPredictionEngineObjectsInPool = 5, int maxPredictionEngineObjectsInPool = 1000)
+        /// <summary>
+        /// Constructor with ITransformer model already created
+        /// </summary>
+        /// <param name="mlContext">MLContext to use</param>
+        /// <param name="model">Model/Transformer to use, already created</param>
+        /// <param name="minPredictionEngineObjectsInPool">Minimum number of PredictionEngineObjects in pool, as goal. Could be less but eventually it'll tend to that number</param>
+        /// <param name="maxPredictionEngineObjectsInPool">Maximum number of PredictionEngineObjects in pool</param>
+        /// <param name="expirationTime">Expiration Time (mlSecs) of PredictionEngineObject since added to the pool</param>
+        public MLModelEngine(MLContext mlContext, ITransformer model, int minPredictionEngineObjectsInPool = 5, int maxPredictionEngineObjectsInPool = 1000, double expirationTime = 30000)
         {
             _mlContext = mlContext;
             _model = model;
             _minPredictionEngineObjectsInPool = minPredictionEngineObjectsInPool;
             _maxPredictionEngineObjectsInPool = maxPredictionEngineObjectsInPool;
+            _expirationTime = expirationTime;
 
             //Create PredictionEngine Object Pool
             _predictionEnginePool = CreatePredictionEngineObjectPool();
@@ -54,21 +71,22 @@ namespace Common
         private ObjectPool<PredictionFunction<TData, TPrediction>> CreatePredictionEngineObjectPool()
         {
             return new ObjectPool<PredictionFunction<TData, TPrediction>>(objectGenerator:() =>
-                                                                              {
-                                                                                  //Measure PredictionEngine creation
-                                                                                  var watch = System.Diagnostics.Stopwatch.StartNew();
+                                                                            {
+                                                                                //Measure PredictionEngine creation
+                                                                                var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                                                                                  //Make PredictionEngine
-                                                                                  var predEngine = _model.MakePredictionFunction<TData, TPrediction>(_mlContext);
+                                                                                //Make PredictionEngine
+                                                                                var predEngine = _model.MakePredictionFunction<TData, TPrediction>(_mlContext);
 
-                                                                                  //Stop measuring time
-                                                                                  watch.Stop();
-                                                                                  long elapsedMs = watch.ElapsedMilliseconds;
+                                                                                //Stop measuring time
+                                                                                watch.Stop();
+                                                                                long elapsedMs = watch.ElapsedMilliseconds;
                                                                                   
-                                                                                  return predEngine;
-                                                                              }, 
+                                                                                return predEngine;
+                                                                            }, 
                                                                           minPoolSize: _minPredictionEngineObjectsInPool,
-                                                                          maxPoolSize: _maxPredictionEngineObjectsInPool);
+                                                                          maxPoolSize: _maxPredictionEngineObjectsInPool,
+                                                                          expirationTime: _expirationTime);
         }
 
         public TPrediction Predict(TData dataSample)
