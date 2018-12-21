@@ -65,7 +65,9 @@ namespace eShopDashboard
                 string modelFilePathName = $"{modelFolder}/country_month_fastTreeTweedie.zip";
                 return new MLModelEngine<CountryData, CountrySalesPrediction>(mlContext, 
                                                                               modelFilePathName, 
-                                                                              minPredictionEngineObjectsInPool:50);
+                                                                              minPredictionEngineObjectsInPool:15,
+                                                                              maxPredictionEngineObjectsInPool:1000,
+                                                                              expirationTime:60000);
             });
 
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));

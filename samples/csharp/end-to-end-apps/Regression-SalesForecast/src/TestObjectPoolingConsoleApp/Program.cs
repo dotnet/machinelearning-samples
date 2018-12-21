@@ -26,7 +26,9 @@ namespace TestObjectPoolingConsoleApp
             string modelFilePathName = $"ModelFiles/country_month_fastTreeTweedie.zip";
             var countrySalesModel = new MLModelEngine<CountryData, CountrySalesPrediction>(mlContext, 
                                                                                            modelFilePathName,
-                                                                                           minPredictionEngineObjectsInPool: 2);
+                                                                                           minPredictionEngineObjectsInPool: 50,
+                                                                                           maxPredictionEngineObjectsInPool: 2000,
+                                                                                           expirationTime:30000);
 
             Console.WriteLine("Current number of objects in pool: {0:####.####}", countrySalesModel.CurrentPredictionEnginePoolSize);
 
@@ -49,7 +51,10 @@ namespace TestObjectPoolingConsoleApp
                 // must serialize their access to the static Console class.
                 Console.CursorLeft = 0;
                 var nextMonthPrediction = countrySalesModel.Predict(countrySample);
-              
+
+                //(Wait for a 1/10 second)
+                //System.Threading.Thread.Sleep(1000);
+
                 Console.WriteLine("Prediction: {0:####.####}", nextMonthPrediction.Score);
                 Console.WriteLine("-----------------------------------------");
                 Console.WriteLine("Current number of objects in pool: {0:####.####}", countrySalesModel.CurrentPredictionEnginePoolSize);
