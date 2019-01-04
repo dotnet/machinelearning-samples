@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.ML.Runtime.Data;
 using Serilog;
 
+using Common;
+
 namespace eShopDashboard.Controllers
 {
     [Produces("application/json")]
@@ -17,16 +19,15 @@ namespace eShopDashboard.Controllers
     public class ProductDemandForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly PredictionFunction<ProductData, ProductUnitPrediction> productSalesPredFunction;
+        private readonly MLModelEngine<ProductData, ProductUnitPrediction> productSalesModel;
 
-        public ProductDemandForecastController(IOptionsSnapshot<AppSettings> appSettings, 
-                                     PredictionFunction<ProductData, ProductUnitPrediction> productSalesPredFunction
-                                    )
+        public ProductDemandForecastController(IOptionsSnapshot<AppSettings> appSettings,
+                                               MLModelEngine<ProductData, ProductUnitPrediction> productSalesModel)
         {
             this.appSettings = appSettings.Value;
 
-            // Get injected Product Sales Prediction function
-            this.productSalesPredFunction = productSalesPredFunction;
+            // Get injected Product Sales Model for scoring
+            this.productSalesModel = productSalesModel;
         }
 
         [HttpGet]
@@ -39,23 +40,11 @@ namespace eShopDashboard.Controllers
         {
             // Build product sample
             var inputExample = new ProductData(productId, year, month, units, avg, count, max, min, prev);
-
-            
+          
             ProductUnitPrediction nextMonthUnitDemandEstimation = null;
 
-            //Set the critical section if using Singleton for the PredictionFunction object
-            //               
-            //lock(this.productSalesPredFunction)
-            //{
-                // Returns prediction
-                nextMonthUnitDemandEstimation = this.productSalesPredFunction.Predict(inputExample);
-            //}
-            //
-            // Note that if using Scoped instead of singleton in DI/IoC you can remove the critical section
-            // It depends if you want better performance in single Http calls (using singleton) 
-            // versus better scalability ann global performance if you have many Http requests/threads 
-            // since the critical section is a bottleneck reducing the execution to one thread for that particular Predict() mathod call
-            //
+            //Predict
+            nextMonthUnitDemandEstimation = this.productSalesModel.Predict(inputExample);
 
             return Ok(nextMonthUnitDemandEstimation.Score);
         }

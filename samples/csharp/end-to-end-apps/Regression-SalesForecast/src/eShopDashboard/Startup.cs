@@ -13,6 +13,8 @@ using Microsoft.ML;
 using Microsoft.ML.Runtime.Data;
 using Serilog;
 
+using Common;
+
 namespace eShopDashboard
 {
     public class Startup
@@ -48,41 +50,25 @@ namespace eShopDashboard
                 return new MLContext(seed: 1);
             });
 
-            // ProductSalesModel created as singleton for the whole ASP.NET Core app
-            // since it is threadsafe and models can be pretty large objects
-            services.AddSingleton<ProductSalesModel>();
-
-            // PredictionFunction for "ProductSales" created as scoped because it is not thread-safe
-            // Prediction Functions should be be re-used across calls because there are expensive initializations
-            // If set to be used as Singleton is very important to use critical sections "lock(predFunct)" in the code
-            // because the 'Predict()' method is not reentrant. 
-            //
-            //services.AddSingleton<PredictionFunction<ProductData, ProductUnitPrediction>>((ctx) =>
-            services.AddScoped<PredictionFunction<ProductData, ProductUnitPrediction>>((ctx) =>
+            services.AddSingleton <MLModelEngine<ProductData, ProductUnitPrediction>>((ctx) =>
             {
-                //Create the Prediction Function object from its related model
-                var model = ctx.GetRequiredService<ProductSalesModel>();
-                return model.CreatePredictionFunction();
+                MLContext mlContext = ctx.GetRequiredService<MLContext>();
+                string modelFolder = Configuration["ForecastModelsPath"];
+                string modelFilePathName = $"{modelFolder}/product_month_fastTreeTweedie.zip";
+                return new MLModelEngine<ProductData, ProductUnitPrediction>(mlContext, modelFilePathName);
             });
 
-
-            // CountrySalesModel created as singleton for the whole ASP.NET Core app
-            // since it is threadsafe and models can be pretty large objects
-            services.AddSingleton<CountrySalesModel>();
-
-            // PredictionFunction for "CountrySales" created as scoped because it is not thread-safe
-            // Prediction Functions should be be re-used across calls because there are expensive initializations
-            // If set to be used as Singleton is very important to use critical sections "lock(predFunct" in the code
-            // because the 'Predict()' method is not reentrant. 
-            //
-            //services.AddSingleton<PredictionFunction<CountryData, CountrySalesPrediction>>((ctx) =>
-            services.AddScoped<PredictionFunction<CountryData, CountrySalesPrediction>>((ctx) =>
+            services.AddSingleton<MLModelEngine<CountryData, CountrySalesPrediction>>((ctx) =>
             {
-                //Create the Prediction Function object from its related model
-                var model = ctx.GetRequiredService<CountrySalesModel>();
-                return model.CreatePredictionFunction();
+                MLContext mlContext = ctx.GetRequiredService<MLContext>();
+                string modelFolder = Configuration["ForecastModelsPath"];
+                string modelFilePathName = $"{modelFolder}/country_month_fastTreeTweedie.zip";
+                return new MLModelEngine<CountryData, CountrySalesPrediction>(mlContext, 
+                                                                              modelFilePathName, 
+                                                                              minPredictionEngineObjectsInPool:15,
+                                                                              maxPredictionEngineObjectsInPool:1000,
+                                                                              expirationTime:60000);
             });
-
 
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));
 
