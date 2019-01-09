@@ -2,8 +2,6 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
 
 using Microsoft.ML.Core.Data;
 using System.Collections.Generic;
@@ -31,8 +29,9 @@ namespace Common
             Console.WriteLine($"-------------------------------------------------");
         }
 
-
-        public static void PrintRegressionMetrics(string name, RegressionEvaluator.Result metrics)
+        //(CDLTLL-Pending to Fix - Results --> ?)
+        //
+        public static void PrintRegressionMetrics(string name, RegressionMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} regression model      ");
@@ -45,18 +44,25 @@ namespace Common
             Console.WriteLine($"*************************************************");
         }
 
-        public static void PrintBinaryClassificationMetrics(string name, BinaryClassifierEvaluator.Result metrics)
+        public static void PrintBinaryClassificationMetrics(string name, CalibratedBinaryClassificationMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*       Metrics for {name} binary classification model      ");
             Console.WriteLine($"*-----------------------------------------------------------");
             Console.WriteLine($"*       Accuracy: {metrics.Accuracy:P2}");
             Console.WriteLine($"*       Auc:      {metrics.Auc:P2}");
+            Console.WriteLine($"*       Auprc:  {metrics.Auprc:P2}");
             Console.WriteLine($"*       F1Score:  {metrics.F1Score:P2}");
+            Console.WriteLine($"*       LogLoss:  {metrics.LogLoss:#.##}");
+            Console.WriteLine($"*       LogLossReduction:  {metrics.LogLossReduction:#.##}");
+            Console.WriteLine($"*       PositivePrecision:  {metrics.PositivePrecision:#.##}");
+            Console.WriteLine($"*       PositiveRecall:  {metrics.PositiveRecall:#.##}");
+            Console.WriteLine($"*       NegativePrecision:  {metrics.NegativePrecision:#.##}");
+            Console.WriteLine($"*       NegativeRecall:  {metrics.NegativeRecall:P2}");
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintMultiClassClassificationMetrics(string name, MultiClassClassifierEvaluator.Result metrics)
+        public static void PrintMultiClassClassificationMetrics(string name, MultiClassClassifierMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*    Metrics for {name} multi-class classification model   ");
@@ -70,68 +76,72 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintRegressionFoldsAverageMetrics(string algorithmName,
-                                                          (RegressionEvaluator.Result metrics,
-                                                           ITransformer model,
-                                                           IDataView scoredTestData)[] crossValidationResults
-                                                         )
-        {
-            var L1 = crossValidationResults.Select(r => r.metrics.L1);
-            var L2 = crossValidationResults.Select(r => r.metrics.L2);
-            var RMS = crossValidationResults.Select(r => r.metrics.L1);
-            var lossFunction = crossValidationResults.Select(r => r.metrics.LossFn);
-            var R2 = crossValidationResults.Select(r => r.metrics.RSquared);
+        //(CDLTLL-Pending to Fix - Results --> ?)
+        //
+        //public static void PrintRegressionFoldsAverageMetrics(string algorithmName,
+        //                                                      (RegressionMetrics metrics,
+        //                                                       ITransformer model,
+        //                                                       IDataView scoredTestData)[] crossValidationResults
+        //                                                     )
+        //{
+        //    var L1 = crossValidationResults.Select(r => r.metrics.L1);
+        //    var L2 = crossValidationResults.Select(r => r.metrics.L2);
+        //    var RMS = crossValidationResults.Select(r => r.metrics.L1);
+        //    var lossFunction = crossValidationResults.Select(r => r.metrics.LossFn);
+        //    var R2 = crossValidationResults.Select(r => r.metrics.RSquared);
 
-            Console.WriteLine($"*************************************************************************************************************");
-            Console.WriteLine($"*       Metrics for {algorithmName} Regression model      ");
-            Console.WriteLine($"*------------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"*       Average L1 Loss:    {L1.Average():0.###} ");
-            Console.WriteLine($"*       Average L2 Loss:    {L2.Average():0.###}  ");
-            Console.WriteLine($"*       Average RMS:          {RMS.Average():0.###}  ");
-            Console.WriteLine($"*       Average Loss Function: {lossFunction.Average():0.###}  ");
-            Console.WriteLine($"*       Average R-squared: {R2.Average():0.###}  ");
-            Console.WriteLine($"*************************************************************************************************************");
-        }
+        //    Console.WriteLine($"*************************************************************************************************************");
+        //    Console.WriteLine($"*       Metrics for {algorithmName} Regression model      ");
+        //    Console.WriteLine($"*------------------------------------------------------------------------------------------------------------");
+        //    Console.WriteLine($"*       Average L1 Loss:    {L1.Average():0.###} ");
+        //    Console.WriteLine($"*       Average L2 Loss:    {L2.Average():0.###}  ");
+        //    Console.WriteLine($"*       Average RMS:          {RMS.Average():0.###}  ");
+        //    Console.WriteLine($"*       Average Loss Function: {lossFunction.Average():0.###}  ");
+        //    Console.WriteLine($"*       Average R-squared: {R2.Average():0.###}  ");
+        //    Console.WriteLine($"*************************************************************************************************************");
+        //}
 
-        public static void PrintMulticlassClassificationFoldsAverageMetrics(
-                                         string algorithmName,
-                                         (MultiClassClassifierEvaluator.Result metrics,
-                                          ITransformer model,
-                                          IDataView scoredTestData)[] crossValResults
-                                                                           )
-        {
-            var metricsInMultipleFolds = crossValResults.Select(r => r.metrics);
+        //(CDLTLL-Pending to Fix - Results --> ?)
+        //
+        //public static void PrintMulticlassClassificationFoldsAverageMetrics(
+        //                                 string algorithmName,
+        //                                 (MultiClassClassifierEvaluator.Metrics metrics,
+        //                                  ITransformer model,
+        //                                  IDataView scoredTestData)[] crossValResults
+        //                                                                   )
+        //{
+        //    var metricsInMultipleFolds = crossValResults.Select(r => r.metrics);
 
-            var microAccuracyValues  = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
-            var microAccuracyAverage = microAccuracyValues.Average();
-            var microAccuraciesStdDeviation = CalculateStandardDeviation(microAccuracyValues);
-            var microAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(microAccuracyValues);
+        //    var microAccuracyValues  = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
+        //    var microAccuracyAverage = microAccuracyValues.Average();
+        //    var microAccuraciesStdDeviation = CalculateStandardDeviation(microAccuracyValues);
+        //    var microAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(microAccuracyValues);
 
-            var macroAccuracyValues = metricsInMultipleFolds.Select(m => m.AccuracyMacro);
-            var macroAccuracyAverage = macroAccuracyValues.Average();
-            var macroAccuraciesStdDeviation = CalculateStandardDeviation(macroAccuracyValues);
-            var macroAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(macroAccuracyValues);
+        //    var macroAccuracyValues = metricsInMultipleFolds.Select(m => m.AccuracyMacro);
+        //    var macroAccuracyAverage = macroAccuracyValues.Average();
+        //    var macroAccuraciesStdDeviation = CalculateStandardDeviation(macroAccuracyValues);
+        //    var macroAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(macroAccuracyValues);
 
-            var logLossValues = metricsInMultipleFolds.Select(m => m.LogLoss);
-            var logLossAverage = logLossValues.Average();
-            var logLossStdDeviation = CalculateStandardDeviation(logLossValues);
-            var logLossConfidenceInterval95 = CalculateConfidenceInterval95(logLossValues);
+        //    var logLossValues = metricsInMultipleFolds.Select(m => m.LogLoss);
+        //    var logLossAverage = logLossValues.Average();
+        //    var logLossStdDeviation = CalculateStandardDeviation(logLossValues);
+        //    var logLossConfidenceInterval95 = CalculateConfidenceInterval95(logLossValues);
 
-            var logLossReductionValues = metricsInMultipleFolds.Select(m => m.LogLossReduction);
-            var logLossReductionAverage = logLossReductionValues.Average();
-            var logLossReductionStdDeviation = CalculateStandardDeviation(logLossReductionValues);
-            var logLossReductionConfidenceInterval95 = CalculateConfidenceInterval95(logLossReductionValues);
+        //    var logLossReductionValues = metricsInMultipleFolds.Select(m => m.LogLossReduction);
+        //    var logLossReductionAverage = logLossReductionValues.Average();
+        //    var logLossReductionStdDeviation = CalculateStandardDeviation(logLossReductionValues);
+        //    var logLossReductionConfidenceInterval95 = CalculateConfidenceInterval95(logLossReductionValues);
 
-            Console.WriteLine($"*************************************************************************************************************");
-            Console.WriteLine($"*       Metrics for {algorithmName} Multi-class Classification model      ");
-            Console.WriteLine($"*------------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"*       Average MicroAccuracy:    {microAccuracyAverage:0.###}  - Standard deviation: ({microAccuraciesStdDeviation:#.###})  - Confidence Interval 95%: ({microAccuraciesConfidenceInterval95:#.###})");
-            Console.WriteLine($"*       Average MacroAccuracy:    {macroAccuracyAverage:0.###}  - Standard deviation: ({macroAccuraciesStdDeviation:#.###})  - Confidence Interval 95%: ({macroAccuraciesConfidenceInterval95:#.###})");
-            Console.WriteLine($"*       Average LogLoss:          {logLossAverage:#.###}  - Standard deviation: ({logLossStdDeviation:#.###})  - Confidence Interval 95%: ({logLossConfidenceInterval95:#.###})");
-            Console.WriteLine($"*       Average LogLossReduction: {logLossReductionAverage:#.###}  - Standard deviation: ({logLossReductionStdDeviation:#.###})  - Confidence Interval 95%: ({logLossReductionConfidenceInterval95:#.###})");
-            Console.WriteLine($"*************************************************************************************************************");
+        //    Console.WriteLine($"*************************************************************************************************************");
+        //    Console.WriteLine($"*       Metrics for {algorithmName} Multi-class Classification model      ");
+        //    Console.WriteLine($"*------------------------------------------------------------------------------------------------------------");
+        //    Console.WriteLine($"*       Average MicroAccuracy:    {microAccuracyAverage:0.###}  - Standard deviation: ({microAccuraciesStdDeviation:#.###})  - Confidence Interval 95%: ({microAccuraciesConfidenceInterval95:#.###})");
+        //    Console.WriteLine($"*       Average MacroAccuracy:    {macroAccuracyAverage:0.###}  - Standard deviation: ({macroAccuraciesStdDeviation:#.###})  - Confidence Interval 95%: ({macroAccuraciesConfidenceInterval95:#.###})");
+        //    Console.WriteLine($"*       Average LogLoss:          {logLossAverage:#.###}  - Standard deviation: ({logLossStdDeviation:#.###})  - Confidence Interval 95%: ({logLossConfidenceInterval95:#.###})");
+        //    Console.WriteLine($"*       Average LogLossReduction: {logLossReductionAverage:#.###}  - Standard deviation: ({logLossReductionStdDeviation:#.###})  - Confidence Interval 95%: ({logLossReductionConfidenceInterval95:#.###})");
+        //    Console.WriteLine($"*************************************************************************************************************");
 
-        }
+        //}
 
         public static double CalculateStandardDeviation (IEnumerable<double> values)
         {
@@ -147,13 +157,14 @@ namespace Common
             return confidenceInterval95;
         }
 
-        public static void PrintClusteringMetrics(string name, ClusteringEvaluator.Result metrics)
+        public static void PrintClusteringMetrics(string name, ClusteringMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} clustering model      ");
             Console.WriteLine($"*------------------------------------------------");
             Console.WriteLine($"*       AvgMinScore: {metrics.AvgMinScore}");
             Console.WriteLine($"*       DBI is: {metrics.Dbi}");
+            Console.WriteLine($"*       NMI is: {metrics.Nmi}");
             Console.WriteLine($"*************************************************");
         }
 

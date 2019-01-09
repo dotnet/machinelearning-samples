@@ -1,19 +1,18 @@
 ﻿using System;
 using System.IO;
-using Microsoft.ML.Runtime.Learners;
-using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
+using Microsoft.ML.Data;
 
 using SentimentAnalysisConsoleApp.DataStructures;
 using Microsoft.ML.Transforms.Text;
 using System.Data;
 using Common;
 
+
 namespace SentimentAnalysisConsoleApp
 {
-
     internal static class Program
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
@@ -46,7 +45,7 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+            TextLoader textLoader = mlContext.Data.CreateTextReader(new TextLoader.Arguments()
                                                     {
                                                         Separator = "tab",
                                                         HasHeader = true,
@@ -105,15 +104,10 @@ namespace SentimentAnalysisConsoleApp
             }
 
             // Create prediction engine related to the loaded trained model
-            var predFunction= trainedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction>(mlContext);
+            var predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext);
 
             //Score
-            var resultprediction = predFunction.Predict(sampleStatement);
-
-            // Using a Model Scorer helper class --> 3 lines, including the object creation, and a single object to deal with
-            // var modelScorer = new ModelScorer<SentimentIssue, SentimentPrediction>(mlContext);
-            // modelScorer.LoadModelFromZipFile(ModelPath);
-            // var resultprediction = modelScorer.PredictSingle(sampleStatement);
+            var resultprediction = predEngine.Predict(sampleStatement);
 
             Console.WriteLine($"=============== Single Prediction  ===============");
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");

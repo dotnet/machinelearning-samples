@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v0.9           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -41,7 +41,7 @@ The initial code is similar to the following:
 
 ```CSharp
 // STEP 1: Common data loading configuration
-TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
+TextLoader textLoader = mlContext.Data.CreateTextReader(new TextLoader.Arguments()
                                         {
                                             Separator = "tab",
                                             HasHeader = true,
@@ -96,10 +96,10 @@ After the model is trained, you can use the `Predict()` API to predict the senti
 
 ```CSharp
 // Create prediction engine related to the loaded trained model
-var predFunction= trainedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction>(mlContext);
+var predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext);
 
 //Score
-var resultprediction = predFunction.Predict(sampleStatement);
+var resultprediction = predEngine.Predict(sampleStatement);
 ```
 
 Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a negative or positive predicted sentiment.
