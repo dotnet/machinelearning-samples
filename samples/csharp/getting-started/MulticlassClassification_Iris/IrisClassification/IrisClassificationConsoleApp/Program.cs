@@ -63,7 +63,7 @@ namespace MulticlassClassification_Iris
                                                                                    "PetalWidth" );
 
 
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder  
+            // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
             var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
