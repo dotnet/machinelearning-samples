@@ -45,16 +45,15 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.CreateTextReader(new TextLoader.Arguments()
-                                                    {
-                                                        Separator = "tab",
-                                                        HasHeader = true,
-                                                        Column = new[]
+            TextLoader textLoader = mlContext.Data.CreateTextReader(                                                        
+                                                        columns:new[]
                                                                     {
                                                                     new TextLoader.Column("Label", DataKind.Bool, 0),
                                                                     new TextLoader.Column("Text", DataKind.Text, 1)
-                                                                    }
-                                                    });
+                                                                    },                                                     
+                                                        hasHeader:true,
+                                                        separatorChar:'\t'
+                                                        );
 
             IDataView trainingDataView = textLoader.Read(TrainDataPath);
             IDataView testDataView = textLoader.Read(TestDataPath);
