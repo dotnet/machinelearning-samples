@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Data;
 using System.IO;
 
 namespace eShopDashboard.Forecast

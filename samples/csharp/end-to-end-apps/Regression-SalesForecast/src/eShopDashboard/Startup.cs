@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Data;
 using Serilog;
 
 using Common;
