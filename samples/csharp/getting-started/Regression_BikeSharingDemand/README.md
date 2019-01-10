@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7 | Dynamic API | Up-to-date | Console app | .csv files | Demand prediction | Regression | Fast Tree regressor compared to additional regression algorithms|
+| v0.9 | Dynamic API | Up-to-date | Console app | .csv files | Demand prediction | Regression | Fast Tree regressor compared to additional regression algorithms|
 
 In this sample, you can see how to use ML.NET to predict the demand of bikes. Since you are trying to predict specific numeric values based on past observed data, in machine learning this type of method for prediction is known as regression.
 
@@ -26,7 +26,7 @@ To solve this problem, you build and train an ML model on existing training data
 
 ![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
-However, in this example we trains multiple models (instead of a single one), each one based on a different regression learner/algorithm and finally we evaluate the accuracy of each approach/algorithm, so you can choose the trained model with better accuracy.
+However, in this example we train multiple models (instead of a single one), each one based on a different regression learner/algorithm and finally we evaluate the accuracy of each approach/algorithm, so you can choose the trained model with better accuracy.
 
 The following list are the trainers/algorithms used and compared:
 
