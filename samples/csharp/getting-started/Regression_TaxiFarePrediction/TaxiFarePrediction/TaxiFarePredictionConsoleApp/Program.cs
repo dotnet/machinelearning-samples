@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using PLplot;
 using System.Diagnostics;
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.Learners;
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML.Transforms;
@@ -50,21 +48,19 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                            {
-                                                Separator = ",",
-                                                HasHeader = true,
-                                                Column = new[]
-                                                            {
-                                                                new TextLoader.Column("VendorId", DataKind.Text, 0),
-                                                                new TextLoader.Column("RateCode", DataKind.Text, 1),
-                                                                new TextLoader.Column("PassengerCount", DataKind.R4, 2),
-                                                                new TextLoader.Column("TripTime", DataKind.R4, 3),
-                                                                new TextLoader.Column("TripDistance", DataKind.R4, 4),
-                                                                new TextLoader.Column("PaymentType", DataKind.Text, 5),
-                                                                new TextLoader.Column("FareAmount", DataKind.R4, 6)
-                                                            }
-                                            });
+            TextLoader textLoader = mlContext.Data.CreateTextReader(new[]
+                                                                    {
+                                                                        new TextLoader.Column("VendorId", DataKind.Text, 0),
+                                                                        new TextLoader.Column("RateCode", DataKind.Text, 1),
+                                                                        new TextLoader.Column("PassengerCount", DataKind.R4, 2),
+                                                                        new TextLoader.Column("TripTime", DataKind.R4, 3),
+                                                                        new TextLoader.Column("TripDistance", DataKind.R4, 4),
+                                                                        new TextLoader.Column("PaymentType", DataKind.Text, 5),
+                                                                        new TextLoader.Column("FareAmount", DataKind.R4, 6)
+                                                                    },
+                                                                     hasHeader: true,
+                                                                     separatorChar: ','
+                                                                    );
 
             IDataView baseTrainingDataView = textLoader.Read(TrainDataPath);
             IDataView testDataView = textLoader.Read(TestDataPath);
@@ -140,10 +136,10 @@ namespace Regression_TaxiFarePrediction
             }
 
             // Create prediction engine related to the loaded trained model
-            var predFunction = trainedModel.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+            var predEngine = trainedModel.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(mlContext);
 
             //Score
-            var resultprediction = predFunction.Predict(taxiTripSample);
+            var resultprediction = predEngine.Predict(taxiTripSample);
             ///
 
             Console.WriteLine($"**********************************************************************");
@@ -163,7 +159,7 @@ namespace Regression_TaxiFarePrediction
             }
 
             // Create prediction engine related to the loaded trained model
-            var predFunction = trainedModel.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+            var predFunction = trainedModel.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(mlContext);
 
             string chartFileName = "";
             using (var pl = new PLStream())

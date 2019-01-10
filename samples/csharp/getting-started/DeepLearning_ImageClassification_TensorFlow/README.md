@@ -1,5 +1,10 @@
 # Image Classification - Scoring sample
 
+| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
+|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+| v0.9           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
+
+
 ## Problem
 Image classification is a common case in many business scenarios. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
 
@@ -57,13 +62,11 @@ There is a single project in the solution named `ImageClassification.Score`, whi
 The `TextLoader.CreateReader()` is used to define the schema of the text file that will be used to load images in the ML.NET model.
 
 ```csharp
- var loader = new TextLoader(env,
-    new TextLoader.Arguments
-    {
-        Column = new[] {
-            new TextLoader.Column("ImagePath", DataKind.Text, 0)
-        }
-    });
+TextLoader loader = mlContext.Data.CreateTextReader(
+                                        columns: new[] 
+                                                    {
+                                                        new TextLoader.Column("ImagePath", DataKind.Text, 0),
+                                                    });
 
 var data = loader.Read(new MultiFileSource(dataLocation));
 ```
@@ -95,11 +98,11 @@ These names are used later in the definition of the estimation pipe: in the case
 
 ![inspecting neural network with netron](./docs/images/netron.png)
 
-Finally, we extract the prediction function after *fitting* the estimator pipeline. The prediction function receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`), and then returns and object of type `ImagePrediction`.  
+Finally, we extract the prediction engine after *fitting* the estimator pipeline. The prediction engine receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`), and then returns and object of type `ImagePrediction`.  
 
 ```
  var modeld = pipeline.Fit(data);
- var predictionFunction = modeld.MakePredictionFunction<ImageNetData, ImageNetPrediction>(env);
+ var predictionEngine = modeld.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(env);
 ```
 When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. Each position in the array is assigned to a label, so for example, if the model has 5 different labels, the array will be length = 5. Each position in the array represents the label's probability in that position; the sum of all array values (probabilities) is equal to one. Then, you need to select the biggest value (probability), and check which is the assigned label to that position.
 

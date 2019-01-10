@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Update-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v0.9           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
@@ -72,9 +72,8 @@ The first step you need to implement is to define the data columns to be loaded 
 [Model build and train](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
 
 ```csharp
-var textLoader = mlContext.Data.TextReader(new TextLoader.Arguments
-                        {
-                            Column = new[] {
+TextLoader textLoader = mlContext.Data.CreateTextReader(
+                            columns: new[] {
                                 new TextLoader.Column("next", DataKind.R4, 0 ),
                                 new TextLoader.Column("productId", DataKind.Text, 1 ),
                                 new TextLoader.Column("year", DataKind.R4, 2 ),
@@ -86,9 +85,8 @@ var textLoader = mlContext.Data.TextReader(new TextLoader.Arguments
                                 new TextLoader.Column("min", DataKind.R4, 8 ),
                                 new TextLoader.Column("prev", DataKind.R4, 9 )
                             },
-                            HasHeader = true,
-                            Separator = ","
-                        });
+                            hasHeader:true,
+                            separatorChar:',');
 ```
 
 Then, the next step is to build the pipeline transformations and to specify what trainer/algorithm you are going to use.
@@ -111,16 +109,7 @@ var trainingPipeline = mlContext.Transforms.Concatenate(outputColumn: "NumFeatur
 var trainingDataView = textLoader.Read(dataPath);
 ```
 
-
-#### 2. Train model
-
-After building the pipeline, we train the forecast model by fitting or using the training data with the selected algorithm. In that step, the model is built, trained and returned as an object:
-
-```csharp
-var model = trainingPipeline.Fit(trainingDataView);
-```
-
-#### 3. Evaluate model
+#### 2. Evaluate model with cross-validation
 
 In this case, the evaluation of the model is performed before training the model with a cross-validation approach, so you obtain metrics telling you how good is the accuracy of the model. 
 
@@ -128,6 +117,13 @@ In this case, the evaluation of the model is performed before training the model
 var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn: "Label");
             
 ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
+```
+#### 3. Train model
+
+After building the pipeline, we train the forecast model by fitting or using the training data with the selected algorithm. In that step, the model is built, trained and returned as an object:
+
+```csharp
+var model = trainingPipeline.Fit(trainingDataView);
 ```
 
 #### 4. Save the model for later comsumption from end-user apps
@@ -151,7 +147,7 @@ using (var stream = File.OpenRead(outputModelPath))
     trainedModel = mlContext.Model.Load(stream);
 }
 
-var predictionFunct = trainedModel.MakePredictionFunction<ProductData, ProductUnitPrediction>(mlContext);
+var predictionEngine = trainedModel.CreatePredictionEngine<ProductData, ProductUnitPrediction>(mlContext);
 
 Console.WriteLine("** Testing Product 1 **");
 
@@ -169,8 +165,8 @@ ProductData dataSample = new ProductData()
     units = 910
 };
 
-//model.Predict() predicts the nextperiod/month forecast to the one provided
-ProductUnitPrediction prediction = predictionFunct.Predict(dataSample);
+// Predict the nextperiod/month forecast to the one provided
+ProductUnitPrediction prediction = predictionEngine.Predict(dataSample);
 Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
 
 ```

@@ -1,5 +1,4 @@
 ﻿using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Data;
 using System.IO;
 using Microsoft.ML;
 //using Microsoft.Extensions.Configuration;
@@ -12,7 +11,7 @@ namespace Common
     {
         private readonly MLContext _mlContext;
         private readonly ITransformer _model;
-        private readonly ObjectPool<PredictionFunction<TData, TPrediction>> _predictionEnginePool;
+        private readonly ObjectPool<PredictionEngine<TData, TPrediction>> _predictionEnginePool;
         private readonly int _minPredictionEngineObjectsInPool;
         private readonly int _maxPredictionEngineObjectsInPool;
         private readonly double _expirationTime;
@@ -68,15 +67,15 @@ namespace Common
             _predictionEnginePool = CreatePredictionEngineObjectPool();
         }
 
-        private ObjectPool<PredictionFunction<TData, TPrediction>> CreatePredictionEngineObjectPool()
+        private ObjectPool<PredictionEngine<TData, TPrediction>> CreatePredictionEngineObjectPool()
         {
-            return new ObjectPool<PredictionFunction<TData, TPrediction>>(objectGenerator:() =>
+            return new ObjectPool<PredictionEngine<TData, TPrediction>>(objectGenerator:() =>
                                                                             {
                                                                                 //Measure PredictionEngine creation
                                                                                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
                                                                                 //Make PredictionEngine
-                                                                                var predEngine = _model.MakePredictionFunction<TData, TPrediction>(_mlContext);
+                                                                                var predEngine = _model.CreatePredictionEngine<TData, TPrediction>(_mlContext);
 
                                                                                 //Stop measuring time
                                                                                 watch.Stop();
@@ -92,7 +91,7 @@ namespace Common
         public TPrediction Predict(TData dataSample)
         {
             //Get PredictionEngine object from the Object Pool
-            PredictionFunction<TData, TPrediction> predictionEngine = _predictionEnginePool.GetObject();
+            PredictionEngine<TData, TPrediction> predictionEngine = _predictionEnginePool.GetObject();
 
             //Measure Predict() execution time
             var watch = System.Diagnostics.Stopwatch.StartNew();

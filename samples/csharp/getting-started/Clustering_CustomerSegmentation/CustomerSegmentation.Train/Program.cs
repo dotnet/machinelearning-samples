@@ -3,13 +3,13 @@ using System.IO;
 
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Transforms;
 using Microsoft.ML.Transforms.Categorical;
 using Microsoft.ML.Transforms.Projections;
 
 using CustomerSegmentation.DataStructures;
 using Common;
+using Microsoft.ML.Data;
 
 namespace CustomerSegmentation
 {
@@ -33,16 +33,14 @@ namespace CustomerSegmentation
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
                 // STEP 1: Common data loading configuration
-                TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                        {
-                                            Separator = ",",
-                                            HasHeader = true,
-                                            Column = new[]
+                TextLoader textLoader = mlContext.Data.CreateTextReader(
+                                            columns:new[]
                                                         {
                                                         new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
                                                         new TextLoader.Column("LastName", DataKind.Text, 32)
-                                                        }
-                                        });
+                                                        },
+                                            hasHeader: true,
+                                            separatorChar: ',');
 
                 var pivotDataView = textLoader.Read(pivotCsv);
 

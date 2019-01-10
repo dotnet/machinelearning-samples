@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Runtime.Api;
-
+﻿
 namespace SentimentAnalysisConsoleApp.DataStructures
 {
     public class SentimentIssue
