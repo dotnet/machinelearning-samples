@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.ImageAnalytics;
 using Microsoft.ML.Transforms;
 using Microsoft.ML;
 
 using ImageClassification.ImageDataStructures;
 using static ImageClassification.ModelScorer.ConsoleHelpers;
 using static ImageClassification.ModelScorer.ModelHelpers;
+using Microsoft.ML.Data;
+using Microsoft.ML.ImageAnalytics;
 
 namespace ImageClassification.ModelScorer
 {
@@ -58,7 +58,7 @@ namespace ImageClassification.ModelScorer
 
         }
 
-        private PredictionFunction<ImageNetData, ImageNetPrediction> LoadModel(string dataLocation, string imagesFolder, string modelLocation)
+        private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string dataLocation, string imagesFolder, string modelLocation)
         {
             ConsoleWriteHeader("Read model");
             Console.WriteLine($"Model location: {modelLocation}");
@@ -66,13 +66,11 @@ namespace ImageClassification.ModelScorer
             Console.WriteLine($"Training file: {dataLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight}), image mean: {ImageNetSettings.mean}");
 
-            var loader = new TextLoader(mlContext,
-                new TextLoader.Arguments
-                {
-                    Column = new[] {
-                        new TextLoader.Column("ImagePath", DataKind.Text, 0),
-                    }
-                });
+            TextLoader loader = mlContext.Data.CreateTextReader(
+                                                    columns: new[] 
+                                                                {
+                                                                  new TextLoader.Column("ImagePath", DataKind.Text, 0),
+                                                                });
 
             var data = loader.Read(new MultiFileSource(dataLocation));
 
@@ -83,12 +81,15 @@ namespace ImageClassification.ModelScorer
 
             var modeld = pipeline.Fit(data);
 
-            var predictionFunction = modeld.MakePredictionFunction<ImageNetData, ImageNetPrediction>(mlContext);
+            var predictionEngine = modeld.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext);
 
-            return predictionFunction;
+            return predictionEngine;
         }
 
-        protected IEnumerable<ImageNetData> PredictDataUsingModel(string testLocation, string imagesFolder, string labelsLocation, PredictionFunction<ImageNetData, ImageNetPrediction> model)
+        protected IEnumerable<ImageNetData> PredictDataUsingModel(string testLocation, 
+                                                                  string imagesFolder, 
+                                                                  string labelsLocation, 
+                                                                  PredictionEngine<ImageNetData, ImageNetPrediction> model)
         {
             ConsoleWriteHeader("Classificate images");
             Console.WriteLine($"Images folder: {imagesFolder}");
