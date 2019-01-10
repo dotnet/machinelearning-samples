@@ -4,8 +4,8 @@ using System.IO;
 using Microsoft.ML;
 using Common;
 using Clustering_Iris.DataStructures;
-using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Core.Data;
+using Microsoft.ML.Data;
 
 namespace Clustering_Iris
 {
@@ -25,19 +25,17 @@ namespace Clustering_Iris
             MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                            {
-                                                Separator = "\t",
-                                                HasHeader = true,
-                                                Column = new[]
+            TextLoader textLoader = mlContext.Data.CreateTextReader(
+                                                columns:new[]
                                                             {
                                                                 new TextLoader.Column("Label", DataKind.R4, 0),
                                                                 new TextLoader.Column("SepalLength", DataKind.R4, 1),
                                                                 new TextLoader.Column("SepalWidth", DataKind.R4, 2),
                                                                 new TextLoader.Column("PetalLength", DataKind.R4, 3),
                                                                 new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                                            }
-                                            });
+                                                            },
+                                                hasHeader:true,
+                                                separatorChar:'\t');
 
             IDataView fullData = textLoader.Read(DataPath);
 
@@ -83,10 +81,10 @@ namespace Clustering_Iris
             {
                 ITransformer model = mlContext.Model.Load(stream);
                 // Create prediction engine related to the loaded trained model
-                var predFunction = model.MakePredictionFunction<IrisData, IrisPrediction>(mlContext);
+                var predEngine = model.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
 
                 //Score
-                var resultprediction = predFunction.Predict(sampleIrisData);
+                var resultprediction = predEngine.Predict(sampleIrisData);
 
                 Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
             }
