@@ -1,10 +1,8 @@
 ﻿using CreditCardFraudDetection.Common;
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Trainers;
 using System.Linq;
 using System.IO;
-using Microsoft.ML.Runtime.Data.IO;
 using System;
 
 namespace CreditCardFraudDetection.Trainer

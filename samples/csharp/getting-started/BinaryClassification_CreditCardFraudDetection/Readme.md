@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Updated to 0.7 | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v0.9           | Dynamic API | Up-to-ate | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -116,8 +116,8 @@ The initial code is similar to the following:
 [...]
 
     //Get all the column names for the Features (All except the Label and the StratificationColumn)
-    var featureColumnNames = _trainData.Schema.GetColumns()
-        .Select(tuple => tuple.column.Name) // Get the column names
+    var featureColumnNames = _trainData.Schema.AsQueryable() 
+        .Select(column => column.Name) // Get the column names
         .Where(name => name != "Label") // Do not include the Label column
         .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
         .ToArray();
@@ -163,7 +163,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
        model = mlContext.Model.Load(file);
    }
 
-   var predictionFunc = model.MakePredictionFunction<TransactionObservation, TransactionFraudPrediction>(mlContext);
+   var predictionEngine = model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(mlContext);
 
 [...]
 
@@ -176,7 +176,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
                                     {
                                         Console.WriteLine($"--- Transaction ---");
                                         testData.PrintToConsole();
-                                        predictionFunc.Predict(testData).PrintToConsole();
+                                        predictionEngine.Predict(testData).PrintToConsole();
                                         Console.WriteLine($"-------------------");
                                     });
 [...]
@@ -189,7 +189,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
                                     {
                                         Console.WriteLine($"--- Transaction ---");
                                         testData.PrintToConsole();
-                                        predictionFunc.Predict(testData).PrintToConsole();
+                                        predictionEngine.Predict(testData).PrintToConsole();
                                         Console.WriteLine($"-------------------");
                                     });
 
