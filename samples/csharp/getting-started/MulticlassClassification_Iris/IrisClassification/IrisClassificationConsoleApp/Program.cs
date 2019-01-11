@@ -60,16 +60,25 @@ namespace MulticlassClassification_Iris
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
                                                                                    "SepalWidth",
                                                                                    "PetalLength",
-                                                                                   "PetalWidth" );
-
+                                                                                   "PetalWidth").AppendCacheCheckpoint(mlContext);
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
             var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
+
+            //Measure training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             Console.WriteLine("=============== Training the model ===============");
             ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
+
+            //Stop measuring time
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine($"***** Training time: {elapsedMs/1000} seconds *****");
+
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
