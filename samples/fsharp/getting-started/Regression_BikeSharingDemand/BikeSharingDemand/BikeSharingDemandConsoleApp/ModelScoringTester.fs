@@ -40,5 +40,5 @@ let visualizeSomePredictions testDataLocation modelScorer numberOfPredictions =
             modelScorer 
             |> Common.ModelScorer.predictSingle testData.[i]
 
-        Common.ConsoleHelper.printRegressionPredictionVersusObserved (int prediction.PredictedCount) (testData.[i].Count.ToString())
+        Common.ConsoleHelper.printRegressionPredictionVersusObserved (float prediction.PredictedCount) (testData.[i].Count.ToString())
     
