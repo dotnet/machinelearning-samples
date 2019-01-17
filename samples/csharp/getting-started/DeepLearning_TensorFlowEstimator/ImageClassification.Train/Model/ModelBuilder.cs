@@ -88,7 +88,8 @@ namespace ImageClassification.Model
             ConsoleWriteHeader("Save model to local file");
             ModelHelpers.DeleteAssets(outputModelLocation);
             using (var f = new FileStream(outputModelLocation, FileMode.Create))
-                model.SaveTo(mlContext, f);
+                mlContext.Model.Save(model, f);
+
             Console.WriteLine($"Model saved: {outputModelLocation}");
         }
 
