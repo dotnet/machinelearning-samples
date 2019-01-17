@@ -1,18 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using ImageClassification.ImageData;
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.ImageAnalytics;
-using Microsoft.ML.Transforms;
-using Microsoft.ML.Runtime;
 using Microsoft.ML;
-using Microsoft.ML.Trainers;
-using Microsoft.ML.Runtime.Api;
+using Microsoft.ML.Data;
+using Microsoft.ML.ImageAnalytics;
+using ImageClassification.ImageData;
 using static ImageClassification.Model.ConsoleHelpers;
-using Microsoft.ML.Runtime.Learners;
-using Microsoft.ML.Transforms.Categorical;
-using Microsoft.ML.Transforms.Conversions;
 
 namespace ImageClassification.Model
 {
@@ -54,7 +47,7 @@ namespace ImageClassification.Model
 
 
 
-            var loader = new TextLoader(mlContext,
+            var loader = mlContext.Data.CreateTextReader(
                 new TextLoader.Arguments
                 {
                     Column = new[] {
@@ -63,23 +56,24 @@ namespace ImageClassification.Model
                     }
                 });
 
-            var pipeline = mlContext.Transforms.Categorical.MapValueToKey("Label", "LabelTokey")
-                            .Append(new ImageLoadingEstimator(mlContext, imagesFolder, ("ImagePath", "ImageReal")))
-                            .Append(new ImageResizingEstimator(mlContext, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-                            .Append(new ImagePixelExtractingEstimator(mlContext, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-                            .Append(new TensorFlowEstimator(mlContext, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
-                            .Append(new SdcaMultiClassTrainer(mlContext, "softmax2_pre_activation", "LabelTokey"))
-                            .Append(new KeyToValueEstimator(mlContext, ("PredictedLabel", "PredictedLabelValue")));
+            var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey")
+                            .Append(mlContext.Transforms.LoadImages(imagesFolder, ("ImagePath", "ImageReal")))
+                            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
+                            .Append(mlContext.Transforms.ScoreTensorFlowModel(featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
+                            .Append(mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent("LabelTokey", "softmax2_pre_activation"))
+                            .Append(mlContext.Transforms.Conversion.MapKeyToValue(("PredictedLabel", "PredictedLabelValue")));
 
             // Train the pipeline
             ConsoleWriteHeader("Training classification model");
-            var data = loader.Read(new MultiFileSource(dataLocation));
+            var data = loader.Read(dataLocation);
             var model = pipeline.Fit(data);
 
             // Process the training data through the model
             // This is an optional step, but it's useful for debugging issues
             var trainData = model.Transform(data);
-            var loadedModelOutputColumnNames = trainData.Schema.GetColumnNames();
+            var loadedModelOutputColumnNames = trainData.Schema
+                .Where(col => !col.IsHidden).Select(col => col.Name);
             var trainData2 = trainData.AsEnumerable<ImageNetPipeline>(mlContext, false, true).ToList();
             trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
