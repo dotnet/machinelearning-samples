@@ -14,12 +14,12 @@ module ModelScorer =
     let loadModelFromZipFile<'TObservation, 'TPrediction when 'TPrediction : (new : unit -> 'TPrediction) and 'TPrediction : not struct and 'TObservation : not struct> modelPath (mlContext : MLContext) =
         use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
         let trainedModel = TransformerChain.LoadFrom(mlContext, stream)
-        let predictionFunction = trainedModel.CreatePredictionEngine<'TObservation, 'TPrediction>(mlContext);
+        let predictionFunction = trainedModel.CreatePredictionEngine<'TObservation, 'TPrediction>(mlContext)
        
         mlContext, trainedModel, predictionFunction
 
     let setTrainedModel<'TObservation, 'TPrediction when 'TPrediction : (new : unit -> 'TPrediction) and 'TPrediction : not struct and 'TObservation : not struct> (trainedModel : ITransformer) (mlContext : MLContext) =
-        let predictionFunction = trainedModel.CreatePredictionEngine<'TObservation, 'TPrediction>(mlContext);
+        let predictionFunction = trainedModel.CreatePredictionEngine<'TObservation, 'TPrediction>(mlContext)
        
         mlContext, trainedModel, predictionFunction
 
@@ -29,5 +29,5 @@ module ModelScorer =
 
     let predictSingle (input : 'TObservation) (mlContext : MLContext, trainedModel, predictionFunction : PredictionEngine<'TObservation, 'TPrediction>) =
         checkTrainedModelIsLoaded trainedModel
-        predictionFunction.Predict(input);
+        predictionFunction.Predict input
         

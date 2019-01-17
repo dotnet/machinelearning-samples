@@ -3,7 +3,7 @@
 open System
 open System.IO
 open Microsoft.ML
-open Microsoft.ML.Runtime.Data
+open Microsoft.ML.Data
 open SentimentAnalysis.DataStructures.Model
 
 
@@ -16,41 +16,37 @@ let testDataPath = sprintf @"%s/wikipedia-detox-250-line-test.tsv" baseDatasetsL
 let baseModelsPath = @"../../../../MLModels";
 let modelPath = sprintf @"%s/SentimentModel.zip" baseModelsPath
 
-let dataLoader (mlContext : MLContext) =
-    mlContext.Data.TextReader(
-        TextLoader.Arguments(
-            Separator = "tab",
-            HasHeader = true,
-            Column = 
-                [|
-                    TextLoader.Column("Label", Nullable DataKind.Bool, 0)
-                    TextLoader.Column("Text", Nullable DataKind.Text, 1)
-                |]
-        )
-    )
+
 
 let read (dataPath : string) (dataLoader : TextLoader) =
     dataLoader.Read dataPath
 
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 1: Common data loading configuration
-    let trainingDataView = 
-        dataLoader mlContext
-        |> read trainDataPath
+    let textLoader =
+        mlContext.Data.CreateTextReader (
+            columns = 
+                [|
+                    TextLoader.Column("Label", Nullable DataKind.Bool, 0)
+                    TextLoader.Column("Text", Nullable DataKind.Text, 1)
+                |],
+            hasHeader = true,
+            separatorChar = '\t'
+        )
 
-    let testDataView = 
-        dataLoader mlContext
-        |> read testDataPath
+    let trainingDataView = textLoader.Read trainDataPath
+    let testDataView = textLoader.Read testDataPath
 
-    // STEP 2: Common data process configuration with pipeline data transformations
-    let dataProcessPipeline =
-        mlContext.Transforms.Text.FeaturizeText("Text", "Features")
+
+    // STEP 2: Common data process configuration with pipeline data transformations          
+    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features")
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<SentimentIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore
+    Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
 
-    // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.BinaryClassification.Trainers.FastTree(label = "Label", features = "Features")
+    // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
+    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn = "Label", featureColumn = "Features")
     let modelBuilder = 
         Common.ModelBuilder.create mlContext dataProcessPipeline
         |> Common.ModelBuilder.addTrainer trainer
@@ -63,19 +59,18 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
-    let metrics = 
-        (trainedModel, modelBuilder)
-        |> Common.ModelBuilder.evaluateBinaryClassificationModel testDataView "Label" "Score"
+    let predictions = trainedModel.Transform testDataView
+    let metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score")
 
     Common.ConsoleHelper.printBinaryClassificationMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
-    printfn "=============== Saving the model to a file ==============="
     (trainedModel, modelBuilder)
     |> Common.ModelBuilder.saveModelAsFile modelPath
 
+
+// (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
 let testSinglePrediction (mlContext : MLContext) =
-    // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
     let sampleStatement = { Text = "This is a very rude movie" }
     
     let resultprediction = 
