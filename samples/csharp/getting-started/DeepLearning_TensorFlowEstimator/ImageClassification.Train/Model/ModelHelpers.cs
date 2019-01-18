@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Runtime.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,15 +70,6 @@ namespace ImageClassification.Model
             var max = probs.Max();
             var index = probs.AsSpan().IndexOf(max);
             return (labels[index],max);
-        }
-
-        public static IEnumerable<string> GetColumnNames(this Schema schema)
-        {
-            for (int i = 0; i < schema.ColumnCount; i++)
-            {
-                if (!MetadataUtils.IsHidden(schema, i)
-)                    yield return schema.GetColumnName(i);
-            }
         }
     }
 }
