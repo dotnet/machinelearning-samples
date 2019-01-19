@@ -1,7 +1,7 @@
 ﻿namespace TaxiFarePrediction.DataStructures
 
 module DataStructures =
-    open Microsoft.ML.Runtime.Api
+    open Microsoft.ML.Data
 
     [<CLIMutable>]
     type TaxiTrip = {
