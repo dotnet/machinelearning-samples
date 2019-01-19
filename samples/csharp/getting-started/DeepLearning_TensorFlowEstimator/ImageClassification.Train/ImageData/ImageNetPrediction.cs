@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Runtime.Api;
-using System;
+﻿using System;
 
 namespace ImageClassification.ImageData
 {
