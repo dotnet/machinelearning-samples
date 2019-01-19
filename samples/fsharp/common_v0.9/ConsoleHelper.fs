@@ -42,10 +42,10 @@ module ConsoleHelper =
  
         printfn"*       LogLogg:  %.2f%%" (metrics.LogLoss)
         printfn"*       LogLossreduction:  %.2f%%" (metrics.LogLossReduction)
-        printfn"*       PositivePrecision:      %.2f%%" (metrics.PositivePrecision)
-        printfn"*       PositiveRecall:      %.2f%%" (metrics.PositiveRecall)
-        printfn"*       NegativePrecision:      %.2f%%" (metrics.NegativePrecision)
-        printfn"*       NegativeRecall:      %.2f%%" (metrics.NegativeRecall)
+        printfn"*       PositivePrecision:      %.2f" (metrics.PositivePrecision)
+        printfn"*       PositiveRecall:      %.2f" (metrics.PositiveRecall)
+        printfn"*       NegativePrecision:      %.2f" (metrics.NegativePrecision)
+        printfn"*       NegativeRecall:      %.2f" (metrics.NegativeRecall)
         printfn"************************************************************"
 
     let printMultiClassClassificationMetrics name (metrics : MultiClassClassifierMetrics) =
