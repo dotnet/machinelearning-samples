@@ -3,7 +3,7 @@
 open System
 open System.IO
 open Microsoft.ML
-open Microsoft.ML.Runtime.Data
+open Microsoft.ML.Data
 open Clustering_Iris.DataStructures
 open DataStructures
 
@@ -14,12 +14,19 @@ let dataPath = sprintf @"%s/iris-full.txt" baseDatasetsLocation
 let baseModelsPath = @"../../../../MLModels"
 let modelPath = sprintf @"%s/IrisModel.zip" baseModelsPath
 
-let dataLoader (mlContext : MLContext) =
-    mlContext.Data.TextReader(
-        TextLoader.Arguments(
-            Separator = "\t",
-            HasHeader = true,
-            Column = 
+
+[<EntryPoint>]
+let main argv =
+
+    //Create the MLContext to share across components for deterministic results
+    let mlContext = MLContext(seed = Nullable 1)    //Seed set to any number so you have a deterministic environment
+
+    // STEP 1: Common data loading configuration
+    let textLoader = 
+        mlContext.Data.CreateTextReader(
+            hasHeader = true,
+            separatorChar = '\t',
+            columns =
                 [|
                     TextLoader.Column("Label", Nullable DataKind.R4, 0)
                     TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
@@ -28,35 +35,22 @@ let dataLoader (mlContext : MLContext) =
                     TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
                 |]
         )
-    )
 
-let read (dataPath : string) (dataLoader : TextLoader) =
-    dataLoader.Read dataPath
-
-
-[<EntryPoint>]
-let main argv =
-
-    let mlContext = MLContext(seed = Nullable 1)
-
-    //STEP 1: Common data loading
-    let fullData = 
-        dataLoader mlContext
-        |> read dataPath
-
-    let struct (trainingDataView, testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
+    let fullData = textLoader.Read dataPath
+    
+    //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
+    let struct(trainingDataView, testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
 
     //STEP 2: Process data transformations in pipeline
-    let dataProcessPipeline =
-        mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
+    let dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
 
     // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
     Common.ConsoleHelper.peekDataViewInConsole<IrisData> mlContext trainingDataView dataProcessPipeline 10 |> ignore
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
 
+    // STEP 3: Create and train the model     
     let trainer = mlContext.Clustering.Trainers.KMeans(features = "Features", clustersCount = 3)
 
-    // STEP 3: Create and train the model                
     let modelBuilder = 
         Common.ModelBuilder.create mlContext dataProcessPipeline
         |> Common.ModelBuilder.addTrainer trainer

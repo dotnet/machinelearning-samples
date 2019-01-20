@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaxiFarePrediction.Solution
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "TaxiFarePrediction", "getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction\TaxiFarePredictionConsoleApp\TaxiFarePrediction.fsproj", "{2865D3B8-753F-4B61-B452-D5A3D032F9BB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrisClustering.Solution", "IrisClustering.Solution", "{68E5A791-705C-464D-A2AC-A30F0C452A54}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Clustering_Iris", "getting-started\Clustering_Iris\IrisClustering\IrisClusteringConsoleApp\Clustering_Iris.fsproj", "{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{2865D3B8-753F-4B61-B452-D5A3D032F9BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2865D3B8-753F-4B61-B452-D5A3D032F9BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2865D3B8-753F-4B61-B452-D5A3D032F9BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +58,7 @@ Global
 		{AC2541F6-ADDF-4B9A-8216-04900767881E} = {D04EC2CC-4F1B-41B2-AFC6-E406FEA0412E}
 		{CF0F35E4-4A8B-4E9A-A284-B791E404D334} = {ABE9B87E-D778-4F97-B38D-62B4A186A6E5}
 		{2865D3B8-753F-4B61-B452-D5A3D032F9BB} = {740E8A4B-A0C2-4FE2-8561-6F46EA10BDCA}
+		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9} = {68E5A791-705C-464D-A2AC-A30F0C452A54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47D66D3A-D6C7-45A5-8C11-8723039BC142}
