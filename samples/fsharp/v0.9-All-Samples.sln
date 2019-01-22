@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2050
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BikeSharingDemand", "getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\BikeSharingDemand.fsproj", "{A8ECCAB5-C5BC-4485-B9F7-08D34915B467}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BikeSharingDemand.Solution", "BikeSharingDemand.Solution", "{2D72154C-F320-468C-92A5-6F1FAD3577AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SentimentAnalysis.Solution", "SentimentAnalysis.Solution", "{D04EC2CC-4F1B-41B2-AFC6-E406FEA0412E}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SentimentAnalysisConsoleApp", "getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis\SentimentAnalysisConsoleApp\SentimentAnalysisConsoleApp.fsproj", "{AC2541F6-ADDF-4B9A-8216-04900767881E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8ECCAB5-C5BC-4485-B9F7-08D34915B467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8ECCAB5-C5BC-4485-B9F7-08D34915B467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8ECCAB5-C5BC-4485-B9F7-08D34915B467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8ECCAB5-C5BC-4485-B9F7-08D34915B467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC2541F6-ADDF-4B9A-8216-04900767881E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC2541F6-ADDF-4B9A-8216-04900767881E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC2541F6-ADDF-4B9A-8216-04900767881E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC2541F6-ADDF-4B9A-8216-04900767881E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A8ECCAB5-C5BC-4485-B9F7-08D34915B467} = {2D72154C-F320-468C-92A5-6F1FAD3577AA}
+		{AC2541F6-ADDF-4B9A-8216-04900767881E} = {D04EC2CC-4F1B-41B2-AFC6-E406FEA0412E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {47D66D3A-D6C7-45A5-8C11-8723039BC142}
+	EndGlobalSection
+EndGlobal
