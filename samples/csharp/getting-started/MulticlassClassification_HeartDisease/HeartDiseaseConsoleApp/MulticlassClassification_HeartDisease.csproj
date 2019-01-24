@@ -4,13 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-  
-    <ItemGroup>
-    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="..\..\..\common\ModelBuilder.cs" Link="Common\ModelBuilder.cs" />
-    <Compile Include="..\..\..\common\ModelScorer.cs" Link="Common\ModelScorer.cs" />
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="..\Data\HeartTest.csv" Link="Data\HeartTest.csv" />
     <Content Include="..\Data\HeartTraining.csv" Link="Data\HeartTraining.csv" />
@@ -23,7 +16,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="0.7.0" />
+    <PackageReference Include="Microsoft.ML" Version="0.9.0" />
   </ItemGroup>
 
 </Project>
