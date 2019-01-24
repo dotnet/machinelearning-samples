@@ -1,11 +1,4 @@
 phases:
-- phase: FSharpGettingStarted
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build F# GettingStarted samples
-    inputs:
-      projects: '.\samples\fsharp\v0.7-All-Samples.sln'
 
 - phase: CreditCardFraudDetection
   queue: Hosted VS2017
@@ -93,4 +86,20 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build eShopDashboardML (Regression)
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\eShopDashboardML\eShopDashboardML.sln'
+      projects: '.\samples\csharp\end-to-end-apps\Regression-SalesForecast\eShopDashboardML.sln'
+
+- phase: MovieRecommenderE2E
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build MovieRecommender E2E (Recommendation)
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\Recommendation-MovieRecommender\Recommendation_MovieRecommenderApp.sln'
+
+- phase: MovieRecommenderMF
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build MovieRecommender MF (Recommendation)
+    inputs:
+      projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'

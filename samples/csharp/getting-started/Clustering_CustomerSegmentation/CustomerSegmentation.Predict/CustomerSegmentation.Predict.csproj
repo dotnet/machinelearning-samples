@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="..\..\..\common\ModelScorer.cs" Link="Common\ModelScorer.cs" />
     <Compile Include="..\CustomerSegmentation.Train\DataStructures\ClusteringPrediction.cs" Link="DataStructures\ClusteringPrediction.cs" />
     <Compile Include="..\CustomerSegmentation.Train\DataStructures\DataHelpers.cs" Link="DataStructures\DataHelpers.cs" />
     <Compile Include="..\CustomerSegmentation.Train\DataStructures\Offer.cs" Link="DataStructures\Offer.cs" />

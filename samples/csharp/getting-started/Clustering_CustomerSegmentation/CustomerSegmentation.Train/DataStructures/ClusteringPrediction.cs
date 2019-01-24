@@ -1,4 +1,5 @@
-﻿using Microsoft.ML.Runtime.Api;
+﻿
+using Microsoft.ML.Data;
 
 namespace CustomerSegmentation.DataStructures
 {

@@ -1,0 +1,36 @@
+﻿@using movierecommender.Models
+@model IEnumerable<Movie>
+@{
+    ViewBag.Title = "Recommendations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1><span class="glyphicon glyphicon-film"></span> Movie Recommender</h1>
+
+<hr>
+<h3>Trending Movies</h3>
+
+<div class="row">
+    @if (Model != null)
+    {
+        foreach (var movie in Model)
+        {
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">@movie.MovieName</h3>
+                        <a href="@Url.Action("Watch", "Movies")" class="btn btn-primary">Play Movie</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h2>Something went wrong! please check the error log.</h2>
+    }
+</div>
+<hr />
+<button type="button" class="btn breadcrumb" id="select" onclick="location.href='@Url.Action("Profiles", "Movies")'">
+    <span class="glyphicon glyphicon-ok "></span> This is fun, let me try again!
+</button>

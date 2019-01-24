@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +10,7 @@ namespace CreditCardFraudDetection.Common
     public static class ConsoleExtensions
     {
 
-        public static void ToConsole(this MultiClassClassifierEvaluator.Result result)
+        public static void ToConsole(this MultiClassClassifierMetrics result)
         {
             Console.WriteLine($"Acuracy macro: {result.AccuracyMacro}");
             Console.WriteLine($"Acuracy micro: {result.AccuracyMicro}");
@@ -27,7 +27,7 @@ namespace CreditCardFraudDetection.Common
 
         }
 
-        public static void ToConsole(this BinaryClassifierEvaluator.CalibratedResult result)
+        public static void ToConsole(this CalibratedBinaryClassificationMetrics result)
         {
             Console.WriteLine($"Area under ROC curve: {result.Auc}");
             Console.WriteLine($"Area under the precision/recall curve: {result.Auprc}");
@@ -41,7 +41,7 @@ namespace CreditCardFraudDetection.Common
 
         }
 
-        public static void ToConsole(this RegressionEvaluator.Result result)
+        public static void ToConsole(this RegressionMetrics result)
         {
             Console.WriteLine($"L1: {result.L1}");
             Console.WriteLine($"L2: {result.L2}");
@@ -50,30 +50,12 @@ namespace CreditCardFraudDetection.Common
             Console.WriteLine($"R scuared: {result.RSquared}");
         }
 
-        //public static IEnumerable<string> GetColumnNames(this ISchema schema)
-        //{
-        //    for (int i = 0; i < schema.ColumnCount; i++)
-        //    {
-        //        if (!schema.IsHidden(i))
-        //            yield return schema.GetColumnName(i);
-        //    }
-        //}
-
-        public static void SaveModel(this ITransformer model, MLContext env, string modelSavePath)
-        {
-            using (var stream = File.Create(modelSavePath))
-            {
-                // Saving and loading happens to 'dynamic' models, so the static typing is lost in the process.
-                model.SaveTo(env, stream);
-            }
-        }
-
-        public static ITransformer ReadModel(this MLContext env, string modelLocation)
+        public static ITransformer ReadModel(this MLContext mlContext, string modelLocation)
         {
             ITransformer model;
             using (var file = File.OpenRead(@modelLocation))
             {
-                model = TransformerChain.LoadFrom(env, file);
+                model = mlContext.Model.Load(file);
             }
             return model;
         }

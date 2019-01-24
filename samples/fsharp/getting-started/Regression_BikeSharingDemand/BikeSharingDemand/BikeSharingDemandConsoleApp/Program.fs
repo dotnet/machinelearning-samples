@@ -3,7 +3,7 @@
 open System
 open Microsoft.ML
 open Microsoft.ML.Core.Data
-open Microsoft.ML.Runtime.Data
+open Microsoft.ML.Data
 
 let modelsLocation = @"../../../../MLModels"
 
@@ -11,12 +11,23 @@ let datasetsLocation = @"../../../../Data"
 let trainingDataLocation = sprintf @"%s/hour_train.csv" datasetsLocation
 let testDataLocation = sprintf @"%s/hour_test.csv" datasetsLocation
 
-let dataLoader (mlContext : MLContext) =
-    mlContext.Data.TextReader(
-        TextLoader.Arguments(
-            Separator = ",",
-            HasHeader = true,
-            Column = 
+
+
+let read (dataPath : string) (dataLoader : TextLoader) =
+    dataLoader.Read dataPath
+
+
+[<EntryPoint>]
+let main argv =
+    
+    // Create MLContext to be shared across the model creation workflow objects 
+    // Set a random seed for repeatable/deterministic results across multiple trainings.
+    let mlContext = MLContext(seed = Nullable 0)
+
+    // 1. Common data loading configuration
+    let textLoader = 
+        mlContext.Data.CreateTextReader(
+            columns = 
                 [|
                     TextLoader.Column("Season", Nullable DataKind.R4, 2)
                     TextLoader.Column("Year", Nullable DataKind.R4, 3)
@@ -31,29 +42,13 @@ let dataLoader (mlContext : MLContext) =
                     TextLoader.Column("Humidity", Nullable DataKind.R4, 12)
                     TextLoader.Column("Windspeed", Nullable DataKind.R4, 13)
                     TextLoader.Column("Count", Nullable DataKind.R4, 16)
-                |]
+                |],
+            hasHeader = true,
+            separatorChar = ','
         )
-    )
-
-let read (dataPath : string) (dataLoader : TextLoader) =
-    dataLoader.Read dataPath
-
-
-[<EntryPoint>]
-let main argv =
-    
-    // Create MLContext to be shared across the model creation workflow objects 
-    // Set a random seed for repeatable/deterministic results across multiple trainings.
-    let mlContext = MLContext(seed = Nullable 0)
-
-    // 1. Common data loading configuration
-    let trainingDataView = 
-        dataLoader mlContext
-        |> read trainingDataLocation
-
-    let testDataView = 
-        dataLoader mlContext
-        |> read testDataLocation
+              
+    let trainingDataView = textLoader.Read(trainingDataLocation)
+    let testDataView = textLoader.Read(testDataLocation)
 
 
     // 2: Common data process configuration with pipeline data transformations
@@ -66,12 +61,11 @@ let main argv =
                                             "Humidity", "Windspeed"))
         |> Common.ConsoleHelper.downcastPipeline
 
-    // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
+    // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
     Common.ConsoleHelper.peekDataViewInConsole<DataStructures.DemandObservation> mlContext trainingDataView dataProcessPipeline 10 |> ignore
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
 
     // Definition of regression trainers/algorithms to use
-    //var regressionLearners = new (string name, IEstimator<ITransformer> value)[]
     let regressionLearners : (string * IEstimator<ITransformer>) array =
         [|
             "FastTree", mlContext.Regression.Trainers.FastTree() |> Common.ConsoleHelper.downcastPipeline
@@ -87,7 +81,7 @@ let main argv =
     // 3. Phase for Training, Evaluation and model file persistence
     // Per each regression trainer: Train, Evaluate, and Save a different model
     for (learnerName, trainer) in regressionLearners do
-        printfn "================== Training model =================="
+        printfn "================== Training the current model =================="
         let modelBuilder = 
             Common.ModelBuilder.create mlContext dataProcessPipeline
             |> Common.ModelBuilder.addTrainer trainer

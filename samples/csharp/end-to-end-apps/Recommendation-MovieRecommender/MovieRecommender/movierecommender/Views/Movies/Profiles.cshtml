@@ -1,0 +1,33 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using movierecommender.Models
+@model IEnumerable<Profile>
+@{
+}
+
+<h1><span class="glyphicon glyphicon-film"></span> Movie Recommender</h1>
+<hr />
+<h3>Who's watching?</h3>
+<br />
+
+<div class="row">
+    @foreach (var profile in Model)
+    {
+        <div class="col-sm-3">
+            <div class="card">
+                <div class="card-block">
+                    <img src="~/images/@profile.ProfileImageName" width="100" height="100" align="bottom" class="img-circle" />
+                    <br /> <br>
+                    <a href="@Url.Action("Watched", "Movies", new { id = profile.ProfileID })" style="font-size:26px" class="card-title">@profile.ProfileName</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<br />
+<br />
+<hr />
+<button type="button" class="btn breadcrumb">
+    <span class="glyphicon glyphicon-dashboard"></span> Manage Profiles
+</button>

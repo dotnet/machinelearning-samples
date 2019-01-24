@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-using Microsoft.ML.Runtime.Learners;
-using Microsoft.ML.Runtime.Data;
 using Microsoft.ML;
+using Microsoft.ML.Core.Data;
+using Microsoft.ML.Data;
 using MulticlassClassification_Iris.DataStructures;
 
 namespace MulticlassClassification_Iris
@@ -38,7 +38,21 @@ namespace MulticlassClassification_Iris
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var textLoader = IrisTextLoaderFactory.CreateTextLoader(mlContext);
+            var textLoader = mlContext.Data.CreateTextReader(
+                                                                new TextLoader.Arguments()
+                                                                {
+                                                                    Separator = "\t",
+                                                                    HasHeader = true,
+                                                                    Column = new[]
+                                                                    {
+                                                                        new TextLoader.Column("Label", DataKind.R4, 0),
+                                                                        new TextLoader.Column("SepalLength", DataKind.R4, 1),
+                                                                        new TextLoader.Column("SepalWidth", DataKind.R4, 2),
+                                                                        new TextLoader.Column("PetalLength", DataKind.R4, 3),
+                                                                        new TextLoader.Column("PetalWidth", DataKind.R4, 4),
+                                                                    }
+                                                                });
+
             var trainingDataView = textLoader.Read(TrainDataPath);
             var testDataView = textLoader.Read(TestDataPath);
 
@@ -46,52 +60,75 @@ namespace MulticlassClassification_Iris
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
                                                                                    "SepalWidth",
                                                                                    "PetalLength",
-                                                                                   "PetalWidth" );
+                                                                                   "PetalWidth").AppendCacheCheckpoint(mlContext);
 
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var modelBuilder = new Common.ModelBuilder<IrisData, IrisPrediction>(mlContext, dataProcessPipeline);
-            // We apply our selected Trainer 
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(label: "Label", features: "Features");
-            modelBuilder.AddTrainer(trainer);
+            // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
+            var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
-            //The pipeline is trained on the dataset that has been loaded and transformed.
+
+            //Measure training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             Console.WriteLine("=============== Training the model ===============");
-            modelBuilder.Train(trainingDataView);
+            ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
+
+            //Stop measuring time
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine($"***** Training time: {elapsedMs/1000} seconds *****");
+
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var metrics = modelBuilder.EvaluateMultiClassClassificationModel(testDataView, "Label");
+            var predictions = trainedModel.Transform(testDataView);
+            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score");
+
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            Console.WriteLine("=============== Saving the model to a file ===============");
-            modelBuilder.SaveModelAsFile(ModelPath);
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                mlContext.Model.Save(trainedModel, fs);
+
+            Console.WriteLine("The model is saved to {0}", ModelPath);
         }
 
         private static void TestSomePredictions(MLContext mlContext)
         {
             //Test Classification Predictions with some hard-coded samples 
 
-            var modelScorer = new Common.ModelScorer<IrisData, IrisPrediction>(mlContext);
-            modelScorer.LoadModelFromZipFile(ModelPath);
+            ITransformer trainedModel;
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                trainedModel = mlContext.Model.Load(stream);
+            }
 
-            var prediction = modelScorer.PredictSingle(SampleIrisData.Iris1);
-            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
+            // Create prediction engine related to the loaded trained model
+            var predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
+
+            //Score sample 1
+            var resultprediction1 = predEngine.Predict(SampleIrisData.Iris1);
+
+            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {resultprediction1.Score[0]:0.####}");
+            Console.WriteLine($"                                           versicolor:  {resultprediction1.Score[1]:0.####}");
+            Console.WriteLine($"                                           virginica:   {resultprediction1.Score[2]:0.####}");
             Console.WriteLine();
 
-            prediction = modelScorer.PredictSingle(SampleIrisData.Iris2);
-            Console.WriteLine($"Actual: virginica.  Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
+            //Score sample 2
+            var resultprediction2 = predEngine.Predict(SampleIrisData.Iris2);
+
+            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {resultprediction2.Score[0]:0.####}");
+            Console.WriteLine($"                                           versicolor:  {resultprediction2.Score[1]:0.####}");
+            Console.WriteLine($"                                           virginica:   {resultprediction2.Score[2]:0.####}");
             Console.WriteLine();
 
-            prediction = modelScorer.PredictSingle(SampleIrisData.Iris3);
-            Console.WriteLine($"Actual: versicolor. Predicted probability: setosa:      {prediction.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {prediction.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {prediction.Score[2]:0.####}");
+            //Score sample 3
+            var resultprediction3 = predEngine.Predict(SampleIrisData.Iris3);
+
+            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {resultprediction3.Score[0]:0.####}");
+            Console.WriteLine($"                                           versicolor:  {resultprediction3.Score[1]:0.####}");
+            Console.WriteLine($"                                           virginica:   {resultprediction3.Score[2]:0.####}");
             Console.WriteLine();
 
         }

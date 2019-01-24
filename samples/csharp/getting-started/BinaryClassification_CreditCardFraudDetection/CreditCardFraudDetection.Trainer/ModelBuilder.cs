@@ -1,16 +1,11 @@
 ﻿using CreditCardFraudDetection.Common;
 using CreditCardFraudDetection.Common.DataModels;
-
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.Data.IO;
 using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
-using static Microsoft.ML.Runtime.Api.GenerateCodeCommand;
-
 using System;
 using System.IO;
 using System.Linq;
-using Microsoft.ML.Runtime;
+using Microsoft.ML.Data;
 
 namespace CreditCardFraudDetection.Trainer
 {
@@ -44,22 +39,24 @@ namespace CreditCardFraudDetection.Trainer
         }
 
         public void TrainFastTreeAndSaveModels( int cvNumFolds = 2, int numLeaves= 20 , int numTrees = 100,
-                                                int minDocumentsInLeafs = 10, double learningRate = 0.2,
-                                                Action<Arguments> advancedSettings = null)
+                                                int minDocumentsInLeafs = 10, double learningRate = 0.2)
         {
             //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
 
-            var pipeline = _mlContext.Transforms.Concatenate("Features", new[] { "Amount", "V1", "V2", "V3", "V4", "V5", "V6",
-                                                                          "V7", "V8", "V9", "V10", "V11", "V12",
-                                                                          "V13", "V14", "V15", "V16", "V17", "V18",
-                                                                          "V19", "V20", "V21", "V22", "V23", "V24",
-                                                                          "V25", "V26", "V27", "V28" })
+            //Get all the column names for the Features (All except the Label and the StratificationColumn)
+            var featureColumnNames = _trainData.Schema.AsQueryable() 
+                .Select(column => column.Name) // Get the column names
+                .Where(name => name != "Label") // Do not include the Label column
+                .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
+                .ToArray();
+
+            var pipeline = _mlContext.Transforms.Concatenate("Features", featureColumnNames)
                             .Append(_mlContext.Transforms.Normalize(inputName: "Features", outputName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
-                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(label: "Label", 
-                                                                                      features: "Features",
+                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
+                                                                                      featureColumn: "Features",
                                                                                       numLeaves: 20,
                                                                                       numTrees: 100,
-                                                                                      minDatapointsInLeafs: 10,
+                                                                                      minDatapointsInLeaves: 10,
                                                                                       learningRate: 0.2));
 
             var model = pipeline.Fit(_trainData);
@@ -70,7 +67,9 @@ namespace CreditCardFraudDetection.Trainer
             Console.WriteLine("Acuracy: " + metrics.Accuracy);
             metrics.ToConsole();
 
-            model.SaveModel(_mlContext, Path.Combine(_outputPath, "fastTree.zip"));
+            using (var fs = new FileStream(Path.Combine(_outputPath, "fastTree.zip"), FileMode.Create, FileAccess.Write, FileShare.Write))
+                _mlContext.Model.Save(model, fs);
+
             Console.WriteLine("Saved model to " + Path.Combine(_outputPath, "fastTree.zip"));
         }
 
@@ -82,12 +81,7 @@ namespace CreditCardFraudDetection.Trainer
             IDataView trainData = null;
             IDataView testData = null;
 
-            // Step one: read the data as an IDataView.
-            // Create the reader: define the data columns 
-            // and where to find them in the text file.
-            var reader = new TextLoader(mlContext, new TextLoader.Arguments
-            {
-                Column = new[] {
+            TextLoader.Column[] columns = new[] {
                     // A boolean column depicting the 'label'.
                     new TextLoader.Column("Label", DataKind.BL, 30),
                     // 29 Features V1..V28 + Amount
@@ -119,12 +113,21 @@ namespace CreditCardFraudDetection.Trainer
                     new TextLoader.Column("V26", DataKind.R4, 26 ),
                     new TextLoader.Column("V27", DataKind.R4, 27 ),
                     new TextLoader.Column("V28", DataKind.R4, 28 ),
-                    new TextLoader.Column("Amount", DataKind.R4, 29 ),
-                },
-                // First line of the file is a header, not a data row.
-                HasHeader = true,
-                Separator = ","
-            });
+                    new TextLoader.Column("Amount", DataKind.R4, 29 )
+                };
+
+            TextLoader.Arguments txtLoaderArgs = new TextLoader.Arguments
+                                                        {
+                                                            Column = columns,
+                                                            // First line of the file is a header, not a data row.
+                                                            HasHeader = true,
+                                                            Separator = ","
+                                                        };
+
+            // Step one: read the data as an IDataView.
+            // Create the reader: define the data columns 
+            // and where to find them in the text file.
+            var reader = new TextLoader(mlContext, txtLoaderArgs);
 
 
             // We know that this is a Binary Classification task,
@@ -134,7 +137,7 @@ namespace CreditCardFraudDetection.Trainer
             var classification = new BinaryClassificationContext(mlContext);
 
             if (!File.Exists(Path.Combine(_outputPath, "testData.idv")) &&
-                !File.Exists(Path.Combine(_outputPath, "trainData.idv"))){
+                !File.Exists(Path.Combine(_outputPath, "trainData.idv"))) {
                 // Split the data 80:20 into train and test sets, train and evaluate.
 
                 data = reader.Read(new MultiFileSource(_dataSetFile));
@@ -148,34 +151,70 @@ namespace CreditCardFraudDetection.Trainer
                 (trainData, testData) = classification.TrainTestSplit(data, testFraction: 0.2);
 
                 // save test split
-                IHostEnvironment env = (IHostEnvironment)mlContext;
-                using (var ch = env.Start("SaveData"))
-                using (var file = env.CreateOutputFile(Path.Combine(_outputPath, "testData.idv")))
+                using (var fileStream = File.Create(Path.Combine(_outputPath, "testData.csv")))
                 {
-                    var saver = new BinarySaver(mlContext, new BinarySaver.Arguments());
-                    DataSaverUtils.SaveDataView(ch, saver, testData, file);
+                    mlContext.Data.SaveAsText(testData, fileStream, separatorChar:',', headerRow:true, schema: true);
                 }
 
-                // save train split
-                using (var ch = ((IHostEnvironment)env).Start("SaveData"))
-                using (var file = env.CreateOutputFile(Path.Combine(_outputPath, "trainData.idv")))
+                // save train split 
+                using (var fileStream = File.Create(Path.Combine(_outputPath, "trainData.csv")))
                 {
-                    var saver = new BinarySaver(mlContext, new BinarySaver.Arguments());
-                    DataSaverUtils.SaveDataView(ch, saver, trainData, file);
+                    mlContext.Data.SaveAsText(trainData, fileStream, separatorChar:',', headerRow: true, schema: true);
                 }
 
             }
-            else {
+            else
+            {
+                //Add the "StratificationColumn" that was added by classification.TrainTestSplit()
+                // And Label is moved to column 0
+
+                TextLoader.Column[] columnsPlus = new[] {
+                    // A boolean column depicting the 'label'.
+                    new TextLoader.Column("Label", DataKind.BL, 0),
+                    // 30 Features V1..V28 + Amount + StratificationColumn
+                    new TextLoader.Column("V1", DataKind.R4, 1 ),
+                    new TextLoader.Column("V2", DataKind.R4, 2 ),
+                    new TextLoader.Column("V3", DataKind.R4, 3 ),
+                    new TextLoader.Column("V4", DataKind.R4, 4 ),
+                    new TextLoader.Column("V5", DataKind.R4, 5 ),
+                    new TextLoader.Column("V6", DataKind.R4, 6 ),
+                    new TextLoader.Column("V7", DataKind.R4, 7 ),
+                    new TextLoader.Column("V8", DataKind.R4, 8 ),
+                    new TextLoader.Column("V9", DataKind.R4, 9 ),
+                    new TextLoader.Column("V10", DataKind.R4, 10 ),
+                    new TextLoader.Column("V11", DataKind.R4, 11 ),
+                    new TextLoader.Column("V12", DataKind.R4, 12 ),
+                    new TextLoader.Column("V13", DataKind.R4, 13 ),
+                    new TextLoader.Column("V14", DataKind.R4, 14 ),
+                    new TextLoader.Column("V15", DataKind.R4, 15 ),
+                    new TextLoader.Column("V16", DataKind.R4, 16 ),
+                    new TextLoader.Column("V17", DataKind.R4, 17 ),
+                    new TextLoader.Column("V18", DataKind.R4, 18 ),
+                    new TextLoader.Column("V19", DataKind.R4, 19 ),
+                    new TextLoader.Column("V20", DataKind.R4, 20 ),
+                    new TextLoader.Column("V21", DataKind.R4, 21 ),
+                    new TextLoader.Column("V22", DataKind.R4, 22 ),
+                    new TextLoader.Column("V23", DataKind.R4, 23 ),
+                    new TextLoader.Column("V24", DataKind.R4, 24 ),
+                    new TextLoader.Column("V25", DataKind.R4, 25 ),
+                    new TextLoader.Column("V26", DataKind.R4, 26 ),
+                    new TextLoader.Column("V27", DataKind.R4, 27 ),
+                    new TextLoader.Column("V28", DataKind.R4, 28 ),
+                    new TextLoader.Column("Amount", DataKind.R4, 29 ),
+                    new TextLoader.Column("StratificationColumn", DataKind.R4, 30 )
+                };
+
                 // Load splited data
-                var binTrainData = new BinaryLoader(mlContext, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "trainData.idv")));
-                var trainRoles = new RoleMappedData(binTrainData, roles: TransactionObservation.Roles());
-                trainData = trainRoles.Data;
+                trainData = mlContext.Data.ReadFromTextFile(Path.Combine(_outputPath, "trainData.csv"),
+                                                            columnsPlus,                                                           
+                                                            hasHeader: txtLoaderArgs.HasHeader,
+                                                            separatorChar: txtLoaderArgs.Separator.ToCharArray()[0]);
 
-
-                var binTestData = new BinaryLoader(mlContext, new BinaryLoader.Arguments(), new MultiFileSource(Path.Combine(_outputPath, "testData.idv")));
-                var testRoles = new RoleMappedData(binTestData, roles: TransactionObservation.Roles());
-                testData = testRoles.Data;
-
+                                                                     
+                testData = mlContext.Data.ReadFromTextFile(Path.Combine(_outputPath, "testData.csv"),
+                                                           columnsPlus,
+                                                           hasHeader: txtLoaderArgs.HasHeader,
+                                                           separatorChar: txtLoaderArgs.Separator.ToCharArray()[0]);
             }
 
             ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (traindata)");

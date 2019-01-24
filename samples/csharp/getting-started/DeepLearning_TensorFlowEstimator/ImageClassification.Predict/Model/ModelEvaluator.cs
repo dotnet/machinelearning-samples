@@ -2,29 +2,29 @@
 using System.Linq;
 using ImageClassification.ImageData;
 using System.IO;
+using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime;
+using Microsoft.ML.Data;
 using static ImageClassification.Model.ConsoleHelpers;
 
 namespace ImageClassification.Model
 {
-    public class ModelEvaluator
+    public class ModelScorer
     {
         private readonly string dataLocation;
         private readonly string imagesFolder;
         private readonly string modelLocation;
-        private readonly IHostEnvironment env;
+        private readonly MLContext mlContext;
 
-        public ModelEvaluator(string dataLocation, string imagesFolder, string modelLocation)
+        public ModelScorer(string dataLocation, string imagesFolder, string modelLocation)
         {
             this.dataLocation = dataLocation;
             this.imagesFolder = imagesFolder;
             this.modelLocation = modelLocation;
-            env = new ConsoleEnvironment( seed: 1);
+            mlContext = new MLContext(seed: 1);
         }
 
-        public void EvaluateStaticApi()
+        public void ClassifyImages()
         {
             ConsoleWriteHeader("Loading model");
             Console.WriteLine($"Model loaded: {modelLocation}");
@@ -32,10 +32,10 @@ namespace ImageClassification.Model
             // Load the model
             ITransformer loadedModel;
             using (var f = new FileStream(modelLocation, FileMode.Open))
-                loadedModel = TransformerChain.LoadFrom(env, f);
+                loadedModel = mlContext.Model.Load(f);
 
             // Make prediction function (input = ImageNetData, output = ImageNetPrediction)
-            var predictor = loadedModel.MakePredictionFunction<ImageNetData, ImageNetPrediction>(env);
+            var predictor = loadedModel.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext);
             // Read csv file into List<ImageNetData>
             var testData = ImageNetData.ReadFromCsv(dataLocation, imagesFolder).ToList();
 

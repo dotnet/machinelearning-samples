@@ -2,8 +2,6 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
 
 using Microsoft.ML.Core.Data;
 using System.Collections.Generic;
@@ -31,8 +29,9 @@ namespace Common
             Console.WriteLine($"-------------------------------------------------");
         }
 
-
-        public static void PrintRegressionMetrics(string name, RegressionEvaluator.Result metrics)
+        //(CDLTLL-Pending to Fix - Results --> ?)
+        //
+        public static void PrintRegressionMetrics(string name, RegressionMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} regression model      ");
@@ -45,18 +44,25 @@ namespace Common
             Console.WriteLine($"*************************************************");
         }
 
-        public static void PrintBinaryClassificationMetrics(string name, BinaryClassifierEvaluator.Result metrics)
+        public static void PrintBinaryClassificationMetrics(string name, CalibratedBinaryClassificationMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*       Metrics for {name} binary classification model      ");
             Console.WriteLine($"*-----------------------------------------------------------");
             Console.WriteLine($"*       Accuracy: {metrics.Accuracy:P2}");
             Console.WriteLine($"*       Auc:      {metrics.Auc:P2}");
+            Console.WriteLine($"*       Auprc:  {metrics.Auprc:P2}");
             Console.WriteLine($"*       F1Score:  {metrics.F1Score:P2}");
+            Console.WriteLine($"*       LogLoss:  {metrics.LogLoss:#.##}");
+            Console.WriteLine($"*       LogLossReduction:  {metrics.LogLossReduction:#.##}");
+            Console.WriteLine($"*       PositivePrecision:  {metrics.PositivePrecision:#.##}");
+            Console.WriteLine($"*       PositiveRecall:  {metrics.PositiveRecall:#.##}");
+            Console.WriteLine($"*       NegativePrecision:  {metrics.NegativePrecision:#.##}");
+            Console.WriteLine($"*       NegativeRecall:  {metrics.NegativeRecall:P2}");
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintMultiClassClassificationMetrics(string name, MultiClassClassifierEvaluator.Result metrics)
+        public static void PrintMultiClassClassificationMetrics(string name, MultiClassClassifierMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*    Metrics for {name} multi-class classification model   ");
@@ -70,16 +76,41 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
-    public static void PrintMulticlassClassificationFoldsAverageMetrics(
+        //(CDLTLL-Pending to Fix - Results --> ?)
+
+        public static void PrintRegressionFoldsAverageMetrics(string algorithmName,
+                                                              (RegressionMetrics metrics,
+                                                               ITransformer model,
+                                                               IDataView scoredTestData)[] crossValidationResults
+                                                             )
+        {
+            var L1 = crossValidationResults.Select(r => r.metrics.L1);
+            var L2 = crossValidationResults.Select(r => r.metrics.L2);
+            var RMS = crossValidationResults.Select(r => r.metrics.L1);
+            var lossFunction = crossValidationResults.Select(r => r.metrics.LossFn);
+            var R2 = crossValidationResults.Select(r => r.metrics.RSquared);
+
+            Console.WriteLine($"*************************************************************************************************************");
+            Console.WriteLine($"*       Metrics for {algorithmName} Regression model      ");
+            Console.WriteLine($"*------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($"*       Average L1 Loss:    {L1.Average():0.###} ");
+            Console.WriteLine($"*       Average L2 Loss:    {L2.Average():0.###}  ");
+            Console.WriteLine($"*       Average RMS:          {RMS.Average():0.###}  ");
+            Console.WriteLine($"*       Average Loss Function: {lossFunction.Average():0.###}  ");
+            Console.WriteLine($"*       Average R-squared: {R2.Average():0.###}  ");
+            Console.WriteLine($"*************************************************************************************************************");
+        }
+
+        public static void PrintMulticlassClassificationFoldsAverageMetrics(
                                          string algorithmName,
-                                         (MultiClassClassifierEvaluator.Result metrics,
+                                         (MultiClassClassifierMetrics metrics,
                                           ITransformer model,
                                           IDataView scoredTestData)[] crossValResults
                                                                            )
         {
             var metricsInMultipleFolds = crossValResults.Select(r => r.metrics);
 
-            var microAccuracyValues  = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
+            var microAccuracyValues = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
             var microAccuracyAverage = microAccuracyValues.Average();
             var microAccuraciesStdDeviation = CalculateStandardDeviation(microAccuracyValues);
             var microAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(microAccuracyValues);
@@ -124,7 +155,7 @@ namespace Common
             return confidenceInterval95;
         }
 
-        public static void PrintClusteringMetrics(string name, ClusteringEvaluator.Result metrics)
+        public static void PrintClusteringMetrics(string name, ClusteringMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} clustering model      ");

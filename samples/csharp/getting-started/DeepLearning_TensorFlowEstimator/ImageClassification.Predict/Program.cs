@@ -18,8 +18,8 @@ namespace ImageClassification.Predict
 
             try
             {
-                var modelEvaluator = new ModelEvaluator(tagsTsv, imagesFolder, imageClassifierZip);
-                modelEvaluator.EvaluateStaticApi();
+                var modelScorer = new ModelScorer(tagsTsv, imagesFolder, imageClassifierZip);
+                modelScorer.ClassifyImages();
             }
             catch (Exception ex)
             {
