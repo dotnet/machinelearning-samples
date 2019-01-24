@@ -3,7 +3,7 @@
 open System
 open System.IO
 open Microsoft.ML
-open Microsoft.ML.Runtime.Data
+open Microsoft.ML.Data
 open MulticlassClassification_Iris.DataStructures
 open Common
 open MulticlassClassification_Iris
@@ -18,12 +18,14 @@ let baseModelsPath = @"../../../../MLModels"
 let modelPath = sprintf @"%s/IrisClassificationModel.zip" baseModelsPath
 
 
-let dataLoader (mlContext : MLContext) =
-    mlContext.Data.TextReader(
-        TextLoader.Arguments(
-            Separator = "tab",
-            HasHeader = true,
-            Column = 
+let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
+    
+    // STEP 1: Common data loading configuration
+    let textLoader = 
+        mlContext.Data.CreateTextReader(
+            separatorChar = '\t',
+            hasHeader = true,
+            columns = 
                 [|
                     TextLoader.Column("Label", Nullable DataKind.R4, 0)
                     TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
@@ -32,41 +34,34 @@ let dataLoader (mlContext : MLContext) =
                     TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
                 |]
         )
-    )
 
-let read (dataPath : string) (dataLoader : TextLoader) =
-    dataLoader.Read dataPath
-
-let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
+    let trainingDataView = textLoader.Read trainDataPath
+    let testDataView = textLoader.Read testDataPath
     
-    // STEP 1: Common data loading configuration
-    let trainingDataView = 
-        dataLoader mlContext
-        |> read trainDataPath
-
-    let testDataView = 
-        dataLoader mlContext
-        |> read testDataPath
-
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
         mlContext.Transforms.Concatenate("Features", [| "SepalLength"; "SepalWidth"; "PetalLength"; "PetalWidth"|])
-
-    // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-    Common.ConsoleHelper.peekDataViewInConsole<IrisData> mlContext trainingDataView dataProcessPipeline 5 |> ignore
-    Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 5 |> ignore
+        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(label = "Label", features = "Features")
+    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
     let modelBuilder = 
         Common.ModelBuilder.create mlContext dataProcessPipeline
         |> Common.ModelBuilder.addTrainer trainer
 
     // STEP 4: Train the model fitting to the DataSet
+    //Measure training time
+    let watch = System.Diagnostics.Stopwatch.StartNew()
+
     printfn "=============== Training the model ==============="
     let trainedModel = 
         modelBuilder
         |> Common.ModelBuilder.train trainingDataView
+
+    //Stop measuring time
+    watch.Stop()
+    let elapsedMs = watch.ElapsedMilliseconds
+    printfn "***** Training time: %f seconds *****" ((float)elapsedMs/1000.0) 
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
@@ -77,7 +72,6 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.printMultiClassClassificationMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
-    printfn "=============== Saving the model to a file ==============="
     (trainedModel, modelBuilder)
     |> Common.ModelBuilder.saveModelAsFile modelPath
 

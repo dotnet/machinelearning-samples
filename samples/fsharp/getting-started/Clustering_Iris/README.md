@@ -1,8 +1,8 @@
-# Clustering Iris flowers (F#)
+# Clustering Iris Data
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | README.md needs update | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v0.9           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -30,59 +30,73 @@ To solve this problem, first we will build and train an ML model. Then we will u
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `ConcatEstimator`), and choosing a learning algorithm (`KMeansPlusPlusTrainer`). All of those steps are stored in a `EstimatorChain`:
+Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `Concatenate`), and choosing a learning algorithm (`KMeans`). All of those steps are stored in `trainingPipeline`:
+
 ```fsharp
-	// LearningPipeline holds all steps of the learning process: data, transforms, learners.
+    // STEP 1: Common data loading configuration
+    let textLoader = 
+        mlContext.Data.CreateTextReader(
+            hasHeader = true,
+            separatorChar = '\t',
+            columns =
+                [|
+                    TextLoader.Column("Label", Nullable DataKind.R4, 0)
+                    TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
+                    TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
+                    TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
+                    TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
+                |]
+        )
+
+    let fullData = textLoader.Read dataPath
     
-	//1. Create ML.NET context/environment
-    use env = new LocalEnvironment()
+    //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
+    let struct(trainingDataView, testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
 
-    //2. Create DataReader with data schema mapped to file's columns
-    let reader = 
-        TextLoader(
-            env, 
-            TextLoader.Arguments(
-                Separator = "tab", 
-                HasHeader = true, 
-                Column = 
-                    [|
-                        TextLoader.Column("Label", Nullable DataKind.R4, 0)
-                        TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
-                        TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
-                        TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
-                        TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
-                    |]
-                )
-            )
+    //STEP 2: Process data transformations in pipeline
+    let dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
 
-    //Load training data
-    let trainingDataView = MultiFileSource(DataPath) |> reader.Read
+    // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
+    Common.ConsoleHelper.peekDataViewInConsole<IrisData> mlContext trainingDataView dataProcessPipeline 10 |> ignore
+    Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
+
+    // STEP 3: Create and train the model     
+    let trainer = mlContext.Clustering.Trainers.KMeans(features = "Features", clustersCount = 3)
+
+    let modelBuilder = 
+        Common.ModelBuilder.create mlContext dataProcessPipeline
+        |> Common.ModelBuilder.addTrainer trainer
+
+    let trainedModel = 
+        modelBuilder
+        |> Common.ModelBuilder.train trainingDataView
 ```
-### 2. Train model
-Training the model is a process of running the chosen algorithm on the given data. It is implemented in the `Fit()` method from the Estimator object. To perform training we just call the method and provide our data.
-```fsharp
-    let model = 
-        env
-        |> Pipeline.concatEstimator "Features" [| "SepalLength"; "SepalWidth"; "PetalLength"; "PetalWidth" |]
-        |> Pipeline.append (KMeansPlusPlusTrainer(env, "Features", clustersCount = 3))
-        |> Pipeline.fit trainingDataView
 
+### 2. Train model
+Training the model is a process of running the chosen algorithm on the given data. To perform training you need to call the Fit() method.
+
+```fsharp
+    let trainedModel = 
+        modelBuilder
+        |> Common.ModelBuilder.train trainingDataView
 ```
 ### 3. Consume model
 After the model is build and trained, we can use the `Predict()` API to predict the cluster for an iris flower and calculate the distance from given flower parameters to each cluster (each centroid of a cluster).
 
 ```fsharp
-    let sampleIrisData = 
-        { 
+   let sampleIrisData = 
+        {
             SepalLength = 3.3f
             SepalWidth = 1.6f
             PetalLength = 0.2f
-            PetalWidth = 5.1f 
+            PetalWidth = 5.1f
         }
 
-    let predictionFunc = loadedModel.MakePredictionFunction<IrisData, IrisPrediction> env
-    let prediction = predictionFunc.Predict sampleIrisData
+    //Create the clusters: Create data files and plot a chart
+    let prediction = 
+        Common.ModelScorer.create mlContext
+        |> Common.ModelScorer.loadModelFromZipFile modelPath
+        |> Common.ModelScorer.predictSingle sampleIrisData
 
-    printfn "Clusters assigned for setosa flowers: %d" prediction.SelectedClusterId
-```
+    printfn "Cluster assigned for setosa flowers: %d" prediction.SelectedClusterId```
 ```
