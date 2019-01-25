@@ -32,12 +32,7 @@ namespace MulticlassClassification_HeartDisease
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
 
-            var textLoader = HeartTextLoaderFactory.CreateTextLoader(mlContext);
-
-            var trainingDataView = textLoader.Read(TrainDataPath);
-
-            var testDataView = textLoader.Read(TestDataPath);
-
+            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartData>(TrainDataPath, hasHeader: true, separatorChar: ',');
 
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features",
                 "Age",
