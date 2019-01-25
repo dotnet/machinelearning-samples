@@ -38,21 +38,21 @@ namespace MulticlassClassification_HeartDisease
 
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features",
                 "Age",
-                "Sex", 
-                "Cp", 
+                "Sex",
+                "Cp",
                 "TrestBps",
                 "Chol",
                 "Fbs",
-                "RestEcg", 
+                "RestEcg",
                 "Thalac",
-                "Exang", 
-                "OldPeak", 
-                "Slope", 
-                "Ca", 
+                "Exang",
+                "OldPeak",
+                "Slope",
+                "Ca",
                 "Thal"
             );
 
-            IEstimator<ITransformer> trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label,DefaultColumnNames.Features);
+            IEstimator<ITransformer> trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, DefaultColumnNames.Features);
 
             trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent();
             var trainingPipeline = dataProcessPipeline.Append(trainer);
@@ -73,9 +73,11 @@ namespace MulticlassClassification_HeartDisease
             Console.WriteLine($"    AccuracyMacro = {metrics.AccuracyMacro:0.####}, a value between 0 and 1, the closer to 1, the better");
             Console.WriteLine($"    AccuracyMicro = {metrics.AccuracyMicro:0.####}, a value between 0 and 1, the closer to 1, the better");
             Console.WriteLine($"    LogLoss = {metrics.LogLoss:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
+            Console.WriteLine($"    LogLoss for class 0 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
+            Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
+            Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
+            Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[3]:0.####}, the closer to 0, the better");
+            Console.WriteLine($"    LogLoss for class 4 = {metrics.PerClassLogLoss[4]:0.####}, the closer to 0, the better");
             Console.WriteLine($"************************************************************");
             Console.WriteLine();
 
@@ -83,8 +85,8 @@ namespace MulticlassClassification_HeartDisease
             using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
-            Console.WriteLine();
-            Console.ReadLine();
+            Console.WriteLine("=============== Model Saved ============= ");
+            Console.ReadKey();
         }
 
 
@@ -103,16 +105,17 @@ namespace MulticlassClassification_HeartDisease
             {
                 var prediction = predictionEngine.Predict(heartData);
 
-                Console.WriteLine($" 0: {prediction.Score:0.###}");
+                Console.WriteLine($" 0: {prediction.Score[0]:0.###}");
                 Console.WriteLine($" 1: {prediction.Score[1]:0.###}");
                 Console.WriteLine($" 2: {prediction.Score[2]:0.###}");
                 Console.WriteLine($" 3: {prediction.Score[3]:0.###}");
+                Console.WriteLine($" 4: {prediction.Score[4]:0.###}");
                 Console.WriteLine();
-                Console.ReadLine();
+                Console.ReadKey();
             }
 
         }
     }
 
-  
+
 }
