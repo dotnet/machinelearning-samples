@@ -11,11 +11,11 @@ namespace MulticlassClassification_HeartDisease
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../DataFiles";
+        private static string BaseDatasetsLocation = @"../../../../Data";
         private static string TrainDataPath = $"{BaseDatasetsLocation}/HeartTraining.csv";
         private static string TestDataPath = $"{BaseDatasetsLocation}/HeartTest.csv";
 
-        private static string BaseModelsPath = @"../../../../HeartPrediction/MLModels";
+        private static string BaseModelsPath = @"../../../../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/HeartClassification.zip";
 
         public static void Main(string[] args)
@@ -32,7 +32,9 @@ namespace MulticlassClassification_HeartDisease
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
 
-            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartData>(TrainDataPath, hasHeader: true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TrainDataPath, hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TestDataPath, hasHeader: true, separatorChar: ',');
+
 
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features",
                 "Age",
@@ -61,7 +63,8 @@ namespace MulticlassClassification_HeartDisease
 
 
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var metrics = mlContext.MulticlassClassification.Evaluate(trainingDataView, "Label", "score", "PredictedLabel", 0);
+            var predictions = trainedModel.Transform(testDataView);
+            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score", "PredictedLabel", 0);
 
 
             Console.WriteLine($"************************************************************");
@@ -81,7 +84,7 @@ namespace MulticlassClassification_HeartDisease
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine();
-
+            Console.ReadLine();
         }
 
 
@@ -105,9 +108,11 @@ namespace MulticlassClassification_HeartDisease
                 Console.WriteLine($" 2: {prediction.Score[2]:0.###}");
                 Console.WriteLine($" 3: {prediction.Score[3]:0.###}");
                 Console.WriteLine();
-
+                Console.ReadLine();
             }
 
         }
     }
+
+  
 }
