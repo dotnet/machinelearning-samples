@@ -3,9 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
 using movierecommender.Models;
+using movierecommender.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,17 +16,19 @@ namespace movierecommender.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly MovieService _movieService;
-        private readonly ProfileService _profileService;
+        private readonly IMovieService _movieService;
+        private readonly IProfileService _profileService;
         private readonly AppSettings _appSettings;
         private readonly ILogger<MoviesController> _logger;
 
         public MoviesController(
             ILogger<MoviesController> logger,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            IMovieService movieService,
+            IProfileService profileService)
         {
-            _movieService = new MovieService();
-            _profileService = new ProfileService();
+            _movieService = movieService;
+            _profileService = profileService;
             _logger = logger;
             _appSettings = appSettings.Value;
         }
@@ -42,17 +43,17 @@ namespace movierecommender.Controllers
             Profile activeprofile = _profileService.GetProfileByID(id);
 
             // 1. Create the local environment
-            MLContext ctx = new MLContext();
+            MLContext mlContext = new MLContext();
 
             //2. Load the MoviesRecommendation Model
-            ITransformer loadedModel;
+            ITransformer trainedModel;
             using (FileStream stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                loadedModel = ctx.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream);
             }
 
             //3. Create a prediction function
-            PredictionFunction<RatingData, RatingPrediction> predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
+            PredictionEngine<MovieRating, MovieRatingPrediction> predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
 
             List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
             List<(int movieId, int movieRating)> MovieRatings = _profileService.GetProfileWatchedMovies(id);
@@ -64,14 +65,14 @@ namespace movierecommender.Controllers
             }
 
             // 3. Create an Rating Prediction Output Class
-            RatingPrediction prediction = null;
-            foreach (Movie movie in _movieService._trendingMovies)
+            MovieRatingPrediction prediction = null;
+            foreach (Movie movie in _movieService.GetTrendingMovies)
             {
                 //4. Call the Rating Prediction for each movie prediction
-                 prediction = predictionfunction.Predict(new RatingData
+                 prediction = predictionEngine.Predict(new MovieRating
                  {
-                     userId = id.ToString(),
-                     movieId = movie.MovieID.ToString()
+                     userId = id,
+                     movieId = movie.MovieID
                  });
 
                 //5. Normalize the prediction scores for the "ratings" b/w 0 - 100
@@ -84,7 +85,7 @@ namespace movierecommender.Controllers
             //5. Provide ratings to the view to be displayed
             ViewData["watchedmovies"] = WatchedMovies;
             ViewData["ratings"] = ratings;
-            ViewData["trendingmovies"] = _movieService._trendingMovies;
+            ViewData["trendingmovies"] = _movieService.GetTrendingMovies;
             return View(activeprofile);
         }
 
@@ -100,7 +101,7 @@ namespace movierecommender.Controllers
 
         public ActionResult Profiles()
         {
-            List<Profile> profiles = _profileService._profile;
+            List<Profile> profiles = _profileService.GetProfiles;
             return View(profiles);
         }
 
@@ -116,7 +117,7 @@ namespace movierecommender.Controllers
             }
 
             ViewData["watchedmovies"] = WatchedMovies;
-            ViewData["trendingmovies"] = _movieService._trendingMovies;
+            ViewData["trendingmovies"] = _movieService.GetTrendingMovies;
             return View(activeprofile);
         }
 
@@ -127,23 +128,18 @@ namespace movierecommender.Controllers
             { }
         }
 
-        public class RatingData
+        public class MovieRating
         {
-            [Column("0")]
-            public string userId;
+            public float userId;
 
-            [Column("1")]
-            public string movieId;
+            public float movieId;
 
-            [Column("2")]
-            [ColumnName("Label")]
             public float Label;
         }
 
-        public class RatingPrediction
+        public class MovieRatingPrediction
         {
-            [ColumnName("PredictedLabel")]
-            public bool predictedLabel;
+            public float Label;
 
             public float Score;
         }

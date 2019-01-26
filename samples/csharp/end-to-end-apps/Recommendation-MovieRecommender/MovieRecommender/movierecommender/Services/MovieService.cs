@@ -1,17 +1,27 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using movierecommender.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace movierecommender.Models
+namespace movierecommender.Services
 {
-    public class MovieService
+    public class MovieService : IMovieService
     {
         public readonly static int _moviesToRecommend = 6;
-        public readonly static int _trendingmovies = 20;
-        public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(() => LoadMovieData());
-        public List<Movie> _trendingMovies = LoadTrendingMovies();
-        public readonly static string _modelpath = @".\Models\model.zip";
+        private readonly static int _trendingMoviesCount = 20;
+        public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(LoadMovieData);
+        private List<Movie> _trendingMovies = LoadTrendingMovies();
+        public readonly static string _modelpath = @"model.zip";
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public List<Movie> GetTrendingMovies => LoadTrendingMovies();
+
+        public MovieService(IHostingEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
 
         public static List<Movie> LoadTrendingMovies() {
             List<Movie> result = new List<Movie>();
@@ -27,7 +37,7 @@ namespace movierecommender.Models
 
         public string GetModelPath()
         {
-            return _modelpath;
+            return Path.Combine(_hostingEnvironment.ContentRootPath, "Models", _modelpath);
         }
 
         public IEnumerable<Movie> GetSomeSuggestions()

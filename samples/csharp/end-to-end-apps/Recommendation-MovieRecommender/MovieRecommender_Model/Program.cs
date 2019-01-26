@@ -8,6 +8,7 @@ using Console = Colorful.Console;
 using System.Drawing;
 using Microsoft.ML.FactorizationMachine;
 using Microsoft.ML.Trainers.Recommender;
+using Microsoft.ML.Core.Data;
 
 namespace MovieRecommenderModel
 {
@@ -103,12 +104,20 @@ namespace MovieRecommenderModel
             Console.WriteLine();
 
             //STEP 8:  Save model to disk
-            Console.WriteLine("=============== Writing model to disk ===============", color);
+            Console.WriteLine("=============== Writing model to the disk ===============", color);
             Console.WriteLine();
 
             using (FileStream fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
                 mlContext.Model.Save(model, fs);
+            }
+
+            Console.WriteLine("=============== Re-Loading model from the disk ===============", color);
+            Console.WriteLine();
+            ITransformer trainedModel;
+            using (FileStream stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                trainedModel = mlContext.Model.Load(stream);
             }
 
             Console.WriteLine("Press any key ...");

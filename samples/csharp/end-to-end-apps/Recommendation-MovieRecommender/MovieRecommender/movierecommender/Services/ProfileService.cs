@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using movierecommender.Models;
+using System.Collections.Generic;
 using System.IO;
 
-namespace movierecommender.Models
+namespace movierecommender.Services
 {
-    public class ProfileService
+    public class ProfileService : IProfileService
     {
-        public List<Profile> _profile = new List<Profile>(LoadProfileData());
+        private List<Profile> _profile = new List<Profile>(LoadProfileData());
+
+        public List<Profile> GetProfiles => _profile;
+
 
         public int _activeprofileid = -1;
 
@@ -85,5 +89,7 @@ namespace movierecommender.Models
             }
             return result;
         }
+
+
     }
 }
