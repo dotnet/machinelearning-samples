@@ -1,6 +1,5 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using System;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace ProductRecommender
 
             //STEP 2: Create a reader by defining the schema for reading the product co-purchase dataset
             //        Do remember to replace amazon0302.txt with dataset from https://snap.stanford.edu/data/amazon0302.html
-            var reader = ctx.Data.TextReader(new TextLoader.Arguments()
+            var reader = ctx.Data.CreateTextReader(new TextLoader.Arguments()
             {
                 Separator = "tab",
                 HasHeader = true,
@@ -62,7 +61,7 @@ namespace ProductRecommender
 
             //STEP 6: Create prediction engine and predict the score for Product 63 being co-purchased with Product 3.
             //        The higher the score the higher the probability for this particular productID being co-purchased 
-            var predictionengine = model.MakePredictionFunction<ProductEntry, Copurchase_prediction>(ctx);
+            var predictionengine = model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(ctx);
             var prediction = predictionengine.Predict(
                 new ProductEntry()
                 {

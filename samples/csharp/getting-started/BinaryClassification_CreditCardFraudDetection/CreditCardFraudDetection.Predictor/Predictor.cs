@@ -2,9 +2,7 @@
 using CreditCardFraudDetection.Common.DataModels;
 using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.Data.IO;
+using Microsoft.ML.Data;
 using System;
 using System.IO;
 using System.Linq;
@@ -62,12 +60,10 @@ namespace CreditCardFraudDetection.Predictor
                 };
 
             //LoaderOptimization test data into DataView
-            var dataTest = mlContext.Data.ReadFromTextFile(columnsPlus, _dasetFile,
-                                                                          advancedSettings: s => {
-                                                                              s.HasHeader = true;
-                                                                              s.Separator = ",";
-                                                                          }
-                                                                         );
+            var dataTest = mlContext.Data.ReadFromTextFile(_dasetFile,
+                                                           columnsPlus,
+                                                           hasHeader: true,
+                                                           separatorChar: ',');
 
             //Inspect/Peek data from datasource
             ConsoleHelpers.ConsoleWriterSection($"Inspect {numberOfTransactions} transactions observed as fraud and {numberOfTransactions} not observed as fraud, from the test datasource:");
@@ -81,7 +77,7 @@ namespace CreditCardFraudDetection.Predictor
                 model = mlContext.Model.Load(file);
             }
 
-            var predictionFunc = model.MakePredictionFunction<TransactionObservation, TransactionFraudPrediction>(mlContext);
+            var predictionEngine = model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(mlContext);
                 ConsoleHelpers.ConsoleWriterSection($"Test {numberOfTransactions} transactions, from the test datasource, that should be predicted as fraud (true):");
                 dataTest.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject: false)
                         .Where(x => x.Label == true)
@@ -92,7 +88,7 @@ namespace CreditCardFraudDetection.Predictor
                                     {
                                         Console.WriteLine($"--- Transaction ---");
                                         testData.PrintToConsole();
-                                        predictionFunc.Predict(testData).PrintToConsole();
+                                        predictionEngine.Predict(testData).PrintToConsole();
                                         Console.WriteLine($"-------------------");
                                     });
 
@@ -106,7 +102,7 @@ namespace CreditCardFraudDetection.Predictor
                                     {
                                         Console.WriteLine($"--- Transaction ---");
                                         testData.PrintToConsole();
-                                        predictionFunc.Predict(testData).PrintToConsole();
+                                        predictionEngine.Predict(testData).PrintToConsole();
                                         Console.WriteLine($"-------------------");
                                     });
         }

@@ -1,7 +1,6 @@
 ﻿using CreditCardFraudDetection.Common.DataModels;
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Data;
 using System;
 using System.IO;
 using System.IO.Compression;

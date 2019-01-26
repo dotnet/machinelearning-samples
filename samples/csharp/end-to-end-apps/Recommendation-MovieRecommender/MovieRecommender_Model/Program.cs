@@ -46,8 +46,8 @@ namespace MovieRecommenderModel
             });
 
             //STEP 3: Read the training data and test data which will be used to train and test the movie recommendation model
-            IDataView trainingDataView = reader.Read(new MultiFileSource(TrainingDataLocation));
-            IDataView testDataView = reader.Read(new MultiFileSource(TestDataLocation));
+            IDataView trainingDataView = reader.Read(TrainingDataLocation);
+            IDataView testDataView = reader.Read(TestDataLocation);
 
             //STEP 4: Transform your data by encoding the two features userId and movieID. 
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
@@ -122,21 +122,16 @@ namespace MovieRecommenderModel
 
     public class RatingData
     {
-        [Column("0")]
         public string userId;
 
-        [Column("1")]
         public string movieId;
 
-        [Column("2")]
-        [ColumnName("Label")]
         public float Label;
     }
 
     public class RatingPrediction
     {
-        [ColumnName("PredictedLabel")]
-        public bool predictedLabel; 
+        public bool PredictedLabel; 
 
         public float Score;
     }

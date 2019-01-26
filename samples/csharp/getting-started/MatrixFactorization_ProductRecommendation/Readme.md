@@ -2,12 +2,12 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.8   | Dynamic API | Up-to date | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
+|0.9   | Dynamic API | Updated to v0.9 | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
 
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
 The style of recommendation in this sample is based upon the co-purchase scenario or products frequently 
-bought together which means it will recommend customers a set of products based upon their order purchase
+bought together which means it will recommend customers a set of products based upon their purchase order
 history. 
 
 ![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/frequentlyboughttogether.png)
@@ -18,10 +18,10 @@ In this example, the highlighted products are being recommended based upon a fre
 ## Problem
 For this tutorial we will use the Amazon product co-purchasing network dataset.  
 
-In terms of an approach for building our product recommender we will use One-Class Factorization Machines which uses a colloborative filtering approach. 
+In terms of an approach for building our product recommender we will use One-Class Factorization Machines which uses a collaborative filtering approach. 
 
 
-The difference between one-class and other Factorization Machines approach we covered is that in this dataset we only have information on order purchase history.
+The difference between one-class and other Factorization Machines approach we covered is that in this dataset we only have information on purchase order history.
 
 We do not have ratings or other details like product description etc. available to us. 
 
@@ -34,7 +34,7 @@ https://snap.stanford.edu/data/amazon0302.html
 
 ## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing colloborative filtering. 
+The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
 
 ## Solution
 
@@ -107,7 +107,7 @@ This will return a trained model.
 
 ```
 
-### 3. Evaluate Model 
+### 3. Consume Model 
 
 We will perform predictions for this model by creating a prediction engine/function as shown below.
 

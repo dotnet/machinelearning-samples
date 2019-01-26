@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.ML.Runtime.Data;
 using Serilog;
+
+using Common;
 
 namespace eShopDashboard.Controllers
 {
@@ -18,18 +19,17 @@ namespace eShopDashboard.Controllers
     public class CountrySalesForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly PredictionFunction<CountryData, CountrySalesPrediction> countrySalesPredFunction;
+        private readonly MLModelEngine<CountryData, CountrySalesPrediction> countrySalesModel;
         private readonly ILogger<CountrySalesForecastController> logger;
 
         public CountrySalesForecastController(IOptionsSnapshot<AppSettings> appSettings,
-                                              PredictionFunction<CountryData, CountrySalesPrediction> countrySalesPredFunction,
-                                              ILogger<CountrySalesForecastController> logger
-                                             )
+                                              MLModelEngine<CountryData, CountrySalesPrediction> countrySalesModel,                                             
+                                              ILogger<CountrySalesForecastController> logger)
         {
             this.appSettings = appSettings.Value;
 
-            // Get injected Country Sales Prediction function
-            this.countrySalesPredFunction = countrySalesPredFunction;
+            // Get injected Country Sales Model for scoring
+            this.countrySalesModel = countrySalesModel;
 
             this.logger = logger;
         }
@@ -52,19 +52,8 @@ namespace eShopDashboard.Controllers
 
             CountrySalesPrediction nextMonthSalesForecast = null;
 
-            //Set the critical section if using Singleton for the PredictionFunction object
-            //               
-            //lock(this.countrySalesPredFunction)
-            //{
-                //Predict action (Measure Prediction function Singleton vs. Scoped)
-                nextMonthSalesForecast = this.countrySalesPredFunction.Predict(countrySample);
-            //}
-            //
-            // Note that if using Scoped instead of singleton in DI/IoC you can remove the critical section
-            // It depends if you want better performance in single Http calls (using singleton) 
-            // versus better scalability ann global performance if you have many Http requests/threads 
-            // since the critical section is a bottleneck reducing the execution to one thread for that particular Predict() mathod call
-            //
+            //Predict
+            nextMonthSalesForecast = this.countrySalesModel.Predict(countrySample);
 
             //Stop measuring time
             watch.Stop();

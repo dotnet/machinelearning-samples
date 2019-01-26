@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Runtime.Api;
-
+﻿
 namespace eShopForecastModelsTrainer
 {
     public class CountryData
