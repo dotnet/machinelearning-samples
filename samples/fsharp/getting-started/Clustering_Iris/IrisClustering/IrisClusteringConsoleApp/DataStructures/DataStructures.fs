@@ -1,7 +1,7 @@
 ﻿namespace Clustering_Iris.DataStructures
 
 module DataStructures =
-    open Microsoft.ML.Runtime.Api
+    open Microsoft.ML.Data
 
     /// Describes Iris flower. Used as an input to prediction function.
     [<CLIMutable>]

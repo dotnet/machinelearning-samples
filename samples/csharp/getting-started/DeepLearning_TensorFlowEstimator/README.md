@@ -3,7 +3,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7.0-preview-27031-8           | Dynamic API | Evolving | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
+| v0.7.0           | Dynamic API | Needs to update to v0.8 | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
 
 
 ## Problem 

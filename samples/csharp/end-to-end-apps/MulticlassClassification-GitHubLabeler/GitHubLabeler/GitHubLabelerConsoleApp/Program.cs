@@ -9,12 +9,11 @@ using Microsoft.Extensions.Configuration;
 
 using Microsoft.ML;
 using Microsoft.ML.Transforms.Conversions;
-using Microsoft.ML.Runtime.Learners;
 using Microsoft.ML.Core.Data;
 
 using Common;
 using GitHubLabeler.DataStructures;
-using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Data;
 
 namespace GitHubLabeler
 {
@@ -36,7 +35,7 @@ namespace GitHubLabeler
             SetupAppConfiguration();
 
             //1. ChainedBuilderExtensions and Train the model
-            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.OVAAveragedPerceptronTrainer);
+            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.SdcaMultiClassTrainer);
 
             //2. Try/test to predict a label for a single hard-coded Issue
             TestSingleLabelPrediction(ModelFilePathName);
@@ -55,18 +54,16 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 0);
 
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                    {
-                                        Separator = "tab",
-                                        HasHeader = true,
-                                        Column = new[]
+            TextLoader textLoader = mlContext.Data.CreateTextReader(
+                                        columns:new[]
                                                     {
                                                         new TextLoader.Column("ID", DataKind.Text, 0),
                                                         new TextLoader.Column("Area", DataKind.Text, 1),
                                                         new TextLoader.Column("Title", DataKind.Text, 2),
                                                         new TextLoader.Column("Description", DataKind.Text, 3),
-                                                    }
-                                    });
+                                                    },
+                                        hasHeader:true,
+                                        separatorChar:'\t');
 
             var trainingDataView = textLoader.Read(DataSetLocation);
 
@@ -114,10 +111,21 @@ namespace GitHubLabeler
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
-            //(CDLTLL-UNDO)
+
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
 
+            //Measure cross-validation time
+            var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
+
             var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn:"Label");
+
+            //Stop measuring time
+            watchCrossValTime.Stop();
+            long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
+            Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");
+           
+            //(CDLTLL-Pending-TODO)
+            //
             ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
@@ -130,15 +138,16 @@ namespace GitHubLabeler
 
             //Stop measuring time
             watch.Stop();
-            long elapsedMs = watch.ElapsedMilliseconds;
+            long elapsedCrossValMs = watch.ElapsedMilliseconds;
 
+            Console.WriteLine($"Time Training the model: {elapsedCrossValMs} miliSecs");
 
             // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
             GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "WebSockets communication is slow in my machine", Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." };
             // Create prediction engine related to the loaded trained model
-            var predFunction = trainedModel.MakePredictionFunction<GitHubIssue, GitHubIssuePrediction>(mlContext);
+            var predEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext);
             //Score
-            var prediction = predFunction.Predict(issue);
+            var prediction = predEngine.Predict(issue);
             Console.WriteLine($"=============== Single Prediction just-trained-model - Result: {prediction.Area} ===============");
             //
 

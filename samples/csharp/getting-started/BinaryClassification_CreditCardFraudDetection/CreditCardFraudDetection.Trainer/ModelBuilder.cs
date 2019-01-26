@@ -1,15 +1,11 @@
 ﻿using CreditCardFraudDetection.Common;
 using CreditCardFraudDetection.Common.DataModels;
-
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Data;
-using Microsoft.ML.Runtime.Data.IO;
 using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
-
 using System;
 using System.IO;
 using System.Linq;
-using Microsoft.ML.Runtime;
+using Microsoft.ML.Data;
 
 namespace CreditCardFraudDetection.Trainer
 {
@@ -48,8 +44,8 @@ namespace CreditCardFraudDetection.Trainer
             //Create a flexible pipeline (composed by a chain of estimators) for building/traing the model.
 
             //Get all the column names for the Features (All except the Label and the StratificationColumn)
-            var featureColumnNames = _trainData.Schema.GetColumns()
-                .Select(tuple => tuple.column.Name) // Get the column names
+            var featureColumnNames = _trainData.Schema.AsQueryable() 
+                .Select(column => column.Name) // Get the column names
                 .Where(name => name != "Label") // Do not include the Label column
                 .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
                 .ToArray();
@@ -157,13 +153,13 @@ namespace CreditCardFraudDetection.Trainer
                 // save test split
                 using (var fileStream = File.Create(Path.Combine(_outputPath, "testData.csv")))
                 {
-                    mlContext.Data.SaveAsText(testData, fileStream, separator:',', headerRow:true, schema: true);
+                    mlContext.Data.SaveAsText(testData, fileStream, separatorChar:',', headerRow:true, schema: true);
                 }
 
                 // save train split 
                 using (var fileStream = File.Create(Path.Combine(_outputPath, "trainData.csv")))
                 {
-                    mlContext.Data.SaveAsText(testData, fileStream, separator: ',', headerRow: true, schema: true);
+                    mlContext.Data.SaveAsText(trainData, fileStream, separatorChar:',', headerRow: true, schema: true);
                 }
 
             }
@@ -209,19 +205,16 @@ namespace CreditCardFraudDetection.Trainer
                 };
 
                 // Load splited data
-                trainData = mlContext.Data.ReadFromTextFile(columnsPlus, Path.Combine(_outputPath, "trainData.csv"),
-                                                                              advancedSettings: s => {
-                                                                                  s.HasHeader = txtLoaderArgs.HasHeader;
-                                                                                  s.Separator = txtLoaderArgs.Separator;
-                                                                              }
-                                                                             );
-                testData = mlContext.Data.ReadFromTextFile(columnsPlus, Path.Combine(_outputPath, "testData.csv"),
-                                                                              advancedSettings: s => {
-                                                                                  s.HasHeader = txtLoaderArgs.HasHeader;
-                                                                                  s.Separator = txtLoaderArgs.Separator;
-                                                                              }
-                                                                             );
+                trainData = mlContext.Data.ReadFromTextFile(Path.Combine(_outputPath, "trainData.csv"),
+                                                            columnsPlus,                                                           
+                                                            hasHeader: txtLoaderArgs.HasHeader,
+                                                            separatorChar: txtLoaderArgs.Separator.ToCharArray()[0]);
 
+                                                                     
+                testData = mlContext.Data.ReadFromTextFile(Path.Combine(_outputPath, "testData.csv"),
+                                                           columnsPlus,
+                                                           hasHeader: txtLoaderArgs.HasHeader,
+                                                           separatorChar: txtLoaderArgs.Separator.ToCharArray()[0]);
             }
 
             ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (traindata)");

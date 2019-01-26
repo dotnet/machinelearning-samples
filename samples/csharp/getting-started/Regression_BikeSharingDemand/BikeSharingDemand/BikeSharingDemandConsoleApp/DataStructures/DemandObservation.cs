@@ -1,4 +1,4 @@
-﻿using Microsoft.ML.Runtime.Api;
+﻿using Microsoft.ML.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,19 +7,32 @@ namespace BikeSharingDemand.DataStructures
 {
     public class DemandObservation
     {
-        public float Season;
-        public float Year;
-        public float Month;
-        public float Hour;
-        public float Holiday;
-        public float Weekday;
-        public float WorkingDay;
-        public float Weather;
-        public float Temperature;
-        public float NormalizedTemperature;
-        public float Humidity;
-        public float Windspeed;
-        public float Count;   // This is the observed count, to be used a "label" to predict
+        [LoadColumn(0)]
+        public float Season { get; set; }
+        [LoadColumn(1)]
+        public float Year { get; set; }
+        [LoadColumn(2)]
+        public float Month { get; set; }
+        [LoadColumn(3)]
+        public float Hour { get; set; }
+        [LoadColumn(4)]
+        public float Holiday { get; set; }
+        [LoadColumn(5)]
+        public float Weekday { get; set; }
+        [LoadColumn(6)]
+        public float WorkingDay { get; set; }
+        [LoadColumn(7)]
+        public float Weather { get; set; }
+        [LoadColumn(8)]
+        public float Temperature { get; set; }
+        [LoadColumn(9)]
+        public float NormalizedTemperature { get; set; }
+        [LoadColumn(10)]
+        public float Humidity { get; set; }
+        [LoadColumn(11)]
+        public float Windspeed { get; set; }
+        [LoadColumn(12)]
+        public float Count { get; set; }   // This is the observed count, to be used a "label" to predict
     }
 
     public static class DemandObservationSample

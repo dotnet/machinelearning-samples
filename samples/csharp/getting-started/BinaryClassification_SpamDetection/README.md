@@ -28,7 +28,7 @@ To build the estimator we will:
     * Convert the label ("spam" or "ham") to a boolean ("true" represents spam) so we can use it with a binary classifier. 
     * Featurize the text message into a numeric vector so a machine learning trainer can use it
 
-* Add a trainer (such as `LinearClassificationTrainer`).
+* Add a trainer (such as `StochasticDualCoordinateAscent`).
 
 The initial code is similar to the following:
 
@@ -54,8 +54,6 @@ var data = reader.Read(new MultiFileSource(TrainDataPath));
 var estimator = mlContext.Transforms.CustomMapping<MyInput, MyOutput>(MyLambda.MyAction, "MyLambda")
     .Append(mlContext.Transforms.Text.FeaturizeText("Message", "Features"))
     .Append(mlContext.BinaryClassification.Trainers.StochasticDualCoordinateAscent());
-
-}
 ```
 
 ### 2. Evaluate model

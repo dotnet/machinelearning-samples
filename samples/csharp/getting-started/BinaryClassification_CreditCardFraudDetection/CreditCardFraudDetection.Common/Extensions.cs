@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Data;
+using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +10,7 @@ namespace CreditCardFraudDetection.Common
     public static class ConsoleExtensions
     {
 
-        public static void ToConsole(this MultiClassClassifierEvaluator.Result result)
+        public static void ToConsole(this MultiClassClassifierMetrics result)
         {
             Console.WriteLine($"Acuracy macro: {result.AccuracyMacro}");
             Console.WriteLine($"Acuracy micro: {result.AccuracyMicro}");
@@ -27,7 +27,7 @@ namespace CreditCardFraudDetection.Common
 
         }
 
-        public static void ToConsole(this BinaryClassifierEvaluator.CalibratedResult result)
+        public static void ToConsole(this CalibratedBinaryClassificationMetrics result)
         {
             Console.WriteLine($"Area under ROC curve: {result.Auc}");
             Console.WriteLine($"Area under the precision/recall curve: {result.Auprc}");
@@ -41,7 +41,7 @@ namespace CreditCardFraudDetection.Common
 
         }
 
-        public static void ToConsole(this RegressionEvaluator.Result result)
+        public static void ToConsole(this RegressionMetrics result)
         {
             Console.WriteLine($"L1: {result.L1}");
             Console.WriteLine($"L2: {result.L2}");

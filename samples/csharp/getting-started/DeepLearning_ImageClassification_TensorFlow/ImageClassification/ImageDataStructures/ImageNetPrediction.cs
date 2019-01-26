@@ -1,5 +1,5 @@
 ﻿using ImageClassification.ModelScorer;
-using Microsoft.ML.Runtime.Api;
+using Microsoft.ML.Data;
 
 namespace ImageClassification.ImageDataStructures
 {

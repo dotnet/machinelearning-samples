@@ -6,7 +6,6 @@ using Microsoft.ML.Core.Data;
 using Microsoft.ML;
 using Octokit;
 using System.IO;
-using Microsoft.ML.Runtime.Data;
 using GitHubLabeler.DataStructures;
 using Common;
 
@@ -21,7 +20,7 @@ namespace GitHubLabeler
         private readonly string _modelPath;
         private readonly MLContext _mlContext;
 
-        private readonly PredictionFunction<GitHubIssue, GitHubIssuePrediction> _predFunction;
+        private readonly PredictionEngine<GitHubIssue, GitHubIssuePrediction> _predEngine;
         private readonly ITransformer _trainedModel;
 
         public Labeler(string modelPath, string repoOwner = "", string repoName = "", string accessToken = "")
@@ -40,7 +39,7 @@ namespace GitHubLabeler
             }
 
             // Create prediction engine related to the loaded trained model
-            _predFunction = _trainedModel.MakePredictionFunction<GitHubIssue, GitHubIssuePrediction>(_mlContext);
+            _predEngine = _trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_mlContext);
 
             //Configure Client to access a GitHub repo
             if (accessToken != string.Empty)
@@ -59,7 +58,7 @@ namespace GitHubLabeler
 
             //Predict label for single hard-coded issue
             //Score
-            var prediction = _predFunction.Predict(singleIssue);
+            var prediction = _predEngine.Predict(singleIssue);
             Console.WriteLine($"=============== Single Prediction - Result: {prediction.Area} ===============");
         }
 
@@ -106,7 +105,7 @@ namespace GitHubLabeler
 
         public string Predict(GitHubIssue issue)
         {          
-            var prediction = _predFunction.Predict(issue);
+            var prediction = _predEngine.Predict(issue);
 
             return prediction.Area;
         }

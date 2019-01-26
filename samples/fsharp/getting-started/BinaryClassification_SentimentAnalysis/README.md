@@ -2,14 +2,15 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | README.md needs update | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v0.9           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 ------------------------------------
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
 ## Problem
-This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use IMDB and Yelp comments that were processed by humans and each comment has been assigned a label: 
+This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use wikipedia-detox-datasets (one dataset for training and a second dataset for model's accuracy evaluation) that were processed by humans and each comment has been assigned a sentiment label:
+
 * 0 - negative
 * 1 - positive
 
@@ -35,66 +36,62 @@ Building a model includes:
 
 * Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
 
-* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `TextTransform`)
+* Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `FeaturizeText`)
 
-* Choosing a trainer/learning algorithm (such as `LinearClassificationTrainer`) to train the model with. 
+* Choosing a trainer/learning algorithm (such as `FastTree`) to train the model with. 
 
 The initial code is similar to the following:
 
 ```fsharp
-    //1. Create ML.NET context/environment
-    use env = new LocalEnvironment()
+    // STEP 1: Common data loading configuration
+    let textLoader =
+        mlContext.Data.CreateTextReader (
+            columns = 
+                [|
+                    TextLoader.Column("Label", Nullable DataKind.Bool, 0)
+                    TextLoader.Column("Text", Nullable DataKind.Text, 1)
+                |],
+            hasHeader = true,
+            separatorChar = '\t'
+        )
 
-    //2. Create DataReader with data schema mapped to file's columns
-    let reader = 
-        TextLoader(
-            env, 
-            TextLoader.Arguments(
-                Separator = "tab", 
-                HasHeader = true, 
-                Column = 
-                    [|
-                        TextLoader.Column("Label", Nullable DataKind.Bool, 0)
-                        TextLoader.Column("Text", Nullable DataKind.Text, 1)
-                    |]
-                )
-            )
+    let trainingDataView = textLoader.Read trainDataPath
+    let testDataView = textLoader.Read testDataPath
 
-    //Load training data
-    let trainingDataView = MultiFileSource(TrainDataPath) |> reader.Read
 
-    printfn "=============== Create and Train the Model ==============="
+    // STEP 2: Common data process configuration with pipeline data transformations          
+    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features")
 
-    let pipeline = 
-        env
-        |> Pipeline.textTransform "Text" "Features"
-        |> Pipeline.append (LinearClassificationTrainer(env, LinearClassificationTrainer.Arguments(), "Features", "Label"))
+    // STEP 3: Set the training algorithm, then create and config the modelBuilder
+    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn = "Label", featureColumn = "Features")
+    let modelBuilder = 
+        Common.ModelBuilder.create mlContext dataProcessPipeline
+        |> Common.ModelBuilder.addTrainer trainer
 ```
+
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. To perform training you need to call the Fit() method while providing the training dataset (wikipedia-detox-250-line-data.tsv file) in a DataView object.
+Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object.
+
+To perform training you need to call the Fit() method while providing the training dataset (wikipedia-detox-250-line-data.tsv file) in a DataView object.
+
 ```fsharp
-    let model = 
-        pipeline          
-        |> Pipeline.fit trainingDataView
+    let trainedModel = 
+        modelBuilder
+        |> Common.ModelBuilder.train trainingDataView
 ```
+
 ### 3. Evaluate model
 We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments.
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 ```fsharp
-    //5. Evaluate the model and show accuracy stats
-    let testDataView = MultiFileSource(TestDataPath) |> reader.Read
+    // STEP 5: Evaluate the model and show accuracy stats
+    let predictions = trainedModel.Transform testDataView
+    let metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score")
 
-    let predictions = model.Transform testDataView
-    let binClassificationCtx = env |> BinaryClassificationContext
-    let metrics = binClassificationCtx.Evaluate(predictions, "Label")
-
-    printfn "Model quality metrics evaluation"
-    printfn "------------------------------------------"
-    printfn "Accuracy: %.2f%%" (metrics.Accuracy * 100.)
+    Common.ConsoleHelper.printBinaryClassificationMetrics (trainer.ToString()) metrics
 ```
->*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
 If you are not satisfied with the quality of the model, you can try to improve it by providing larger training datasets and by choosing different training algorithms with different hyper-parameters for each algorithm.
 
@@ -104,8 +101,10 @@ If you are not satisfied with the quality of the model, you can try to improve i
 After the model is trained, we can use the `Predict()` API to predict the sentiment for new reviews. 
 
 ```fsharp
-    let predictionFunct = model.MakePredictionFunction<SentimentIssue, SentimentPrediction> env
-    let sampleStatement = { Label = false; Text = "This is a very rude movie" }
-    let resultprediction = predictionFunct.Predict sampleStatement
+    // Create prediction engine related to the loaded trained model
+    let predEngine = trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext)
+
+    //Score
+    let resultprediction = predEngine.Predict(sampleStatement)
 ```
-Where in `resultprediction.PredictionLabel` will be either 1 or 0 depending if it is a positive or negative predicted sentiment.
+Where in `resultprediction.PredictionLabel` will be either true or false depending if it is a positive or negative predicted sentiment.

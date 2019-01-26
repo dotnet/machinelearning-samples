@@ -1,4 +1,11 @@
 # ML.NET Samples
+ML.NET is still new, and as we are developing it, we would love to get your feedback! Please fill out the brief survey below and help shape the future of ML.NET by telling us about your usage and interest in Machine Learning and ML.NET.
+
+<a href="https://www.research.net/r/mlnet-survey">Take the survey now!</a>
+
+At the end of the survey, you can leave your name and e-mail address (optional) so that an engineer on the .NET team can reach out to you to talk a little bit more about your experiences and thoughts. We appreciate your contribution!
+
+-------------------------------------------------------
 [![](https://dotnet.visualstudio.com/_apis/public/build/definitions/9ee6d478-d288-47f7-aacc-f6e6d082ae6d/22/badge)](https://dotnet.visualstudio.com/public/_build/index?definitionId=22 )
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
 
@@ -81,7 +88,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h4>Movie recommender &nbsp;&nbsp;&nbsp;
         <a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon">
         <a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"> </h4>
-       <h4>Product recommender  Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
+       <h4>Product recommender &nbsp;&nbsp;&nbsp;
+        <a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
@@ -117,7 +125,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <img src="images/Ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
-  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/deslike, context, interests, etc.
+  Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/dislike, context, interests, etc.
   </td>
   <td>
       <h4>Coming soon</h4>
@@ -140,7 +148,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  </table>
 
-**NuGet feed configuration:** Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such us 0.8, 0.9 etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.8.0-preview-27128-1), not available in the regular NuGet feed.
+**NuGet feed configuration:** Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such as 0.8, 0.9 etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.8.0-preview-27128-1), not available in the regular NuGet feed.
 
 If that is the case, please use this MyGet feed in Visual Studio or your NuGet feed configuration:
 
@@ -155,6 +163,9 @@ In addition to the ML.NET samples provided by Microsoft, we're also highlighting
 
 Those Community Samples are not maintained by Microsoft but by their owners.
 If you have created any cool ML.NET sample, please, add its info into this [REQUEST issue](https://github.com/dotnet/machinelearning-samples/issues/86) and we'll publish its information in the mentioned page, eventually.
+
+## Translations of Samples:
+- [Chinese Simplified](https://github.com/feiyun0112/machinelearning-samples.zh-cn)
 
 ## Learn more
 
