@@ -35,40 +35,22 @@ namespace MulticlassClassification_HeartDisease
             var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TrainDataPath, hasHeader: true, separatorChar: ',');
             var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TestDataPath, hasHeader: true, separatorChar: ',');
 
-
-            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features",
-                "Age",
-                "Sex",
-                "Cp",
-                "TrestBps",
-                "Chol",
-                "Fbs",
-                "RestEcg",
-                "Thalac",
-                "Exang",
-                "OldPeak",
-                "Slope",
-                "Ca",
-                "Thal"
-            );
-
-            IEstimator<ITransformer> trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, DefaultColumnNames.Features);
-
-            trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent();
-            var trainingPipeline = dataProcessPipeline.Append(trainer);
+            var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
+                .Append(mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, DefaultColumnNames.Features));
 
             Console.WriteLine("=============== Training the model ===============");
-            var trainedModel = trainingPipeline.Fit(trainingDataView);
-            Console.WriteLine();
+            var trainedModel = pipeline.Fit(trainingDataView);
+            Console.WriteLine("=============== Finish the train model. Push Enter ===============");
+
+            Console.ReadKey();
 
 
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score", "PredictedLabel", 0);
 
-
             Console.WriteLine($"************************************************************");
-            Console.WriteLine($"*    Metrics for {trainer.ToString()} multi-class classification model   ");
+            Console.WriteLine($"*    Metrics for {pipeline.ToString()} multi-class classification model   ");
             Console.WriteLine($"*-----------------------------------------------------------");
             Console.WriteLine($"    AccuracyMacro = {metrics.AccuracyMacro:0.####}, a value between 0 and 1, the closer to 1, the better");
             Console.WriteLine($"    AccuracyMicro = {metrics.AccuracyMicro:0.####}, a value between 0 and 1, the closer to 1, the better");
