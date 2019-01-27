@@ -8,7 +8,6 @@
   <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.9" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.MatrixFactorization" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
 
   <ItemGroup>

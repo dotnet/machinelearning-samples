@@ -19,7 +19,6 @@
     <PackageReference Include="CsvHelper" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.MatrixFactorization" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 

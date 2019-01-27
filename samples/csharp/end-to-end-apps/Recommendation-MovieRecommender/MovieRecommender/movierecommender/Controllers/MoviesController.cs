@@ -40,7 +40,7 @@ namespace movierecommender.Controllers
 
         public ActionResult Recommend(int id)
         {
-            Profile activeprofile = _profileService.GetProfileByID(id);
+            var activeprofile = _profileService.GetProfileByID(id);
 
             // 1. Create the local environment
             MLContext mlContext = new MLContext();
@@ -53,10 +53,10 @@ namespace movierecommender.Controllers
             }
 
             //3. Create a prediction function
-            PredictionEngine<MovieRating, MovieRatingPrediction> predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
+            var predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
 
             List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
-            List<(int movieId, int movieRating)> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+            var MovieRatings = _profileService.GetProfileWatchedMovies(id);
             List<Movie> WatchedMovies = new List<Movie>();
 
             foreach ((int movieId, int movieRating) in MovieRatings)
@@ -66,13 +66,13 @@ namespace movierecommender.Controllers
 
             // 3. Create an Rating Prediction Output Class
             MovieRatingPrediction prediction = null;
-            foreach (Movie movie in _movieService.GetTrendingMovies)
+            foreach (var movie in _movieService.GetTrendingMovies)
             {
                 //4. Call the Rating Prediction for each movie prediction
                  prediction = predictionEngine.Predict(new MovieRating
                  {
-                     userId = id,
-                     movieId = movie.MovieID
+                     userId = id.ToString(),
+                     movieId = movie.MovieID.ToString()
                  });
 
                 //5. Normalize the prediction scores for the "ratings" b/w 0 - 100
@@ -101,14 +101,14 @@ namespace movierecommender.Controllers
 
         public ActionResult Profiles()
         {
-            List<Profile> profiles = _profileService.GetProfiles;
+            var profiles = _profileService.GetProfiles;
             return View(profiles);
         }
 
         public ActionResult Watched(int id)
         {
-            Profile activeprofile = _profileService.GetProfileByID(id);
-            List<(int movieId, int movieRating)> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+            var activeprofile = _profileService.GetProfileByID(id);
+            var MovieRatings = _profileService.GetProfileWatchedMovies(id);
             List<Movie> WatchedMovies = new List<Movie>();
 
             foreach ((int movieId, float normalizedScore) in MovieRatings)
@@ -130,16 +130,16 @@ namespace movierecommender.Controllers
 
         public class MovieRating
         {
-            public float userId;
+            public string userId;
 
-            public float movieId;
+            public string movieId;
 
-            public float Label;
+            public bool Label;
         }
 
         public class MovieRatingPrediction
         {
-            public float Label;
+            public bool Label;
 
             public float Score;
         }
