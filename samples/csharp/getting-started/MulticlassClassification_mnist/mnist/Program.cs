@@ -44,11 +44,13 @@ namespace mnist
                 ITransformer trainedModel = trainingPipeline.Fit(data);
                 long elapsedMs = watch.ElapsedMilliseconds;
                 Console.WriteLine($"***** Training time: {elapsedMs / 1000} seconds *****");
+                
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 var predictions = trainedModel.Transform(testData);
                 var metrics = env.MulticlassClassification.Evaluate(predictions, "Number", "Score");
 
+                Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
                 using (var fs = new FileStream(_modelpath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     env.Model.Save(trainedModel, fs);
