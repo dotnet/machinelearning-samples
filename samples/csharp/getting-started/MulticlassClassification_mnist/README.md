@@ -25,7 +25,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 ### 1. Build model
 
 Building a model includes: 
-* Uploading data (`optdigits-train.csv`) with `DataReader`)
+* Uploading data (`optdigits-train.csv`) with (`DataReader`)
 * Create an Estimator and transform the data in the first 64 columns to one column so it can be used effectively by an ML algorithm (with `Concatenate`)
 * Choosing a learning algorithm (`StochasticDualCoordinateAscent`). 
 
