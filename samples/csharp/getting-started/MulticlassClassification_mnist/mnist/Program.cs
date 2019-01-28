@@ -64,6 +64,8 @@ namespace mnist
                 var predictions = trainedModel.Transform(testData);
                 var metrics = env.MulticlassClassification.Evaluate(predictions, "Number", "Score");
 
+                Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
+
                 using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     env.Model.Save(trainedModel, fs);
 
