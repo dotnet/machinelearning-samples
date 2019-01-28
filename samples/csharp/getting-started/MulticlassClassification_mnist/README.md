@@ -32,10 +32,6 @@ Building a model includes:
 
 The initial code is similar to the following:
 ```CSharp
-// Create MLContext to be shared across the model creation workflow objects 
-// Set a random seed for repeatable/deterministic results across multiple trainings.
-var mlContext = new MLContext(seed: 0);
-
 // STEP 1: Common data loading configuration
 var reader = env.Data.CreateTextReader(
 	new TextLoader.Arguments()
@@ -68,7 +64,6 @@ To perform training we just call the method providing the training dataset (iris
 
 ```CSharp
 // STEP 4: Train the model fitting to the DataSet            
-
 ITransformer trainedModel = trainingPipeline.Fit(data);
 
 ```

@@ -27,7 +27,6 @@ namespace mnist
         {
             try
             {
-
                 var classification = new MulticlassClassificationContext(env);
 
                 // STEP 1: Common data loading configuration
