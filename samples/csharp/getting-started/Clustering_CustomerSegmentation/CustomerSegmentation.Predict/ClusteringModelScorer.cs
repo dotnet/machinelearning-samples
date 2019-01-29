@@ -1,6 +1,4 @@
 ﻿using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
 using OxyPlot;
 using OxyPlot.Series;
 using System;
@@ -12,6 +10,7 @@ using System.Linq;
 using Common;
 using CustomerSegmentation.DataStructures;
 using Microsoft.ML;
+using Microsoft.ML.Data;
 
 namespace CustomerSegmentation.Model
 {
@@ -43,17 +42,15 @@ namespace CustomerSegmentation.Model
         }
 
         public void CreateCustomerClusters()
-        {            
-            var reader = new TextLoader(_mlContext,
-                new TextLoader.Arguments
-                {
-                    Column = new[] {
-                        new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                        new TextLoader.Column("LastName", DataKind.Text, 32)
-                    },
-                    HasHeader = true,
-                    Separator = ","
-                });
+        {
+            TextLoader reader = _mlContext.Data.CreateTextReader(
+                            columns: new[]
+                                        {
+                                          new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
+                                          new TextLoader.Column("LastName", DataKind.Text, 32)
+                                        },
+                            hasHeader: true,
+                            separatorChar: ',');
 
             var data = reader.Read(_pivotDataLocation);
 

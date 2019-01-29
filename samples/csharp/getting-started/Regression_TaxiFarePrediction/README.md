@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+| v0.9           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
@@ -32,7 +32,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 ![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
-### 1. Build model
+### 1. Build model's pipeline
 
 Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (`StochasticDualCoordinateAscent` in this case):
 
@@ -41,21 +41,19 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
 MLContext mlContext = new MLContext(seed: 0);
 
 // STEP 1: Common data loading configuration
-TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                {
-                                    Separator = ",",
-                                    HasHeader = true,
-                                    Column = new[]
-                                                {
-                                                    new TextLoader.Column("VendorId", DataKind.Text, 0),
-                                                    new TextLoader.Column("RateCode", DataKind.Text, 1),
-                                                    new TextLoader.Column("PassengerCount", DataKind.R4, 2),
-                                                    new TextLoader.Column("TripTime", DataKind.R4, 3),
-                                                    new TextLoader.Column("TripDistance", DataKind.R4, 4),
-                                                    new TextLoader.Column("PaymentType", DataKind.Text, 5),
-                                                    new TextLoader.Column("FareAmount", DataKind.R4, 6)
-                                                }
-                                });
+TextLoader textLoader = mlContext.Data.CreateTextReader(new[]
+                                                        {
+                                                            new TextLoader.Column("VendorId", DataKind.Text, 0),
+                                                            new TextLoader.Column("RateCode", DataKind.Text, 1),
+                                                            new TextLoader.Column("PassengerCount", DataKind.R4, 2),
+                                                            new TextLoader.Column("TripTime", DataKind.R4, 3),
+                                                            new TextLoader.Column("TripDistance", DataKind.R4, 4),
+                                                            new TextLoader.Column("PaymentType", DataKind.Text, 5),
+                                                            new TextLoader.Column("FareAmount", DataKind.R4, 6)
+                                                        },
+                                                            hasHeader: true,
+                                                            separatorChar: ','
+                                                        );
 
 IDataView baseTrainingDataView = textLoader.Read(TrainDataPath);
 IDataView testDataView = textLoader.Read(TestDataPath);
@@ -127,10 +125,10 @@ using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, Fi
 }
 
 // Create prediction engine related to the loaded trained model
-var predFunction = trainedModel.MakePredictionFunction<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+var predEngine = trainedModel.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(mlContext);
 
 //Score
-var resultprediction = predFunction.Predict(taxiTripSample);
+var resultprediction = predEngine.Predict(taxiTripSample);
 
 Console.WriteLine($"**********************************************************************");
 Console.WriteLine($"Predicted fare: {resultprediction.FareAmount:0.####}, actual fare: 15.5");

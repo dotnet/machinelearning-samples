@@ -2,10 +2,10 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Runtime.Data;
 using Microsoft.ML.Core.Data;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
 using Common;
+using Microsoft.ML.Data;
 
 namespace eShopForecastModelsTrainer
 {
@@ -35,9 +35,8 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training country forecasting model");
 
-            var textLoader = mlContext.Data.TextReader(new TextLoader.Arguments
-                                        {
-                                            Column = new[] {
+            TextLoader textLoader = mlContext.Data.CreateTextReader(
+                                            columns:new[] {
                                                 new TextLoader.Column("next", DataKind.R4, 0 ),
                                                 new TextLoader.Column("country", DataKind.Text, 1 ),
                                                 new TextLoader.Column("year", DataKind.R4, 2 ),
@@ -50,9 +49,9 @@ namespace eShopForecastModelsTrainer
                                                 new TextLoader.Column("med", DataKind.R4, 9 ),
                                                 new TextLoader.Column("prev", DataKind.R4, 10 )
                                             },
-                                            HasHeader = true,
-                                            Separator = ","
-                                        });
+                                            hasHeader:true,
+                                            separatorChar:','                                    
+                                        );
 
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
 
@@ -99,7 +98,7 @@ namespace eShopForecastModelsTrainer
             //        .LoadFrom(mlContext, file);
             //}
 
-            var predictionFunct = trainedModel.MakePredictionFunction<CountryData, CountrySalesPrediction>(mlContext);
+            var predictionEngine = trainedModel.CreatePredictionEngine<CountryData, CountrySalesPrediction>(mlContext);
 
             Console.WriteLine("** Testing Country 1 **");
 
@@ -118,7 +117,7 @@ namespace eShopForecastModelsTrainer
                 sales = 873612.9F,
             };
             // Predict sample data
-            var prediction = predictionFunct.Predict(dataSample);
+            var prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(6.0084501F, 10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score, 10)}");
 
             dataSample = new CountryData()
@@ -134,7 +133,7 @@ namespace eShopForecastModelsTrainer
                 count = 2387,
                 sales = 1019647.67F,
             };
-            prediction = predictionFunct.Predict(dataSample);
+            prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score, 10)}");
 
             Console.WriteLine(" ");
@@ -153,7 +152,7 @@ namespace eShopForecastModelsTrainer
                 count = 10,
                 sales = 5322.56F
             };
-            prediction = predictionFunct.Predict(dataSample);
+            prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Real value (US$): {Math.Pow(3.805769F, 10)}, Predicted Forecast (US$): {Math.Pow(prediction.Score, 10)}");
 
             dataSample = new CountryData()
@@ -169,7 +168,7 @@ namespace eShopForecastModelsTrainer
                 count = 11,
                 sales = 6393.96F,
             };
-            prediction = predictionFunct.Predict(dataSample);
+            prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Country: {dataSample.country}, month to predict: {dataSample.month + 1}, year: {dataSample.year} - Predicted Forecast (US$):  {Math.Pow(prediction.Score, 10)}");
         }
     }

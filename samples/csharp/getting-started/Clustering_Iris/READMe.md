@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v0.9           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -36,19 +36,17 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-TextLoader textLoader = mlContext.Data.TextReader(new TextLoader.Arguments()
-                                {
-                                    Separator = "\t",
-                                    HasHeader = true,
-                                    Column = new[]
+TextLoader textLoader = mlContext.Data.CreateTextReader(
+                                    columns:new[]
                                                 {
                                                     new TextLoader.Column("Label", DataKind.R4, 0),
                                                     new TextLoader.Column("SepalLength", DataKind.R4, 1),
                                                     new TextLoader.Column("SepalWidth", DataKind.R4, 2),
                                                     new TextLoader.Column("PetalLength", DataKind.R4, 3),
                                                     new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                                }
-                                });
+                                                },
+                                    hasHeader:true,
+                                    separatorChar:'\t');
 
 IDataView fullData = textLoader.Read(DataPath);
 
@@ -78,10 +76,10 @@ After the model is build and trained, we can use the `Predict()` API to predict 
                 };
 
                 // Create prediction engine related to the loaded trained model
-                var predFunction = trainedModel.MakePredictionFunction<IrisData, IrisPrediction>(mlContext);
+                var predEngine = model.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
 
                 //Score
-                var resultprediction = predFunction.Predict(sampleIrisData);
+                var resultprediction = predEngine.Predict(sampleIrisData);
                 
                 Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
 ```

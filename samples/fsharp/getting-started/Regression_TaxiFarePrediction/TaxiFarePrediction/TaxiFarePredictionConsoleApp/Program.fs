@@ -1,10 +1,11 @@
 ﻿open System
 open System.IO
+open System.Linq
 open System.Diagnostics
 open PLplot
 open TaxiFarePrediction.DataStructures.DataStructures
 open Microsoft.ML
-open Microsoft.ML.Runtime.Data
+open Microsoft.ML.Data
 open Microsoft.ML.Transforms
 open Microsoft.ML.Transforms.Normalizers
 
@@ -17,12 +18,14 @@ let testDataPath = sprintf @"%s/taxi-fare-test.csv" baseDatasetsLocation
 let baseModelsPath = @"../../../../MLModels"
 let modelPath = sprintf @"%s/TaxiFareModel.zip" baseModelsPath
 
-let dataLoader (mlContext : MLContext) =
-    mlContext.Data.TextReader(
-        TextLoader.Arguments(
-            Separator = ",",
-            HasHeader = true,
-            Column = 
+let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
+
+    // STEP 1: Common data loading configuration
+    let textLoader = 
+        mlContext.Data.CreateTextReader(
+            separatorChar = ',',
+            hasHeader = true,
+            columns = 
                 [|
                     TextLoader.Column("VendorId", Nullable DataKind.Text, 0)
                     TextLoader.Column("RateCode", Nullable DataKind.Text, 1)
@@ -32,26 +35,19 @@ let dataLoader (mlContext : MLContext) =
                     TextLoader.Column("PaymentType", Nullable DataKind.Text, 5)
                     TextLoader.Column("FareAmount", Nullable DataKind.R4, 6)
                 |]
-        )
-    )
+            )
 
-let read (dataPath : string) (dataLoader : TextLoader) =
-    dataLoader.Read dataPath
+    let baseTrainingDataView = textLoader.Read trainDataPath
+    let testDataView = textLoader.Read testDataPath
 
-let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
-    
-    // STEP 1: Common data loading configuration
-    let trainingDataView = 
-        dataLoader mlContext
-        |> read trainDataPath
-
-    let testDataView = 
-        dataLoader mlContext
-        |> read testDataPath
+    //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
+    //let cnt = baseTrainingDataView.GetColumn<decimal>(mlContext, "FareAmount").Count()
+    let trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
+    //let cnt2 = trainingDataView.GetColumn<float>(mlContext, "FareAmount").Count()
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
-        CopyColumnsEstimator(mlContext, "FareAmount", "Label")
+        mlContext.Transforms.CopyColumns("FareAmount", "Label")
         |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId", "VendorIdEncoded"))
         |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode", "RateCodeEncoded"))
         |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
@@ -65,13 +61,15 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.peekDataViewInConsole<TaxiTrip> mlContext trainingDataView dataProcessPipeline 5 |> ignore
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 5 |> ignore
 
-    // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(label = "Label", features = "Features")
+    // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
+    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
+
     let modelBuilder = 
         Common.ModelBuilder.create mlContext dataProcessPipeline
         |> Common.ModelBuilder.addTrainer trainer
 
     // STEP 4: Train the model fitting to the DataSet
+    //The pipeline is trained on the dataset that has been loaded and transformed.
     printfn "=============== Training the model ==============="
     let trainedModel = 
         modelBuilder
