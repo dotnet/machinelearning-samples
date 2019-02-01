@@ -54,19 +54,8 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 0);
 
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.CreateTextReader(
-                                        columns:new[]
-                                                    {
-                                                        new TextLoader.Column("ID", DataKind.Text, 0),
-                                                        new TextLoader.Column("Area", DataKind.Text, 1),
-                                                        new TextLoader.Column("Title", DataKind.Text, 2),
-                                                        new TextLoader.Column("Description", DataKind.Text, 3),
-                                                    },
-                                        hasHeader:true,
-                                        separatorChar:'\t');
-
-            var trainingDataView = textLoader.Read(DataSetLocation);
-
+            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t');
+             
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Area", "Label")
                             .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
@@ -171,9 +160,9 @@ namespace GitHubLabeler
             var repoOwner = Configuration["GitHubRepoOwner"]; //IMPORTANT: This can be a GitHub User or a GitHub Organization
             var repoName = Configuration["GitHubRepoName"];
 
-            if (string.IsNullOrEmpty(token) ||
-                string.IsNullOrEmpty(repoOwner) ||
-                string.IsNullOrEmpty(repoName))
+            if (string.IsNullOrEmpty(token) || token == "YOUR - GUID - GITHUB - TOKEN" ||
+                string.IsNullOrEmpty(repoOwner) || repoOwner == "YOUR-REPO-USER-OWNER-OR-ORGANIZATION" ||
+                string.IsNullOrEmpty(repoName) || repoName == "YOUR-REPO-SINGLE-NAME" )
             {
                 Console.Error.WriteLine();
                 Console.Error.WriteLine("Error: please configure the credentials in the appsettings.json file");

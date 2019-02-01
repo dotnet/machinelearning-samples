@@ -50,19 +50,7 @@ Here's the code which will be used to build the model:
  
  var mlcontext = new MLContext();
 
- var reader = mlcontext.Data.TextReader(new TextLoader.Arguments()
-            {
-                Separator = ",",
-                HasHeader = true,
-                Column = new[]
-                {
-                    new TextLoader.Column("userId", DataKind.R4, 0),
-                    new TextLoader.Column("movieId", DataKind.R4, 1),
-                    new TextLoader.Column("Label", DataKind.R4, 2)
-                }
-            });
-
- IDataView trainingDataView = reader.Read(new MultiFileSource(TrainingDataLocation));
+ IDataView trainingDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, separatorChar:',');
 
  var pipeline = mlcontext.Transforms.Categorical.MapValueToKey("userId", "userIdEncoded")
                                    .Append(mlcontext.Transforms.Categorical.MapValueToKey("movieId", "movieIdEncoded")
@@ -87,7 +75,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```CSharp 
 Console.WriteLine("=============== Evaluating the model ===============");
-IDataView testDataView = reader.Read(new MultiFileSource(TestDataLocation));
+IDataView testDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
 var prediction = model.Transform(testDataView);
 var metrics = mlcontext.Regression.Evaluate(prediction, label: "Label", score: "Score");
 ```

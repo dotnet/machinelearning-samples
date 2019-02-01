@@ -67,29 +67,50 @@ However, when learning/researching the sample, you can focus just on one of the 
 
 #### 1. Build Model
 
-The first step you need to implement is to define the data columns to be loaded from the dataset files, like in the following code:
+STEP 1: Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ProductData. 
+
+[Schema in a class type](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
+
+```csharp
+ public class ProductData
+    {
+        // next,productId,year,month,units,avg,count,max,min,prev
+        //The index of column in LoadColumn(int index) should be matched with the position of columns in file.
+        [LoadColumn(0)]
+        public float next;
+
+        [LoadColumn(1)]
+        public string productId;
+
+        [LoadColumn(2)]
+        public float year;
+
+        [LoadColumn(3)]
+        public float month;
+
+        [LoadColumn(4)]
+        public float units;
+
+        [LoadColumn(5)]
+        public float avg;
+
+        [LoadColumn(6)]
+        public float count;
+
+        [LoadColumn(7)]
+        public float max;
+
+        [LoadColumn(8)]
+        public float min;
+
+        [LoadColumn(9)]
+        public float prev;
+    }
+```
 
 [Model build and train](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
 
-```csharp
-TextLoader textLoader = mlContext.Data.CreateTextReader(
-                            columns: new[] {
-                                new TextLoader.Column("next", DataKind.R4, 0 ),
-                                new TextLoader.Column("productId", DataKind.Text, 1 ),
-                                new TextLoader.Column("year", DataKind.R4, 2 ),
-                                new TextLoader.Column("month", DataKind.R4, 3 ),
-                                new TextLoader.Column("units", DataKind.R4, 4 ),
-                                new TextLoader.Column("avg", DataKind.R4, 5 ),
-                                new TextLoader.Column("count", DataKind.R4, 6 ),
-                                new TextLoader.Column("max", DataKind.R4, 7 ),
-                                new TextLoader.Column("min", DataKind.R4, 8 ),
-                                new TextLoader.Column("prev", DataKind.R4, 9 )
-                            },
-                            hasHeader:true,
-                            separatorChar:',');
-```
-
-Then, the next step is to build the pipeline transformations and to specify what trainer/algorithm you are going to use.
+Build the pipeline transformations and to specify what trainer/algorithm you are going to use.
 In this case you are doing the following transformations:
 - Concat current features to a new Column named NumFeatures
 - Transform  productId using [one-hot encoding](https://en.wikipedia.org/wiki/One-hot)
@@ -106,7 +127,7 @@ var trainingPipeline = mlContext.Transforms.Concatenate(outputColumn: "NumFeatur
     .Append(mlContext.Transforms.CopyColumns("next", "Label"))
     .Append(trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features"));
 
-var trainingDataView = textLoader.Read(dataPath);
+var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 ```
 
 #### 2. Evaluate model with cross-validation
