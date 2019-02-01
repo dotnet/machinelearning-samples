@@ -36,21 +36,7 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training product forecasting");
 
-            TextLoader textLoader = mlContext.Data.CreateTextReader(
-                                        columns: new[] {
-                                            new TextLoader.Column("next", DataKind.R4, 0 ),
-                                            new TextLoader.Column("productId", DataKind.Text, 1 ),
-                                            new TextLoader.Column("year", DataKind.R4, 2 ),
-                                            new TextLoader.Column("month", DataKind.R4, 3 ),
-                                            new TextLoader.Column("units", DataKind.R4, 4 ),
-                                            new TextLoader.Column("avg", DataKind.R4, 5 ),
-                                            new TextLoader.Column("count", DataKind.R4, 6 ),
-                                            new TextLoader.Column("max", DataKind.R4, 7 ),
-                                            new TextLoader.Column("min", DataKind.R4, 8 ),
-                                            new TextLoader.Column("prev", DataKind.R4, 9 )
-                                        },
-                                        hasHeader:true,
-                                        separatorChar:',');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
 
@@ -59,9 +45,7 @@ namespace eShopForecastModelsTrainer
                 .Append(mlContext.Transforms.Concatenate(outputColumn: "Features", "NumFeatures", "CatFeatures"))
                 .Append(mlContext.Transforms.CopyColumns("next", "Label"))
                 .Append(trainer);
-
-            var trainingDataView = textLoader.Read(dataPath);
-
+            
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");

@@ -43,18 +43,37 @@ Building the model includes the following steps:
 * Image *featurization* using the deep neural network
 * Image classification using SDCA
 
-The `TextLoader.CreateReader()` is used to define the schema of the text file that will be used to load images in the training model.
+Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageNetData. 
+
 ```csharp
- var loader = new TextLoader(env,
- new TextLoader.Arguments
- {
-     Column = new[] {
-         new TextLoader.Column("ImagePath", DataKind.Text, 0),
-         new TextLoader.Column("Label", DataKind.Text, 1)
-     }
- });
+public class ImageNetData
+    {
+        [LoadColumn(0)]
+        public string ImagePath;
+
+        [LoadColumn(1)]
+        public string Label;
+
+        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
+        {
+            return File.ReadAllLines(file)
+             .Select(x => x.Split('\t'))
+             .Select(x => new ImageNetData()
+             {
+                 ImagePath = Path.Combine(folder,x[0]),
+                 Label = x[1],
+             });
+        }
+    }
 ```
+Load the training data using Text loader
+
+```csharp
+var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
+```
+
 The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
+
 ```csharp
  var pipeline = new ValueToKeyMappingEstimator(env, "Label", "LabelTokey") 
     .Append(new ImageLoadingEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
@@ -66,11 +85,9 @@ The following step is to define the estimator pipe. Usually, when dealing with d
 ```
 
 ### 2. Train model
-In order to begin the training, we declare a datasource and then execute `Fit` on the built pipeline:
-```csharp
- var data = loader.Read(new MultiFileSource(dataLocation));
- var model = pipeline.Fit(data);
-
+In order to begin the training execute `Fit` on the built pipeline:
+```csharp 
+  var model = pipeline.Fit(data);
 ```
 As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
 
