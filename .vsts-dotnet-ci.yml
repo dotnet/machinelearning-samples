@@ -103,3 +103,11 @@ phases:
     displayName: Build MovieRecommender MF (Recommendation)
     inputs:
       projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'
+
+- phase: HeartDisease
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Heart Disease (MulticlassClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\MulticlassClassification_HeartDisease\MulticlassClassification_HeartDisease.sln'
