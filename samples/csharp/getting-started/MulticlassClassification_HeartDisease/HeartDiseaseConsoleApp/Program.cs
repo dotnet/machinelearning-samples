@@ -5,6 +5,8 @@ using MulticlassClassification_HeartDisease.DataStructure;
 using System;
 using System.IO;
 
+using Common;
+
 namespace MulticlassClassification_HeartDisease
 {
     public class Program
@@ -35,33 +37,25 @@ namespace MulticlassClassification_HeartDisease
             var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TrainDataPath, hasHeader: true, separatorChar: ',');
             var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TestDataPath, hasHeader: true, separatorChar: ',');
 
-            var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
-                .Append(mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, DefaultColumnNames.Features));
+            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
+                                        .AppendCacheCheckpoint(mlContext);
 
+            // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
+            ConsoleHelper.PeekDataViewInConsole<HeartData>(mlContext, trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
+
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+            var trainingPipeline = dataProcessPipeline.Append(trainer);        
+            
             Console.WriteLine("=============== Training the model ===============");
-            var trainedModel = pipeline.Fit(trainingDataView);
-            Console.WriteLine("=============== Finish the train model. Push Enter ===============");
-
-            Console.ReadKey();
-
+            var trainedModel = trainingPipeline.Fit(trainingDataView);
+            Console.WriteLine("=============== Finish the train model.===============");
 
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score", "PredictedLabel", 0);
 
-            Console.WriteLine($"************************************************************");
-            Console.WriteLine($"*    Metrics for {pipeline.ToString()} multi-class classification model   ");
-            Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"    AccuracyMacro = {metrics.AccuracyMacro:0.####}, a value between 0 and 1, the closer to 1, the better");
-            Console.WriteLine($"    AccuracyMicro = {metrics.AccuracyMicro:0.####}, a value between 0 and 1, the closer to 1, the better");
-            Console.WriteLine($"    LogLoss = {metrics.LogLoss:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 0 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[3]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"    LogLoss for class 4 = {metrics.PerClassLogLoss[4]:0.####}, the closer to 0, the better");
-            Console.WriteLine($"************************************************************");
-            Console.WriteLine();
+            Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             Console.WriteLine("=============== Saving the model to a file ===============");
             using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
