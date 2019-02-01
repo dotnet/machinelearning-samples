@@ -69,7 +69,7 @@ However, when learning/researching the sample, you can focus just on one of the 
 
 STEP 1: Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ProductData. 
 
-[Schema in a class type](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
+[Schema in a class type](./src/eShopForecastModelsTrainer/ProductData.cs)
 
 ```csharp
  public class ProductData

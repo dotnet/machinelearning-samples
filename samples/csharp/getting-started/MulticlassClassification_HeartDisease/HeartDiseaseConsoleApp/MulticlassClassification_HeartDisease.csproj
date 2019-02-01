@@ -10,6 +10,10 @@
     <EmbeddedResource Remove="MLModels\**" />
     <None Remove="MLModels\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="..\Data\HeartTest.csv" Link="Data\HeartTest.csv" />
     <Content Include="..\Data\HeartTraining.csv" Link="Data\HeartTraining.csv" />
@@ -17,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Common\" />
   </ItemGroup>
 
 
