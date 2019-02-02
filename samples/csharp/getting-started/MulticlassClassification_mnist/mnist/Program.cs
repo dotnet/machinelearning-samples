@@ -21,6 +21,9 @@ namespace mnist
             var env = new MLContext();
             Train(env);
             TestSomePredictions(env);
+
+            Console.WriteLine("Hit any key to finish the app");
+            Console.ReadKey();
         }
 
         public static void Train(MLContext env)
