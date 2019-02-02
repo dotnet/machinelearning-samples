@@ -62,7 +62,6 @@ namespace MulticlassClassification_HeartDisease
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("=============== Model Saved ============= ");
-            Console.ReadKey();
         }
 
 
@@ -87,7 +86,6 @@ namespace MulticlassClassification_HeartDisease
                 Console.WriteLine($" 3: {prediction.Score[3]:0.###}");
                 Console.WriteLine($" 4: {prediction.Score[4]:0.###}");
                 Console.WriteLine();
-                Console.ReadKey();
             }
 
         }
