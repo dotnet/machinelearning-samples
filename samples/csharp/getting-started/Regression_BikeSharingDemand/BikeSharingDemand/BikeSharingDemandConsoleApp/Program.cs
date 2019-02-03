@@ -24,34 +24,14 @@ namespace BikeSharingDemand
             var mlContext = new MLContext(seed: 0);
 
             // 1. Common data loading configuration
-            var textLoader = mlContext.Data.CreateTextReader(
-                                                    columns:new[]
-                                                            {
-                                                            new TextLoader.Column("Season", DataKind.R4, 2),
-                                                            new TextLoader.Column("Year", DataKind.R4, 3),
-                                                            new TextLoader.Column("Month", DataKind.R4, 4),
-                                                            new TextLoader.Column("Hour", DataKind.R4, 5),
-                                                            new TextLoader.Column("Holiday", DataKind.R4, 6),
-                                                            new TextLoader.Column("Weekday", DataKind.R4, 7),
-                                                            new TextLoader.Column("WorkingDay", DataKind.R4, 8),
-                                                            new TextLoader.Column("Weather", DataKind.R4, 9),
-                                                            new TextLoader.Column("Temperature", DataKind.R4, 10),
-                                                            new TextLoader.Column("NormalizedTemperature", DataKind.R4, 11),
-                                                            new TextLoader.Column("Humidity", DataKind.R4, 12),
-                                                            new TextLoader.Column("Windspeed", DataKind.R4, 13),
-                                                            new TextLoader.Column("Count", DataKind.R4, 16)
-                                                            },
-                                                    hasHeader: true,
-                                                    separatorChar: ',');
-              
-            var trainingDataView = textLoader.Read(TrainingDataLocation);
-            var testDataView = textLoader.Read(TestDataLocation);
+            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(TrainingDataLocation, hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(TestDataLocation, hasHeader: true, separatorChar: ',');
 
             // 2. Common data pre-process with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.CopyColumns("Count", "Label")
                         // Concatenate all the numeric columns into a single features column
                         .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
-                                                                            "Hour", "Holiday", "Weekday",
+                                                                            "Hour", "Holiday", "Weekday", "WorkingDay",
                                                                             "Weather", "Temperature", "NormalizedTemperature",
                                                                             "Humidity", "Windspeed"));
 

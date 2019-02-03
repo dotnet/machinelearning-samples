@@ -22,6 +22,13 @@ The datasets are provided under the original terms that Microsoft received such 
 
 > Original source: https://en.wikipedia.org/wiki/Iris_flower_data_set#Use_of_the_data_set.
 
+### MNIST
+
+> Redistributing the dataset "optdigits-train.csv", "optdigits-val.csv" with citation:
+
+> Dua, D. and Karra Taniskidou, E. (2017). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. 
+
+> Original source: http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits
 
 ### Corefx Issues
 

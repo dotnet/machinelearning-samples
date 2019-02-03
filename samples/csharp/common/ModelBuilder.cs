@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.ML;
+﻿using Microsoft.ML;
 using Microsoft.ML.Core.Data;
-using Microsoft.ML.Runtime.Api;
-using Microsoft.ML.Runtime.Data;
+using System;
+using System.IO;
+using Microsoft.ML.Data;
 
 namespace Common
 {
@@ -16,9 +14,7 @@ namespace Common
         public IEstimator<ITransformer> TrainingPipeline { get; private set; }
         public ITransformer TrainedModel { get; private set; }
 
-        public ModelBuilder(
-            MLContext mlContext,
-            IEstimator<ITransformer> dataProcessPipeline //, IEstimator<ITransformer> trainer
+        public ModelBuilder(MLContext mlContext,IEstimator<ITransformer> dataProcessPipeline //, IEstimator<ITransformer> trainer
                            )
         {
             _mlcontext = mlContext;
