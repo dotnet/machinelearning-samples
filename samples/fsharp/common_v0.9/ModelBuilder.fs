@@ -35,6 +35,11 @@ module ModelBuilder =
             |> downcastPipeline
         (mlContext, newPipeline)
 
+    let appendCacheCheckpoint (mlContext : MLContext) (pipeline: IEstimator<'a>) =
+        pipeline.AppendCacheCheckpoint mlContext
+        |> downcastPipeline
+        
+
     let train (trainingData : IDataView) (mlContext : MLContext, pipeline : IEstimator<'a>) =
         pipeline.Fit trainingData :> ITransformer
         

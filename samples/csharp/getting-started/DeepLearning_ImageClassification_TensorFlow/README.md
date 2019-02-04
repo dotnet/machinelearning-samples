@@ -59,16 +59,34 @@ You need to follow next steps in order to execute the classification test:
 There is a single project in the solution named `ImageClassification.Score`, which is responsible for loading the model in TensorFlow format, and then classify images.
 
 ### ML.NET: Model Scoring
-The `TextLoader.CreateReader()` is used to define the schema of the text file that will be used to load images in the ML.NET model.
+
+Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageNetData. 
 
 ```csharp
-TextLoader loader = mlContext.Data.CreateTextReader(
-                                        columns: new[] 
-                                                    {
-                                                        new TextLoader.Column("ImagePath", DataKind.Text, 0),
-                                                    });
+public class ImageNetData
+    {
+        [LoadColumn(0)]
+        public string ImagePath;
 
-var data = loader.Read(new MultiFileSource(dataLocation));
+        [LoadColumn(1)]
+        public string Label;
+
+        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
+        {
+            return File.ReadAllLines(file)
+             .Select(x => x.Split('\t'))
+             .Select(x => new ImageNetData()
+             {
+                 ImagePath = Path.Combine(folder,x[0]),
+                 Label = x[1],
+             });
+        }
+    }
+```
+The first step is to load the data using TextLoader
+
+```csharp
+var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
 ```
 
 The image file used to load images has two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. 

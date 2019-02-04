@@ -66,14 +66,8 @@ namespace ImageClassification.ModelScorer
             Console.WriteLine($"Training file: {dataLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight}), image mean: {ImageNetSettings.mean}");
 
-            TextLoader loader = mlContext.Data.CreateTextReader(
-                                                    columns: new[] 
-                                                                {
-                                                                  new TextLoader.Column("ImagePath", DataKind.Text, 0),
-                                                                });
-
-            var data = loader.Read(new MultiFileSource(dataLocation));
-
+            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
+            
             var pipeline = mlContext.Transforms.LoadImages(imageFolder: imagesFolder, columns: ("ImagePath", "ImageReal"))
                             .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
                             .Append(mlContext.Transforms.ExtractPixels(new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))

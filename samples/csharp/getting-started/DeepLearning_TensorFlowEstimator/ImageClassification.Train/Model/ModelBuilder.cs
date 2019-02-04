@@ -47,14 +47,7 @@ namespace ImageClassification.Model
 
 
 
-            var loader = mlContext.Data.CreateTextReader(
-                new TextLoader.Arguments
-                {
-                    Column = new[] {
-                        new TextLoader.Column("ImagePath", DataKind.Text, 0),
-                        new TextLoader.Column("Label", DataKind.Text, 1)
-                    }
-                });
+            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey")
                             .Append(mlContext.Transforms.LoadImages(imagesFolder, ("ImagePath", "ImageReal")))
@@ -66,7 +59,6 @@ namespace ImageClassification.Model
 
             // Train the pipeline
             ConsoleWriteHeader("Training classification model");
-            var data = loader.Read(dataLocation);
             var model = pipeline.Fit(data);
 
             // Process the training data through the model

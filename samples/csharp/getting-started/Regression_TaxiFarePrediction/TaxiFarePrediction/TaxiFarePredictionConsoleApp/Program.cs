@@ -48,22 +48,8 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.CreateTextReader(new[]
-                                                                    {
-                                                                        new TextLoader.Column("VendorId", DataKind.Text, 0),
-                                                                        new TextLoader.Column("RateCode", DataKind.Text, 1),
-                                                                        new TextLoader.Column("PassengerCount", DataKind.R4, 2),
-                                                                        new TextLoader.Column("TripTime", DataKind.R4, 3),
-                                                                        new TextLoader.Column("TripDistance", DataKind.R4, 4),
-                                                                        new TextLoader.Column("PaymentType", DataKind.Text, 5),
-                                                                        new TextLoader.Column("FareAmount", DataKind.R4, 6)
-                                                                    },
-                                                                     hasHeader: true,
-                                                                     separatorChar: ','
-                                                                    );
-
-            IDataView baseTrainingDataView = textLoader.Read(TrainDataPath);
-            IDataView testDataView = textLoader.Read(TestDataPath);
+            IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
+            IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
             //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
             var cnt = baseTrainingDataView.GetColumn<float>(mlContext, "FareAmount").Count();
