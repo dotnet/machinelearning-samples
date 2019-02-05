@@ -34,11 +34,11 @@
                     <h3 class="card-title">@movie.MovieName</h3>
                     @{
                         bool thumbsup = false;
-                        foreach (Tuple<int, int> tuple in profile.ProfileMovieRatings)
+                        foreach ((int movieId, int movieRating) in profile.ProfileMovieRatings)
                         {
-                            if (tuple.Item1 == movie.MovieID)
+                            if (movieId == movie.MovieID)
                             {
-                                if (tuple.Item2 >= 4)
+                                if (movieRating >= 4)
                                 {
                                     thumbsup = true;
                                     break;

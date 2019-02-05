@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|v0.7| Dynamic API | Needs update to v0.8 | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
+|v0.9| Dynamic API | Needs update to v0.8 | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
 
 ![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender/movierecommender/wwwroot/images/movierecommender.gif)
 
@@ -47,52 +47,54 @@ The trained model is consumed in the [Controller](https://github.com/dotnet/mach
 
 ```CSharp
 
-   // 1. Create the ML.NET environment and load the MoviesRecommendation Model
-   var ctx = new MLContext();
+   // 1. Create the ML.NET environment and load the already trained model
+   MLContext mlContext = new MLContext();
             
-   ITransformer loadedModel;
+   ITransformer trainedModel;
    using (var stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
    {
-   loadedModel = ctx.Model.Load(stream);
+    trainedModel = mlContext.Model.Load(stream);
    }
  ```
 ### 2. Create a prediction function to predict a set of movie recommendations 
 
 ```CSharp
-   //3. Create a prediction function
-   var predictionfunction = loadedModel.MakePredictionFunction<RatingData, RatingPrediction>(ctx);
+   //2. Create a prediction function
+   var predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
             
-   List<Tuple<int, float>> ratings = new List<Tuple<int, float>>();
-   List<Tuple<int, int>> MovieRatings = _profileService.GetProfileWatchedMovies(id);
+   List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
+   var MovieRatings = _profileService.GetProfileWatchedMovies(id);
    List<Movie> WatchedMovies = new List<Movie>();
 
-   foreach (Tuple<int, int> tuple in MovieRatings)
+   foreach ((int movieId, int movieRating) in MovieRatings)
    {
-   WatchedMovies.Add(_movieService.Get(tuple.Item1));
+     WatchedMovies.Add(_movieService.Get(movieId));
    }
    
-   RatingPrediction prediction = null;
+   MovieRatingPrediction prediction = null;
    
-   foreach (var movie in _movieService._trendingMovies)
+   foreach (var movie in _movieService.GetTrendingMovies)
    {
-   // Call the Rating Prediction for each movie prediction
-      prediction = predictionfunction.Predict(new RatingData { userId = id.ToString(), movieId = movie.MovieID.ToString()});
-              
-   // Normalize the prediction scores for the "ratings" b/w 0 - 100
-      var normalizedscore = Sigmoid(prediction.Score);
-
-   // Add the score for recommendation of each movie in the trending movie list
-      ratings.Add(Tuple.Create(movie.MovieID, normalizedscore));
+       //Call the Rating Prediction for each movie prediction
+        prediction = predictionEngine.Predict(new MovieRating
+        {
+            userId = id.ToString(),
+            movieId = movie.MovieID.ToString()
+        });
+       //Normalize the prediction scores for the "ratings" b/w 0 - 100
+       float normalizedscore = Sigmoid(prediction.Score);
+       //Add the score for recommendation of each movie in the trending movie list
+        ratings.Add((movie.MovieID, normalizedscore));
    }
  ```
 
 ### 3. Provide rating predictions to the view to be displayed
 
 ```CSharp
-   ViewData["watchedmovies"] = WatchedMovies;
-   ViewData["ratings"] = ratings;
-   ViewData["trendingmovies"] = _movieService._trendingMovies;
-   return View(activeprofile);
+  ViewData["watchedmovies"] = WatchedMovies;
+  ViewData["ratings"] = ratings;
+  ViewData["trendingmovies"] = _movieService.GetTrendingMovies;
+  return View(activeprofile);
  ```
 
 ## Alternate Approaches 

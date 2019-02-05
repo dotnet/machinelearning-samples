@@ -42,8 +42,10 @@ let main argv =
     let struct(trainingDataView, testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
 
     //STEP 2: Process data transformations in pipeline
-    let dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
-
+    let dataProcessPipeline = 
+        mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
+        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
+        
     // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
     Common.ConsoleHelper.peekDataViewInConsole<IrisData> mlContext trainingDataView dataProcessPipeline 10 |> ignore
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
