@@ -1,27 +1,31 @@
-﻿using CsvHelper;
+﻿using Microsoft.AspNetCore.Hosting;
+using movierecommender.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
+using System.Linq;
 
-namespace movierecommender.Models
+namespace movierecommender.Services
 {
-    public partial class MovieService
+    public class MovieService : IMovieService
     {
         public readonly static int _moviesToRecommend = 6;
-        public readonly static int _trendingmovies = 20;
-        public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(() => LoadMovieData());
-        public List<Movie> _trendingMovies = LoadTrendingMovies();
-        public readonly static string _modelpath = @".\Models\model.zip";
+        private readonly static int _trendingMoviesCount = 20;
+        public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(LoadMovieData);
+        private List<Movie> _trendingMovies = LoadTrendingMovies();
+        public readonly static string _modelpath = @"model.zip";
+        private readonly IHostingEnvironment _hostingEnvironment;
 
+        public List<Movie> GetTrendingMovies => LoadTrendingMovies();
+
+        public MovieService(IHostingEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
 
         public static List<Movie> LoadTrendingMovies() {
+            List<Movie> result = new List<Movie>();
 
-            var result = new List<Movie>();
-            
             result.Add(new Movie { MovieID = 1573, MovieName = "Face/Off (1997)" });
             result.Add(new Movie { MovieID = 1721,  MovieName = "Titanic (1997)" });
             result.Add(new Movie { MovieID = 1703, MovieName = "Home Alone 3 (1997)" });
@@ -33,15 +37,16 @@ namespace movierecommender.Models
 
         public string GetModelPath()
         {
-            return _modelpath;
+            return Path.Combine(_hostingEnvironment.ContentRootPath, "Models", _modelpath);
         }
 
         public IEnumerable<Movie> GetSomeSuggestions()
         {
-            var movies = GetRecentMovies().ToArray();
+            Movie[] movies = GetRecentMovies().ToArray();
 
             Random rnd = new Random();
             int[] movieselector = new int[_moviesToRecommend];
+
             for (int i = 0; i < _moviesToRecommend; i++)
             {
                 movieselector[i] = rnd.Next(movies.Length);
@@ -63,7 +68,6 @@ namespace movierecommender.Models
             return _movies.Value.Single(m => m.MovieID == id);
         }
 
-
         public IEnumerable<Movie> GetAllMovies()
         {
             return _movies.Value;
@@ -71,16 +75,16 @@ namespace movierecommender.Models
 
         private static List<Movie> LoadMovieData()
         {
-            var result = new List<Movie>();
-            
-            Stream fileReader = File.OpenRead("Content/movies.csv");
+            List<Movie> result = new List<Movie>();
+
+            FileStream fileReader = File.OpenRead("Content/movies.csv");
 
             StreamReader reader = new StreamReader(fileReader);
             try
             {
                 bool header = true;
                 int index = 0;
-                var line = "";
+                string line = "";
                 while (!reader.EndOfStream)
                 {
                     if (header)
@@ -90,18 +94,15 @@ namespace movierecommender.Models
                     }
                     line = reader.ReadLine();
                     string[] fields = line.Split(',');
-                    int MovieID = Int32.Parse(fields[0].ToString().TrimStart(new char[] { '0' }));
-                    string MovieName = fields[1].ToString();
+                    int MovieID = int.Parse(fields[0].TrimStart(new char[] { '0' }));
+                    string MovieName = fields[1];
                     result.Add(new Movie() { MovieID = MovieID, MovieName = MovieName });
                     index++;
                 }
             }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Dispose(); 
-                }
+                reader?.Dispose();
             }
 
             return result;
