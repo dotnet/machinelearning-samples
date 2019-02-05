@@ -55,6 +55,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
         |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripTime", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
         |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripDistance", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
         |> Common.ModelBuilder.append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
+        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
         |> Common.ConsoleHelper.downcastPipeline
 
     // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
