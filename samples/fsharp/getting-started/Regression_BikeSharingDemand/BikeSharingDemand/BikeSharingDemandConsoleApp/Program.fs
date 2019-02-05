@@ -59,6 +59,7 @@ let main argv =
                                             "Hour", "Holiday", "Weekday",
                                             "Weather", "Temperature", "NormalizedTemperature",
                                             "Humidity", "Windspeed"))
+        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
         |> Common.ConsoleHelper.downcastPipeline
 
     // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
