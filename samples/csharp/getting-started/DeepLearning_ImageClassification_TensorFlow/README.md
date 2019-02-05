@@ -91,7 +91,7 @@ var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader
 
 The image file used to load images has two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. 
 
-It is important to highlight that the label in this is not really used when scoring with the TensorFlow model. It is in this file only as a reference when testing the predictions so you can compare the actual label of each sample data with the predicted label provided by the TensorFlow model. That is why when loading the file with the 'TextLoader' above you just taking the ImagePath or name of the file but you are not taking the label.
+It is important to highlight that the label in the `ImageNetData` class is not really used when scoring with the TensorFlow model. It is used when testing the predictions so you can compare the actual label of each sample data with the predicted label provided by the TensorFlow model. 
 
 ```csv
 broccoli.jpg	broccoli
