@@ -42,17 +42,16 @@ namespace movierecommender.Controllers
         {
             var activeprofile = _profileService.GetProfileByID(id);
 
-            // 1. Create the local environment
+            // 1. Create the ML.NET environment and load the already trained model
             MLContext mlContext = new MLContext();
-
-            //2. Load the MoviesRecommendation Model
+            
             ITransformer trainedModel;
             using (FileStream stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
 
-            //3. Create a prediction function
+            //2. Create a prediction function
             var predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
 
             List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
@@ -63,26 +62,25 @@ namespace movierecommender.Controllers
             {
                 WatchedMovies.Add(_movieService.Get(movieId));
             }
-
-            // 3. Create an Rating Prediction Output Class
+                        
             MovieRatingPrediction prediction = null;
             foreach (var movie in _movieService.GetTrendingMovies)
             {
-                //4. Call the Rating Prediction for each movie prediction
+                // Call the Rating Prediction for each movie prediction
                  prediction = predictionEngine.Predict(new MovieRating
                  {
                      userId = id.ToString(),
                      movieId = movie.MovieID.ToString()
                  });
 
-                //5. Normalize the prediction scores for the "ratings" b/w 0 - 100
+                // Normalize the prediction scores for the "ratings" b/w 0 - 100
                 float normalizedscore = Sigmoid(prediction.Score);
 
-                //6. Add the score for recommendation of each movie in the trending movie list
+                // Add the score for recommendation of each movie in the trending movie list
                  ratings.Add((movie.MovieID, normalizedscore));
             }
 
-            //5. Provide ratings to the view to be displayed
+            //3. Provide rating predictions to the view to be displayed
             ViewData["watchedmovies"] = WatchedMovies;
             ViewData["ratings"] = ratings;
             ViewData["trendingmovies"] = _movieService.GetTrendingMovies;
