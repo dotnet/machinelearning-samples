@@ -33,28 +33,31 @@ namespace CustomerSegmentation
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
                 // STEP 1: Common data loading configuration
-                TextLoader textLoader = mlContext.Data.CreateTextReader(
-                                            columns:new[]
+                var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
+                                            columns: new[]
                                                         {
                                                         new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                                                        new TextLoader.Column("LastName", DataKind.Text, 32)
+                                                        new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
                                                         },
                                             hasHeader: true,
                                             separatorChar: ',');
 
-                var pivotDataView = textLoader.Read(pivotCsv);
-
                 //STEP 2: Configure data transformations in pipeline
-                var dataProcessPipeline =  new PrincipalComponentAnalysisEstimator(mlContext, "Features", "PCAFeatures", rank: 2)
-                                                .Append(new OneHotEncodingEstimator(mlContext, new[] { new OneHotEncodingEstimator.ColumnInfo("LastName",
-                                                                                                                                              "LastNameKey",
-                                                                                                                                              OneHotEncodingTransformer.OutputKind.Ind) }));
+                var dataProcessPipeline = new PrincipalComponentAnalysisEstimator(env:mlContext, outputColumnName:"PCAFeatures", inputColumnName: "Features", rank: 2)
+                                                .Append(new OneHotEncodingEstimator(mlContext,
+                                                new[]
+                                                {
+                                                    new OneHotEncodingEstimator.ColumnInfo(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
+                                                     OneHotEncodingTransformer.OutputKind.Ind) }
+                                                ))
+                                                .AppendCacheCheckpoint(mlContext);
+
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
                 //STEP 3: Create the training pipeline                
-                var trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount: 3);
+                var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
 
                 //STEP 4: Train the model fitting to the pivotDataView
@@ -64,7 +67,7 @@ namespace CustomerSegmentation
                 //STEP 5: Evaluate the model and show accuracy stats
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 var predictions = trainedModel.Transform(pivotDataView);
-                var metrics = mlContext.Clustering.Evaluate(predictions, score: "Score", features: "Features");
+                var metrics = mlContext.Clustering.Evaluate(predictions, score: DefaultColumnNames.Score, features: DefaultColumnNames.Features);
 
                 ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
