@@ -2,7 +2,9 @@
 
 ## Overview
 
-This Unity Package shows you how to load a ML.NET model into your Unity Game. 
+This Unity Package shows you how to load a ML.NET model into your Unity Game using a simple form based UI application.
+
+![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/images/HelloML.NET_Unity.png)
 
 ## Features
 * Unity Package File  
