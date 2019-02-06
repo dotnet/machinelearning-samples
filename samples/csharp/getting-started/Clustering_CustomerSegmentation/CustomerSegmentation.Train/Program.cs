@@ -49,8 +49,7 @@ namespace CustomerSegmentation
                                                 {
                                                     new OneHotEncodingEstimator.ColumnInfo(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
                                                      OneHotEncodingTransformer.OutputKind.Ind) }
-                                                ))
-                                                .AppendCacheCheckpoint(mlContext);
+                                                ));
 
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
