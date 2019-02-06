@@ -3,7 +3,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7.0           | Dynamic API | Needs to update to v0.8 | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
+| v0.9.0           | Dynamic API | Up-to-date | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
 
 
 ## Problem 
@@ -75,13 +75,13 @@ var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader
 The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
 ```csharp
- var pipeline = new ValueToKeyMappingEstimator(env, "Label", "LabelTokey") 
-    .Append(new ImageLoadingEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
-    .Append(new ImageResizingEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-    .Append(new ImagePixelExtractingEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-    .Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
-    .Append(new SdcaMultiClassTrainer(env, "softmax2_pre_activation", "LabelTokey"))
-    .Append(new KeyToValueEstimator(env, ("PredictedLabel", "PredictedLabelValue")));
+var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey")
+    .Append(mlContext.Transforms.LoadImages(imagesFolder, ("ImagePath", "ImageReal")))
+    .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
+    .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
+    .Append(mlContext.Transforms.ScoreTensorFlowModel(featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
+    .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
+    .Append(mlContext.Transforms.Conversion.MapKeyToValue(("PredictedLabel", "PredictedLabelValue")));
 ```
 
 ### 2. Train model
@@ -125,7 +125,7 @@ using (var f = new FileStream(modelLocation, FileMode.Open))
 
 Then, we proceed to create a predictor function, and make predictions:
 ```csharp
-var predictor = loadedModel.MakePredictionFunction<ImageNetData, ImageNetPrediction>(env);
+var predictor = loadedModel.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext);
 var pred = predictor.Predict(testImage);
 ```
 The prediction function receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`). Then returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and `Score` (*probability* value between 0 and 1) properties.
