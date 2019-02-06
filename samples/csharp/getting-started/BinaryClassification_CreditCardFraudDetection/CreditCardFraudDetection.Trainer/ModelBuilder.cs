@@ -58,8 +58,7 @@ namespace CreditCardFraudDetection.Trainer
                                                                                       numLeaves: 20,
                                                                                       numTrees: 100,
                                                                                       minDatapointsInLeaves: 10,
-                                                                                      learningRate: 0.2))
-                            .AppendCacheCheckpoint(_mlContext);
+                                                                                      learningRate: 0.2));
 
             var model = pipeline.Fit(_trainData);
 

@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v0.10           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -109,7 +109,7 @@ The initial code is similar to the following:
 
 
 [...]
-    var classification = new BinaryClassificationContext(env);
+    var classification = new BinaryClassificationCatalog(mlContext);
 
     (trainData, testData) = classification.TrainTestSplit(data, testFraction: 0.2);
 
@@ -122,14 +122,14 @@ The initial code is similar to the following:
         .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
         .ToArray();
 
-    var pipeline = _mlContext.Transforms.Concatenate("Features", featureColumnNames)
-                    .Append(_mlContext.Transforms.Normalize(inputName: "Features", outputName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
-                    .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
-                                                                              featureColumn: "Features",
-                                                                              numLeaves: 20,
-                                                                              numTrees: 100,
-                                                                              minDatapointsInLeaves: 10,
-                                                                              learningRate: 0.2));
+    var pipeline = _mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
+                            .Append(_mlContext.Transforms.Normalize(inputColumnName: "Features", outputColumnName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
+                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
+                                                                                      featureColumn: "Features",
+                                                                                      numLeaves: 20,
+                                                                                      numTrees: 100,
+                                                                                      minDatapointsInLeaves: 10,
+                                                                                      learningRate: 0.2));
 
 `````
 
@@ -167,7 +167,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
 
 [...]
 
-    dataTest.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject: false)
+    mlContext.CreateEnumerable<TransactionObservation>(dataTest, reuseRowObject: false)
                         .Where(x => x.Label == true)
                         .Take(numberOfTransactions)
                         .Select(testData => testData)
@@ -181,7 +181,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
                                     });
 [...]
 
-    dataTest.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject: false)
+    mlContext.CreateEnumerable<TransactionObservation>(dataTest, reuseRowObject: false)
                         .Where(x => x.Label == false)
                         .Take(numberOfTransactions)
                         .ToList()
