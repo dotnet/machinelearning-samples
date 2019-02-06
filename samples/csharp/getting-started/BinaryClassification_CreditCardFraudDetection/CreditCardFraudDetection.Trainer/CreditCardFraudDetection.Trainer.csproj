@@ -18,4 +18,8 @@
     <Folder Include="assets\output\" />
   </ItemGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\CreditCardFraudDetection.Common\CreditCardFraudDetection.Common.csproj" />
+  </ItemGroup>
+  
 </Project>
