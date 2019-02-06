@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BikeSharingDemand", "getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\BikeSharingDemand.fsproj", "{A8ECCAB5-C5BC-4485-B9F7-08D34915B467}"
 EndProject
@@ -22,6 +22,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrisClustering.Solution", "IrisClustering.Solution", "{68E5A791-705C-464D-A2AC-A30F0C452A54}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Clustering_Iris", "getting-started\Clustering_Iris\IrisClustering\IrisClusteringConsoleApp\Clustering_Iris.fsproj", "{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowEstimator.Solution", "TensorFlowEstimator.Solution", "{9DCFB279-F0C1-4D20-993C-878A507708C8}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Train", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Train\ImageClassification.Train.fsproj", "{A756A3AD-4259-4056-BDDF-A33884455A4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowScorer.Solution", "TensorFlowScorer.Solution", "{F84DB5B9-6E38-4D05-B467-C38141AC34D1}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Score", "getting-started\DeepLearning_ImageClassification_TensorFlow\ImageClassification\ImageClassification.Score.fsproj", "{543507C1-9011-4562-9CE3-E7229F25AC27}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Predict", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Predict\ImageClassification.Predict.fsproj", "{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +59,18 @@ Global
 		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A756A3AD-4259-4056-BDDF-A33884455A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A756A3AD-4259-4056-BDDF-A33884455A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A756A3AD-4259-4056-BDDF-A33884455A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A756A3AD-4259-4056-BDDF-A33884455A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{543507C1-9011-4562-9CE3-E7229F25AC27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{543507C1-9011-4562-9CE3-E7229F25AC27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{543507C1-9011-4562-9CE3-E7229F25AC27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{543507C1-9011-4562-9CE3-E7229F25AC27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +81,9 @@ Global
 		{CF0F35E4-4A8B-4E9A-A284-B791E404D334} = {ABE9B87E-D778-4F97-B38D-62B4A186A6E5}
 		{2865D3B8-753F-4B61-B452-D5A3D032F9BB} = {740E8A4B-A0C2-4FE2-8561-6F46EA10BDCA}
 		{23F5ADD0-DCF0-494B-9AE7-4754EC9A23C9} = {68E5A791-705C-464D-A2AC-A30F0C452A54}
+		{A756A3AD-4259-4056-BDDF-A33884455A4E} = {9DCFB279-F0C1-4D20-993C-878A507708C8}
+		{543507C1-9011-4562-9CE3-E7229F25AC27} = {F84DB5B9-6E38-4D05-B467-C38141AC34D1}
+		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2} = {9DCFB279-F0C1-4D20-993C-878A507708C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47D66D3A-D6C7-45A5-8C11-8723039BC142}
