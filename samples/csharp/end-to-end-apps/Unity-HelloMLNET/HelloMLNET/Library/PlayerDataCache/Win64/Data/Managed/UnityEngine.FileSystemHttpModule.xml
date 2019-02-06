@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.FileSystemHttpModule</name>
+    </assembly>
+    <member name="A:UnityEngine.FileSystemHttpModule">
+      <summary>
+        <para>HTTP Virtual File System. Allows file I/O over HTTP</para>
+      </summary>
+    </member>
+  </members>
+</doc>

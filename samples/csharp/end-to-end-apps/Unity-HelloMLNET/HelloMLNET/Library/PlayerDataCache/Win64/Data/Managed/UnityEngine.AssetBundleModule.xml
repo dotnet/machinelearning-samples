@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.AssetBundleModule</name>
+    </assembly>
+    <member name="T:UnityEngine.AssetBundle">
+      <summary>
+        <para>AssetBundles let you stream additional assets via the UnityWebRequest class and instantiate them at runtime. AssetBundles are created via BuildPipeline.BuildAssetBundle.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundle.isStreamedSceneAssetBundle">
+      <summary>
+        <para>Return true if the AssetBundle is a streamed Scene AssetBundle.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.Contains(System.String)">
+      <summary>
+        <para>Check if an AssetBundle contains a specific object.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.GetAllAssetNames">
+      <summary>
+        <para>Return all asset names in the AssetBundle.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.GetAllLoadedAssetBundles">
+      <summary>
+        <para>To use when you need to get a list of all the currently loaded Asset Bundles.</para>
+      </summary>
+      <returns>
+        <para>Returns IEnumerable&lt;AssetBundle&gt; of all currently loaded Asset Bundles.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.GetAllScenePaths">
+      <summary>
+        <para>Return all the Scene asset paths (paths to *.unity assets) in the AssetBundle.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAllAssets(System.Type)">
+      <summary>
+        <para>Loads all assets contained in the asset bundle that inherit from type.</para>
+      </summary>
+      <param name="type"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAllAssets">
+      <summary>
+        <para>Loads all assets contained in the asset bundle.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAllAssets">
+      <summary>
+        <para>Loads all assets contained in the asset bundle that inherit from type T.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAllAssetsAsync">
+      <summary>
+        <para>Loads all assets contained in the asset bundle asynchronously.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAllAssetsAsync">
+      <summary>
+        <para>Loads all assets contained in the asset bundle that inherit from T asynchronously.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAllAssetsAsync(System.Type)">
+      <summary>
+        <para>Loads all assets contained in the asset bundle that inherit from type asynchronously.</para>
+      </summary>
+      <param name="type"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAsset(System.String)">
+      <summary>
+        <para>Loads asset with name from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAsset(System.String,System.Type)">
+      <summary>
+        <para>Loads asset with name of a given type from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+      <param name="type"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAsset(System.String)">
+      <summary>
+        <para>Loads asset with name of type T from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetAsync(System.String)">
+      <summary>
+        <para>Asynchronously loads asset with name from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetAsync(System.String)">
+      <summary>
+        <para>Asynchronously loads asset with name of a given T from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetAsync(System.String,System.Type)">
+      <summary>
+        <para>Asynchronously loads asset with name of a given type from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+      <param name="type"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetWithSubAssets(System.String)">
+      <summary>
+        <para>Loads asset and sub assets with name from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetWithSubAssets(System.String,System.Type)">
+      <summary>
+        <para>Loads asset and sub assets with name of a given type from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+      <param name="type"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetWithSubAssets(System.String)">
+      <summary>
+        <para>Loads asset and sub assets with name of type T from the bundle.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetWithSubAssetsAsync(System.String)">
+      <summary>
+        <para>Loads asset with sub assets with name from the bundle asynchronously.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetWithSubAssetsAsync(System.String)">
+      <summary>
+        <para>Loads asset with sub assets with name of type T from the bundle asynchronously.</para>
+      </summary>
+      <param name="name"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadAssetWithSubAssetsAsync(System.String,System.Type)">
+      <summary>
+        <para>Loads asset with sub assets with name of a given type from the bundle asynchronously.</para>
+      </summary>
+      <param name="name"></param>
+      <param name="type"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromFile(System.String,System.UInt32,System.UInt64)">
+      <summary>
+        <para>Synchronously loads an AssetBundle from a file on disk.</para>
+      </summary>
+      <param name="path">Path of the file on disk.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <param name="offset">An optional byte offset. This value specifies where to start reading the AssetBundle from.</param>
+      <returns>
+        <para>Loaded AssetBundle object or null if failed.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromFile">
+      <summary>
+        <para>Synchronously loads an AssetBundle from a file on disk.</para>
+      </summary>
+      <param name="path">Path of the file on disk.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <param name="offset">An optional byte offset. This value specifies where to start reading the AssetBundle from.</param>
+      <returns>
+        <para>Loaded AssetBundle object or null if failed.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromFileAsync(System.String,System.UInt32,System.UInt64)">
+      <summary>
+        <para>Asynchronously loads an AssetBundle from a file on disk.</para>
+      </summary>
+      <param name="path">Path of the file on disk.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <param name="offset">An optional byte offset. This value specifies where to start reading the AssetBundle from.</param>
+      <returns>
+        <para>Asynchronous create request for an AssetBundle. Use AssetBundleCreateRequest.assetBundle property to get an AssetBundle once it is loaded.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromMemory(System.Byte[],System.UInt32)">
+      <summary>
+        <para>Synchronously create an AssetBundle from a memory region.</para>
+      </summary>
+      <param name="binary">Array of bytes with the AssetBundle data.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <returns>
+        <para>Loaded AssetBundle object or null if failed.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromMemoryAsync(System.Byte[],System.UInt32)">
+      <summary>
+        <para>Asynchronously create an AssetBundle from a memory region.</para>
+      </summary>
+      <param name="binary">Array of bytes with the AssetBundle data.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <returns>
+        <para>Asynchronous create request for an AssetBundle. Use AssetBundleCreateRequest.assetBundle property to get an AssetBundle once it is loaded.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromStream(System.IO.Stream,System.UInt32,System.UInt32)">
+      <summary>
+        <para>Synchronously loads an AssetBundle from a managed Stream.</para>
+      </summary>
+      <param name="stream">The managed Stream object. Unity calls Read(), Seek() and the Length property on this object to load the AssetBundle data.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content.</param>
+      <param name="managedReadBufferSize">You can use this to override the size of the read buffer Unity uses while loading data. The default size is 32KB.</param>
+      <returns>
+        <para>The loaded AssetBundle object or null when the object fails to load.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.LoadFromStreamAsync(System.IO.Stream,System.UInt32,System.UInt32)">
+      <summary>
+        <para>Asynchronously loads an AssetBundle from a managed Stream.</para>
+      </summary>
+      <param name="stream">The managed Stream object. Unity calls Read(), Seek() and the Length property on this object to load the AssetBundle data.</param>
+      <param name="crc">An optional CRC-32 checksum of the uncompressed content.</param>
+      <param name="managedReadBufferSize">You can use this to override the size of the read buffer Unity uses while loading data. The default size is 32KB.</param>
+      <returns>
+        <para>Asynchronous create request for an AssetBundle. Use AssetBundleCreateRequest.assetBundle property to get an AssetBundle once it is loaded.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.RecompressAssetBundleAsync(System.String,System.String,UnityEngine.BuildCompression,System.UInt32,UnityEngine.ThreadPriority)">
+      <summary>
+        <para>Asynchronously recompress a downloaded/stored AssetBundle from one BuildCompression to another.</para>
+      </summary>
+      <param name="inputPath">Path to the AssetBundle to recompress.</param>
+      <param name="outputPath">Path to the recompressed AssetBundle to be generated. Can be the same as inputPath.</param>
+      <param name="method">The compression method, level and blocksize to use during recompression. Only some BuildCompression types are supported (see note).</param>
+      <param name="expectedCRC">CRC of the AssetBundle to test against. Testing this requires additional file reading and computation. Pass in 0 to skip this check.</param>
+      <param name="priority">The priority at which the recompression operation should run. This sets thread priority during the operation and does not effect the order in which operations are performed. Recompression operations run on a background worker thread.</param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.Unload(System.Boolean)">
+      <summary>
+        <para>Unloads all assets in the bundle.</para>
+      </summary>
+      <param name="unloadAllLoadedObjects"></param>
+    </member>
+    <member name="M:UnityEngine.AssetBundle.UnloadAllAssetBundles(System.Boolean)">
+      <summary>
+        <para>Unloads all currently loaded Asset Bundles.</para>
+      </summary>
+      <param name="unloadAllObjects">Determines whether the current instances of objects loaded from Asset Bundles will also be unloaded.</param>
+    </member>
+    <member name="T:UnityEngine.AssetBundleCreateRequest">
+      <summary>
+        <para>Asynchronous create request for an AssetBundle.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleCreateRequest.assetBundle">
+      <summary>
+        <para>Asset object being loaded (Read Only).</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.AssetBundleLoadResult">
+      <summary>
+        <para>The result of an Asset Bundle Load or Recompress Operation.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.AlreadyLoaded">
+      <summary>
+        <para>The Asset Bundle is already loaded.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.Cancelled">
+      <summary>
+        <para>The operation was cancelled.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.FailedCache">
+      <summary>
+        <para>The Asset Bundle was not successfully cached.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.FailedDecompression">
+      <summary>
+        <para>Failed to decompress the Asset Bundle.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.FailedDeleteRecompressionTarget">
+      <summary>
+        <para>The target path given for the Recompression operation could not be deleted for swap with recompressed bundle file.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.FailedRead">
+      <summary>
+        <para>Failed to read the Asset Bundle file.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.FailedWrite">
+      <summary>
+        <para>Failed to write to the file system.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.NoSerializedData">
+      <summary>
+        <para>The Asset Bundle does not contain any serialized data. It may be empty, or corrupt.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.NotCompatible">
+      <summary>
+        <para>The AssetBundle is incompatible with this version of Unity.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.NotMatchingCrc">
+      <summary>
+        <para>The decompressed Asset data did not match the precomputed CRC. This may suggest that the AssetBundle did not download correctly.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.NotValidAssetBundle">
+      <summary>
+        <para>This does not appear to be a valid Asset Bundle.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.RecompressionTargetExistsButNotArchive">
+      <summary>
+        <para>The target path given for the Recompression operation exists but is not an Archive container.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.RecompressionTargetIsLoaded">
+      <summary>
+        <para>The target path given for the Recompression operation is an Archive that is currently loaded.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.AssetBundleLoadResult.Success">
+      <summary>
+        <para>The operation completed successfully.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.AssetBundleManifest">
+      <summary>
+        <para>Manifest for all the AssetBundles in the build.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.AssetBundleManifest.GetAllAssetBundles">
+      <summary>
+        <para>Get all the AssetBundles in the manifest.</para>
+      </summary>
+      <returns>
+        <para>An array of asset bundle names.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundleManifest.GetAllAssetBundlesWithVariant">
+      <summary>
+        <para>Get all the AssetBundles with variant in the manifest.</para>
+      </summary>
+      <returns>
+        <para>An array of asset bundle names.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundleManifest.GetAllDependencies(System.String)">
+      <summary>
+        <para>Get all the dependent AssetBundles for the given AssetBundle.</para>
+      </summary>
+      <param name="assetBundleName">Name of the asset bundle.</param>
+    </member>
+    <member name="M:UnityEngine.AssetBundleManifest.GetAssetBundleHash(System.String)">
+      <summary>
+        <para>Get the hash for the given AssetBundle.</para>
+      </summary>
+      <param name="assetBundleName">Name of the asset bundle.</param>
+      <returns>
+        <para>The 128-bit hash for the asset bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.AssetBundleManifest.GetDirectDependencies(System.String)">
+      <summary>
+        <para>Get the direct dependent AssetBundles for the given AssetBundle.</para>
+      </summary>
+      <param name="assetBundleName">Name of the asset bundle.</param>
+      <returns>
+        <para>Array of asset bundle names this asset bundle depends on.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.AssetBundleRecompressOperation">
+      <summary>
+        <para>Asynchronous AssetBundle recompression from one compression method and level to another.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRecompressOperation.humanReadableResult">
+      <summary>
+        <para>A string describing the recompression operation result (Read Only).</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRecompressOperation.inputPath">
+      <summary>
+        <para>Path of the AssetBundle being recompressed (Read Only).</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRecompressOperation.outputPath">
+      <summary>
+        <para>Path of the resulting recompressed AssetBundle (Read Only).</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRecompressOperation.result">
+      <summary>
+        <para>Result of the recompression operation.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRecompressOperation.success">
+      <summary>
+        <para>True if the recompress operation is complete and was successful, otherwise false (Read Only).</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.AssetBundleRequest">
+      <summary>
+        <para>Asynchronous load request from an AssetBundle.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRequest.allAssets">
+      <summary>
+        <para>Asset objects with sub assets being loaded. (Read Only)</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.AssetBundleRequest.asset">
+      <summary>
+        <para>Asset object being loaded (Read Only).</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.BuildCompression">
+      <summary>
+        <para>Contains information about compression methods, compression levels and block sizes that are supported by Asset Bundle compression at build time and recompression at runtime.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.BuildCompression.LZ4">
+      <summary>
+        <para>LZ4HC "Chunk Based" Compression.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.BuildCompression.LZ4Runtime">
+      <summary>
+        <para>LZ4 Compression for runtime recompression.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.BuildCompression.LZMA">
+      <summary>
+        <para>LZMA Compression.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.BuildCompression.Uncompressed">
+      <summary>
+        <para>Uncompressed Asset Bundle.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.BuildCompression.UncompressedRuntime">
+      <summary>
+        <para>Uncompressed Asset Bundle.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.CompressionLevel">
+      <summary>
+        <para>Compression Levels relate to how much time should be spent compressing Assets into an Asset Bundle.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.CompressionLevel.None">
+      <summary>
+        <para>No compression.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.CompressionType">
+      <summary>
+        <para>Compression Method for Asset Bundles.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.CompressionType.Lz4">
+      <summary>
+        <para>LZ4 compression results in larger compressed files than LZMA, but does not require the entire bundle to be decompressed before use.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.CompressionType.Lz4HC">
+      <summary>
+        <para>LZ4HC is a high compression variant of LZ4. LZ4HC compression results in larger compressed files than LZMA, but does not require the entire bundle to be decompressed before use.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.CompressionType.Lzma">
+      <summary>
+        <para>LZMA compression results in smaller compressed Asset Bundles but they must be entirely decompressed before use.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.CompressionType.None">
+      <summary>
+        <para>Uncompressed Asset Bundles are larger than compressed Asset Bundles, but they are the fastest to access once downloaded.</para>
+      </summary>
+    </member>
+    <member name="A:UnityEngine.AssetBundleModule">
+      <summary>
+        <para>The AssetBundle module implements the AssetBundle class and related APIs to load data from AssetBundles.</para>
+      </summary>
+    </member>
+  </members>
+</doc>

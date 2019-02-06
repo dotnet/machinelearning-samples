@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.CrashReportingModule</name>
+    </assembly>
+    <member name="T:UnityEngine.CrashReportHandler.CrashReportHandler">
+      <summary>
+        <para>Engine API for CrashReporting Service.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.CrashReportHandler.CrashReportHandler.enableCaptureExceptions">
+      <summary>
+        <para>This Boolean field will cause CrashReportHandler to capture exceptions when set to true. By default enable capture exceptions is true.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.CrashReportHandler.CrashReportHandler.logBufferSize">
+      <summary>
+        <para>The Performance Reporting service will keep a buffer of up to the last X log messages (Debug.Log, etc) to send along with crash reports.  The default is 10 log messages, the max is 50. Set this to 0 to disable capture of logs with your crash reports.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.CrashReportHandler.CrashReportHandler.GetUserMetadata(System.String)">
+      <summary>
+        <para>Get a custom crash report metadata field that has been set.</para>
+      </summary>
+      <param name="key"></param>
+      <returns>
+        <para>Value that was previously set for the key, or null if no value was found.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.CrashReportHandler.CrashReportHandler.SetUserMetadata(System.String,System.String)">
+      <summary>
+        <para>Set a custom metadata key-value pair to be included with crash reports.</para>
+      </summary>
+      <param name="key"></param>
+      <param name="value"></param>
+    </member>
+  </members>
+</doc>

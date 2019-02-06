@@ -1,0 +1,1426 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.VFXModule</name>
+    </assembly>
+    <member name="T:UnityEngine.Experimental.VFX.VFXEventAttribute">
+      <summary>
+        <para>The class VFXEventAttribute handles properties transmitted to a system with a Experimental.VFX.VisualEffect.SendEvent.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.CopyValuesFrom(UnityEngine.Experimental.VFX.VFXEventAttribute)">
+      <summary>
+        <para>Copy stored values from another event attribute.</para>
+      </summary>
+      <param name="eventAttibute">The source event attribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.#ctor(UnityEngine.Experimental.VFX.VFXEventAttribute)">
+      <summary>
+        <para>Copy constructor.</para>
+      </summary>
+      <param name="original">Source event attribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetBool(System.Int32)">
+      <summary>
+        <para>Gets a named stored boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored boolean value (or false if Experimental.VFX.VFXEventAttribute.HasBool returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetBool(System.String)">
+      <summary>
+        <para>Gets a named stored boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored boolean value (or false if Experimental.VFX.VFXEventAttribute.HasBool returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetFloat(System.Int32)">
+      <summary>
+        <para>Gets a named stored float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored float (or 0.0f if Experimental.VFX.VFXEventAttribute.HasFloat returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetFloat(System.String)">
+      <summary>
+        <para>Gets a named stored float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored float (or 0.0f if Experimental.VFX.VFXEventAttribute.HasFloat returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetInt(System.Int32)">
+      <summary>
+        <para>Gets a named stored integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored integer value (or 0 if Experimental.VFX.VFXEventAttribute.HasInt returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetInt(System.String)">
+      <summary>
+        <para>Gets a named stored integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored integer value (or 0 if Experimental.VFX.VFXEventAttribute.HasInt returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetMatrix4x4(System.Int32)">
+      <summary>
+        <para>Gets a named stored Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Matrix4x4 (or Matrix4x4.identity if Experimental.VFX.VFXEventAttribute.HasMatrix4x4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetMatrix4x4(System.String)">
+      <summary>
+        <para>Gets a named stored Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Matrix4x4 (or Matrix4x4.identity if Experimental.VFX.VFXEventAttribute.HasMatrix4x4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetUint(System.Int32)">
+      <summary>
+        <para>Gets a named stored unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored unsigned integer value (or 0 if Experimental.VFX.VFXEventAttribute.HasUint returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetUint(System.String)">
+      <summary>
+        <para>Gets a named stored unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored unsigned integer value (or 0 if Experimental.VFX.VFXEventAttribute.HasUint returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetVector2(System.Int32)">
+      <summary>
+        <para>Gets a named stored Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Vector2 (or Vector2.zero if Experimental.VFX.VFXEventAttribute.HasVector2 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetVector2(System.String)">
+      <summary>
+        <para>Gets a named stored Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Vector2 (or Vector2.zero if Experimental.VFX.VFXEventAttribute.HasVector2 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetVector3(System.Int32)">
+      <summary>
+        <para>Gets a named stored Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Vector3 (or Vector3.zero if Experimental.VFX.VFXEventAttribute.HasVector3 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetVector3(System.String)">
+      <summary>
+        <para>Gets a named stored Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Vector3 (or Vector3.zero if Experimental.VFX.VFXEventAttribute.HasVector3 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetVector4(System.Int32)">
+      <summary>
+        <para>Gets a named stored Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Vector4 (or Vector4.zero if Experimental.VFX.VFXEventAttribute.HasVector4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.GetVector4(System.String)">
+      <summary>
+        <para>Gets a named stored Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The stored Vector4 (or Vector4.zero if Experimental.VFX.VFXEventAttribute.HasVector4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasBool(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasBool(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasFloat(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasFloat(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasInt(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasInt(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasMatrix4x4(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasMatrix4x4(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasUint(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasUint(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasVector2(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasVector2(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasVector3(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasVector3(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasVector4(System.Int32)">
+      <summary>
+        <para>Returns true if event attribute stores this named Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.HasVector4(System.String)">
+      <summary>
+        <para>Returns true if event attribute stores this named Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetBool(System.Int32,System.Boolean)">
+      <summary>
+        <para>Sets a named boolean value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="b">The new boolean value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetBool(System.String,System.Boolean)">
+      <summary>
+        <para>Sets a named boolean value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="b">The new boolean value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetFloat(System.Int32,System.Single)">
+      <summary>
+        <para>Sets a named float value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="f">The new float value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetFloat(System.String,System.Single)">
+      <summary>
+        <para>Sets a named float value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="f">The new float value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetInt(System.Int32,System.Int32)">
+      <summary>
+        <para>Sets a named integer value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetInt(System.String,System.Int32)">
+      <summary>
+        <para>Sets a named integer value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetMatrix4x4(System.Int32,UnityEngine.Matrix4x4)">
+      <summary>
+        <para>Sets a named Matrix4x4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Matrix4x4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetMatrix4x4(System.String,UnityEngine.Matrix4x4)">
+      <summary>
+        <para>Sets a named Matrix4x4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Matrix4x4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetUint(System.Int32,System.UInt32)">
+      <summary>
+        <para>Sets a named unsigned integer value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new unsigned integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetUint(System.String,System.UInt32)">
+      <summary>
+        <para>Sets a named unsigned integer value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new unsigned integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetVector2(System.Int32,UnityEngine.Vector2)">
+      <summary>
+        <para>Sets a named Vector2 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector2 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetVector2(System.String,UnityEngine.Vector2)">
+      <summary>
+        <para>Sets a named Vector2 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector2 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetVector3(System.Int32,UnityEngine.Vector3)">
+      <summary>
+        <para>Sets a named Vector3 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector3 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetVector3(System.String,UnityEngine.Vector3)">
+      <summary>
+        <para>Sets a named Vector3 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector3 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetVector4(System.Int32,UnityEngine.Vector4)">
+      <summary>
+        <para>Sets a named Vector4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXEventAttribute.SetVector4(System.String,UnityEngine.Vector4)">
+      <summary>
+        <para>Sets a named Vector4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector4 value.</param>
+    </member>
+    <member name="T:UnityEngine.Experimental.VFX.VFXExpressionValues">
+      <summary>
+        <para>This class is a wrapper to the set of expression values.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetAnimationCurve(System.Int32)">
+      <summary>
+        <para>Returns a an animation curve that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetAnimationCurve(System.String)">
+      <summary>
+        <para>Returns a an animation curve that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetBool(System.Int32)">
+      <summary>
+        <para>Returns a boolean that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetBool(System.String)">
+      <summary>
+        <para>Returns a boolean that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetFloat(System.Int32)">
+      <summary>
+        <para>Returns a float that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetFloat(System.String)">
+      <summary>
+        <para>Returns a float that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetGradient(System.Int32)">
+      <summary>
+        <para>Returns a gradient that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetGradient(System.String)">
+      <summary>
+        <para>Returns a gradient that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetInt(System.Int32)">
+      <summary>
+        <para>Returns an integer that corresponds to the bound named expression. IF this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetInt(System.String)">
+      <summary>
+        <para>Returns an integer that corresponds to the bound named expression. IF this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetMatrix4x4(System.Int32)">
+      <summary>
+        <para>Returns a Matrix4 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetMatrix4x4(System.String)">
+      <summary>
+        <para>Returns a Matrix4 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetMesh(System.Int32)">
+      <summary>
+        <para>Returns a mesh that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetMesh(System.String)">
+      <summary>
+        <para>Returns a mesh that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetTexture(System.Int32)">
+      <summary>
+        <para>Returns a texture that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetTexture(System.String)">
+      <summary>
+        <para>Returns a texture that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetUInt(System.Int32)">
+      <summary>
+        <para>Returns an unsigned integer that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetUInt(System.String)">
+      <summary>
+        <para>Returns an unsigned integer that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetVector2(System.Int32)">
+      <summary>
+        <para>Returns a Vector2 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetVector2(System.String)">
+      <summary>
+        <para>Returns a Vector2 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetVector3(System.Int32)">
+      <summary>
+        <para>Returns a Vector3 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetVector3(System.String)">
+      <summary>
+        <para>Returns a Vector3 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetVector4(System.Int32)">
+      <summary>
+        <para>Returns a Vector4 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXExpressionValues.GetVector4(System.String)">
+      <summary>
+        <para>Returns a Vector4 that corresponds to the bound named expression. If this entry is not available, or the type doesn't match, an exception is thrown.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="T:UnityEngine.Experimental.VFX.VFXManager">
+      <summary>
+        <para>The VFX Manager lets you set a number of properties that control VisualEffect behavior within your game.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXManager.fixedTimeStep">
+      <summary>
+        <para>The fixed interval in which the frame rate updates. The tick rate is in seconds.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXManager.maxDeltaTime">
+      <summary>
+        <para>The maximum allowed delta time for an update interval. This limit affects fixedDeltaTime and deltaTime. The tick rate is in seconds.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.VFX.VFXSpawnerCallbacks">
+      <summary>
+        <para>This abstract class provides a way to implement custom spawner block in C#.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXSpawnerCallbacks.OnPlay(UnityEngine.Experimental.VFX.VFXSpawnerState,UnityEngine.Experimental.VFX.VFXExpressionValues,UnityEngine.Experimental.VFX.VisualEffect)">
+      <summary>
+        <para>This method is invoked when Play is triggered on parent spawner system.</para>
+      </summary>
+      <param name="state">The spawner state.</param>
+      <param name="vfxValues">The values of expression (input properties for a spawner block).</param>
+      <param name="vfxComponent">The visual effect.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXSpawnerCallbacks.OnStop(UnityEngine.Experimental.VFX.VFXSpawnerState,UnityEngine.Experimental.VFX.VFXExpressionValues,UnityEngine.Experimental.VFX.VisualEffect)">
+      <summary>
+        <para>This method is invoked when stop is triggered on parent spawner system.</para>
+      </summary>
+      <param name="state">The spawner state.</param>
+      <param name="vfxValues">The values of expression (input properties for a spawner block).</param>
+      <param name="vfxComponent">The visual effect.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VFXSpawnerCallbacks.OnUpdate(UnityEngine.Experimental.VFX.VFXSpawnerState,UnityEngine.Experimental.VFX.VFXExpressionValues,UnityEngine.Experimental.VFX.VisualEffect)">
+      <summary>
+        <para>This method is invoked when update is triggered on parent spawner system.</para>
+      </summary>
+      <param name="state">The spawner state.</param>
+      <param name="vfxValues">The values of expression (input properties for a spawner block).</param>
+      <param name="vfxComponent">The visual effect.</param>
+    </member>
+    <member name="T:UnityEngine.Experimental.VFX.VFXSpawnerState">
+      <summary>
+        <para>The spawn state of a Spawn system.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXSpawnerState.deltaTime">
+      <summary>
+        <para>The current delta time.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXSpawnerState.playing">
+      <summary>
+        <para>The current playing state.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXSpawnerState.spawnCount">
+      <summary>
+        <para>The current Spawn count.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXSpawnerState.totalTime">
+      <summary>
+        <para>The accumulated delta time since the last Play event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VFXSpawnerState.vfxEventAttribute">
+      <summary>
+        <para>Gets the modifiable current event attribute (Read Only).</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.VFX.VisualEffect">
+      <summary>
+        <para>The visual effect class that references an Experimental.VFX.VisualEffectAsset instance within the Scene.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.aliveParticleCount">
+      <summary>
+        <para>Returns the sum of all alive particles within the visual effect.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.culled">
+      <summary>
+        <para>Is this visual effect culled (not visible) from any camera ? (Read Only)</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.pause">
+      <summary>
+        <para>The paused state of visual effect.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.playRate">
+      <summary>
+        <para>A multiplier applied to the delta time when updating the VisualEffect. The default value is 1.0f.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.resetSeedOnPlay">
+      <summary>
+        <para>Controls whether the visual effect generates a new random number to seed the random number generator for each call to Experimental.VFX.VisualEffect.Play function.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.startSeed">
+      <summary>
+        <para>The initial seed used used for internal random number generator.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.VFX.VisualEffect.visualEffectAsset">
+      <summary>
+        <para>The visual effect asset used by the visual effect.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.AdvanceOneFrame">
+      <summary>
+        <para>If Experimental.VFX.VisualEffect._pause is true, the method processes the next visual effect update for exactly one frame with the current delta time.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.CreateVFXEventAttribute">
+      <summary>
+        <para>Create a new event attribute class.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.#ctor">
+      <summary>
+        <para>The visual effect constructor.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetAnimationCurve(System.Int32)">
+      <summary>
+        <para>Gets a named exposed animation curve.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed animation curve value (or empty animation curve if Experimental.VFX.VisualEffect.HasAnimationCurve returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetAnimationCurve(System.String)">
+      <summary>
+        <para>Gets a named exposed animation curve.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed animation curve value (or empty animation curve if Experimental.VFX.VisualEffect.HasAnimationCurve returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetBool(System.Int32)">
+      <summary>
+        <para>Get a named exposed boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed boolean value (or false if Experimental.VFX.VisualEffect.HasBool returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetBool(System.String)">
+      <summary>
+        <para>Get a named exposed boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed boolean value (or false if Experimental.VFX.VisualEffect.HasBool returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetFloat(System.Int32)">
+      <summary>
+        <para>Gets a named exposed float (o.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed float value (or 0.0f if Experimental.VFX.VisualEffect.HasFloat returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetFloat(System.String)">
+      <summary>
+        <para>Gets a named exposed float (o.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed float value (or 0.0f if Experimental.VFX.VisualEffect.HasFloat returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetGradient(System.Int32)">
+      <summary>
+        <para>Gets a named exposed gradient.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed gradient value (or empty gradient if Experimental.VFX.VisualEffect.HasGradient returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetGradient(System.String)">
+      <summary>
+        <para>Gets a named exposed gradient.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed gradient value (or empty gradient if Experimental.VFX.VisualEffect.HasGradient returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetInt(System.Int32)">
+      <summary>
+        <para>Get named exposed integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed integer value (or 0 if Experimental.VFX.VisualEffect.HasInt returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetInt(System.String)">
+      <summary>
+        <para>Get named exposed integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed integer value (or 0 if Experimental.VFX.VisualEffect.HasInt returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetMatrix4x4(System.Int32)">
+      <summary>
+        <para>Gets named exposed Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Matrix4x4 value (or Matrix4x4.zero if Experimental.VFX.VisualEffect.HasMatrix4x4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetMatrix4x4(System.String)">
+      <summary>
+        <para>Gets named exposed Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Matrix4x4 value (or Matrix4x4.zero if Experimental.VFX.VisualEffect.HasMatrix4x4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetMesh(System.Int32)">
+      <summary>
+        <para>Gets named exposed mesh.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed mesh value (or null if Experimental.VFX.VisualEffect.HasMesh returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetMesh(System.String)">
+      <summary>
+        <para>Gets named exposed mesh.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed mesh value (or null if Experimental.VFX.VisualEffect.HasMesh returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetTexture(System.Int32)">
+      <summary>
+        <para>Gets named exposed texture.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed texture value (or null if Experimental.VFX.VisualEffect.HasTexture returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetTexture(System.String)">
+      <summary>
+        <para>Gets named exposed texture.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed texture value (or null if Experimental.VFX.VisualEffect.HasTexture returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetTextureDimension(System.Int32)">
+      <summary>
+        <para>Get expected texture dimension for a named exposed texture.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetTextureDimension(System.String)">
+      <summary>
+        <para>Get expected texture dimension for a named exposed texture.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetUInt(System.Int32)">
+      <summary>
+        <para>Get named exposed unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed unsigned integer value (or 0 if Experimental.VFX.VisualEffect.HasUInt returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetUInt(System.String)">
+      <summary>
+        <para>Get named exposed unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed unsigned integer value (or 0 if Experimental.VFX.VisualEffect.HasUInt returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetVector2(System.Int32)">
+      <summary>
+        <para>Gets named exposed Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Vector2 value (or Vector2.zero if Experimental.VFX.VisualEffect.HasVector2 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetVector2(System.String)">
+      <summary>
+        <para>Gets named exposed Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Vector2 value (or Vector2.zero if Experimental.VFX.VisualEffect.HasVector2 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetVector3(System.Int32)">
+      <summary>
+        <para>Gets named exposed Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Vector3 value (or Vector3.zero if Experimental.VFX.VisualEffect.HasVector3 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetVector3(System.String)">
+      <summary>
+        <para>Gets named exposed Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Vector3 value (or Vector3.zero if Experimental.VFX.VisualEffect.HasVector3 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetVector4(System.Int32)">
+      <summary>
+        <para>Gets named exposed Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Vector4 value (or Vector4.zero if Experimental.VFX.VisualEffect.HasVector4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.GetVector4(System.String)">
+      <summary>
+        <para>Gets named exposed Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <returns>
+        <para>The exposed Vector4 value (or Vector4.zero if Experimental.VFX.VisualEffect.HasVector4 returns false).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasAnimationCurve(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named animation curve.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasAnimationCurve(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named animation curve.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasBool(System.Int32)">
+      <summary>
+        <para>Returns true if the visual effect can override the boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasBool(System.String)">
+      <summary>
+        <para>Returns true if the visual effect can override the boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasFloat(System.Int32)">
+      <summary>
+        <para>Returns true if the visual effect can override this named float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasFloat(System.String)">
+      <summary>
+        <para>Returns true if the visual effect can override this named float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasGradient(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named gradient.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasGradient(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named gradient.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasInt(System.Int32)">
+      <summary>
+        <para>Returns true if the visual effect can override this named integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasInt(System.String)">
+      <summary>
+        <para>Returns true if the visual effect can override this named integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasMatrix4x4(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasMatrix4x4(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named Matrix4x4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasMesh(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named mesh.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasMesh(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named mesh.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasTexture(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named texture.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasTexture(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named texture.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasUInt(System.Int32)">
+      <summary>
+        <para>Returns true if the visual effect can override this named unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasUInt(System.String)">
+      <summary>
+        <para>Returns true if the visual effect can override this named unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasVector2(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasVector2(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasVector3(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasVector3(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasVector4(System.Int32)">
+      <summary>
+        <para>Returns true if visual effect can override this named Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.HasVector4(System.String)">
+      <summary>
+        <para>Returns true if visual effect can override this named Vector4.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.Play(UnityEngine.Experimental.VFX.VFXEventAttribute)">
+      <summary>
+        <para>Sends a stop event to all Spawn systems. If Experimental.VFX.VisualEffect._resetSeedOnPlay is true, this methods recomputes a new random seed for the random value generator and resets internal total time to zero.</para>
+      </summary>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.Play">
+      <summary>
+        <para>Sends a stop event to all Spawn systems. If Experimental.VFX.VisualEffect._resetSeedOnPlay is true, this methods recomputes a new random seed for the random value generator and resets internal total time to zero.</para>
+      </summary>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.Reinit">
+      <summary>
+        <para>Reintialize visual effect.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.ResetOverride(System.Int32)">
+      <summary>
+        <para>Sets the overridden state to false, and restores the default value that is specified in the visual effect Asset.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.ResetOverride(System.String)">
+      <summary>
+        <para>Sets the overridden state to false, and restores the default value that is specified in the visual effect Asset.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SendEvent">
+      <summary>
+        <para>Send a custom named event.</para>
+      </summary>
+      <param name="eventName">The name of the event.</param>
+      <param name="eventNameID">The name ID of the event retrieved by Shader.PropertyToID.</param>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SendEvent(System.String)">
+      <summary>
+        <para>Send a custom named event.</para>
+      </summary>
+      <param name="eventName">The name of the event.</param>
+      <param name="eventNameID">The name ID of the event retrieved by Shader.PropertyToID.</param>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SendEvent(System.Int32,UnityEngine.Experimental.VFX.VFXEventAttribute)">
+      <summary>
+        <para>Send a custom named event.</para>
+      </summary>
+      <param name="eventName">The name of the event.</param>
+      <param name="eventNameID">The name ID of the event retrieved by Shader.PropertyToID.</param>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SendEvent(System.String,UnityEngine.Experimental.VFX.VFXEventAttribute)">
+      <summary>
+        <para>Send a custom named event.</para>
+      </summary>
+      <param name="eventName">The name of the event.</param>
+      <param name="eventNameID">The name ID of the event retrieved by Shader.PropertyToID.</param>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetAnimationCurve(System.Int32,UnityEngine.AnimationCurve)">
+      <summary>
+        <para>Sets a named animation curve value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="c">The new animation curve.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetAnimationCurve(System.String,UnityEngine.AnimationCurve)">
+      <summary>
+        <para>Sets a named animation curve value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="c">The new animation curve.</param>
+      <param name="name">The name of the property.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetBool(System.Int32,System.Boolean)">
+      <summary>
+        <para>Sets the value for a named boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="b">The new boolean value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetBool(System.String,System.Boolean)">
+      <summary>
+        <para>Sets the value for a named boolean.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="b">The new boolean value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetFloat(System.Int32,System.Single)">
+      <summary>
+        <para>Sets the value for a named float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="f">The new float value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetFloat(System.String,System.Single)">
+      <summary>
+        <para>Sets the value for a named float.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="f">The new float value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetGradient(System.Int32,UnityEngine.Gradient)">
+      <summary>
+        <para>Sets a named gradient value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="g">The new gradient value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetGradient(System.String,UnityEngine.Gradient)">
+      <summary>
+        <para>Sets a named gradient value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="g">The new gradient value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetInt(System.Int32,System.Int32)">
+      <summary>
+        <para>Sets the value for a named integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetInt(System.String,System.Int32)">
+      <summary>
+        <para>Sets the value for a named integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetMatrix4x4(System.Int32,UnityEngine.Matrix4x4)">
+      <summary>
+        <para>Sets a named Matrix4x4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Matrix4x4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetMatrix4x4(System.String,UnityEngine.Matrix4x4)">
+      <summary>
+        <para>Sets a named Matrix4x4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Matrix4x4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetMesh(System.Int32,UnityEngine.Mesh)">
+      <summary>
+        <para>Sets a named mesh value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="m">The new mesh value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetMesh(System.String,UnityEngine.Mesh)">
+      <summary>
+        <para>Sets a named mesh value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="m">The new mesh value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetTexture(System.Int32,UnityEngine.Texture)">
+      <summary>
+        <para>Sets a named texture value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="t">The new texture value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetTexture(System.String,UnityEngine.Texture)">
+      <summary>
+        <para>Sets a named texture value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="t">The new texture value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetUInt(System.Int32,System.UInt32)">
+      <summary>
+        <para>Sets the value for a named unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new unsigned integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetUInt(System.String,System.UInt32)">
+      <summary>
+        <para>Sets the value for a named unsigned integer.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="i">The new unsigned integer value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetVector2(System.Int32,UnityEngine.Vector2)">
+      <summary>
+        <para>Sets the value for a named Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector2 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetVector2(System.String,UnityEngine.Vector2)">
+      <summary>
+        <para>Sets the value for a named Vector2.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector2 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetVector3(System.Int32,UnityEngine.Vector3)">
+      <summary>
+        <para>Sets the value for a named Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector3 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetVector3(System.String,UnityEngine.Vector3)">
+      <summary>
+        <para>Sets the value for a named Vector3.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector3 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetVector4(System.Int32,UnityEngine.Vector4)">
+      <summary>
+        <para>Sets a named Vector4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.SetVector4(System.String,UnityEngine.Vector4)">
+      <summary>
+        <para>Sets a named Vector4 value.</para>
+      </summary>
+      <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+      <param name="name">The name of the property.</param>
+      <param name="v">The new Vector4 value.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.Stop">
+      <summary>
+        <para>Send a stop event to all Spawn systems.</para>
+      </summary>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffect.Stop(UnityEngine.Experimental.VFX.VFXEventAttribute)">
+      <summary>
+        <para>Send a stop event to all Spawn systems.</para>
+      </summary>
+      <param name="eventAttribute">Can be null or eventAttribute instantiated with Experimental.VFX.VisualEffect.CreateVFXEventAttribute.</param>
+    </member>
+    <member name="T:UnityEngine.Experimental.VFX.VisualEffectAsset">
+      <summary>
+        <para>This class contains a graph of the elements needed to describe a visual effect. These include: the visual effects system, generated shaders, and compiled data.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.VFX.VisualEffectAsset.#ctor">
+      <summary>
+        <para>The visual effect Asset constructor.</para>
+      </summary>
+    </member>
+  </members>
+</doc>

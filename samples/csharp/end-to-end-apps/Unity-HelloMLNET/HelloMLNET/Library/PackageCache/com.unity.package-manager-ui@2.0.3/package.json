@@ -1,0 +1,13 @@
+{
+  "name": "com.unity.package-manager-ui",
+  "displayName": "Package Manager UI",
+  "version": "2.0.3",
+  "unity": "2018.3",
+  "description": "Use the Unity Package Manager user interface to manage a Project's packages and discover new packages.\n\nFor more information, click the 'View documentation' link above. ",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.internal.unity3d.com/upm-packages/package-ux/upm-package-packman-ui.git",
+    "revision": "ce18f76a10af38052f176e5fc2af35c21b3693fc"
+  }
+}
