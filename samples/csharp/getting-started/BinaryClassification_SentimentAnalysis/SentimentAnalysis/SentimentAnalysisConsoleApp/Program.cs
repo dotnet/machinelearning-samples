@@ -2,12 +2,9 @@
 using System.IO;
 using Microsoft.ML.Core.Data;
 using Microsoft.ML;
-using Microsoft.ML.Trainers;
 using Microsoft.ML.Data;
 
 using SentimentAnalysisConsoleApp.DataStructures;
-using Microsoft.ML.Transforms.Text;
-using System.Data;
 using Common;
 
 
@@ -17,12 +14,12 @@ namespace SentimentAnalysisConsoleApp
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-data.tsv";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-test.tsv";
+        private static readonly string BaseDatasetsLocation = @"../../../../Data";
+        private static readonly string TrainDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-data.tsv";
+        private static readonly string TestDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-test.tsv";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/SentimentModel.zip";
+        private static readonly string BaseModelsPath = @"../../../../MLModels";
+        private static readonly string ModelPath = $"{BaseModelsPath}/SentimentModel.zip";
 
         static void Main(string[] args)
         {
@@ -32,7 +29,7 @@ namespace SentimentAnalysisConsoleApp
 
             // Create, Train, Evaluate and Save a model
             BuildTrainEvaluateAndSaveModel(mlContext);
-            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training processh ===============");
+            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
             // Make a single test prediction loding the model from .ZIP file
             TestSinglePrediction(mlContext);
@@ -82,8 +79,7 @@ namespace SentimentAnalysisConsoleApp
 
         // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
-        {
-            
+        {         
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
 
             ITransformer trainedModel;
@@ -101,7 +97,6 @@ namespace SentimentAnalysisConsoleApp
             Console.WriteLine($"=============== Single Prediction  ===============");
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
             Console.WriteLine($"==================================================");
-            //
         }
     }
 }
