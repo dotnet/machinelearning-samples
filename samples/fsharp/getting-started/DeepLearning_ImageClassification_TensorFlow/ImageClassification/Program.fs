@@ -1,11 +1,9 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-open Common
 open Microsoft.ML.ImageAnalytics
+open Microsoft.ML.Core.Data
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -127,10 +125,11 @@ let score dataLocation imagesFolder inputModelLocation labelsTxt =
     let mlContext = MLContext(seed = Nullable 1)
     let data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
-        mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImagePath", "ImageReal")|])
-        |> ModelBuilder.append (mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
-        |> ModelBuilder.append (mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean) |]))
-        |> ModelBuilder.append (mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2" |]));
+        EstimatorChain()
+            .Append(mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImagePath", "ImageReal")|]))
+            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
+            .Append(mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean) |]))
+            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2" |]))
     let model = pipeline.Fit(data)
     let predictionEngine = model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext)
 

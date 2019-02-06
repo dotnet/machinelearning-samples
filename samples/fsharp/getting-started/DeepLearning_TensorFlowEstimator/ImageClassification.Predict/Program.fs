@@ -1,11 +1,7 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-open Common
-open Microsoft.ML.ImageAnalytics
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 

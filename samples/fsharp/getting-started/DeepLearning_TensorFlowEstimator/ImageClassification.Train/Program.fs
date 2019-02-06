@@ -1,10 +1,7 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-open Common
 open Microsoft.ML.ImageAnalytics
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
@@ -79,13 +76,14 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
     let mlContext = MLContext(seed = Nullable 1)
     let data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
-        mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey")
-        |> ModelBuilder.append (mlContext.Transforms.LoadImages(imagesFolder, struct ("ImagePath", "ImageReal")))
-        |> ModelBuilder.append (mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
-        |> ModelBuilder.append (mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean)))
-        |> ModelBuilder.append (mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2_pre_activation" |]))
-        |> ModelBuilder.append (mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
-        |> ModelBuilder.append (mlContext.Transforms.Conversion.MapKeyToValue(struct("PredictedLabel", "PredictedLabelValue")))
+        EstimatorChain()
+            .Append(mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey"))
+            .Append(mlContext.Transforms.LoadImages(imagesFolder, struct ("ImagePath", "ImageReal")))
+            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
+            .Append(mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean)))
+            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2_pre_activation" |]))
+            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue(struct("PredictedLabel", "PredictedLabelValue")))
     
     printHeader ["Training classification model"]
     let model = pipeline.Fit(data)
