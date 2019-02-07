@@ -32,15 +32,15 @@ namespace BikeSharingDemand
 
             // Concatenate all the numeric columns into a single features column
             var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features,
-                                                     "Season", "Year", "Month",
-                                                     "Hour", "Holiday", "Weekday", "WorkingDay",
-                                                     "Weather", "Temperature", "NormalizedTemperature",
-                                                     "Humidity", "Windspeed")
+                                                     nameof(DemandObservation.Season), nameof(DemandObservation.Year), nameof(DemandObservation.Month),
+                                                     nameof(DemandObservation.Hour), nameof(DemandObservation.Holiday), nameof(DemandObservation.Weekday),
+                                                     nameof(DemandObservation.WorkingDay), nameof(DemandObservation.Weather), nameof(DemandObservation.Temperature),
+                                                     nameof(DemandObservation.NormalizedTemperature), nameof(DemandObservation.Humidity), nameof(DemandObservation.Windspeed))
                                          .AppendCacheCheckpoint(mlContext);
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataProcessPipeline, 10);
-            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 10);
+            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 10);
 
             // Definition of regression trainers/algorithms to use
             //var regressionLearners = new (string name, IEstimator<ITransformer> value)[]
@@ -66,7 +66,7 @@ namespace BikeSharingDemand
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 IDataView predictions = trainedModel.Transform(testDataView);
-                var metrics = mlContext.Regression.Evaluate(data:predictions, label:"Label", score: DefaultColumnNames.Score);               
+                var metrics = mlContext.Regression.Evaluate(data:predictions, label:DefaultColumnNames.Label, score: DefaultColumnNames.Score);               
                 ConsoleHelper.PrintRegressionMetrics(trainer.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
