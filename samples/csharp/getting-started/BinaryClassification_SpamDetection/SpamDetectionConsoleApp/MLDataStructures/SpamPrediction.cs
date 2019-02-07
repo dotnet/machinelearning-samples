@@ -1,4 +1,4 @@
-﻿using Microsoft.ML.Runtime.Api;
+﻿using Microsoft.ML.Data;
 
 namespace SpamDetectionConsoleApp.MLDataStructures
 {
