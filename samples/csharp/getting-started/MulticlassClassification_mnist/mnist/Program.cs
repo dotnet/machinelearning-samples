@@ -13,64 +13,68 @@ namespace mnist
     {
 
         static readonly string TrainDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-train.csv");
-        static readonly string ValidationDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-val.csv");
+        static readonly string TestDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-val.csv");
         static readonly string ModelPath = Path.Combine(Environment.CurrentDirectory, "MLModels", "Model.zip");
 
         static void Main(string[] args)
         {
-            var env = new MLContext();
-            Train(env);
-            TestSomePredictions(env);
+            MLContext mLContext = new MLContext();
+            Train(mLContext);
+            TestSomePredictions(mLContext);
 
             Console.WriteLine("Hit any key to finish the app");
             Console.ReadKey();
         }
 
-        public static void Train(MLContext env)
+        public static void Train(MLContext mLContext)
         {
             try
             {
-                var classification = new MulticlassClassificationContext(env);
-
                 // STEP 1: Common data loading configuration
-                var reader = env.Data.CreateTextReader(
-                    new TextLoader.Arguments()
-                    {
-                        Column = new[] 
+                var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
+                        columns : new[] 
                         {
-                            new TextLoader.Column("PixelValues", DataKind.R4, 0, 63),
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
                             new TextLoader.Column("Number", DataKind.R4, 64)
                         },
-                        Separator = ",",
-                        HasHeader = false
-                    });
+                        hasHeader : false,
+                        separatorChar : ','
+                        );
 
-                var data = reader.Read(TrainDataPath);
-                var testData = reader.Read(ValidationDataPath);
+                
+                var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
+                        columns: new[]
+                        {
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
+                            new TextLoader.Column("Number", DataKind.R4, 64)
+                        },
+                        hasHeader: false,
+                        separatorChar: ','
+                        );
 
                 // STEP 2: Common data process configuration with pipeline data transformations
-                var dataProcessPipeline = env.Transforms.Concatenate("Features", "PixelValues").AppendCacheCheckpoint(env);
+                var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
 
                 // STEP 3: Set the training algorithm, then create and config the modelBuilder
-                var trainer = env.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: "Features");
+                var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: DefaultColumnNames.Features);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
 
                 // STEP 4: Train the model fitting to the DataSet
                 var watch = System.Diagnostics.Stopwatch.StartNew();
                 Console.WriteLine("=============== Training the model ===============");
 
-                ITransformer trainedModel = trainingPipeline.Fit(data);
+                ITransformer trainedModel = trainingPipeline.Fit(trainData);
                 long elapsedMs = watch.ElapsedMilliseconds;
                 Console.WriteLine($"***** Training time: {elapsedMs / 1000} seconds *****");
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 var predictions = trainedModel.Transform(testData);
-                var metrics = env.MulticlassClassification.Evaluate(predictions, "Number", "Score");
+                var metrics = mLContext.MulticlassClassification.Evaluate(data:predictions, label:"Number", score:DefaultColumnNames.Score);
 
                 Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
                 using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                    env.Model.Save(trainedModel, fs);
+                    mLContext.Model.Save(trainedModel, fs);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);
             }
