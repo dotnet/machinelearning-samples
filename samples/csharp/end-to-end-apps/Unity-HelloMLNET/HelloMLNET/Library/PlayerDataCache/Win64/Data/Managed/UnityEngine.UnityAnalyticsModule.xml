@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.UnityAnalyticsModule</name>
+    </assembly>
+    <member name="T:UnityEngine.Analytics.Analytics">
+      <summary>
+        <para>Unity Analytics provides insight into your game users e.g. DAU, MAU.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.Analytics.deviceStatsEnabled">
+      <summary>
+        <para>Controls whether the sending of device stats at runtime is enabled.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.Analytics.enabled">
+      <summary>
+        <para>Controls whether the Analytics service is enabled at runtime.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.Analytics.initializeOnStartup">
+      <summary>
+        <para>Reports whether Unity is set to initialize Analytics on startup.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.Analytics.limitUserTracking">
+      <summary>
+        <para>Controls whether to limit user tracking at runtime.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.Analytics.playerOptedOut">
+      <summary>
+        <para>Reports whether the player has opted out of data collection.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.CustomEvent(System.String,System.Collections.Generic.IDictionary`2&lt;System.String,System.Object&gt;)">
+      <summary>
+        <para>Custom Events (optional).</para>
+      </summary>
+      <param name="customEventName">Name of custom event. Name cannot include the prefix "unity." - This is a reserved keyword.</param>
+      <param name="eventData">Additional parameters sent to Unity Analytics at the time the custom event was triggered. Dictionary key cannot include the prefix "unity." - This is a reserved keyword.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.CustomEvent(System.String)">
+      <summary>
+        <para>Custom Events (optional).</para>
+      </summary>
+      <param name="customEventName"></param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.CustomEvent(System.String,UnityEngine.Vector3)">
+      <summary>
+        <para>Custom Events (optional).</para>
+      </summary>
+      <param name="customEventName"></param>
+      <param name="position"></param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.FlushEvents">
+      <summary>
+        <para>Attempts to flush immediately all queued analytics events to the network and filesystem cache if possible (optional).</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.RegisterEvent(System.String,System.Int32,System.Int32,System.String,System.String)">
+      <summary>
+        <para>This API is used for registering a Runtime Analytics event. It is meant for internal use only and is likely to change in the future. User code should never use this API.</para>
+      </summary>
+      <param name="eventName">Name of the event.</param>
+      <param name="maxEventPerHour">Hourly limit for this event name.</param>
+      <param name="maxItems">Maximum number of items in this event.</param>
+      <param name="vendorKey">Vendor key name.</param>
+      <param name="prefix">Optional event name prefix value.</param>
+      <param name="ver">Event version number.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.RegisterEvent(System.String,System.Int32,System.Int32,System.String,System.Int32,System.String)">
+      <summary>
+        <para>This API is used for registering a Runtime Analytics event. It is meant for internal use only and is likely to change in the future. User code should never use this API.</para>
+      </summary>
+      <param name="eventName">Name of the event.</param>
+      <param name="maxEventPerHour">Hourly limit for this event name.</param>
+      <param name="maxItems">Maximum number of items in this event.</param>
+      <param name="vendorKey">Vendor key name.</param>
+      <param name="prefix">Optional event name prefix value.</param>
+      <param name="ver">Event version number.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.ResumeInitialization">
+      <summary>
+        <para>Resume Analytics initialization.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.SendEvent(System.String,System.Object,System.Int32,System.String)">
+      <summary>
+        <para>This API is used to send a Runtime Analytics event. It is meant for internal use only and is likely to change in the future. User code should never use this API.</para>
+      </summary>
+      <param name="eventName">Name of the event.</param>
+      <param name="ver">Event version number.</param>
+      <param name="prefix">Optional event name prefix value.</param>
+      <param name="parameters">Additional event data.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.SetUserBirthYear(System.Int32)">
+      <summary>
+        <para>User Demographics (optional).</para>
+      </summary>
+      <param name="birthYear">Birth year of user. Must be 4-digit year format, only.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.SetUserGender(UnityEngine.Analytics.Gender)">
+      <summary>
+        <para>User Demographics (optional).</para>
+      </summary>
+      <param name="gender">Gender of user can be "Female", "Male", or "Unknown".</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.SetUserId(System.String)">
+      <summary>
+        <para>User Demographics (optional).</para>
+      </summary>
+      <param name="userId">User id.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.Transaction(System.String,System.Decimal,System.String)">
+      <summary>
+        <para>Tracking Monetization (optional).</para>
+      </summary>
+      <param name="productId">The id of the purchased item.</param>
+      <param name="amount">The price of the item.</param>
+      <param name="currency">Abbreviation of the currency used for the transaction. For example “USD” (United States Dollars). See http:en.wikipedia.orgwikiISO_4217 for a standardized list of currency abbreviations.</param>
+      <param name="receiptPurchaseData">Receipt data (iOS)  receipt ID (android)  for in-app purchases to verify purchases with Apple iTunes / Google Play. Use null in the absence of receipts.</param>
+      <param name="signature">Android receipt signature. If using native Android use the INAPP_DATA_SIGNATURE string containing the signature of the purchase data that was signed with the private key of the developer. The data signature uses the RSASSA-PKCS1-v1_5 scheme. Pass in null in absence of a signature.</param>
+      <param name="usingIAPService">Set to true when using UnityIAP.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.Transaction(System.String,System.Decimal,System.String,System.String,System.String)">
+      <summary>
+        <para>Tracking Monetization (optional).</para>
+      </summary>
+      <param name="productId">The id of the purchased item.</param>
+      <param name="amount">The price of the item.</param>
+      <param name="currency">Abbreviation of the currency used for the transaction. For example “USD” (United States Dollars). See http:en.wikipedia.orgwikiISO_4217 for a standardized list of currency abbreviations.</param>
+      <param name="receiptPurchaseData">Receipt data (iOS)  receipt ID (android)  for in-app purchases to verify purchases with Apple iTunes / Google Play. Use null in the absence of receipts.</param>
+      <param name="signature">Android receipt signature. If using native Android use the INAPP_DATA_SIGNATURE string containing the signature of the purchase data that was signed with the private key of the developer. The data signature uses the RSASSA-PKCS1-v1_5 scheme. Pass in null in absence of a signature.</param>
+      <param name="usingIAPService">Set to true when using UnityIAP.</param>
+    </member>
+    <member name="M:UnityEngine.Analytics.Analytics.Transaction(System.String,System.Decimal,System.String,System.String,System.String,System.Boolean)">
+      <summary>
+        <para>Tracking Monetization (optional).</para>
+      </summary>
+      <param name="productId">The id of the purchased item.</param>
+      <param name="amount">The price of the item.</param>
+      <param name="currency">Abbreviation of the currency used for the transaction. For example “USD” (United States Dollars). See http:en.wikipedia.orgwikiISO_4217 for a standardized list of currency abbreviations.</param>
+      <param name="receiptPurchaseData">Receipt data (iOS)  receipt ID (android)  for in-app purchases to verify purchases with Apple iTunes / Google Play. Use null in the absence of receipts.</param>
+      <param name="signature">Android receipt signature. If using native Android use the INAPP_DATA_SIGNATURE string containing the signature of the purchase data that was signed with the private key of the developer. The data signature uses the RSASSA-PKCS1-v1_5 scheme. Pass in null in absence of a signature.</param>
+      <param name="usingIAPService">Set to true when using UnityIAP.</param>
+    </member>
+    <member name="T:UnityEngine.Analytics.AnalyticsResult">
+      <summary>
+        <para>Analytics API result.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.AnalyticsDisabled">
+      <summary>
+        <para>Analytics API result: Analytics is disabled.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.InvalidData">
+      <summary>
+        <para>Analytics API result: Invalid argument value.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.NotInitialized">
+      <summary>
+        <para>Analytics API result: Analytics not initialized.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.Ok">
+      <summary>
+        <para>Analytics API result: Success.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.SizeLimitReached">
+      <summary>
+        <para>Analytics API result: Argument size limit.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.TooManyItems">
+      <summary>
+        <para>Analytics API result: Too many parameters.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.TooManyRequests">
+      <summary>
+        <para>Analytics API result: Too many requests.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsResult.UnsupportedPlatform">
+      <summary>
+        <para>Analytics API result: This platform doesn't support Analytics.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Analytics.AnalyticsSessionInfo">
+      <summary>
+        <para>Provides access to the Analytics session information for the current game instance.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.AnalyticsSessionInfo.sessionCount">
+      <summary>
+        <para>The number of sessions played since the app was installed.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.AnalyticsSessionInfo.sessionElapsedTime">
+      <summary>
+        <para>The time elapsed, in milliseconds, since the beginning of the current game session.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.AnalyticsSessionInfo.sessionFirstRun">
+      <summary>
+        <para>Reports whether the current session is the first session since the player installed the game or application.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.AnalyticsSessionInfo.sessionId">
+      <summary>
+        <para>A random, unique GUID identifying the current game or app session.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Analytics.AnalyticsSessionInfo.sessionState">
+      <summary>
+        <para>The current state of the session.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Analytics.AnalyticsSessionInfo.sessionStateChanged(UnityEngine.Analytics.AnalyticsSessionInfo/SessionStateChanged)">
+      <summary>
+        <para>Dispatched when the Analytics session state changes.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="P:UnityEngine.Analytics.AnalyticsSessionInfo.userId">
+      <summary>
+        <para>A random GUID uniquely identifying sessions played on the same instance of your game or app.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Analytics.AnalyticsSessionInfo.SessionStateChanged">
+      <summary>
+        <para>Dispatched when the Analytics session state changes.</para>
+      </summary>
+      <param name="sessionState">Current session state.</param>
+      <param name="sessionId">Current session id.</param>
+      <param name="sessionElapsedTime">Length of the current session in milliseconds.</param>
+      <param name="sessionChanged">True, if the sessionId has changed; otherwise false.</param>
+    </member>
+    <member name="T:UnityEngine.Analytics.AnalyticsSessionState">
+      <summary>
+        <para>Session tracking states.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsSessionState.kSessionPaused">
+      <summary>
+        <para>Session tracking has paused.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsSessionState.kSessionResumed">
+      <summary>
+        <para>Session tracking has resumed.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsSessionState.kSessionStarted">
+      <summary>
+        <para>Session tracking has started.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.AnalyticsSessionState.kSessionStopped">
+      <summary>
+        <para>Session tracking has stopped.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Analytics.Gender">
+      <summary>
+        <para>User Demographics: Gender of a user.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.Gender.Female">
+      <summary>
+        <para>User Demographics: Female Gender of a user.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.Gender.Male">
+      <summary>
+        <para>User Demographics: Male Gender of a user.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Analytics.Gender.Unknown">
+      <summary>
+        <para>User Demographics: Unknown Gender of a user.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.RemoteSettings">
+      <summary>
+        <para>Provides access to your remote settings.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.RemoteSettings.BeforeFetchFromServer(System.Action)">
+      <summary>
+        <para>Dispatched before the RemoteSettings object makes the network request for the latest settings.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="?:UnityEngine.RemoteSettings.Completed(System.Action`3&lt;System.Boolean,System.Boolean,System.Int32&gt;)">
+      <summary>
+        <para>Dispatched when the network request made by the RemoteSettings object to fetch the remote configuration file is complete.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.ForceUpdate">
+      <summary>
+        <para>Forces the game to download the newest settings from the server and update its values.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetBool(System.String)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetBool(System.String,System.Boolean)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetCount">
+      <summary>
+        <para>Gets the number of keys in the remote settings configuration.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetFloat(System.String)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetFloat(System.String,System.Single)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetInt(System.String)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetInt(System.String,System.Int32)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetKeys">
+      <summary>
+        <para>Gets an array containing all the keys in the remote settings configuration.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetLong(System.String,System.Int64)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetString(System.String)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.GetString(System.String,System.String)">
+      <summary>
+        <para>Gets the value corresponding to remote setting identified by key, if it exists.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <param name="defaultValue">The default value to use if the setting identified by the key parameter cannot be found or is unavailable.</param>
+      <returns>
+        <para>The current value of the setting identified by key, or the default value.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.HasKey(System.String)">
+      <summary>
+        <para>Reports whether the specified key exists in the remote settings configuration.</para>
+      </summary>
+      <param name="key">The key identifying the setting.</param>
+      <returns>
+        <para>True, if the key exists.</para>
+      </returns>
+    </member>
+    <member name="?:UnityEngine.RemoteSettings.Updated(UnityEngine.RemoteSettings/UpdatedEventHandler)">
+      <summary>
+        <para>Dispatched when a remote settings configuration is fetched and successfully parsed from the server or from local cache.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="T:UnityEngine.RemoteSettings.UpdatedEventHandler">
+      <summary>
+        <para>Defines the delegate signature for handling RemoteSettings.Updated events.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.RemoteSettings.WasLastUpdatedFromServer">
+      <summary>
+        <para>Reports whether or not the settings available from the RemoteSettings object were received from the Analytics Service during the current session.</para>
+      </summary>
+      <returns>
+        <para>True, if the remote settings file was received from the Analytics Service in the current session. False, if the remote settings file was received during an earlier session and cached.</para>
+      </returns>
+    </member>
+    <member name="A:UnityEngine.UnityAnalyticsModule">
+      <summary>
+        <para>The UnityAnalytics module implements APIs required to use Unity Analytics.</para>
+      </summary>
+    </member>
+  </members>
+</doc>
