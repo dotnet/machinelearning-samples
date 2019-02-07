@@ -64,6 +64,7 @@ let main argv =
     // STEP5: Save/persist the model as a .ZIP file
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
     mlContext.Model.Save(trainedModel, fs)
+    fs.Close()
 
     printfn "=============== End of training process ==============="
 
