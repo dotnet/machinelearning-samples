@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.SubstanceModule</name>
+    </assembly>
+    <member name="T:UnityEngine.ProceduralCacheSize">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralCacheSize.Heavy">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralCacheSize.Medium">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralCacheSize.NoLimit">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralCacheSize.None">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralCacheSize.Tiny">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralLoadingBehavior">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralLoadingBehavior.BakeAndDiscard">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralLoadingBehavior.BakeAndKeep">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralLoadingBehavior.Cache">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralLoadingBehavior.DoNothing">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralLoadingBehavior.DoNothingAndCache">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralLoadingBehavior.Generate">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralMaterial">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.animationUpdateRate">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.cacheSize">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isCachedDataAvailable">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isFrozen">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isLoadTimeGenerated">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isProcessing">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isReadable">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isSupported">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.loadingBehavior">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.preset">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralMaterial.substanceProcessorUsage">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.CacheProceduralProperty(System.String,System.Boolean)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.ClearCache">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.FreezeAndReleaseSourceData">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetGeneratedTexture(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="textureName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetGeneratedTextures">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralBoolean(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralColor(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralEnum(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralFloat(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralPropertyDescriptions">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralString(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralTexture(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.GetProceduralVector(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.HasProceduralProperty(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.IsProceduralPropertyCached(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.IsProceduralPropertyVisible(System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.RebuildTextures">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.RebuildTexturesImmediately">
+      <summary>
+        <para>Triggers an immediate (synchronous) rebuild of this ProceduralMaterial's dirty textures.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralBoolean(System.String,System.Boolean)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralColor(System.String,UnityEngine.Color)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralEnum(System.String,System.Int32)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralFloat(System.String,System.Single)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralString(System.String,System.String)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralTexture(System.String,UnityEngine.Texture2D)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.SetProceduralVector(System.String,UnityEngine.Vector4)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="inputName"></param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.StopRebuilds">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralOutputType">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.AmbientOcclusion">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.DetailMask">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Diffuse">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Emissive">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Height">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Metallic">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Normal">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Opacity">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Roughness">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Smoothness">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Specular">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralOutputType.Unknown">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralProcessorUsage">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralProcessorUsage.All">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralProcessorUsage.Half">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralProcessorUsage.One">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralProcessorUsage.Unsupported">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralPropertyDescription">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.componentLabels">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.enumOptions">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.group">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.hasRange">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.label">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.maximum">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.minimum">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.name">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.step">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyDescription.type">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralPropertyType">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Boolean">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Color3">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Color4">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Enum">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Float">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.String">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Texture">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Vector2">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Vector3">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ProceduralPropertyType.Vector4">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.ProceduralTexture">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralTexture.format">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.ProceduralTexture.hasAlpha">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralTexture.GetPixels32(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+      <param name="x"></param>
+      <param name="y"></param>
+      <param name="blockWidth"></param>
+      <param name="blockHeight"></param>
+    </member>
+    <member name="M:UnityEngine.ProceduralTexture.GetProceduralOutputType">
+      <summary>
+        <para>Deprecated feature, no longer available</para>
+      </summary>
+    </member>
+  </members>
+</doc>
