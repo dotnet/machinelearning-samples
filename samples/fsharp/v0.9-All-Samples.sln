@@ -28,6 +28,7 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "CustomerSegmentation.Train", "getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.Train\CustomerSegmentation.Train.fsproj", "{43517BE9-8168-4941-AA2A-E02891E6466D}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "CustomerSegmentation.Predict", "getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.Predict\CustomerSegmentation.Predict.fsproj", "{09708903-6C41-44EF-BF14-416E4CB48603}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowEstimator.Solution", "TensorFlowEstimator.Solution", "{9DCFB279-F0C1-4D20-993C-878A507708C8}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Train", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Train\ImageClassification.Train.fsproj", "{A756A3AD-4259-4056-BDDF-A33884455A4E}"
@@ -37,6 +38,10 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Score", "getting-started\DeepLearning_ImageClassification_TensorFlow\ImageClassification\ImageClassification.Score.fsproj", "{543507C1-9011-4562-9CE3-E7229F25AC27}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Predict", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Predict\ImageClassification.Predict.fsproj", "{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BinaryClassification_SpamDetection", "BinaryClassification_SpamDetection", "{4BCB9F94-ACBA-4437-B592-2E08E5C58CC4}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SpamDetectionConsoleApp", "getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp\SpamDetectionConsoleApp.fsproj", "{880A505E-177F-4E6D-A563-2C527F8CCADD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +89,10 @@ Global
 		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{880A505E-177F-4E6D-A563-2C527F8CCADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{880A505E-177F-4E6D-A563-2C527F8CCADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{880A505E-177F-4E6D-A563-2C527F8CCADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{880A505E-177F-4E6D-A563-2C527F8CCADD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +108,7 @@ Global
 		{A756A3AD-4259-4056-BDDF-A33884455A4E} = {9DCFB279-F0C1-4D20-993C-878A507708C8}
 		{543507C1-9011-4562-9CE3-E7229F25AC27} = {F84DB5B9-6E38-4D05-B467-C38141AC34D1}
 		{C167FF79-C9DB-41BB-836B-5E1B495A2DD2} = {9DCFB279-F0C1-4D20-993C-878A507708C8}
+		{880A505E-177F-4E6D-A563-2C527F8CCADD} = {4BCB9F94-ACBA-4437-B592-2E08E5C58CC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47D66D3A-D6C7-45A5-8C11-8723039BC142}
