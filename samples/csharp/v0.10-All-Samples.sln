@@ -69,11 +69,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysisConsoleApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction\TaxiFarePredictionConsoleApp\TaxiFarePrediction.csproj", "{6EF19460-7ACD-49D1-A9D9-814ED5E3ADA6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MulticlassClassification_HeartDisease.Solution", "MulticlassClassification_HeartDisease.Solution", "{686796E7-27CE-4EEF-9551-05D9DDD2297E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDisease.Solution", "HeartDisease.Solution", "{686796E7-27CE-4EEF-9551-05D9DDD2297E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticlassClassification_HeartDisease", "getting-started\MulticlassClassification_HeartDisease\HeartDiseaseConsoleApp\MulticlassClassification_HeartDisease.csproj", "{460D2F7E-96AE-4E21-A3B6-ED3BF2912CA9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MulticlassClassification_mnist", "MulticlassClassification_mnist", "{70FA24A2-97D5-4B4D-BB42-34C0E5C38326}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mnist.Solution", "Mnist.Solution", "{70FA24A2-97D5-4B4D-BB42-34C0E5C38326}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mnist", "getting-started\MulticlassClassification_mnist\mnist\mnist.csproj", "{46BCC288-76F1-4E47-AD5B-495B7CAC0EC6}"
 EndProject
@@ -82,6 +82,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Train", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Train\ImageClassification.Train.csproj", "{FCE96408-448D-4BBD-8935-2247BD3E8701}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Predict", "getting-started\DeepLearning_TensorFlowEstimator\ImageClassification.Predict\ImageClassification.Predict.csproj", "{C5D57BEB-5567-4052-A3CA-ACF780A3E486}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpamDetection.Solution", "SpamDetection.Solution", "{F2E5968C-1788-480B-A68D-6C1F6AD6E4AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpamDetectionConsoleApp", "getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp\SpamDetectionConsoleApp.csproj", "{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -275,6 +279,14 @@ Global
 		{C5D57BEB-5567-4052-A3CA-ACF780A3E486}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5D57BEB-5567-4052-A3CA-ACF780A3E486}.Release|x64.ActiveCfg = Release|Any CPU
 		{C5D57BEB-5567-4052-A3CA-ACF780A3E486}.Release|x64.Build.0 = Release|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -304,6 +316,7 @@ Global
 		{43111327-9C7F-418B-82B9-C1B5D583E6B4} = {256EED4C-79DE-46E5-8673-0991C630C6BD}
 		{FCE96408-448D-4BBD-8935-2247BD3E8701} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
 		{C5D57BEB-5567-4052-A3CA-ACF780A3E486} = {BB78093B-4EEE-401F-95E2-4BE7C5C420D4}
+		{44FAC0AE-EDB4-457A-B669-2AC32DA962CB} = {F2E5968C-1788-480B-A68D-6C1F6AD6E4AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
