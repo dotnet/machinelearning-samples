@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9   | Dynamic API | Updated to v0.9 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
+| v0.10   | Dynamic API | Updated to v0.9 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
 
 In this sample, you can see how to use ML.NET to build a movie recommendation engine. 
 
@@ -39,7 +39,7 @@ To solve this problem, you build and train an ML model on existing training data
 
 Building a model includes: 
 
-* Define the data's schema mapped to the datasets to read (`recommendation-ratings-train.csv` and `recommendation-ratings-test.csv`) with a DataReader
+* Define the data's schema mapped to the datasets to read (`recommendation-ratings-train.csv` and `recommendation-ratings-test.csv`) with a Textloader
 
 * Matrix Factorization requires the two features userId, movieId to be encoded
 
@@ -48,13 +48,29 @@ Building a model includes:
 Here's the code which will be used to build the model:
 ```CSharp
  
- var mlcontext = new MLContext();
+ //STEP 1: Create MLContext to be shared across the model creation workflow objects 
+  MLContext mlcontext = new MLContext();
 
- IDataView trainingDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, separatorChar:',');
+ //STEP 2: Read the training data which will be used to train the movie recommendation model    
+ //The schema for training data is defined by type 'TInput' in ReadFromTextFile<TInput>() method.
+ IDataView trainingDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, ar:',');
 
- var pipeline = mlcontext.Transforms.Categorical.MapValueToKey("userId", "userIdEncoded")
-                                   .Append(mlcontext.Transforms.Categorical.MapValueToKey("movieId", "movieIdEncoded")
-                                   .Append(new MatrixFactorizationTrainer(mlcontext, "Label","userIdEncoded", "movieIdEncoded")));
+//STEP 3: Transform your data by encoding the two features userId and movieID. These encoded features will be provided as 
+//        to our MatrixFactorizationTrainer.
+ var dataProcessingPipeline = mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: userIdEncoded, inputColumnName: eRating.userId))
+                .Append(mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: movieIdEncoded, inputColumnName: nameofg.movieId)));
+ 
+ //Specify the options for MatrixFactorization trainer
+ MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
+ options.MatrixColumnIndexColumnName = userIdEncoded;
+ options.MatrixRowIndexColumnName = movieIdEncoded;
+ options.LabelColumnName = DefaultColumnNames.Label;
+ options.NumIterations = 20;
+ options.K = 100;
+
+//STEP 4: Create the training pipeline 
+ var trainingPipeLine = dataProcessingPipeline.Append(mlcontext.Recommendation().Trainers.MatrixFactorization(options));
+
 ```
 
 
@@ -64,7 +80,7 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training you need to call the `Fit()` method while providing the training dataset (`recommendation-ratings-train.csv` file) in a DataView object.
 
 ```CSharp    
-var model = pipeline.Fit(trainingDataView);
+ITransformer model = trainingPipeLine.Fit(trainingDataView);
 ```
 Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
 
@@ -77,7 +93,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 Console.WriteLine("=============== Evaluating the model ===============");
 IDataView testDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
 var prediction = model.Transform(testDataView);
-var metrics = mlcontext.Regression.Evaluate(prediction, label: "Label", score: "Score");
+var metrics = mlcontext.Regression.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 ```
 
 ### 4. Consume model
