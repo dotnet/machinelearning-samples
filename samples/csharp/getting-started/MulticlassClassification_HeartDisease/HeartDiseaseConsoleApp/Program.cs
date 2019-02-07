@@ -34,15 +34,17 @@ namespace MulticlassClassification_HeartDisease
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
 
-            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TrainDataPath, hasHeader: true, separatorChar: ',');
-            var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(TestDataPath, hasHeader: true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(path:TrainDataPath, hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(path:TestDataPath, hasHeader: true, separatorChar: ',');
 
-            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
+            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(HeartDataImport.Age), nameof(HeartDataImport.Sex),
+                nameof(HeartDataImport.Cp), nameof(HeartDataImport.TrestBps), nameof(HeartDataImport.Chol), nameof(HeartDataImport.Fbs), nameof(HeartDataImport.RestEcg), nameof(HeartDataImport.Thalac),
+                nameof(HeartDataImport.Exang), nameof(HeartDataImport.OldPeak), nameof(HeartDataImport.Slope), nameof(HeartDataImport.Ca), nameof(HeartDataImport.Thal))
                                         .AppendCacheCheckpoint(mlContext);
 
             // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             ConsoleHelper.PeekDataViewInConsole<HeartData>(mlContext, trainingDataView, dataProcessPipeline, 5);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 5);
 
             var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);        
@@ -53,7 +55,7 @@ namespace MulticlassClassification_HeartDisease
 
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score", "PredictedLabel", 0);
+            var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, label:DefaultColumnNames.Label, score:DefaultColumnNames.Score, predictedLabel:DefaultColumnNames.PredictedLabel, topK:0);
 
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
