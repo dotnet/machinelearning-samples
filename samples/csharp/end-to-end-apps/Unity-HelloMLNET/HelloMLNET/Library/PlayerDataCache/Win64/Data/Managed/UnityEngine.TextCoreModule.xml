@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.TextCoreModule</name>
+    </assembly>
+    <member name="T:UnityEngine.TextCore.FaceInfo">
+      <summary>
+        <para>A structure that contains information about a given typeface and for a specific point size.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.ascentLine">
+      <summary>
+        <para>The Ascent line is typically located at the top of the tallest glyph in the typeface.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.baseline">
+      <summary>
+        <para>The Baseline is an imaginary line upon which all glyphs appear to rest on.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.capLine">
+      <summary>
+        <para>The Cap line is typically located at the top of capital letters.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.descentLine">
+      <summary>
+        <para>The Descent line is typically located at the bottom of the glyph with the lowest descender in the typeface.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.familyName">
+      <summary>
+        <para>The name of the font typeface also known as family name.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.lineHeight">
+      <summary>
+        <para>The line height represents the distance between consecutive lines of text.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.meanLine">
+      <summary>
+        <para>The Mean line is typically located at the top of lowercase letters.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.pointSize">
+      <summary>
+        <para>The point size used for sampling the typeface.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.scale">
+      <summary>
+        <para>The relative scale of the typeface.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.strikethroughOffset">
+      <summary>
+        <para>The position of the strikethrough.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.strikethroughThickness">
+      <summary>
+        <para>The thickness of the strikethrough.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.styleName">
+      <summary>
+        <para>The style name of the typeface which defines both the visual style and weight of the typeface.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.subscriptOffset">
+      <summary>
+        <para>The position of characters using subscript.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.subscriptSize">
+      <summary>
+        <para>The relative size / scale of subscript characters.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.superscriptOffset">
+      <summary>
+        <para>The position of characters using superscript.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.superscriptSize">
+      <summary>
+        <para>The relative size / scale of superscript characters.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.tabWidth">
+      <summary>
+        <para>The width of the tab character.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.underlineOffset">
+      <summary>
+        <para>The position of the underline.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.FaceInfo.underlineThickness">
+      <summary>
+        <para>The thickness of the underline.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.TextCore.FaceInfo.Compare(UnityEngine.TextCore.FaceInfo)">
+      <summary>
+        <para>Compares the information in this FaceInfo structure with the information in the given FaceInfo structure to determine whether they have the same values.</para>
+      </summary>
+      <param name="other">The FaceInfo structure to compare this FaceInfo structure with.</param>
+      <returns>
+        <para>Returns true if the FaceInfo structures have the same values. False if not.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.TextCore.Glyph">
+      <summary>
+        <para>A Glyph is the visual representation of a text element or character.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.Glyph.atlasIndex">
+      <summary>
+        <para>The index of the atlas texture that contains this glyph.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.Glyph.glyphRect">
+      <summary>
+        <para>A rectangle that defines the position of a glyph within an atlas texture.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.Glyph.index">
+      <summary>
+        <para>The index of the glyph in the source font file.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.Glyph.metrics">
+      <summary>
+        <para>The metrics that define the size, position and spacing of a glyph when performing text layout.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.Glyph.scale">
+      <summary>
+        <para>The relative scale of the glyph. The default value is 1.0.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.TextCore.Glyph.Compare(UnityEngine.TextCore.Glyph)">
+      <summary>
+        <para>Compares two glyphs to determine if they have the same values.</para>
+      </summary>
+      <param name="other">The glyph to compare with.</param>
+      <returns>
+        <para>Returns true if the glyphs have the same values. False if not.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.Glyph.#ctor">
+      <summary>
+        <para>Constructor for a new glyph.</para>
+      </summary>
+      <param name="glyph">Glyph used as a reference for the new glyph.</param>
+      <param name="index">The index of the glyph in the font file.</param>
+      <param name="metrics">The metrics of the glyph.</param>
+      <param name="glyphRect">The GlyphRect defining the position of the glyph in the atlas texture.</param>
+      <param name="scale">The relative scale of the glyph.</param>
+      <param name="atlasIndex">The index of the atlas texture that contains the glyph.</param>
+    </member>
+    <member name="M:UnityEngine.TextCore.Glyph.#ctor(UnityEngine.TextCore.Glyph)">
+      <summary>
+        <para>Constructor for a new glyph.</para>
+      </summary>
+      <param name="glyph">Glyph used as a reference for the new glyph.</param>
+      <param name="index">The index of the glyph in the font file.</param>
+      <param name="metrics">The metrics of the glyph.</param>
+      <param name="glyphRect">The GlyphRect defining the position of the glyph in the atlas texture.</param>
+      <param name="scale">The relative scale of the glyph.</param>
+      <param name="atlasIndex">The index of the atlas texture that contains the glyph.</param>
+    </member>
+    <member name="M:UnityEngine.TextCore.Glyph.#ctor(System.UInt32,UnityEngine.TextCore.GlyphMetrics,UnityEngine.TextCore.GlyphRect)">
+      <summary>
+        <para>Constructor for a new glyph.</para>
+      </summary>
+      <param name="glyph">Glyph used as a reference for the new glyph.</param>
+      <param name="index">The index of the glyph in the font file.</param>
+      <param name="metrics">The metrics of the glyph.</param>
+      <param name="glyphRect">The GlyphRect defining the position of the glyph in the atlas texture.</param>
+      <param name="scale">The relative scale of the glyph.</param>
+      <param name="atlasIndex">The index of the atlas texture that contains the glyph.</param>
+    </member>
+    <member name="M:UnityEngine.TextCore.Glyph.#ctor(System.UInt32,UnityEngine.TextCore.GlyphMetrics,UnityEngine.TextCore.GlyphRect,System.Single,System.Int32)">
+      <summary>
+        <para>Constructor for a new glyph.</para>
+      </summary>
+      <param name="glyph">Glyph used as a reference for the new glyph.</param>
+      <param name="index">The index of the glyph in the font file.</param>
+      <param name="metrics">The metrics of the glyph.</param>
+      <param name="glyphRect">The GlyphRect defining the position of the glyph in the atlas texture.</param>
+      <param name="scale">The relative scale of the glyph.</param>
+      <param name="atlasIndex">The index of the atlas texture that contains the glyph.</param>
+    </member>
+    <member name="T:UnityEngine.TextCore.GlyphMetrics">
+      <summary>
+        <para>A set of values that define the size, position and spacing of a glyph when performing text layout.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphMetrics.height">
+      <summary>
+        <para>The height of the glyph.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphMetrics.horizontalAdvance">
+      <summary>
+        <para>The horizontal distance to increase (left to right) or decrease (right to left) the drawing position relative to the origin of the text element.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphMetrics.horizontalBearingX">
+      <summary>
+        <para>The horizontal distance from the current drawing position (origin) relative to the element's left bounding box edge (bbox).</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphMetrics.horizontalBearingY">
+      <summary>
+        <para>The vertical distance from the current baseline relative to the element's top bounding box edge (bbox).</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphMetrics.width">
+      <summary>
+        <para>The width of the glyph.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.TextCore.GlyphMetrics.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single)">
+      <summary>
+        <para>Constructs a new GlyphMetrics structure.</para>
+      </summary>
+      <param name="width">The width of the glyph.</param>
+      <param name="height">The height of the glyph.</param>
+      <param name="bearingX">The horizontal bearingX.</param>
+      <param name="bearingY">The horizontal bearingY.</param>
+      <param name="advance">The horizontal advance.</param>
+    </member>
+    <member name="T:UnityEngine.TextCore.GlyphRect">
+      <summary>
+        <para>A rectangle that defines the position of a glyph within an atlas texture.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphRect.height">
+      <summary>
+        <para>The height of the glyph.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphRect.width">
+      <summary>
+        <para>The width of the glyph.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphRect.x">
+      <summary>
+        <para>The x position of the glyph in the font atlas texture.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphRect.y">
+      <summary>
+        <para>The y position of the glyph in the font atlas texture.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TextCore.GlyphRect.zero">
+      <summary>
+        <para>A GlyphRect with all values set to zero. Shorthand for writing GlyphRect(0, 0, 0, 0).</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.TextCore.GlyphRect.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>
+        <para>Constructor for a new GlyphRect.</para>
+      </summary>
+      <param name="x">The x position of the glyph in the atlas texture.</param>
+      <param name="y">The y position of the glyph in the atlas texture.</param>
+      <param name="width">The width of the glyph.</param>
+      <param name="height">The height of the glyph.</param>
+      <param name="rect">The Rect used to construct the new GlyphRect.</param>
+    </member>
+    <member name="M:UnityEngine.TextCore.GlyphRect.#ctor(UnityEngine.Rect)">
+      <summary>
+        <para>Constructor for a new GlyphRect.</para>
+      </summary>
+      <param name="x">The x position of the glyph in the atlas texture.</param>
+      <param name="y">The y position of the glyph in the atlas texture.</param>
+      <param name="width">The width of the glyph.</param>
+      <param name="height">The height of the glyph.</param>
+      <param name="rect">The Rect used to construct the new GlyphRect.</param>
+    </member>
+    <member name="T:UnityEngine.TextCore.LowLevel.FontEngine">
+      <summary>
+        <para>The FontEngine is used to access data from source font files. This includes information about individual characters, glyphs and relevant metrics typically used in the process of text parsing, layout and rendering.
+
+The types of font files supported are TrueType (.ttf, .ttc) and OpenType (.otf).
+
+The FontEngine is also used to raster the visual representation of characters known as glyphs in a given font atlas texture.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.DestroyFontEngine">
+      <summary>
+        <para>Destroy and unload resources used by the Font Engine.</para>
+      </summary>
+      <returns>
+        <para>A value of zero (0) if the Font Engine and used resources were successfully released.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.GetFaceInfo">
+      <summary>
+        <para>Get the FaceInfo for the currently loaded and sized typeface.</para>
+      </summary>
+      <returns>
+        <para>Returns the FaceInfo of the currently loaded typeface.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.InitializeFontEngine">
+      <summary>
+        <para>Initialize the Font Engine and required resources.</para>
+      </summary>
+      <returns>
+        <para>A value of zero (0) if the initialization of the Font Engine was successful.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.LoadFontFace(UnityEngine.Font)">
+      <summary>
+        <para>Load a source font file.</para>
+      </summary>
+      <param name="filePath">The path of the source font file relative to the project.</param>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <param name="sourceFontFile">An array that contains the font file.</param>
+      <param name="font">The font to load the data from. The Unity font must be set to Dynamic mode with Include Font Data selected.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was loaded successfully.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.LoadFontFace(UnityEngine.Font,System.Int32)">
+      <summary>
+        <para>Load a source font file.</para>
+      </summary>
+      <param name="filePath">The path of the source font file relative to the project.</param>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <param name="sourceFontFile">An array that contains the font file.</param>
+      <param name="font">The font to load the data from. The Unity font must be set to Dynamic mode with Include Font Data selected.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was loaded successfully.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.LoadFontFace(System.String)">
+      <summary>
+        <para>Load a source font file.</para>
+      </summary>
+      <param name="filePath">The path of the source font file relative to the project.</param>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <param name="sourceFontFile">An array that contains the font file.</param>
+      <param name="font">The font to load the data from. The Unity font must be set to Dynamic mode with Include Font Data selected.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was loaded successfully.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.LoadFontFace(System.String,System.Int32)">
+      <summary>
+        <para>Load a source font file.</para>
+      </summary>
+      <param name="filePath">The path of the source font file relative to the project.</param>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <param name="sourceFontFile">An array that contains the font file.</param>
+      <param name="font">The font to load the data from. The Unity font must be set to Dynamic mode with Include Font Data selected.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was loaded successfully.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.LoadFontFace(System.Byte[])">
+      <summary>
+        <para>Load a source font file.</para>
+      </summary>
+      <param name="filePath">The path of the source font file relative to the project.</param>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <param name="sourceFontFile">An array that contains the font file.</param>
+      <param name="font">The font to load the data from. The Unity font must be set to Dynamic mode with Include Font Data selected.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was loaded successfully.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.LoadFontFace(System.Byte[],System.Int32)">
+      <summary>
+        <para>Load a source font file.</para>
+      </summary>
+      <param name="filePath">The path of the source font file relative to the project.</param>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <param name="sourceFontFile">An array that contains the font file.</param>
+      <param name="font">The font to load the data from. The Unity font must be set to Dynamic mode with Include Font Data selected.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was loaded successfully.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.SetFaceSize(System.Int32)">
+      <summary>
+        <para>Set the size of the currently loaded font face.</para>
+      </summary>
+      <param name="pointSize">The point size used to scale the font face.</param>
+      <returns>
+        <para>A value of zero (0) if the font face was successfully scaled to the given point size.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.TryGetGlyphIndex(System.UInt32,System.UInt32&amp;)">
+      <summary>
+        <para>Try to get the glyph index for the character at the given Unicode value.</para>
+      </summary>
+      <param name="unicode">The unicode value of the character for which to lookup the glyph index.</param>
+      <param name="glyphIndex">The index of the glyph for the given unicode character or the .notdef glyph (index 0) if no glyph is available for the given Unicode value.</param>
+      <returns>
+        <para>Returns true if the given unicode has a glyph index.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.TryGetGlyphWithIndexValue(System.UInt32,UnityEngine.TextCore.LowLevel.GlyphLoadFlags,UnityEngine.TextCore.Glyph&amp;)">
+      <summary>
+        <para>Try loading the glyph for the given index value and if available populate the glyph.</para>
+      </summary>
+      <param name="glyphIndex">The index of the glyph that should be loaded.</param>
+      <param name="flags">The glyph loading flag that should be used to load the glyph.</param>
+      <param name="glyph">The glyph using the provided index or the .notdef glyph (index 0) if no glyph was found at that index.</param>
+      <returns>
+        <para>Returns true if a glyph exists at the given index. Otherwise returns false.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.TextCore.LowLevel.FontEngine.TryGetGlyphWithUnicodeValue(System.UInt32,UnityEngine.TextCore.LowLevel.GlyphLoadFlags,UnityEngine.TextCore.Glyph&amp;)">
+      <summary>
+        <para>Try loading a glyph for the given unicode value. If available, populates the glyph and returns true. Otherwise returns false and populates the glyph with the .notdef / missing glyph data.</para>
+      </summary>
+      <param name="flags">The glyph loading flag that should be used to load the glyph.</param>
+      <param name="glyph">The glyph using the provided index or the .notdef glyph (index 0) if no glyph was found at that index.</param>
+      <param name="unicode">The Unicode value of the character whose glyph should be loaded.</param>
+      <returns>
+        <para>Returns true if a glyph exists for the given unicode value. Otherwise returns false.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.TextCore.LowLevel.FontEngineError">
+      <summary>
+        <para>Error code returned by the various FontEngine functions.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Atlas_Generation_Cancelled">
+      <summary>
+        <para>Error code returned when the FontEngine glyph packing or rendering process has been cancelled.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Character_Code">
+      <summary>
+        <para>Error code returned by the LoadGlyph function when referencing an invalid Unicode character value.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Face">
+      <summary>
+        <para>Error code indicating an invalid font face.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_File">
+      <summary>
+        <para>Error code indicating an invalid font file.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_File_Format">
+      <summary>
+        <para>Error code returned by the LoadFontFace function when the source font file is of an unknown or invalid format.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_File_Path">
+      <summary>
+        <para>Error code returned by the LoadFontFace function when the file path to the source font file appears invalid.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_File_Structure">
+      <summary>
+        <para>Error code returned by the LoadFontFace function when the source font file appears invalid or improperly formatted.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Glyph_Index">
+      <summary>
+        <para>Error code returned by the LoadGlyph function when referencing an invalid or out of range glyph index value.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Library">
+      <summary>
+        <para>Error code indicating failure to initialize the font engine library.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Library_or_Face">
+      <summary>
+        <para>Error code indicating failure to initialize the font engine library and / or successfully load a font face.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Pixel_Size">
+      <summary>
+        <para>Error code returned by the LoadGlyph or SetFaceSize functions using an invalid pointSize value.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Invalid_Table">
+      <summary>
+        <para>Error code indicating failure to load one of the tables of the font file.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.FontEngineError.Success">
+      <summary>
+        <para>Error code returned when the function was successfully executed.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.TextCore.LowLevel.GlyphLoadFlags">
+      <summary>
+        <para>The various options (flags) used by the FontEngine when loading glyphs from a font face.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_BITMAP_METRICS_ONLY">
+      <summary>
+        <para>Load glyph metrics without allocating and loading the bitmap data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_COMPUTE_METRICS">
+      <summary>
+        <para>Load glyph metrics without using the 'hdmx' table. This flag is mostly used to validate font data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_DEFAULT">
+      <summary>
+        <para>Load glyph metrics and bitmap representation if available for the current face size.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_FORCE_AUTOHINT">
+      <summary>
+        <para>Load glyphs using the auto hinter instead of the font's native hinter.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_MONOCHROME">
+      <summary>
+        <para>Load glyph metrics and render outline using 1-bit monochrome.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_NO_AUTOHINT">
+      <summary>
+        <para>Load glyphs using the font's native hinter.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_NO_BITMAP">
+      <summary>
+        <para>Load glyphs and ignore embedded bitmap strikes.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_NO_HINTING">
+      <summary>
+        <para>Load glyphs without hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_NO_SCALE">
+      <summary>
+        <para>Load glyphs at default font units without scaling. This flag implies LOAD_NO_HINTING and LOAD_NO_BITMAP and unsets LOAD_RENDER.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphLoadFlags.LOAD_RENDER">
+      <summary>
+        <para>Load glyph metrics and render outline using 8-bit or antialiased image of the glyph.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.TextCore.LowLevel.GlyphPackingMode">
+      <summary>
+        <para>The modes available when packing glyphs into an atlas texture.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphPackingMode.BestAreaFit">
+      <summary>
+        <para>Place the glyph into the smallest free space available in which it can fit.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphPackingMode.BestLongSideFit">
+      <summary>
+        <para>Place the glyph against the longer side of a free space to minimize the length of the longer leftover side.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphPackingMode.BestShortSideFit">
+      <summary>
+        <para>Place the glyph against the short side of a free space to minimize the length of the shorter leftover side.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphPackingMode.BottomLeftRule">
+      <summary>
+        <para>Place the glyph into available free space in a Tetris like fashion.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphPackingMode.ContactPointRule">
+      <summary>
+        <para>Place the glyph into the available free space by trying to maximize the contact point between it and other glyphs.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.TextCore.LowLevel.GlyphRenderMode">
+      <summary>
+        <para>The rendering modes used by the Font Engine to render glyphs.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.RASTER">
+      <summary>
+        <para>Renders a bitmap representation of the glyph from a binary (1-bit monochrome) image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.RASTER_HINTED">
+      <summary>
+        <para>Renders a bitmap representation of the glyph from a binary (1-bit monochrome) image of the glyph outline with hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDF">
+      <summary>
+        <para>Renders a signed distance field (SDF) representation of the glyph from a binary (1-bit monochrome) image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDF16">
+      <summary>
+        <para>Renders a signed distance field (SDF) representation of the glyph from a binary (1-bit monochrome) image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDF32">
+      <summary>
+        <para>Renders a signed distance field (SDF) representation of the glyph from a binary (1-bit monochrome) image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDF8">
+      <summary>
+        <para>Renders a signed distance field (SDF) representation of the glyph from a binary (1-bit monochrome) image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDFAA">
+      <summary>
+        <para>Renders a signed distance field (SDF) representation of the glyph from an 8-bit or antialiased image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDFAA_HINTED">
+      <summary>
+        <para>Renders a signed distance field (SDF) representation of the glyph from an 8-bit or antialiased image of the glyph outline with hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SMOOTH">
+      <summary>
+        <para>Renders a bitmap representation of the glyph from an 8-bit or antialiased image of the glyph outline with no hinting.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TextCore.LowLevel.GlyphRenderMode.SMOOTH_HINTED">
+      <summary>
+        <para>Renders a bitmap representation of the glyph from an 8-bit or antialiased image of the glyph outline with hinting.</para>
+      </summary>
+    </member>
+  </members>
+</doc>

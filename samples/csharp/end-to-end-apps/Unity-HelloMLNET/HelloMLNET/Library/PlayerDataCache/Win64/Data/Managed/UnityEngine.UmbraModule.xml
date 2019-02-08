@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.UmbraModule</name>
+    </assembly>
+    <member name="A:UnityEngine.UmbraModule">
+      <summary>
+        <para>The Umbra module implements Unity's occlusion culling system.</para>
+      </summary>
+    </member>
+  </members>
+</doc>
