@@ -9,7 +9,7 @@ using SentimentAnalysisConsoleApp.DataStructures;
 using Microsoft.ML.Transforms.Text;
 using System.Data;
 using Common;
-
+using Microsoft.Data.DataView;
 
 namespace SentimentAnalysisConsoleApp
 {
@@ -49,14 +49,14 @@ namespace SentimentAnalysisConsoleApp
             IDataView testDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 
             // STEP 2: Common data process configuration with pipeline data transformations          
-            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features");
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             ConsoleHelper.PeekDataViewInConsole<SentimentIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 1);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 1);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", featureColumn: "Features");
+            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -66,7 +66,7 @@ namespace SentimentAnalysisConsoleApp
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score");
+            var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 

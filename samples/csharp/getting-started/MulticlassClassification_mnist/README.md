@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .csv files | MNIST classification | Multi-class classification | Sdca Multi-class |
+| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | MNIST classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to classify handwritten digits from 0 to 9 using the MNIST dataset. This is a **multiclass classification** problem that we will solve using SDCA (Stochastic Dual Coordinate Ascent) algorithm.
 
@@ -33,27 +33,33 @@ Building a model includes:
 The initial code is similar to the following:
 ```CSharp
 // STEP 1: Common data loading configuration
-var reader = env.Data.CreateTextReader(
-	new TextLoader.Arguments()
-	{
-		Column = new[] 
-		{
-			new TextLoader.Column("PixelValues", DataKind.R4, 0, 63),
-			new TextLoader.Column("Number", DataKind.R4, 64)
-		},
-		Separator = ",",
-		HasHeader = false
-	});
+var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
+                        columns : new[] 
+                        {
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
+                            new TextLoader.Column("Number", DataKind.R4, 64)
+                        },
+                        hasHeader : false,
+                        separatorChar : ','
+                        );
 
-var data = reader.Read(TrainDataPath);
-var testData = reader.Read(ValidationDataPath);
+var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
+                        columns: new[]
+                        {
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
+                            new TextLoader.Column("Number", DataKind.R4, 64)
+                        },
+                        hasHeader: false,
+                        separatorChar: ','
+                        );						
 
 // STEP 2: Common data process configuration with pipeline data transformations
-var dataProcessPipeline = env.Transforms.Concatenate("Features", "PixelValues").AppendCacheCheckpoint(env);
+var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
+
                 
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder
-var trainer = env.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: "Features");
+var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: DefaultColumnNames.Features);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
@@ -64,7 +70,7 @@ To perform training we just call the method providing the training dataset (iris
 
 ```CSharp
 // STEP 4: Train the model fitting to the DataSet            
-ITransformer trainedModel = trainingPipeline.Fit(data);
+ITransformer trainedModel = trainingPipeline.Fit(trainData);
 
 ```
 ### 3. Evaluate model
@@ -72,7 +78,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```CSharp
 var predictions = trainedModel.Transform(testData);
-var metrics = env.MulticlassClassification.Evaluate(predictions, "Number", "Score");
+var metrics = mLContext.MulticlassClassification.Evaluate(data:predictions, label:"Number", score:DefaultColumnNames.Score);
 
 Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 ```

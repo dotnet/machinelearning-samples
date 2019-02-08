@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 
@@ -116,24 +116,25 @@ Here's the code which will be used to build the model:
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-TextLoader textLoader = mlContext.Data.CreateTextReader(
-                            columns:new[]
-                                        {
-                                        new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                                        new TextLoader.Column("LastName", DataKind.Text, 32)
-                                        },
-                            hasHeader: true,
-                            separatorChar: ',');
-
-var pivotDataView = textLoader.Read(pivotCsv);
+var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
+                                            columns: new[]
+                                                        {
+                                                        new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
+                                                        new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
+                                                        },
+                                            hasHeader: true,
+                                            separatorChar: ',');
 
 //STEP 2: Configure data transformations in pipeline
-var dataProcessPipeline =  new PrincipalComponentAnalysisEstimator(mlContext, "Features", "PCAFeatures", rank: 2)
-                                .Append(new OneHotEncodingEstimator(mlContext, new[] { new OneHotEncodingEstimator.ColumnInfo("LastName",
-                                                                   "LastNameKey",
-                                                                   OneHotEncodingTransformer.OutputKind.Ind) }));
+var dataProcessPipeline = new PrincipalComponentAnalysisEstimator(env:mlContext, outputColumnName:"PCAFeatures",    inputColumnName: "Features", rank: 2)
+                                                .Append(new OneHotEncodingEstimator(mlContext,
+                                                new[]
+                                                {
+                                                    new OneHotEncodingEstimator.ColumnInfo(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
+                                                     OneHotEncodingTransformer.OutputKind.Ind) }
+                                                ));
 //STEP 3: Create the training pipeline                
-var trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount: 3);
+var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
@@ -179,21 +180,19 @@ In this case, the model is not predicting any value (like a regression task) or 
 The code below is how you use the model to create those clusters:
 
 ```csharp
-TextLoader reader = _mlContext.Data.CreateTextReader(
-                columns: new[]
-                            {
-                                new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                                new TextLoader.Column("LastName", DataKind.Text, 32)
-                            },
-                hasHeader: true,
-                separatorChar: ',');
-
-var data = reader.Read(new MultiFileSource(_pivotDataLocation));
+ var data = _mlContext.Data.ReadFromTextFile(path:_pivotDataLocation,
+                            columns: new[]
+                                        {
+                                          new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
+                                          new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
+                                        },
+                            hasHeader: true,
+                            separatorChar: ',');
 
 //Apply data transformation to create predictions/clustering
-var predictions = _trainedModel.Transform(data)
-                .AsEnumerable<ClusteringPrediction>(_mlContext, false)
-                .ToArray();
+var tranfomedDataView = _trainedModel.Transform(data);
+var predictions = _mlContext.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
+                            .ToArray();
 ```
 
 Additionally, the method `SaveCustomerSegmentationPlotChart()` saves an scatter plot drawing the samples in each assigned cluster, using the [OxyPlot](http://www.oxyplot.org/) library.

@@ -1,10 +1,8 @@
 # Image Classification
 
-
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9.0           | Dynamic API | Up-to-date | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
-
+| v0.10           | Dynamic API | Needs to update to v0.8 | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
 
 ## Problem 
 Image classification is a common problem which has been solved quite a while using Machine Learning techniques. In this sample, we will review an approach that mixes new techniques (deep learning) and old school (SDCA) techniques.
@@ -69,25 +67,25 @@ public class ImageNetData
 Load the training data using Text loader
 
 ```csharp
-var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
+var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
 ```
 
 The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
 ```csharp
-var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey")
-    .Append(mlContext.Transforms.LoadImages(imagesFolder, ("ImagePath", "ImageReal")))
-    .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-    .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
-    .Append(mlContext.Transforms.ScoreTensorFlowModel(featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
-    .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
-    .Append(mlContext.Transforms.Conversion.MapKeyToValue(("PredictedLabel", "PredictedLabelValue")));
+ var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
+                            .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
+                            .Append(mlContext.Transforms.Resize(outputColumnName:ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
+                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransformer.ColumnInfo(name: "input",inputColumnName: ImageReal,  interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
+                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:featurizerModelLocation, outputColumnNames: new[] { "softmax2_pre_activation" },inputColumnNames: new[] { "input" }))
+                            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression(labelColumn:LabelTokey, featureColumn:"softmax2_pre_activation"))
+                            .Append(mlContext.Transforms.Conversion.MapKeyToValue((PredictedLabelValue,DefaultColumnNames.PredictedLabel)));
 ```
 
 ### 2. Train model
 In order to begin the training execute `Fit` on the built pipeline:
 ```csharp 
-  var model = pipeline.Fit(data);
+  ITransformer model = pipeline.Fit(data);
 ```
 As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
 
@@ -96,9 +94,9 @@ As a reference, In the following screenshot, you can check the DataView used to 
 ### 3. Evaluate model
 After the training, we evaluate the model using the training data. The `Evaluate` function needs a `IDataView` as parameter, so we apply `Transform` to the model, and then take the `AsDynamic` value.
 ```csharp
- var sdcaContext = new MulticlassClassificationContext(env);
+ var sdcaContext = new MulticlassClassificationCatalog(mlContext);
  ConsoleWriteHeader("Classification metrics");
- var metrics = sdcaContext.Evaluate(trainData, label: "LabelTokey", predictedLabel: "PredictedLabel");
+ var metrics = sdcaContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
  Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
  Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 ```

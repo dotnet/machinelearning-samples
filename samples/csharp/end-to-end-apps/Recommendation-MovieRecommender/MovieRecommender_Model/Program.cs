@@ -18,16 +18,8 @@ namespace MovieRecommenderModel
         private static string TestDataLocation = @".\Data\ratings_test.csv";
         private static string ModelPath = @"..\..\..\Model\model.zip";
 
-        private static string userId = nameof(userId);
         private static string userIdFeaturized = nameof(userIdFeaturized);
-
-        private static string movieId = nameof(movieId);
         private static string movieIdFeaturized = nameof(movieIdFeaturized);
-
-        private static string Label = nameof(Label);
-        private static string Features = nameof(Features);
-
-        private static string Score = nameof(Score);
 
         static void Main(string[] args)
         {
@@ -39,24 +31,11 @@ namespace MovieRecommenderModel
             //STEP 1: Create MLContext to be shared across the model creation workflow objects
             MLContext mlContext = new MLContext();
 
-            //STEP 2: Create a TextLoader by defining the schema for reading the movie recommendation datasets
-            var reader = mlContext.Data.CreateTextReader(new TextLoader.Arguments()
-            {
-                Separator = ",",
-                HasHeader = true,
-                Column = new[]
-                {
-                    new TextLoader.Column("userId", DataKind.Text, 0),
-                    new TextLoader.Column("movieId", DataKind.Text, 1),
-                    new TextLoader.Column("Label", DataKind.BL, 2)
-                }
-            });
+            //STEP 2: Read data from text file using TextLoader by defining the schema for reading the movie recommendation datasets and return dataview.
+            var trainingDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
 
             Console.WriteLine("=============== Reading Input Files ===============", color);
             Console.WriteLine();
-
-            //STEP 3: Read the training data and test data which will be used to train and test the movie recommendation model
-            var trainingDataView = reader.Read(TrainingDataLocation);
 
             // ML.NET doesn't cache data set by default. Therefore, if one reads a data set from a file and accesses it many times, it can be slow due to
             // expensive featurization and disk operations. When the considered data can fit into memory, a solution is to cache the data in memory. Caching is especially
@@ -69,13 +48,11 @@ namespace MovieRecommenderModel
 
             //STEP 4: Transform your data by encoding the two features userId and movieID.
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
-
-
-            var pipeline = mlContext.Transforms.Text.FeaturizeText(userId, userIdFeaturized)
-                                          .Append(mlContext.Transforms.Text.FeaturizeText(movieId, movieIdFeaturized)
-                                          .Append(mlContext.Transforms.Concatenate(Features, userIdFeaturized, movieIdFeaturized))
+            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: userIdFeaturized, inputColumnName: nameof(MovieRating.userId))
+                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: movieIdFeaturized, inputColumnName: nameof(MovieRating.movieId))
+                                          .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, userIdFeaturized, movieIdFeaturized))
                                           //.AppendCacheCheckpoint(mlContext) // Add a data-cache step within a pipeline.
-                                          .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] { Features })));
+                                          .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {DefaultColumnNames.Features})));
 
             var preview = pipeline.Preview(trainingDataView, maxRows: 10);
 
@@ -88,10 +65,11 @@ namespace MovieRecommenderModel
             //STEP 6: Evaluate the model performance
             Console.WriteLine("=============== Evaluating the model ===============", color);
             Console.WriteLine();
-            var testDataView = reader.Read(TestDataLocation);
+            var testDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
+
             var prediction = model.Transform(testDataView);
 
-            var metrics = mlContext.BinaryClassification.Evaluate(prediction, label: "Label", score: "Score", predictedLabel: "PredictedLabel");
+            var metrics = mlContext.BinaryClassification.Evaluate(data: prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score, predictedLabel: DefaultColumnNames.PredictedLabel);
             Console.WriteLine("Evaluation Metrics: acc:" + Math.Round(metrics.Accuracy, 2) + " auc:" + Math.Round(metrics.Auc, 2),color);
 
             //STEP 7:  Try/test a single prediction by predicting a single movie rating for a specific user
@@ -168,10 +146,13 @@ namespace MovieRecommenderModel
 
     public class MovieRating
     {
+        [LoadColumn(0)]
         public string userId;
 
+        [LoadColumn(1)]
         public string movieId;
 
+        [LoadColumn(2)]
         public bool Label;
     }
 

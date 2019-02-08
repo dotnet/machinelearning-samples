@@ -9,6 +9,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML;
 
 using System.Reflection;
+using Microsoft.Data.DataView;
 
 namespace Common
 {
@@ -177,11 +178,21 @@ namespace Common
 
             // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
             // Convert to an enumerable of user-defined type.
-            var someRows = transformedData.AsEnumerable<TObservation>(mlContext, reuseRowObject: false)
+
+            //Preview<TSource>(this IDataReader<TSource> reader, TSource source, int maxRows = 100);
+
+            var someRows = mlContext.CreateEnumerable<TObservation>(transformedData, reuseRowObject: false)
                                            // Take the specified number of rows
                                            .Take(numberOfRows)
                                            // Convert to List
                                            .ToList();
+            // v0.9
+            //
+            //var someRows = transformedData.AsEnumerable<TObservation>(mlContext, reuseRowObject: false)
+            //                               // Take the specified number of rows
+            //                               .Take(numberOfRows)
+            //                               // Convert to List
+            //                               .ToList();
 
             someRows.ForEach(row =>
                                 {
