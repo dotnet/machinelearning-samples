@@ -24,7 +24,7 @@ let read (dataPath : string) (dataLoader : TextLoader) =
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 1: Common data loading configuration
     let textLoader =
-        mlContext.Data.CreateTextReader (
+        mlContext.Data.CreateTextLoader(
             columns = 
                 [|
                     TextLoader.Column("Label", Nullable DataKind.Bool, 0)
@@ -40,7 +40,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 2: Common data process configuration with pipeline data transformations          
     let dataProcessPipeline = 
-        mlContext.Transforms.Text.FeaturizeText("Text", "Features")
+        mlContext.Transforms.Text.FeaturizeText("Features", "Text")
         |> Common.ModelBuilder.appendCacheCheckpoint mlContext
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 

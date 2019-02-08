@@ -4,10 +4,10 @@ module ConsoleHelper =
     open System
     open Microsoft.ML
     open Microsoft.ML.Data
-    open Microsoft.ML.Data
     open Microsoft.ML.Core.Data
     //open Microsoft.ML.Api
     open System.Reflection
+    open Microsoft.Data.DataView
 
     let printPrediction prediction =
         printfn "*************************************************"
@@ -139,7 +139,7 @@ module ConsoleHelper =
         // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
         // Convert to an enumerable of user-defined type.
         let someRows = 
-            transformedData.AsEnumerable<'TObservation>(mlContext, reuseRowObject = false)
+            mlContext.CreateEnumerable<'TObservation>(transformedData, reuseRowObject = false)
             // Take the specified number of rows
             |> Seq.take numberOfRows
             // Convert to List

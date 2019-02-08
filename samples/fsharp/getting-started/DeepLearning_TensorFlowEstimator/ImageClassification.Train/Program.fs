@@ -77,23 +77,22 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
     let data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
         EstimatorChain()
-            .Append(mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey"))
-            .Append(mlContext.Transforms.LoadImages(imagesFolder, struct ("ImagePath", "ImageReal")))
-            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
-            .Append(mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean)))
-            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2_pre_activation" |]))
+            .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelTokey", "Label"))
+            .Append(mlContext.Transforms.LoadImages(imagesFolder, struct ("ImageReal", "ImagePath")))
+            .Append(mlContext.Transforms.Resize("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
+            .Append(mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean)))
+            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2_pre_activation" |], [| "input" |]))
             .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
-            .Append(mlContext.Transforms.Conversion.MapKeyToValue(struct("PredictedLabel", "PredictedLabelValue")))
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
     
     printHeader ["Training classification model"]
     let model = pipeline.Fit(data)
     let trainData = model.Transform(data)
-    trainData.AsEnumerable<_>(mlContext, false, true)
+    mlContext.CreateEnumerable<_>(trainData, false, true)
     |> Seq.iter printImagePrediction
-    let sdcaContext = MulticlassClassificationContext(mlContext)
     
     printHeader ["Classification metrics"]
-    let metrics = sdcaContext.Evaluate(trainData, label = "LabelTokey", predictedLabel = "PredictedLabel")
+    let metrics = mlContext.MulticlassClassification.Evaluate(trainData, label = "LabelTokey", predictedLabel = "PredictedLabel")
     printfn "LogLoss is: %.15f" metrics.LogLoss
     metrics.PerClassLogLoss
     |> Seq.map string

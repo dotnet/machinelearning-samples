@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
@@ -39,7 +39,7 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
 ```fsharp
     // STEP 1: Common data loading configuration
     let textLoader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             separatorChar = ',',
             hasHeader = true,
             columns = 
@@ -64,15 +64,17 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
-        mlContext.Transforms.CopyColumns("FareAmount", "Label")
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId", "VendorIdEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode", "RateCodeEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "PassengerCount", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripTime", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripDistance", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
-        |> Common.ConsoleHelper.downcastPipeline
+        EstimatorChain()
+            .Append(mlContext.Transforms.CopyColumns("Label", "FareAmount"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorIdEncoded", "VendorId"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCodeEncoded", "RateCode"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentTypeEncoded", "PaymentType"))
+            .Append(mlContext.Transforms.Normalize("PassengerCount", "PassengerCount", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripTime", "TripTime", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripDistance", "TripDistance", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
+            .AppendCacheCheckpoint(mlContext)
+            |> downcastPipeline
 
     // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<TaxiTrip> mlContext trainingDataView dataProcessPipeline 5 |> ignore

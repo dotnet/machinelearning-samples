@@ -126,10 +126,10 @@ let score dataLocation imagesFolder inputModelLocation labelsTxt =
     let data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
         EstimatorChain()
-            .Append(mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImagePath", "ImageReal")|]))
-            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
-            .Append(mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean) |]))
-            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2" |]))
+            .Append(mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImageReal", "ImagePath")|]))
+            .Append(mlContext.Transforms.Resize("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
+            .Append(mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean) |]))
+            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2" |], [| "input" |]))
     let model = pipeline.Fit(data)
     let predictionEngine = model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext)
 

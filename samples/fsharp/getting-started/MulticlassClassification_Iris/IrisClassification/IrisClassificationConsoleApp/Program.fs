@@ -22,7 +22,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     
     // STEP 1: Common data loading configuration
     let textLoader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             separatorChar = '\t',
             hasHeader = true,
             columns = 
