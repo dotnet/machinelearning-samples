@@ -1,0 +1,1275 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.XRModule</name>
+    </assembly>
+    <member name="T:UnityEngine.Experimental.IntegratedSubsystem">
+      <summary>
+        <para>An IntegratedSubsystem is initialized from an IntegratedSubsystemDescriptor for a given Subsystem (Example, Input, Environment, Display, etc.) and provides an interface to interact with that given IntegratedSubsystem until it is Destroyed. After an IntegratedSubsystem is created it can be Started or Stopped to turn on and off functionality (and preserve performance). The base type for IntegratedSubsystem only exposes this functionality; this class is designed to be a base class for derived classes that expose more functionality specific to a given IntegratedSubsystem.
+
+            Note: initializing a second IntegratedSubsystem from the same IntegratedSubsystemDescriptor will return a reference to the existing IntegratedSubsystem as only one IntegratedSubsystem is currently allowed for a single IntegratedSubsystem provider.
+            </para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.IntegratedSubsystem.Destroy">
+      <summary>
+        <para>Destroys this instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.IntegratedSubsystem.Start">
+      <summary>
+        <para>Starts an instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.IntegratedSubsystem.Stop">
+      <summary>
+        <para>Stops an instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.IntegratedSubsystemDescriptor">
+      <summary>
+        <para>Information about a subsystem that can be queried before creating a subsystem instance.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.IntegratedSubsystemDescriptor.id">
+      <summary>
+        <para>A unique string that identifies the subsystem that this Descriptor can create.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.ISubsystem">
+      <summary>
+        <para>Interface implemented by both Subsystem and IntegratedSubsystem which provides control over the state of either.
+            </para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.ISubsystem.Destroy">
+      <summary>
+        <para>Destroys this instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.ISubsystem.Start">
+      <summary>
+        <para>Starts an instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.ISubsystem.Stop">
+      <summary>
+        <para>Stops an instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.ISubsystemDescriptor">
+      <summary>
+        <para>A subsystem descriptor is metadata about a subsystem which can be inspected before loading / initializing a subsystem.
+            </para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.Subsystem">
+      <summary>
+        <para>A Subsystem is initialized from a SubsystemDescriptor for a given Subsystem (Example, Input, Environment, Display, etc.) and provides an interface to interact with that given Subsystem until it is Destroyed. After a Subsystem is created it can be Started or Stopped to turn on and off functionality (and preserve performance). The base type for Subsystem only exposes this functionality; this class is designed to be a base class for derived classes that expose more functionality specific to a given Subsystem.
+
+            Note: initializing a second Subsystem from the same SubsystemDescriptor will return a reference to the existing Subsystem as only one Subsystem is currently allowed for a single Subsystem provider.
+            </para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.Subsystem.Destroy">
+      <summary>
+        <para>Destroys this instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.Subsystem.Start">
+      <summary>
+        <para>Starts an instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.Subsystem.Stop">
+      <summary>
+        <para>Stops an instance of a subsystem.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.SubsystemDescriptor">
+      <summary>
+        <para>Information about a subsystem that can be queried before creating a subsystem instance.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.SubsystemDescriptor.id">
+      <summary>
+        <para>A unique string that identifies the subsystem that this Descriptor can create.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.SubsystemDescriptor.subsystemImplementationType">
+      <summary>
+        <para>The System.Type of the subsystem implementation associated with this descriptor.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.SubsystemManager">
+      <summary>
+        <para>Gives access to subsystems which provide additional functionality through plugins.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.SubsystemManager.GetInstances(System.Collections.Generic.List`1&lt;T&gt;)">
+      <summary>
+        <para>Returns active Subsystems of a specific instance type.</para>
+      </summary>
+      <param name="instances">Active instances.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.SubsystemManager.GetSubsystemDescriptors(System.Collections.Generic.List`1&lt;T&gt;)">
+      <summary>
+        <para>Returns a list of SubsystemDescriptors which describe additional functionality that can be enabled.</para>
+      </summary>
+      <param name="descriptors">Subsystem specific descriptors.</param>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.BoundedPlane">
+      <summary>
+        <para>Structure describing a bounded plane representing a real-world surface.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Alignment">
+      <summary>
+        <para>The alignment of the plane, e.g., horizontal or vertical.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Center">
+      <summary>
+        <para>Center point of the plane in device space.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.BoundedPlane.GetCorners(UnityEngine.Vector3&amp;,UnityEngine.Vector3&amp;,UnityEngine.Vector3&amp;,UnityEngine.Vector3&amp;)">
+      <summary>
+        <para>Outputs four points, in device space, representing the four corners of the plane. The corners are in clockwise order.</para>
+      </summary>
+      <param name="p0">The vertex of the first corner.</param>
+      <param name="p1">The vertex of the second corner.</param>
+      <param name="p2">The vertex of the third corner.</param>
+      <param name="p3">The vertex of the fourth corner.</param>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Height">
+      <summary>
+        <para>Current height of the plane.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Id">
+      <summary>
+        <para>A session-unique identifier for the plane.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Normal">
+      <summary>
+        <para>Normal vector of the plane in device space.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Plane">
+      <summary>
+        <para>Returns the infinite Plane associated with this BoundedPlane.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Pose">
+      <summary>
+        <para>Pose of the plane in device space.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Size">
+      <summary>
+        <para>Current size of the plane.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.SubsumedById">
+      <summary>
+        <para>A session-unique identifier for the BoundedPlane that subsumed this plane.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.BoundedPlane.TryGetBoundary(System.Collections.Generic.List`1&lt;UnityEngine.Vector3&gt;)">
+      <summary>
+        <para>Try to retrieve a list of positions in device space describing current plane boundary.</para>
+      </summary>
+      <param name="boundaryOut">A list of vertices representing the boundary.</param>
+      <returns>
+        <para>True if the plane exists (i.e., is still being tracked), otherwise false.</para>
+      </returns>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.BoundedPlane.Width">
+      <summary>
+        <para>Current width of the plane.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.FrameReceivedEventArgs">
+      <summary>
+        <para>Structure containing data passed during Frame Received Event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.FrameReceivedEventArgs.CameraSubsystem">
+      <summary>
+        <para>Reference to the XRCameraSubsystem associated with this event.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.MeshChangeState">
+      <summary>
+        <para>The state of a tracked mesh since the last query.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshChangeState.Added">
+      <summary>
+        <para>The mesh has been added since the last call to XRMeshSubsystem.TryGetMeshInfos.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshChangeState.Removed">
+      <summary>
+        <para>The mesh has been removed since the last call to XRMeshSubsystem.TryGetMeshInfos.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshChangeState.Unchanged">
+      <summary>
+        <para>The mesh has not changed since the last call to XRMeshSubsystem.TryGetMeshInfos.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshChangeState.Updated">
+      <summary>
+        <para>The mesh has been updated since the last call to XRMeshSubsystem.TryGetMeshInfos.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.MeshGenerationResult">
+      <summary>
+        <para>Contains event information related to a generated mesh.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshGenerationResult.Attributes">
+      <summary>
+        <para>The MeshVertexAttributes that were written to the MeshGenerationResult.Mesh.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshGenerationResult.Mesh">
+      <summary>
+        <para>If the generation was successful, data has been written to this Mesh.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshGenerationResult.MeshCollider">
+      <summary>
+        <para>If the generation was successful, physics data has been written to this MeshCollider.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshGenerationResult.MeshId">
+      <summary>
+        <para>The TrackableId of the tracked mesh that was generated.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshGenerationResult.Status">
+      <summary>
+        <para>The MeshGenerationStatus of the mesh generation task.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.MeshGenerationStatus">
+      <summary>
+        <para>The status of a XRMeshSubsystem.GenerateMeshAsync.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshGenerationStatus.Canceled">
+      <summary>
+        <para>The mesh generation was canceled.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshGenerationStatus.GenerationAlreadyInProgress">
+      <summary>
+        <para>The XRMeshSubsystem was already generating the requested mesh.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshGenerationStatus.InvalidMeshId">
+      <summary>
+        <para>The mesh generation failed because the mesh does not exist.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshGenerationStatus.Success">
+      <summary>
+        <para>The mesh generation was successful.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshGenerationStatus.UnknownError">
+      <summary>
+        <para>The mesh generation failed for unknown reasons.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.MeshInfo">
+      <summary>
+        <para>Contains state information related to a tracked mesh.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshInfo.ChangeState">
+      <summary>
+        <para>The change state (e.g., Added, Removed) of the tracked mesh.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshInfo.MeshId">
+      <summary>
+        <para>The TrackableId of the tracked mesh.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.MeshInfo.PriorityHint">
+      <summary>
+        <para>A hint that can be used to determine when this mesh should be processed.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.MeshVertexAttributes">
+      <summary>
+        <para>A set of vertex attributes.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshVertexAttributes.Colors">
+      <summary>
+        <para>Vertex normals</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshVertexAttributes.None">
+      <summary>
+        <para>No vertex attributes</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshVertexAttributes.Normals">
+      <summary>
+        <para>Vertex normals</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshVertexAttributes.Tangents">
+      <summary>
+        <para>Vertex tangents</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.MeshVertexAttributes.UVs">
+      <summary>
+        <para>Vertex UVs</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.PlaneAddedEventArgs">
+      <summary>
+        <para>Contains data supplied to a XRPlaneSubsystem.PlaneAdded event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PlaneAddedEventArgs.Plane">
+      <summary>
+        <para>The BoundedPlane that was added.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PlaneAddedEventArgs.PlaneSubsystem">
+      <summary>
+        <para>A reference to the PlaneSubsystem object from which the event originated.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.PlaneAlignment">
+      <summary>
+        <para>Describes current plane alignment in mixed reality space.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.PlaneAlignment.Horizontal">
+      <summary>
+        <para>Plane has horizontal alignment.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.PlaneAlignment.NonAxis">
+      <summary>
+        <para>Plane is not alligned along cardinal (X, Y or Z) axis.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.PlaneAlignment.Vertical">
+      <summary>
+        <para>Plane has vertical alignment.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.PlaneRemovedEventArgs">
+      <summary>
+        <para>Contains data supplied to a XRPlaneSubsystem.PlaneRemoved event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PlaneRemovedEventArgs.Plane">
+      <summary>
+        <para>The BoundedPlane that was removed.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PlaneRemovedEventArgs.PlaneSubsystem">
+      <summary>
+        <para>A reference to the XRPlaneSubsystem object from which the event originated.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.PlaneUpdatedEventArgs">
+      <summary>
+        <para>Contains data supplied to a XRPlaneSubsystem.PlaneUpdated event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PlaneUpdatedEventArgs.Plane">
+      <summary>
+        <para>The BoundedPlane that was updated.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PlaneUpdatedEventArgs.PlaneSubsystem">
+      <summary>
+        <para>A reference to the XRPlaneSubsystem object from which the event originated.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.PointCloudUpdatedEventArgs">
+      <summary>
+        <para>Contains data supplied to a XRDepth.PointCloudUpdated event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.PointCloudUpdatedEventArgs.DepthSubsystem">
+      <summary>
+        <para>A reference to the XRDepthSubsystem object from which the event originated.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.ReferencePoint">
+      <summary>
+        <para>Describes the transform data of a real-world point.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.ReferencePoint.Id">
+      <summary>
+        <para>ID for the reference point that is unique across the session.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.ReferencePoint.Pose">
+      <summary>
+        <para>The pose (position and rotation) of the reference point. Respond to changes in this pose to correct for changes in the device's understanding of where this point is in the real world.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.ReferencePoint.TrackingState">
+      <summary>
+        <para>The TrackingState of the reference point.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.ReferencePointUpdatedEventArgs">
+      <summary>
+        <para>Data to be passed to the user when the device corrects its understanding of the world enough that the ReferencePoint's position or rotation has changed.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.ReferencePointUpdatedEventArgs.PreviousPose">
+      <summary>
+        <para>The previous Pose of the ReferencePoint, prior to this event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.ReferencePointUpdatedEventArgs.PreviousTrackingState">
+      <summary>
+        <para>The previous TrackingState of the ReferencePoint, prior to this event.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.ReferencePointUpdatedEventArgs.ReferencePoint">
+      <summary>
+        <para>The reference point that has the value of its position, rotation, or both changed enough through the device correcting its understanding of where this point should be located in device space.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.SessionTrackingStateChangedEventArgs">
+      <summary>
+        <para>Structure defining Tracking State Changed event arguments passed when tracking state changes.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.SessionTrackingStateChangedEventArgs.NewState">
+      <summary>
+        <para>New Tracking State.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.SessionTrackingStateChangedEventArgs.SessionSubsystem">
+      <summary>
+        <para>Reference to the XRSessionSubsystem object associated with the event.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.TrackableId">
+      <summary>
+        <para>A session-unique identifier for trackables in the environment, e.g., planes and feature points.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.TrackableId.InvalidId">
+      <summary>
+        <para>Represents an invalid id.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.TrackableId.ToString">
+      <summary>
+        <para>Generates a nicely formatted version of the id.</para>
+      </summary>
+      <returns>
+        <para>A string unique to this id</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.TrackableType">
+      <summary>
+        <para>A trackable is feature in the physical environment that a device is able to track, such as a plane.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.All">
+      <summary>
+        <para>All trackables (planes and point cloud)</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.FeaturePoint">
+      <summary>
+        <para>A feature point.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.None">
+      <summary>
+        <para>No trackable.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.PlaneEstimated">
+      <summary>
+        <para>An estimated plane.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.Planes">
+      <summary>
+        <para>Any of the plane types.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.PlaneWithinBounds">
+      <summary>
+        <para>Within the BoundedPlane.Size of a BoundedPlane</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.PlaneWithinInfinity">
+      <summary>
+        <para>The infinite plane of a BoundedPlane</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackableType.PlaneWithinPolygon">
+      <summary>
+        <para>The boundary of a BoundedPlane</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.TrackingState">
+      <summary>
+        <para>Current tracking state of the device.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackingState.Tracking">
+      <summary>
+        <para>Tracking is currently working.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackingState.Unavailable">
+      <summary>
+        <para>Tracking is not available.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.Experimental.XR.TrackingState.Unknown">
+      <summary>
+        <para>Tracking state is unknown.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRCameraSubsystem">
+      <summary>
+        <para>Provides access to a device's camera.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystem.Camera">
+      <summary>
+        <para>Set current Camera component within the app to be used by this XRCameraInstance.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRCameraSubsystem.FrameReceived(System.Action`1&lt;UnityEngine.Experimental.XR.FrameReceivedEventArgs&gt;)">
+      <summary>
+        <para>Event raised when a new camera frame is received.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.GetTextures(System.Collections.Generic.List`1&lt;UnityEngine.Texture2D&gt;)">
+      <summary>
+        <para>Fills the provided texturesOut with the texture(s) associated with the XRCameraSubsystem.</para>
+      </summary>
+      <param name="texturesOut">A List of Texture2D to be filled. Passing null will throw an ArgumentNullException.</param>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystem.LastUpdatedFrame">
+      <summary>
+        <para>The frame during which the camera subsystem was last successfully updated.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystem.LightEstimationRequested">
+      <summary>
+        <para>True if the XRCameraSubsystem should try to provide light estimation.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystem.Material">
+      <summary>
+        <para>Set current Material to be used while rendering to the render target.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.TryGetAverageBrightness(System.Single&amp;)">
+      <summary>
+        <para>Provides brightness for the whole image as an average of all pixels' brightness.</para>
+      </summary>
+      <param name="averageBrightness">An estimated average brightness for the environment.</param>
+      <returns>
+        <para>Returns true if average brigthness was provided.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.TryGetAverageColorTemperature(System.Single&amp;)">
+      <summary>
+        <para>Provides color temperature for the whole image as an average of all pixels' color temperature.</para>
+      </summary>
+      <param name="averageColorTemperature">An estimated color temperature.</param>
+      <returns>
+        <para>Return true if succesful.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.TryGetDisplayMatrix(UnityEngine.Matrix4x4&amp;)">
+      <summary>
+        <para>Provides display matrix defining how texture is being rendered on the screen.</para>
+      </summary>
+      <param name="displayMatrix"></param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.TryGetProjectionMatrix(UnityEngine.Matrix4x4&amp;)">
+      <summary>
+        <para>Provides projection matrix used by camera subsystem.</para>
+      </summary>
+      <param name="projectionMatrix"></param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.TryGetShaderName(System.String&amp;)">
+      <summary>
+        <para>Provides shader name used by Camera subsystem to render texture.</para>
+      </summary>
+      <param name="shaderName"></param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRCameraSubsystem.TryGetTimestamp(System.Int64&amp;)">
+      <summary>
+        <para>Provides timestamp.</para>
+      </summary>
+      <param name="timestampNs"></param>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRCameraSubsystemDescriptor">
+      <summary>
+        <para>Class providing information about  XRCameraSubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystemDescriptor.ProvidesAverageBrightness">
+      <summary>
+        <para>Specifies if current subsystem is allowed to provide average brightness.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystemDescriptor.ProvidesAverageColorTemperature">
+      <summary>
+        <para>Specifies if current subsystem is allowed to provide average camera temperature.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystemDescriptor.ProvidesDisplayMatrix">
+      <summary>
+        <para>Specifies if current subsystem is allowed to provide display matrix.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystemDescriptor.ProvidesProjectionMatrix">
+      <summary>
+        <para>Specifies if current subsystem is allowed to provide projection matrix.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRCameraSubsystemDescriptor.ProvidesTimestamp">
+      <summary>
+        <para>Specifies if current subsystem is allowed to provide timestamp.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRDepthSubsystem">
+      <summary>
+        <para>Provides access to depth data of the physical environment, such as a point cloud.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRDepthSubsystem.GetConfidence(System.Collections.Generic.List`1&lt;System.Single&gt;)">
+      <summary>
+        <para>Retrieves the confidence values for each point in the point cloud.</para>
+      </summary>
+      <param name="confidenceOut">A list of floats containing all confidence values for the point cloud.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRDepthSubsystem.GetPoints(System.Collections.Generic.List`1&lt;UnityEngine.Vector3&gt;)">
+      <summary>
+        <para>Retrieves the point cloud points.</para>
+      </summary>
+      <param name="pointsOut">A list of Vector3s containing all points in the point cloud.</param>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRDepthSubsystem.LastUpdatedFrame">
+      <summary>
+        <para>The frame during which the point cloud was last updated.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRDepthSubsystem.PointCloudUpdated(System.Action`1&lt;UnityEngine.Experimental.XR.PointCloudUpdatedEventArgs&gt;)">
+      <summary>
+        <para>Raised once during each frame in which the point cloud is updated.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRDepthSubsystemDescriptor">
+      <summary>
+        <para>Class providing information about XRDepthSubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRDepthSubsystemDescriptor.SupportsFeaturePoints">
+      <summary>
+        <para>When true, XRDepthSubsystem will provide list of feature points detected so far.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRDisplaySubsystem">
+      <summary>
+        <para>An XRDisplaySubsystem controls rendering to a head tracked display.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRDisplaySubsystemDescriptor">
+      <summary>
+        <para>Class providing information about XRDisplaySubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRInputSubsystem">
+      <summary>
+        <para>XRInputSubsystem
+Instance is used to enable and disable the inputs coming from a specific plugin.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRInputSubsystemDescriptor">
+      <summary>
+        <para>Information about an Input subsystem.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRInputSubsystemDescriptor.disablesLegacyInput">
+      <summary>
+        <para>When true, will suppress legacy support for Daydream, Oculus, OpenVR, and Windows MR built directly into the Unity runtime from generating input. This is useful when adding an XRInputSubsystem that supports these devices.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRMeshSubsystem">
+      <summary>
+        <para>Allows external systems to provide dynamic meshes to Unity.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRMeshSubsystem.GenerateMeshAsync(UnityEngine.Experimental.XR.TrackableId,UnityEngine.Mesh,UnityEngine.MeshCollider,UnityEngine.Experimental.XR.MeshVertexAttributes,System.Action`1&lt;UnityEngine.Experimental.XR.MeshGenerationResult&gt;)">
+      <summary>
+        <para>Request that the mesh with TrackableId meshId gets generated. onMeshGenerationComplete is called when generation is complete.</para>
+      </summary>
+      <param name="meshId">The TrackableId of the mesh you wish to generate.</param>
+      <param name="mesh">The Mesh to write the results into.</param>
+      <param name="meshCollider">(Optional) The MeshCollider to populate with physics data. This may be null.</param>
+      <param name="attributes">The vertex attributes you'd like to use.</param>
+      <param name="onMeshGenerationComplete">The delegate to invoke when the generation completes.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRMeshSubsystem.TryGetMeshInfos(System.Collections.Generic.List`1&lt;UnityEngine.Experimental.XR.MeshInfo&gt;)">
+      <summary>
+        <para>Get information about every mesh tracked by the system.</para>
+      </summary>
+      <param name="meshInfosOut">A List of MeshInfos to be filled. Passing null will throw an ArgumentNullException.</param>
+      <returns>
+        <para>True if the List was populated.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRMeshSubsystemDescriptor">
+      <summary>
+        <para>Information about an XRMeshSubsystem.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRPlaneSubsystem">
+      <summary>
+        <para>Provides methods, events, and properties that provides information about planes detected in the environment. </para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRPlaneSubsystem.GetAllPlanes(System.Collections.Generic.List`1&lt;UnityEngine.Experimental.XR.BoundedPlane&gt;)">
+      <summary>
+        <para>Get all the BoundedPlanes currently tracked by the system.</para>
+      </summary>
+      <param name="planesOut">A list of BoundedPlanes containing all planes currently tracked by the system.</param>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRPlaneSubsystem.LastUpdatedFrame">
+      <summary>
+        <para>The frame during which the planes were last updated.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRPlaneSubsystem.PlaneAdded(System.Action`1&lt;UnityEngine.Experimental.XR.PlaneAddedEventArgs&gt;)">
+      <summary>
+        <para>Raised for each BoundedPlane that has been added in the current frame.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRPlaneSubsystem.PlaneRemoved(System.Action`1&lt;UnityEngine.Experimental.XR.PlaneRemovedEventArgs&gt;)">
+      <summary>
+        <para>Raised for each BoundedPlane that has been removed in the current frame.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRPlaneSubsystem.PlaneUpdated(System.Action`1&lt;UnityEngine.Experimental.XR.PlaneUpdatedEventArgs&gt;)">
+      <summary>
+        <para>Raised for each plane that has been updated in the current frame.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRPlaneSubsystem.TryGetPlane(UnityEngine.Experimental.XR.TrackableId,UnityEngine.Experimental.XR.BoundedPlane&amp;)">
+      <summary>
+        <para>Get a BoundedPlane by TrackableId</para>
+      </summary>
+      <param name="planeId">The session-unique TrackableId of the plane to get.</param>
+      <param name="plane">The BoundedPlane with the supplied planeId</param>
+      <returns>
+        <para>True if the BoundedPlane with planeId exists, false otherwise.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRPlaneSubsystem.TryGetPlaneBoundary(UnityEngine.Experimental.XR.TrackableId,System.Collections.Generic.List`1&lt;UnityEngine.Vector3&gt;)">
+      <summary>
+        <para>Try to retrieve a list of positions in device space describing the current plane boundary.</para>
+      </summary>
+      <param name="planeId">The session-unique TrackableId of the plane.</param>
+      <param name="boundaryOut">A list of vertices representing the plane's boundary.</param>
+      <returns>
+        <para>True if the plane exists (i.e., is still being tracked), otherwise false.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRPlaneSubsystemDescriptor">
+      <summary>
+        <para>Class providing information about XRPlaneSubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRRaycastHit">
+      <summary>
+        <para>Structure describing the result of a XRRaycastSubsystem.Raycast hit.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRRaycastHit.Distance">
+      <summary>
+        <para>The distance, in meters, from the screen to the hit's XRRaycastSubsystemHit.Position.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRRaycastHit.HitType">
+      <summary>
+        <para>The TrackableType(s) that were hit.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRRaycastHit.Pose">
+      <summary>
+        <para>The position and rotation of the hit result in device space where the ray hit the trackable.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRRaycastHit.TrackableId">
+      <summary>
+        <para>The TrackableId of the trackable that was hit by the raycast.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRRaycastSubsystem">
+      <summary>
+        <para>Provides methods and properties that allow for querying portions of the physical environment that are near a provided specified ray. These trackables include planes and depth data.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRRaycastSubsystem.Raycast(UnityEngine.Vector3,System.Collections.Generic.List`1&lt;UnityEngine.Experimental.XR.XRRaycastHit&gt;,UnityEngine.Experimental.XR.TrackableType)">
+      <summary>
+        <para>Casts a ray from a screen point against selected trackables (e.g., planes and feature points).</para>
+      </summary>
+      <param name="screenPoint">The screen point from which to cast.</param>
+      <param name="hitResults">The resulting list of XRRaycastHit.</param>
+      <param name="trackableTypeMask">An optional mask of TrackableType to raycast against.</param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRRaycastSubsystem.Raycast(UnityEngine.Ray,UnityEngine.Experimental.XR.XRDepthSubsystem,UnityEngine.Experimental.XR.XRPlaneSubsystem,System.Collections.Generic.List`1&lt;UnityEngine.Experimental.XR.XRRaycastHit&gt;,UnityEngine.Experimental.XR.TrackableType,System.Single)">
+      <summary>
+        <para>Casts a ray using ray against selected trackables (e.g., planes and feature points).</para>
+      </summary>
+      <param name="ray">The Ray to use.</param>
+      <param name="depthSubsystem">The XRDepthSubsystem to raycast against. May be null.</param>
+      <param name="planeSubsystem">The XRPlaneSubsystem to raycast against. May be null.</param>
+      <param name="hitResults">The resulting list of XRRaycastHit.</param>
+      <param name="trackableTypeMask">An optional mask of TrackableType to raycast against.</param>
+      <param name="pointCloudRaycastAngleInDegrees">When raycasting against feature points, cast a cone with this angle.</param>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRRaycastSubsystemDescriptor">
+      <summary>
+        <para>Class providing information about XRRaycastSubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRReferencePointSubsystem">
+      <summary>
+        <para>Provides methods and properties that allow for querying, creating, and removing of reference points. These reference points are cues to the XRSessionSubsystem that indicate areas of interest in the environment which helps assure that tracking of these points remains accurate.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRReferencePointSubsystem.GetAllReferencePoints(System.Collections.Generic.List`1&lt;UnityEngine.Experimental.XR.ReferencePoint&gt;)">
+      <summary>
+        <para>Retrieves all ReferencePoints added by calls to XRReferencePointSubsystem.TryAddReferencePoint.</para>
+      </summary>
+      <param name="referencePointsOut">A list of ReferencePoints containing all reference points.</param>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRReferencePointSubsystem.LastUpdatedFrame">
+      <summary>
+        <para>The frame during which the reference points were last updated.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRReferencePointSubsystem.ReferencePointUpdated(System.Action`1&lt;UnityEngine.Experimental.XR.ReferencePointUpdatedEventArgs&gt;)">
+      <summary>
+        <para>Raised each frame for each ReferencePoint that had the values of its position, rotation, or both changed enough by the device correcting its understanding of where the point should be located in Unity space.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRReferencePointSubsystem.TryAddReferencePoint(UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Experimental.XR.TrackableId&amp;)">
+      <summary>
+        <para>Attempt to add a ReferencePoint that gets tracked by the device.</para>
+      </summary>
+      <param name="position">Current position, in device space, of a point you want the device to track.</param>
+      <param name="rotation">Current rotation, in device space, of a point you want the device to track.</param>
+      <param name="referencePointId">If this method returns true, this is filled out with the ID (unique to the session) of the point.</param>
+      <returns>
+        <para>If the ReferencePoint was added successfully, this method returns true. Otherwise, it returns false.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRReferencePointSubsystem.TryAddReferencePoint(UnityEngine.Pose,UnityEngine.Experimental.XR.TrackableId&amp;)">
+      <summary>
+        <para>Attempt to add a ReferencePoint that gets tracked by the device.</para>
+      </summary>
+      <param name="pose">Current pose, in device space, of a point you want the device to track.</param>
+      <param name="referencePointId">If this method returns true, this is filled out with the ID (unique to the session) of the point.</param>
+      <returns>
+        <para>If the ReferencePoint was added successfully, this method returns true. Otherwise, it returns false.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRReferencePointSubsystem.TryGetReferencePoint(UnityEngine.Experimental.XR.TrackableId,UnityEngine.Experimental.XR.ReferencePoint&amp;)">
+      <summary>
+        <para>Attempt to retrieve a ReferencePoint.</para>
+      </summary>
+      <param name="referencePointId">The ID of the ReferencePoint that TryAddReferencePoint filled out when you added this point.</param>
+      <param name="referencePoint">The ReferencePoint to be filled out that matches the ID passed in.</param>
+      <returns>
+        <para>If the ReferencePoint was found and filled out successfully, this method returns true. Otherwise, it return false.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Experimental.XR.XRReferencePointSubsystem.TryRemoveReferencePoint(UnityEngine.Experimental.XR.TrackableId)">
+      <summary>
+        <para>Attempt to remove a ReferencePoint getting tracked by the device.</para>
+      </summary>
+      <param name="referencePointId">ID of the ReferencePoint you wish to remove so the device no longer tries to track it.</param>
+      <returns>
+        <para>If the ReferencePoint was removed successfully, this method returns true. Otherwise, it returns false.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRReferencePointSubsystemDescriptor">
+      <summary>
+        <para>Class providing information about XRReferencePointSubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRSessionSubsystem">
+      <summary>
+        <para>A collection of methods and properties used to interact with and configure an XR session.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRSessionSubsystem.LastUpdatedFrame">
+      <summary>
+        <para>The frame during which the tracking state was last updated.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Experimental.XR.XRSessionSubsystem.TrackingState">
+      <summary>
+        <para>Get current tracking status of the device.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.Experimental.XR.XRSessionSubsystem.TrackingStateChanged(System.Action`1&lt;UnityEngine.Experimental.XR.SessionTrackingStateChangedEventArgs&gt;)">
+      <summary>
+        <para>Raised when the TrackingState changes.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="T:UnityEngine.Experimental.XR.XRSessionSubsystemDescriptor">
+      <summary>
+        <para>Class providing information about XRSessionSubsystem registration.</para>
+      </summary>
+    </member>
+    <member name="A:UnityEngine.XRModule">
+      <summary>
+        <para>The XR module contains the VR and AR related platform support functionality.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.HapticCapabilities">
+      <summary>
+        <para>Describes the haptic capabilities of the device at an XR.XRNode in the XR input subsystem.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.HapticCapabilities.bufferFrequencyHz">
+      <summary>
+        <para>The frequency (in Hz) that this device plays back buffered haptic data.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.HapticCapabilities.numChannels">
+      <summary>
+        <para>The number of channels that this device plays back haptic data.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.HapticCapabilities.supportsBuffer">
+      <summary>
+        <para>True if this device supports sending a haptic buffer.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.HapticCapabilities.supportsImpulse">
+      <summary>
+        <para>True if this device supports sending a haptic impulse.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.InputDevice">
+      <summary>
+        <para>Defines an input device in the XR input subsystem.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.InputDevice.IsValid">
+      <summary>
+        <para>true if the device is currently a valid input device; otherwise false.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.InputDevice.SendHapticBuffer(System.UInt32,System.Byte[])">
+      <summary>
+        <para>Sends a raw buffer of haptic data to the device.</para>
+      </summary>
+      <param name="channel">The channel to receive the data.</param>
+      <param name="buffer">A raw byte buffer that contains the haptic data to send to the device.</param>
+      <returns>
+        <para>true if successful; otherwise false.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.InputDevice.SendHapticImpulse(System.UInt32,System.Single,System.Single)">
+      <summary>
+        <para>Sends a haptic impulse to a device.</para>
+      </summary>
+      <param name="channel">The channel to receive the impulse.</param>
+      <param name="amplitude">The normalized (0.0 to 1.0) amplitude value of the haptic impulse to play on the device.</param>
+      <param name="duration">The duration in seconds that the haptic impulse will play. Only supported on Oculus.</param>
+      <returns>
+        <para>true if successful; otherwise false.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.InputDevice.StopHaptics">
+      <summary>
+        <para>Stop all haptic playback for a device.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.InputDevice.TryGetHapticCapabilities(UnityEngine.XR.HapticCapabilities&amp;)">
+      <summary>
+        <para>Gets the haptic capabilities of the device.</para>
+      </summary>
+      <param name="capabilities">A HapticCapabilities struct to receive the capabilities of this device.</param>
+      <returns>
+        <para>true if device can be queried, false otherwise.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.XR.InputDevices">
+      <summary>
+        <para>An interface for accessing devices in the XR input subsytem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode)">
+      <summary>
+        <para>Gets the input device at a given XR.XRNode endpoint.</para>
+      </summary>
+      <param name="node">The XRNode that owns the requested device.</param>
+      <returns>
+        <para>An XR.InputDevice at this [[XR.XRNode].</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.XR.InputTracking">
+      <summary>
+        <para>A collection of methods and properties for interacting with the XR tracking system.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.InputTracking.disablePositionalTracking">
+      <summary>
+        <para>Disables positional tracking in XR. This takes effect the next time the head pose is sampled.  If set to true the camera only tracks headset rotation state.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.XR.InputTracking.nodeAdded(System.Action`1&lt;UnityEngine.XR.XRNodeState&gt;)">
+      <summary>
+        <para>Called when a tracked node is added to the underlying XR system.</para>
+      </summary>
+      <param name="nodeState">Describes the node that has been added.</param>
+      <param name="value"></param>
+    </member>
+    <member name="?:UnityEngine.XR.InputTracking.nodeRemoved(System.Action`1&lt;UnityEngine.XR.XRNodeState&gt;)">
+      <summary>
+        <para>Called when a tracked node is removed from the underlying XR system.</para>
+      </summary>
+      <param name="nodeState">Describes the node that has been removed.</param>
+      <param name="value"></param>
+    </member>
+    <member name="?:UnityEngine.XR.InputTracking.trackingAcquired(System.Action`1&lt;UnityEngine.XR.XRNodeState&gt;)">
+      <summary>
+        <para>Called when a tracked node begins reporting tracking information.</para>
+      </summary>
+      <param name="nodeState">Describes the node that has begun being tracked.</param>
+      <param name="value"></param>
+    </member>
+    <member name="?:UnityEngine.XR.InputTracking.trackingLost(System.Action`1&lt;UnityEngine.XR.XRNodeState&gt;)">
+      <summary>
+        <para>Called when a tracked node stops reporting tracking information.</para>
+      </summary>
+      <param name="nodeState">Describes the node that has lost tracking.</param>
+      <param name="value"></param>
+    </member>
+    <member name="M:UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode)">
+      <summary>
+        <para>Gets the position of a specific node.</para>
+      </summary>
+      <param name="node">Specifies which node's position should be returned.</param>
+      <returns>
+        <para>The position of the node in its local tracking space.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode)">
+      <summary>
+        <para>Gets the rotation of a specific node.</para>
+      </summary>
+      <param name="node">Specifies which node's rotation should be returned.</param>
+      <returns>
+        <para>The rotation of the node in its local tracking space.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.InputTracking.GetNodeName(System.UInt64)">
+      <summary>
+        <para>Accepts the unique identifier for a tracked node and returns a friendly name for it.</para>
+      </summary>
+      <param name="uniqueID">The unique identifier for the Node index.</param>
+      <param name="uniqueId"></param>
+      <returns>
+        <para>The name of the tracked node if the given 64-bit identifier maps to a currently tracked node. Empty string otherwise.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.InputTracking.GetNodeStates">
+      <summary>
+        <para>Describes all currently connected XRNodes and provides available tracking states for each.</para>
+      </summary>
+      <param name="nodeStates">A list that is populated with XR.XRNodeState objects.</param>
+    </member>
+    <member name="M:UnityEngine.XR.InputTracking.Recenter">
+      <summary>
+        <para>Center tracking to the current position and orientation of the HMD.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.XRNode">
+      <summary>
+        <para>Enumeration of XR nodes which can be updated by XR input or sent haptic data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.CenterEye">
+      <summary>
+        <para>Node representing a point between the left and right eyes.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.GameController">
+      <summary>
+        <para>Represents a tracked game Controller not associated with a specific hand.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.HardwareTracker">
+      <summary>
+        <para>Represents a physical device that provides tracking data for objects to which it is attached.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.Head">
+      <summary>
+        <para>Node representing the user's head.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.LeftEye">
+      <summary>
+        <para>Node representing the left eye.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.LeftHand">
+      <summary>
+        <para>Node representing the left hand.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.RightEye">
+      <summary>
+        <para>Node representing the right eye.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.RightHand">
+      <summary>
+        <para>Node representing the right hand.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRNode.TrackingReference">
+      <summary>
+        <para>Represents a stationary physical device that can be used as a point of reference in the tracked area.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.acceleration">
+      <summary>
+        <para>Sets the vector representing the current acceleration of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.angularAcceleration">
+      <summary>
+        <para>Sets the vector representing the current angular acceleration of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.angularVelocity">
+      <summary>
+        <para>Sets the vector representing the current angular velocity of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.nodeType">
+      <summary>
+        <para>The type of the tracked node as specified in XR.XRNode.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.position">
+      <summary>
+        <para>Sets the vector representing the current position of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.rotation">
+      <summary>
+        <para>Sets the quaternion representing the current rotation of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.tracked">
+      <summary>
+        <para>
+          Set to true if the node is presently being tracked by the underlying XR system,
+and false if the node is not presently being tracked by the underlying XR system.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.uniqueID">
+      <summary>
+        <para>The unique identifier of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRNodeState.velocity">
+      <summary>
+        <para>Sets the vector representing the current velocity of the tracked node.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.XRNodeState.TryGetAcceleration">
+      <summary>
+        <para>Attempt to retrieve a vector representing the current acceleration of the tracked node.</para>
+      </summary>
+      <returns>
+        <para>True if the acceleration was set in the output parameter. False if the acceleration is not available due to limitations of the underlying platform or if the node is not presently tracked.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRNodeState.TryGetAngularAcceleration(UnityEngine.Vector3&amp;)">
+      <summary>
+        <para>Attempt to retrieve a Vector3 representing the current angular acceleration of the tracked node.</para>
+      </summary>
+      <param name="angularAcceleration"></param>
+      <returns>
+        <para>True if the angular acceleration was set in the output parameter. False if the angular acceleration is not available due to limitations of the underlying platform or if the node is not presently tracked.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRNodeState.TryGetAngularVelocity(UnityEngine.Vector3&amp;)">
+      <summary>
+        <para>Attempt to retrieve a Vector3 representing the current angular velocity of the tracked node.</para>
+      </summary>
+      <param name="angularVelocity"></param>
+      <returns>
+        <para>True if the angular velocity was set in the output parameter. False if the angular velocity is not available due to limitations of the underlying platform or if the node is not presently tracked.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRNodeState.TryGetPosition">
+      <summary>
+        <para>Attempt to retrieve a vector representing the current position of the tracked node.</para>
+      </summary>
+      <returns>
+        <para>True if the position was set in the output parameter. False if the position is not available due to limitations of the underlying platform or if the node is not presently tracked.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRNodeState.TryGetRotation">
+      <summary>
+        <para>Attempt to retrieve a quaternion representing the current rotation of the tracked node.</para>
+      </summary>
+      <returns>
+        <para>True if the rotation was set in the output parameter. False if the rotation is not available due to limitations of the underlying platform or if the node is not presently tracked.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRNodeState.TryGetVelocity">
+      <summary>
+        <para>Attempt to retrieve a vector representing the current velocity of the tracked node.</para>
+      </summary>
+      <returns>
+        <para>True if the velocity was set in the output parameter. False if the velocity is not available due to limitations of the underlying platform or if the node is not presently tracked.</para>
+      </returns>
+    </member>
+  </members>
+</doc>
