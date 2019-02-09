@@ -47,7 +47,7 @@ let main _argv =
     // Set up the MLContext, which is a catalog of components in ML.NET.
     let mlContext = MLContext(seed = Nullable 1)
     let reader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             columns = 
                 [|
                     TextLoader.Column("LabelText" , Nullable DataKind.Text, 0)
@@ -58,12 +58,11 @@ let main _argv =
     
     let data = reader.Read(trainDataPath)
     
-    // Create the estimator which converts the text label to a key sorted by value (with ham < spam we get ham -> false and spam -> true)
-    // then featurizes the text, and add a linear trainer.
+    // Create the estimator which converts the text label to a bool then featurizes the text, and add a linear trainer.
     let estimator = 
         EstimatorChain()
-            .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelText", "Label", sort = ValueToKeyMappingTransformer.SortOrder.Value))
-            .Append(mlContext.Transforms.Text.FeaturizeText("Message","Features"))
+            .Append(mlContext.Transforms.Conversion.ValueMap(["ham"; "spam"], [false; true],[| struct ("Label", "LabelText") |]))
+            .Append(mlContext.Transforms.Text.FeaturizeText("Features", "Message"))
             .AppendCacheCheckpoint(mlContext)
             .Append(mlContext.BinaryClassification.Trainers.StochasticDualCoordinateAscent("Label", "Features"))
         

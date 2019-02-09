@@ -6,6 +6,7 @@ open Microsoft.ML
 open Microsoft.ML.Data
 open Clustering_Iris.DataStructures
 open DataStructures
+open Microsoft.Data.DataView
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 

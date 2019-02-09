@@ -123,11 +123,11 @@ let main _ =
     let loaderArgs = TextLoader.Arguments()
     loaderArgs.Column <- columns
     loaderArgs.HasHeader <- true
-    loaderArgs.Separator <- ","
+    loaderArgs.Separators <- [| ',' |]
     
     let reader = TextLoader (mlContext, loaderArgs)
     
-    let classification = BinaryClassificationContext mlContext
+    let classification = BinaryClassificationCatalog mlContext
   
     (*
     Split the data 80:20 into train and test files, 
@@ -207,7 +207,7 @@ let main _ =
                 trainFile,
                 columnsPlus,                                                           
                 loaderArgs.HasHeader,
-                loaderArgs.Separator.ToCharArray().[0]
+                loaderArgs.Separators.[0]
                 )
                                                                   
         let testData = 
@@ -215,7 +215,7 @@ let main _ =
                 testFile,
                 columnsPlus,
                 loaderArgs.HasHeader,
-                loaderArgs.Separator.ToCharArray().[0]
+                loaderArgs.Separators.[0]
                 )
     
         trainData, testData
@@ -237,8 +237,8 @@ let main _ =
         |> fun x -> 
             x.Append (
                 mlContext.Transforms.Normalize (
-                    "Features", 
                     "FeaturesNormalizedByMeanVar", 
+                    "Features", 
                     NormalizingEstimator.NormalizerMode.MeanVariance
                     )
                 )
@@ -279,7 +279,7 @@ let main _ =
     let testData = mlContext.Data.ReadFromTextFile (testFile, columnsPlus, hasHeader = true, separatorChar = ',')
 
     printfn "Making predictions"
-    testData.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject = false)
+    mlContext.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
     |> Seq.filter (fun x -> x.Label = true)
     // use 5 observations from the test data
     |> Seq.take 5
