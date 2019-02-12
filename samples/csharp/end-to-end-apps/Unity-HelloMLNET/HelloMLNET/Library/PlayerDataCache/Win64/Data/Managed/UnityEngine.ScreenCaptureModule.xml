@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.ScreenCaptureModule</name>
+    </assembly>
+    <member name="T:UnityEngine.ScreenCapture">
+      <summary>
+        <para>Functionality to take Screenshots.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ScreenCapture.CaptureScreenshot(System.String,System.Int32)">
+      <summary>
+        <para>Captures a screenshot at path filename as a PNG file.</para>
+      </summary>
+      <param name="filename">Pathname to save the screenshot file to.</param>
+      <param name="superSize">Factor by which to increase resolution.</param>
+      <param name="stereoCaptureMode">Specifies the eye texture to capture when stereo rendering is enabled.</param>
+    </member>
+    <member name="M:UnityEngine.ScreenCapture.CaptureScreenshot(System.String,UnityEngine.ScreenCapture/StereoScreenCaptureMode)">
+      <summary>
+        <para>Captures a screenshot at path filename as a PNG file.</para>
+      </summary>
+      <param name="filename">Pathname to save the screenshot file to.</param>
+      <param name="superSize">Factor by which to increase resolution.</param>
+      <param name="stereoCaptureMode">Specifies the eye texture to capture when stereo rendering is enabled.</param>
+    </member>
+    <member name="M:UnityEngine.ScreenCapture.CaptureScreenshotAsTexture(System.Int32)">
+      <summary>
+        <para>Captures a screenshot of the game view into a Texture2D object.</para>
+      </summary>
+      <param name="superSize">Factor by which to increase resolution.</param>
+      <param name="stereoCaptureMode">Specifies the eye texture to capture when stereo rendering is enabled.</param>
+    </member>
+    <member name="M:UnityEngine.ScreenCapture.CaptureScreenshotAsTexture(UnityEngine.ScreenCapture/StereoScreenCaptureMode)">
+      <summary>
+        <para>Captures a screenshot of the game view into a Texture2D object.</para>
+      </summary>
+      <param name="superSize">Factor by which to increase resolution.</param>
+      <param name="stereoCaptureMode">Specifies the eye texture to capture when stereo rendering is enabled.</param>
+    </member>
+    <member name="T:UnityEngine.ScreenCapture.StereoScreenCaptureMode">
+      <summary>
+        <para>Enumeration specifying the eye texture to capture when using ScreenCapture.CaptureScreenshot and when stereo rendering is enabled.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ScreenCapture.StereoScreenCaptureMode.BothEyes">
+      <summary>
+        <para>Both the left and right eyes are captured and composited into one image.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ScreenCapture.StereoScreenCaptureMode.LeftEye">
+      <summary>
+        <para>The Left Eye is captured. This is the default setting for the CaptureScreenshot method.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.ScreenCapture.StereoScreenCaptureMode.RightEye">
+      <summary>
+        <para>The Right Eye is captured.</para>
+      </summary>
+    </member>
+    <member name="A:UnityEngine.ScreenCaptureModule">
+      <summary>
+        <para>The ScreenCapture module provides functionality to take screen shots using the ScreenCapture class.</para>
+      </summary>
+    </member>
+  </members>
+</doc>

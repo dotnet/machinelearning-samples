@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v0.10           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -36,25 +36,23 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-TextLoader textLoader = mlContext.Data.CreateTextReader(
-                                    columns:new[]
-                                                {
-                                                    new TextLoader.Column("Label", DataKind.R4, 0),
-                                                    new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                                    new TextLoader.Column("SepalWidth", DataKind.R4, 2),
-                                                    new TextLoader.Column("PetalLength", DataKind.R4, 3),
-                                                    new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                                },
-                                    hasHeader:true,
-                                    separatorChar:'\t');
-
-IDataView fullData = textLoader.Read(DataPath);
+IDataView fullData = mlContext.Data.ReadFromTextFile(path: DataPath,
+                                                columns:new[]
+                                                            {
+                                                                new TextLoader.Column(DefaultColumnNames.Label, DataKind.R4, 0),
+                                                                new TextLoader.Column(nameof(IrisData.SepalLength), DataKind.R4, 1),
+                                                                new TextLoader.Column(nameof(IrisData.SepalWidth), DataKind.R4, 2),
+                                                                new TextLoader.Column(nameof(IrisData.PetalLength), DataKind.R4, 3),
+                                                                new TextLoader.Column(nameof(IrisData.PetalWidth), DataKind.R4, 4),
+                                                            },
+                                                hasHeader:true,
+                                                separatorChar:'\t');
 
 //STEP 2: Process data transformations in pipeline
-var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth");
+var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth), nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth));
 
 // STEP 3: Create and train the model     
-var trainer = mlContext.Clustering.Trainers.KMeans(features: "Features", clustersCount: 3);
+ var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 ### 2. Train model

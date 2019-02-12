@@ -11,13 +11,13 @@ namespace MulticlassClassification_Iris.DataStructures
             PetalLength = 1.6f,
             PetalWidth= 0.2f,
         };
-
+        
         internal static readonly IrisData Iris2 = new IrisData()
         {
-            SepalLength = 6.4f,
-            SepalWidth = 3.1f,
-            PetalLength = 5.5f,
-            PetalWidth = 2.2f,
+            SepalLength = 6.0f,
+            SepalWidth = 3.4f,
+            PetalLength = 6.1f,
+            PetalWidth = 2.0f,
         };
 
         internal static readonly IrisData Iris3 = new IrisData()

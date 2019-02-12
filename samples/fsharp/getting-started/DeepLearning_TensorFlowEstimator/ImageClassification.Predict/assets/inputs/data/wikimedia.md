@@ -1,0 +1,4 @@
+MichalPL, [Ok Toaster](https://commons.wikimedia.org/wiki/File:OK._Toaster.jpg) [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.en)  
+Agnieszka Kwiecień, [Spinach pizza](https://commons.wikimedia.org/wiki/File:Spinach_pizza.jpg), [GNU Free Documentation License v1.2 or later](https://en.wikipedia.org/wiki/en:GNU_Free_Documentation_License) and [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/legalcode)  
+David Monniaux, [Broccoli DSC00862](https://commons.wikimedia.org/wiki/File:Broccoli_DSC00862.png), [GNU Free Documentation License v1.2 or later](https://en.wikipedia.org/wiki/en:GNU_Free_Documentation_License) and [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/legalcode)  
+Earlgray.Ler2ra, [My teddy bear](https://commons.wikimedia.org/wiki/File:My_teddy_bear.jpg),  [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.en)  

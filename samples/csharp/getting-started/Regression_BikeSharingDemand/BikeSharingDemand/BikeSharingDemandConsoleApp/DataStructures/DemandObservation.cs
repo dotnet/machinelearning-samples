@@ -35,6 +35,7 @@ namespace BikeSharingDemand.DataStructures
         [LoadColumn(13)]
         public float Windspeed { get; set; }
         [LoadColumn(16)]
+        [ColumnName("Label")]
         public float Count { get; set; }   // This is the observed count, to be used a "label" to predict
     }
 

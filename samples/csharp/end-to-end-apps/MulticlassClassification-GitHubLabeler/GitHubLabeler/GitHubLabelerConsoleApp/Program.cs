@@ -57,10 +57,10 @@ namespace GitHubLabeler
             var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t');
              
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Area", "Label")
-                            .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
-                            .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
-                            .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"))
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
+                            .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "TitleFeaturized",inputColumnName:nameof(GitHubIssue.Title)))
+                            .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "DescriptionFeaturized", inputColumnName: nameof(GitHubIssue.Description)))
+                            .Append(mlContext.Transforms.Concatenate(outputColumnName:DefaultColumnNames.Features, "TitleFeaturized", "DescriptionFeaturized"))
                             //Sample Caching the DataView so estimators iterating over the data multiple times, instead of always reading from file, using the cache might get better performance
                             .AppendCacheCheckpoint(mlContext);  //In this sample, only when using OVA (Not SDCA) the cache improves the training time, since OVA works multiple times/iterations over the same data
 
@@ -96,7 +96,7 @@ namespace GitHubLabeler
 
             //Set the trainer/algorithm and map label to value (original readable state)
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-                    .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(DefaultColumnNames.PredictedLabel));
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
@@ -106,7 +106,7 @@ namespace GitHubLabeler
             //Measure cross-validation time
             var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
 
-            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn:"Label");
+            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn:DefaultColumnNames.Label);
 
             //Stop measuring time
             watchCrossValTime.Stop();

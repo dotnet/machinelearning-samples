@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace movierecommender.Models
 {
@@ -11,6 +7,6 @@ namespace movierecommender.Models
         public int ProfileID { get; set; }
         public string ProfileImageName { get; set;}
         public string ProfileName { get; set; }
-        public List<Tuple<int,int>> ProfileMovieRatings { get; set;}
+        public List<(int movieId, int movieRating)> ProfileMovieRatings { get; set;}
      }
 }

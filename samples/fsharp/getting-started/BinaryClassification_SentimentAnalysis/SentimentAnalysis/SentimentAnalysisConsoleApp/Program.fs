@@ -23,20 +23,8 @@ let read (dataPath : string) (dataLoader : TextLoader) =
 
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 1: Common data loading configuration
-    let textLoader =
-        mlContext.Data.CreateTextReader (
-            columns = 
-                [|
-                    TextLoader.Column("Label", Nullable DataKind.Bool, 0)
-                    TextLoader.Column("Text", Nullable DataKind.Text, 1)
-                |],
-            hasHeader = true,
-            separatorChar = '\t'
-        )
-
-    let trainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
-
+    let trainingDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(trainDataPath, hasHeader = true)
+    let testDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(testDataPath, hasHeader = true)
 
     // STEP 2: Common data process configuration with pipeline data transformations          
     let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features")
@@ -47,15 +35,11 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
     let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn = "Label", featureColumn = "Features")
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
+    let trainingPipeline = dataProcessPipeline.Append(trainer)
 
     // STEP 4: Train the model fitting to the DataSet
     printfn "=============== Training the model ==============="
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = trainingPipeline.Fit(trainingDataView)
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
@@ -65,25 +49,35 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.printBinaryClassificationMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
-    (trainedModel, modelBuilder)
-    |> Common.ModelBuilder.saveModelAsFile modelPath
+    use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
+    mlContext.Model.Save(trainedModel, fs)
+
+    printfn "The model is saved to %s" modelPath
 
 
 // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
 let testSinglePrediction (mlContext : MLContext) =
-    let sampleStatement = { Text = "This is a very rude movie" }
+    let sampleStatement = { Label = false; Text = "This is a very rude movie" }
     
-    let resultprediction = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
-        |> Common.ModelScorer.predictSingle sampleStatement
+    let stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
+    let trainedModel = mlContext.Model.Load(stream)
+    
+    // Create prediction engine related to the loaded trained model
+    let predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext)
+
+    //Score
+    let resultprediction = predEngine.Predict(sampleStatement)
+
 
     printfn "=============== Single Prediction  ==============="
-    printfn "Text: %s | Prediction: %s sentiment | Probability: %f "
+    printfn 
+        "Text: %s | Prediction: %s sentiment | Probability: %f"
         sampleStatement.Text
         (if Convert.ToBoolean(resultprediction.Prediction) then "Toxic" else "Nice")
         resultprediction.Probability
     printfn "=================================================="
+
+
     
 
 [<EntryPoint>]

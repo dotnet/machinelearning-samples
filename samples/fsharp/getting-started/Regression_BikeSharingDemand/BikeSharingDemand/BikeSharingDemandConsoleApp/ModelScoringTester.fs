@@ -3,6 +3,7 @@
 open System
 open System.IO
 open DataStructures
+open Microsoft.ML
 
 let readSampleDataFromCsvFile dataLocation numberOfRecordsToRead =
     File.ReadLines(dataLocation)
@@ -28,17 +29,13 @@ let readSampleDataFromCsvFile dataLocation numberOfRecordsToRead =
     |> Seq.toList
 
 
-let visualizeSomePredictions testDataLocation modelScorer numberOfPredictions =
-    
+let visualizeSomePredictions testDataLocation (predEngine : PredictionEngine<DemandObservation, DemandPrediction>) numberOfPredictions =
     //Make a few prediction tests 
     // Make the provided number of predictions and compare with observed data from the test dataset
+
     let testData = readSampleDataFromCsvFile testDataLocation numberOfPredictions
-
-    for i = 0 to numberOfPredictions-1 do
-
-        let prediction = 
-            modelScorer 
-            |> Common.ModelScorer.predictSingle testData.[i]
-
-        Common.ConsoleHelper.printRegressionPredictionVersusObserved (float prediction.PredictedCount) (testData.[i].Count.ToString())
+    for i in 0 .. (numberOfPredictions - 1) do
+        //Score
+        let resultprediction = predEngine.Predict testData.[i]
+        Common.ConsoleHelper.printRegressionPredictionVersusObserved (float resultprediction.PredictedCount) (testData.[i].Count.ToString())
     

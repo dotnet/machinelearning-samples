@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.MatrixFactorization" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
 
 </Project>

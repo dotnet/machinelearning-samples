@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     Profile profile = Model;
     var WatchedMovie = (List<Movie>)ViewData["watchedmovies"];
-    var MovieRatings = (List<Tuple<int, float>>) ViewData["ratings"];
+    var MovieRatings = (List<(int movieId, float score)>) ViewData["ratings"];
     var TrendingMovie = (List<Movie>)ViewData["trendingmovies"];
 }
 <div class="row">
@@ -32,11 +32,11 @@
                     <h3 class="card-title">@movie.MovieName</h3>
                     @{
                         bool thumbsup = false;
-                        foreach (Tuple<int, int> tuple in profile.ProfileMovieRatings)
+                        foreach ((int movieId, int movieRating) in profile.ProfileMovieRatings)
                         {
-                            if (tuple.Item1 == movie.MovieID)
+                            if (movieId == movie.MovieID)
                             {
-                                if (tuple.Item2 >= 4)
+                                if (movieRating >= 4)
                                 {
                                     thumbsup = true;
                                     break;
@@ -70,12 +70,12 @@
                 <div class="card-block">
                     <h3 class="card-title">@movie.MovieName</h3>
                     @{
-                        foreach (Tuple<int, float> tuple in MovieRatings)
+                        foreach ((int movieId, float normalizedScore) in MovieRatings)
                         {
-                            if (tuple.Item1 == movie.MovieID)
+                            if (movieId == movie.MovieID)
                             {
 
-                                var formatted = tuple.Item2.ToString("0.##\\%");
+                                var formatted = normalizedScore.ToString("0.##\\%");
                                 <span class="glyphicon glyphicon-fire"></span>@formatted;
                             }
                         }

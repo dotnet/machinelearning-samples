@@ -78,8 +78,8 @@ namespace CreditCardFraudDetection.Predictor
             }
 
             var predictionEngine = model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(mlContext);
-                ConsoleHelpers.ConsoleWriterSection($"Test {numberOfTransactions} transactions, from the test datasource, that should be predicted as fraud (true):");
-                dataTest.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject: false)
+            ConsoleHelpers.ConsoleWriterSection($"Test {numberOfTransactions} transactions, from the test datasource, that should be predicted as fraud (true):");
+            mlContext.CreateEnumerable<TransactionObservation>(dataTest, reuseRowObject: false)
                         .Where(x => x.Label == true)
                         .Take(numberOfTransactions)
                         .Select(testData => testData)
@@ -93,8 +93,8 @@ namespace CreditCardFraudDetection.Predictor
                                     });
 
 
-                ConsoleHelpers.ConsoleWriterSection($"Test {numberOfTransactions} transactions, from the test datasource, that should NOT be predicted as fraud (false):");
-                dataTest.AsEnumerable<TransactionObservation>(mlContext, reuseRowObject: false)
+             ConsoleHelpers.ConsoleWriterSection($"Test {numberOfTransactions} transactions, from the test datasource, that should NOT be predicted as fraud (false):");
+             mlContext.CreateEnumerable<TransactionObservation>(dataTest, reuseRowObject: false)
                         .Where(x => x.Label == false)
                         .Take(numberOfTransactions)
                         .ToList()

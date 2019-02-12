@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
+| v0.10           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
 
 
 ## Problem
@@ -91,7 +91,7 @@ var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader
 
 The image file used to load images has two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. 
 
-It is important to highlight that the label in this is not really used when scoring with the TensorFlow model. It is in this file only as a reference when testing the predictions so you can compare the actual label of each sample data with the predicted label provided by the TensorFlow model. That is why when loading the file with the 'TextLoader' above you just taking the ImagePath or name of the file but you are not taking the label.
+It is important to highlight that the label in the `ImageNetData` class is not really used when scoring with the TensorFlow model. It is used when testing the predictions so you can compare the actual label of each sample data with the predicted label provided by the TensorFlow model. 
 
 ```csv
 broccoli.jpg	broccoli
@@ -105,10 +105,10 @@ As you can observe, the file does not have a header row.
 The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
 ```csharp
- var pipeline = new ImageLoaderEstimator(env, imagesFolder, ("ImagePath", "ImageReal"))
-    .Append(new ImageResizerEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-    .Append(new ImagePixelExtractorEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-    .Append(new TensorFlowEstimator(env, modelLocation, new[] { "input" }, new[] { "softmax2" }));
+ var pipeline = mlContext.Transforms.LoadImages(imageFolder: imagesFolder, columns: (outputColumnName: ImageReal, inputColumnName: nameof(ImageNetData.ImagePath)))
+                            .Append(mlContext.Transforms.Resize(outputColumnName: ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
+                            .Append(mlContext.Transforms.ExtractPixels(columns: new[] { new ImagePixelExtractorTransformer.ColumnInfo(name: InceptionSettings.inputTensorName, inputColumnName: ImageReal, interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:modelLocation, outputColumnNames:new[] { InceptionSettings.outputTensorName }, inputColumnNames: new[] { InceptionSettings.inputTensorName } ));
 
 ```
 You also need to check the neural network, and check the names of the input / output nodes. In order to inspect the model, you can use tools like [Netron](https://github.com/lutzroeder/netron), which is automatically installed with [Visual Studio Tools for AI](https://visualstudio.microsoft.com/downloads/ai-tools-vs/). 
