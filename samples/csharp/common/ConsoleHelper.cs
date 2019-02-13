@@ -175,8 +175,8 @@ namespace Common
             var transformer = pipeline.Fit(dataView);
             var transformedData = transformer.Transform(dataView);
 
-            // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
-            // Convert to an enumerable of user-defined type.
+            // 'transformedData' is a 'promise' of data, lazy-loading. call Preview  
+            //and iterate through the returned collection from preview.
 
             var preViewTransformedData = transformedData.Preview(maxRows: numberOfRows);
 
