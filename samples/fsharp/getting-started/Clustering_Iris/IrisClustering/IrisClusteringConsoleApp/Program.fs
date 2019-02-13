@@ -6,6 +6,7 @@ open Microsoft.ML
 open Microsoft.ML.Data
 open Clustering_Iris.DataStructures
 open DataStructures
+open Microsoft.Data.DataView
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -23,7 +24,7 @@ let main argv =
 
     // STEP 1: Common data loading configuration
     let textLoader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             hasHeader = true,
             separatorChar = '\t',
             columns =
@@ -50,7 +51,7 @@ let main argv =
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
 
     // STEP 3: Create and train the model     
-    let trainer = mlContext.Clustering.Trainers.KMeans(features = "Features", clustersCount = 3)
+    let trainer = mlContext.Clustering.Trainers.KMeans(featureColumn = "Features", clustersCount = 3)
     let trainingPipeline = dataProcessPipeline.Append(trainer)
     let trainedModel = trainingPipeline.Fit(trainingDataView)
 

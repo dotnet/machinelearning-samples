@@ -3,7 +3,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7.0           | Dynamic API | Needs to update to v0.8 | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
+| v0.10           | Dynamic API | Up-to-date | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
 
 
 ## Problem 
@@ -65,13 +65,14 @@ The following step is to define the estimator pipe. Usually, when dealing with d
 
 ```fsharp
 let pipeline =
-    mlContext.Transforms.Conversion.MapValueToKey("Label", "LabelTokey")
-    |> ModelBuilder.append (mlContext.Transforms.LoadImages(imagesFolder, struct ("ImagePath", "ImageReal")))
-    |> ModelBuilder.append (mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
-    |> ModelBuilder.append (mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean)))
-    |> ModelBuilder.append (mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2_pre_activation" |]))
-    |> ModelBuilder.append (mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
-    |> ModelBuilder.append (mlContext.Transforms.Conversion.MapKeyToValue(struct("PredictedLabel", "PredictedLabelValue")))
+    EstimatorChain()
+        .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelTokey", "Label"))
+        .Append(mlContext.Transforms.LoadImages(imagesFolder, struct ("ImageReal", "ImagePath")))
+        .Append(mlContext.Transforms.Resize("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
+        .Append(mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean)))
+        .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2_pre_activation" |], [| "input" |]))
+        .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
+        .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
 ```
 
 ### 2. Train model
@@ -86,9 +87,8 @@ As a reference, In the following screenshot, you can check the DataView used to 
 ### 3. Evaluate model
 After the training, we evaluate the model using the training data. The `Evaluate` function needs a `IDataView` as parameter, so we apply `Transform` to the model, and then take the `AsDynamic` value.
 ```fsharp
-let sdcaContext = MulticlassClassificationContext(mlContext)
 printHeader ["Classification metrics"]
-let metrics = sdcaContext.Evaluate(trainData, label = "LabelTokey", predictedLabel = "PredictedLabel")
+let metrics = mlContext.MulticlassClassification.Evaluate(trainData, label = "LabelTokey", predictedLabel = "PredictedLabel")
 printfn "LogLoss is: %.15f" metrics.LogLoss
 metrics.PerClassLogLoss
 |> Seq.map string

@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 
@@ -106,7 +106,7 @@ Here's the code which will be used to build the model:
 let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic environment
 // STEP 1: Common data loading configuration
 let textLoader = 
-    mlContext.Data.CreateTextReader(
+    mlContext.Data.CreateTextLoader(
         columns = 
             [| 
                 TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
@@ -120,8 +120,8 @@ let pivotDataView = textLoader.Read(pivotCsv)
 //STEP 2: Configure data transformations in pipeline
 let dataProcessPipeline =  
     EstimatorChain()
-        .Append(mlContext.Transforms.Projection.ProjectToPrincipalComponents("Features", "PCAFeatures", rank = 2))
-        .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnInfo("LastName", "LastNameKey", OneHotEncodingTransformer.OutputKind.Ind) |]))
+        .Append(mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnInfo("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
 
 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
 Common.ConsoleHelper.peekDataViewInConsole<PivotObservation> mlContext pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore
@@ -135,7 +135,7 @@ let trainingPipeline = dataProcessPipeline.Append(trainer)
 In this case, `TextLoader` doesn't define explicitly each column, but declares a `Features` property made by the first 32 columns of the file; also declares the property `LastName` to the value of the last column.
 
 Then, you need to apply some transformations to the data:
-1) Add a PCA column, using the `mlContext.Transforms.Projection.ProjectToPrincipalComponents("Features", "PCAFeatures", rank = 2)` Estimator, passing as parameter `rank = 2`, which means that we are reducing the features from 32 to 2 dimensions (*x* and *y*)
+1) Add a PCA column, using the `mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2)` Estimator, passing as parameter `rank = 2`, which means that we are reducing the features from 32 to 2 dimensions (*x* and *y*)
 
 2) Transform LastName using `OneHotEncodingEstimator`
 
