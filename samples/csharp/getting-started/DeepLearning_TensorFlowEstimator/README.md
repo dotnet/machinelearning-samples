@@ -1,10 +1,8 @@
 # Image Classification
 
-
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.7.0           | Dynamic API | Needs to update to v0.8 | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
-
+| v0.10           | Dynamic API | Needs to update to v0.8 | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
 
 ## Problem 
 Image classification is a common problem which has been solved quite a while using Machine Learning techniques. In this sample, we will review an approach that mixes new techniques (deep learning) and old school (SDCA) techniques.
@@ -43,34 +41,51 @@ Building the model includes the following steps:
 * Image *featurization* using the deep neural network
 * Image classification using SDCA
 
-The `TextLoader.CreateReader()` is used to define the schema of the text file that will be used to load images in the training model.
+Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageNetData. 
+
 ```csharp
- var loader = new TextLoader(env,
- new TextLoader.Arguments
- {
-     Column = new[] {
-         new TextLoader.Column("ImagePath", DataKind.Text, 0),
-         new TextLoader.Column("Label", DataKind.Text, 1)
-     }
- });
+public class ImageNetData
+    {
+        [LoadColumn(0)]
+        public string ImagePath;
+
+        [LoadColumn(1)]
+        public string Label;
+
+        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
+        {
+            return File.ReadAllLines(file)
+             .Select(x => x.Split('\t'))
+             .Select(x => new ImageNetData()
+             {
+                 ImagePath = Path.Combine(folder,x[0]),
+                 Label = x[1],
+             });
+        }
+    }
 ```
-The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
+Load the training data using Text loader
+
 ```csharp
- var pipeline = new ValueToKeyMappingEstimator(env, "Label", "LabelTokey") 
-    .Append(new ImageLoadingEstimator(env, imagesFolder, ("ImagePath", "ImageReal")))
-    .Append(new ImageResizingEstimator(env, "ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-    .Append(new ImagePixelExtractingEstimator(env, new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-    .Append(new TensorFlowEstimator(env, featurizerModelLocation, new[] { "input" }, new[] { "softmax2_pre_activation" }))
-    .Append(new SdcaMultiClassTrainer(env, "softmax2_pre_activation", "LabelTokey"))
-    .Append(new KeyToValueEstimator(env, ("PredictedLabel", "PredictedLabelValue")));
+var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
+```
+
+The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
+
+```csharp
+ var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
+                            .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
+                            .Append(mlContext.Transforms.Resize(outputColumnName:ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
+                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransformer.ColumnInfo(name: "input",inputColumnName: ImageReal,  interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
+                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:featurizerModelLocation, outputColumnNames: new[] { "softmax2_pre_activation" },inputColumnNames: new[] { "input" }))
+                            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression(labelColumn:LabelTokey, featureColumn:"softmax2_pre_activation"))
+                            .Append(mlContext.Transforms.Conversion.MapKeyToValue((PredictedLabelValue,DefaultColumnNames.PredictedLabel)));
 ```
 
 ### 2. Train model
-In order to begin the training, we declare a datasource and then execute `Fit` on the built pipeline:
-```csharp
- var data = loader.Read(new MultiFileSource(dataLocation));
- var model = pipeline.Fit(data);
-
+In order to begin the training execute `Fit` on the built pipeline:
+```csharp 
+  ITransformer model = pipeline.Fit(data);
 ```
 As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
 
@@ -79,9 +94,9 @@ As a reference, In the following screenshot, you can check the DataView used to 
 ### 3. Evaluate model
 After the training, we evaluate the model using the training data. The `Evaluate` function needs a `IDataView` as parameter, so we apply `Transform` to the model, and then take the `AsDynamic` value.
 ```csharp
- var sdcaContext = new MulticlassClassificationContext(env);
+ var sdcaContext = new MulticlassClassificationCatalog(mlContext);
  ConsoleWriteHeader("Classification metrics");
- var metrics = sdcaContext.Evaluate(trainData, label: "LabelTokey", predictedLabel: "PredictedLabel");
+ var metrics = sdcaContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
  Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
  Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 ```
@@ -108,7 +123,7 @@ using (var f = new FileStream(modelLocation, FileMode.Open))
 
 Then, we proceed to create a predictor function, and make predictions:
 ```csharp
-var predictor = loadedModel.MakePredictionFunction<ImageNetData, ImageNetPrediction>(env);
+var predictor = loadedModel.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext);
 var pred = predictor.Predict(testImage);
 ```
 The prediction function receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`). Then returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and `Score` (*probability* value between 0 and 1) properties.

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.VRModule</name>
+    </assembly>
+    <member name="A:UnityEngine.VRModule">
+      <summary>
+        <para>The VR module implements support for virtual reality devices in Unity.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.GameViewRenderMode">
+      <summary>
+        <para>Enumeration of available modes for XR rendering in the Game view or in the main window on a host PC. XR rendering only occurs when the Unity Editor is in Play Mode.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.GameViewRenderMode.BothEyes">
+      <summary>
+        <para>Renders both eyes of the XR device side-by-side in the Game view or in the main window on a host PC.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.GameViewRenderMode.LeftEye">
+      <summary>
+        <para>Renders the left eye of the XR device in the Game View window or in main window on a host PC.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.GameViewRenderMode.OcclusionMesh">
+      <summary>
+        <para>Renders both eyes of the XR device, and the occlusion mesh, side-by-side in the Game view or in the main window on a host PC.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.GameViewRenderMode.RightEye">
+      <summary>
+        <para>Renders the right eye of the XR device in the Game View window or in main window on a host PC.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.TrackingOriginMode">
+      <summary>
+        <para>Represents how the device is reporting pose data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.TrackingOriginMode.Device">
+      <summary>
+        <para>Represents a Device relative tracking origin. A Device relative tracking origin defines a Local Origin at the position of the device in space at some previous point in time, usually at a recenter event, power-on or AR/VR session start. Pose data provided by the device will be in this space relative to the local origin. This means that poses returned in this mode will not include the user height (for VR) or the device height (for AR) and any camera tracking from the XR Device will need to be manually offset accordingly.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.TrackingOriginMode.Floor">
+      <summary>
+        <para>Represents the tracking origin whereby 0,0,0 is on the "floor" or other surface determined by the XR Device being used. The pose values reported by an XR Device in this mode will include the height of the XR Device above this surface, removing the need to offset the position of the camera tracking the XR Device by the height of the user (VR) or the height of the device above the floor (AR).</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.TrackingOriginMode.Unknown">
+      <summary>
+        <para>This indicates that the device does not know, or is unable to determine how it is reporting pose data. This value should be treated as an error condition.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.TrackingSpaceType">
+      <summary>
+        <para>Represents the size of physical space available for XR.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.TrackingSpaceType.RoomScale">
+      <summary>
+        <para>Represents a space large enough for free movement.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.TrackingSpaceType.Stationary">
+      <summary>
+        <para>Represents a small space where movement may be constrained or positional tracking is unavailable.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.UserPresenceState">
+      <summary>
+        <para>Represents the current user presence state detected by the device.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.UserPresenceState.NotPresent">
+      <summary>
+        <para>The device does not detect that the user is present.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.UserPresenceState.Present">
+      <summary>
+        <para>The device detects that the user is present.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.UserPresenceState.Unknown">
+      <summary>
+        <para>The device is currently in a state where it cannot determine user presence.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.UserPresenceState.Unsupported">
+      <summary>
+        <para>The device does not support detecting user presence.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.WSA.HolographicRemoting">
+      <summary>
+        <para>he Holographic Remoting interface allows you to connect an application to a remote holographic device, and stream data between the application and that device.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.WSA.HolographicRemoting.ConnectionState">
+      <summary>
+        <para>Whether the app is displaying protected content.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.WSA.HolographicSettings">
+      <summary>
+        <para>The Holographic Settings contain functions which effect the performance and presentation of Holograms on Windows Holographic platforms.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.WSA.HolographicSettings.ActivateLatentFramePresentation(System.Boolean)">
+      <summary>
+        <para>Option to allow developers to achieve higher framerate at the cost of high latency.  By default this option is off.</para>
+      </summary>
+      <param name="activated">True to enable or false to disable Low Latent Frame Presentation.</param>
+    </member>
+    <member name="T:UnityEngine.XR.WSA.HolographicSettings.HolographicReprojectionMode">
+      <summary>
+        <para>Represents the kind of reprojection an app is requesting to stabilize its holographic rendering relative to the user's head motion.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicSettings.HolographicReprojectionMode.Disabled">
+      <summary>
+        <para>The image should not be stabilized for the user's head motion, instead remaining fixed in the display. This is generally discouraged, as it is only comfortable for users when used sparingly, such as when the only visible content is a small cursor.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicSettings.HolographicReprojectionMode.OrientationOnly">
+      <summary>
+        <para>The image should be stabilized only for changes to the user's head orientation, ignoring positional changes. This is best for body-locked content that should tag along with the user as they walk around, such as 360-degree video.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicSettings.HolographicReprojectionMode.PositionAndOrientation">
+      <summary>
+        <para>The image should be stabilized for changes to both the user's head position and orientation. This is best for world-locked content that should remain physically stationary as the user walks around.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.WSA.HolographicSettings.IsContentProtectionEnabled">
+      <summary>
+        <para>Whether the app is displaying protected content.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.WSA.HolographicSettings.IsDisplayOpaque">
+      <summary>
+        <para>This method returns whether or not the display associated with the main camera reports as opaque.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.WSA.HolographicSettings.IsLatentFramePresentation">
+      <summary>
+        <para>Returns true if Holographic rendering is currently running with Latent Frame Presentation.  Default value is false.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.WSA.HolographicSettings.ReprojectionMode">
+      <summary>
+        <para>The kind of reprojection the app is requesting to stabilize its holographic rendering relative to the user's head motion.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.WSA.HolographicSettings.SetFocusPointForFrame(UnityEngine.Vector3)">
+      <summary>
+        <para>Sets a point in 3d space that is the focal point of the Scene for the user for this frame. This helps improve the visual fidelity of content around this point. This must be set every frame.</para>
+      </summary>
+      <param name="position">The position of the focal point in the Scene, relative to the camera.</param>
+      <param name="normal">Surface normal of the plane being viewed at the focal point.</param>
+      <param name="velocity">A vector that describes how the focus point is moving in the Scene at this point in time. This allows the HoloLens to compensate for both your head movement and the movement of the object in the Scene.</param>
+    </member>
+    <member name="M:UnityEngine.XR.WSA.HolographicSettings.SetFocusPointForFrame(UnityEngine.Vector3,UnityEngine.Vector3)">
+      <summary>
+        <para>Sets a point in 3d space that is the focal point of the Scene for the user for this frame. This helps improve the visual fidelity of content around this point. This must be set every frame.</para>
+      </summary>
+      <param name="position">The position of the focal point in the Scene, relative to the camera.</param>
+      <param name="normal">Surface normal of the plane being viewed at the focal point.</param>
+      <param name="velocity">A vector that describes how the focus point is moving in the Scene at this point in time. This allows the HoloLens to compensate for both your head movement and the movement of the object in the Scene.</param>
+    </member>
+    <member name="M:UnityEngine.XR.WSA.HolographicSettings.SetFocusPointForFrame(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3)">
+      <summary>
+        <para>Sets a point in 3d space that is the focal point of the Scene for the user for this frame. This helps improve the visual fidelity of content around this point. This must be set every frame.</para>
+      </summary>
+      <param name="position">The position of the focal point in the Scene, relative to the camera.</param>
+      <param name="normal">Surface normal of the plane being viewed at the focal point.</param>
+      <param name="velocity">A vector that describes how the focus point is moving in the Scene at this point in time. This allows the HoloLens to compensate for both your head movement and the movement of the object in the Scene.</param>
+    </member>
+    <member name="T:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason">
+      <summary>
+        <para>Enum indicating the reason why connection to remote device has failed.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason.ConnectionLost">
+      <summary>
+        <para>Enum indicating the reason why remote connection failed.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason.HandshakeFailed">
+      <summary>
+        <para>Handskahe failed while traying to establish connection with remote device.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason.None">
+      <summary>
+        <para>No failure.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason.ProtocolVersionMismatch">
+      <summary>
+        <para>Protocol used by the app does not match remoting app running on remote device.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason.Unknown">
+      <summary>
+        <para>Couldn't identify the reason why connection failed.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionFailureReason.Unreachable">
+      <summary>
+        <para>Remove device is not reachable.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.WSA.HolographicStreamerConnectionState">
+      <summary>
+        <para>Current state of the holographis streamer remote connection.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionState.Connected">
+      <summary>
+        <para>Indicates app being connected to remote device.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionState.Connecting">
+      <summary>
+        <para>Indicates app trying to connect to remote device.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.WSA.HolographicStreamerConnectionState.Disconnected">
+      <summary>
+        <para>Indicates app being currently disconnected from any other remote device.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.XRDevice">
+      <summary>
+        <para>Contains all functionality related to a XR device.</para>
+      </summary>
+    </member>
+    <member name="?:UnityEngine.XR.XRDevice.deviceLoaded(System.Action`1&lt;System.String&gt;)">
+      <summary>
+        <para>Subscribe a delegate to this event to get notified when an XRDevice is successfully loaded.</para>
+      </summary>
+      <param name="value"></param>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.family">
+      <summary>
+        <para>The name of the family of the loaded XR device.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.fovZoomFactor">
+      <summary>
+        <para>Zooms the XR projection.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.isPresent">
+      <summary>
+        <para>Successfully detected a XR device in working order.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.model">
+      <summary>
+        <para>Specific model of loaded XR device.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.refreshRate">
+      <summary>
+        <para>Refresh rate of the display in Hertz.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.trackingOriginMode">
+      <summary>
+        <para>Returns the devices TrackingOriginType.</para>
+      </summary>
+      <returns>
+        <para>The TrackingOriginType that the device is currently using. It will return the Unknown TrackingOriginType on failure.</para>
+      </returns>
+    </member>
+    <member name="P:UnityEngine.XR.XRDevice.userPresence">
+      <summary>
+        <para>Indicates whether the user is present and interacting with the device.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.XRDevice.DisableAutoXRCameraTracking">
+      <summary>
+        <para>Sets whether the camera passed in the first parameter is controlled implicitly by the XR Device</para>
+      </summary>
+      <param name="Camera">The camera that we wish to change behavior on</param>
+      <param name="Disabled">True if the camera's transform is set externally. False if the camera is to be driven implicitly by XRDevice, </param>
+      <returns>
+        <para>Nothing.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRDevice.GetNativePtr">
+      <summary>
+        <para>This method returns an IntPtr representing the native pointer to the XR device if one is available, otherwise the value will be IntPtr.Zero.</para>
+      </summary>
+      <returns>
+        <para>The native pointer to the XR device.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRDevice.GetTrackingSpaceType">
+      <summary>
+        <para>Returns the device's current TrackingSpaceType. This value determines how the camera is positioned relative to its starting position. For more, see the section "Understanding the camera" in.</para>
+      </summary>
+      <returns>
+        <para>The device's current TrackingSpaceType.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRDevice.SetTrackingSpaceType(UnityEngine.XR.TrackingSpaceType)">
+      <summary>
+        <para>Sets the device's current TrackingSpaceType. Returns true on success. Returns false if the given TrackingSpaceType is not supported or the device fails to switch.</para>
+      </summary>
+      <param name="TrackingSpaceType">The TrackingSpaceType the device should switch to.</param>
+      <param name="trackingSpaceType"></param>
+      <returns>
+        <para>True on success. False if the given TrackingSpaceType is not supported or the device fails to switch.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.XR.XRSettings">
+      <summary>
+        <para>Global XR related settings.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.enabled">
+      <summary>
+        <para>Globally enables or disables XR for the application.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.eyeTextureDesc">
+      <summary>
+        <para>Fetch the eye texture RenderTextureDescriptor from the active stereo device.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.eyeTextureHeight">
+      <summary>
+        <para>The current height of an eye texture for the loaded device.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.eyeTextureResolutionScale">
+      <summary>
+        <para>Controls the actual size of eye textures as a multiplier of the device's default resolution.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.eyeTextureWidth">
+      <summary>
+        <para>The current width of an eye texture for the loaded device.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.gameViewRenderMode">
+      <summary>
+        <para>Sets the render mode for the XR device. The render mode controls how the view of the XR device renders in the Game view and in the main window on a host PC.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.isDeviceActive">
+      <summary>
+        <para>Read-only value that can be used to determine if the XR device is active.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.loadedDeviceName">
+      <summary>
+        <para>Type of XR device that is currently loaded.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.occlusionMaskScale">
+      <summary>
+        <para>A scale applied to the standard occulsion mask for each platform.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.renderScale">
+      <summary>
+        <para>This field has been deprecated. Use XRSettings.eyeTextureResolutionScale instead.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.renderViewportScale">
+      <summary>
+        <para>Controls how much of the allocated eye texture should be used for rendering.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.showDeviceView">
+      <summary>
+        <para>This property has been deprecated. Use XRSettings.gameViewRenderMode instead.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.stereoRenderingMode">
+      <summary>
+        <para>The stereo rendering mode that is currently in use.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.supportedDevices">
+      <summary>
+        <para>Returns a list of supported XR devices that were included at build time.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRSettings.useOcclusionMesh">
+      <summary>
+        <para>Specifies whether or not the occlusion mesh should be used when rendering. Enabled by default.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.XRSettings.LoadDeviceByName(System.String)">
+      <summary>
+        <para>Loads the requested device at the beginning of the next frame.</para>
+      </summary>
+      <param name="deviceName">Name of the device from XRSettings.supportedDevices.</param>
+      <param name="prioritizedDeviceNameList">Prioritized list of device names from XRSettings.supportedDevices.</param>
+    </member>
+    <member name="M:UnityEngine.XR.XRSettings.LoadDeviceByName(System.String[])">
+      <summary>
+        <para>Loads the requested device at the beginning of the next frame.</para>
+      </summary>
+      <param name="deviceName">Name of the device from XRSettings.supportedDevices.</param>
+      <param name="prioritizedDeviceNameList">Prioritized list of device names from XRSettings.supportedDevices.</param>
+    </member>
+    <member name="T:UnityEngine.XR.XRSettings.StereoRenderingMode">
+      <summary>
+        <para>Enum type signifying the different stereo rendering modes available.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRSettings.StereoRenderingMode.MultiPass">
+      <summary>
+        <para>This is the reference stereo rendering path for VR.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRSettings.StereoRenderingMode.SinglePass">
+      <summary>
+        <para>This is a faster rendering path for VR than XRSettings.StereoRenderingMode.MultiPass.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRSettings.StereoRenderingMode.SinglePassInstanced">
+      <summary>
+        <para>This is an optimized version of the XRSettings.StereoRenderingMode.SinglePass mode.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.XR.XRSettings.StereoRenderingMode.SinglePassMultiview">
+      <summary>
+        <para>This is a OpenGL optimized version of the XRSettings.StereoRenderingMode.SinglePassInstanced mode.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.XR.XRStats">
+      <summary>
+        <para>Timing and other statistics from the XR subsystem.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.XR.XRStats.gpuTimeLastFrame">
+      <summary>
+        <para>Total GPU time utilized last frame as measured by the XR subsystem.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.XR.XRStats.TryGetDroppedFrameCount(System.Int32&amp;)">
+      <summary>
+        <para>Retrieves the number of dropped frames reported by the XR SDK.</para>
+      </summary>
+      <param name="droppedFrameCount">Outputs the number of frames dropped since the last update.</param>
+      <returns>
+        <para>True if the dropped frame count is available, false otherwise.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRStats.TryGetFramePresentCount(System.Int32&amp;)">
+      <summary>
+        <para>Retrieves the number of times the current frame has been drawn to the device as reported by the XR SDK.</para>
+      </summary>
+      <param name="framePresentCount">Outputs the number of times the current frame has been presented.</param>
+      <returns>
+        <para>True if the frame present count is available, false otherwise.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.XR.XRStats.TryGetGPUTimeLastFrame(System.Single&amp;)">
+      <summary>
+        <para>Retrieves the time spent by the GPU last frame, in seconds, as reported by the XR SDK.</para>
+      </summary>
+      <param name="gpuTimeLastFrame">Outputs the time spent by the GPU last frame.</param>
+      <returns>
+        <para>True if the GPU time spent last frame is available, false otherwise.</para>
+      </returns>
+    </member>
+  </members>
+</doc>

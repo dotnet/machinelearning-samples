@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.ML.Data;
+using Microsoft.Data.DataView;
 
 namespace CreditCardFraudDetection.Trainer
 {
@@ -15,7 +16,7 @@ namespace CreditCardFraudDetection.Trainer
         private readonly string _dataSetFile;
         private readonly string _outputPath;
 
-        private BinaryClassificationContext _context;
+        private BinaryClassificationCatalog _context;
         private TextLoader _reader;
         private IDataView _trainData;
         private IDataView _testData;
@@ -50,8 +51,8 @@ namespace CreditCardFraudDetection.Trainer
                 .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
                 .ToArray();
 
-            var pipeline = _mlContext.Transforms.Concatenate("Features", featureColumnNames)
-                            .Append(_mlContext.Transforms.Normalize(inputName: "Features", outputName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
+            var pipeline = _mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
+                            .Append(_mlContext.Transforms.Normalize(inputColumnName: "Features", outputColumnName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
                             .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
                                                                                       featureColumn: "Features",
                                                                                       numLeaves: 20,
@@ -61,7 +62,7 @@ namespace CreditCardFraudDetection.Trainer
 
             var model = pipeline.Fit(_trainData);
 
-            var metrics = _context.Evaluate(model.Transform(_testData), "Label");
+            var metrics = _context.Evaluate(model.Transform(_testData), label:"Label");
 
             ConsoleHelpers.ConsoleWriteHeader($"Test Metrics:");
             Console.WriteLine("Acuracy: " + metrics.Accuracy);
@@ -73,7 +74,7 @@ namespace CreditCardFraudDetection.Trainer
             Console.WriteLine("Saved model to " + Path.Combine(_outputPath, "fastTree.zip"));
         }
 
-        private (BinaryClassificationContext context, TextLoader, IDataView trainData, IDataView testData) 
+        private (BinaryClassificationCatalog context, TextLoader, IDataView trainData, IDataView testData) 
                     PrepareData(MLContext mlContext)
         {
 
@@ -117,12 +118,11 @@ namespace CreditCardFraudDetection.Trainer
                 };
 
             TextLoader.Arguments txtLoaderArgs = new TextLoader.Arguments
-                                                        {
-                                                            Column = columns,
-                                                            // First line of the file is a header, not a data row.
-                                                            HasHeader = true,
-                                                            Separator = ","
-                                                        };
+                                                    {
+                                                        Column = columns,
+                                                        HasHeader = true,
+                                                        Separators = new char[] { ',' }
+                                                    };                                                        
 
             // Step one: read the data as an IDataView.
             // Create the reader: define the data columns 
@@ -134,7 +134,7 @@ namespace CreditCardFraudDetection.Trainer
             // so we create a Binary Classification context:
             // it will give us the algorithms we need,
             // as well as the evaluation procedure.
-            var classification = new BinaryClassificationContext(mlContext);
+            var classification = new BinaryClassificationCatalog(mlContext);
 
             if (!File.Exists(Path.Combine(_outputPath, "testData.idv")) &&
                 !File.Exists(Path.Combine(_outputPath, "trainData.idv"))) {
@@ -208,13 +208,13 @@ namespace CreditCardFraudDetection.Trainer
                 trainData = mlContext.Data.ReadFromTextFile(Path.Combine(_outputPath, "trainData.csv"),
                                                             columnsPlus,                                                           
                                                             hasHeader: txtLoaderArgs.HasHeader,
-                                                            separatorChar: txtLoaderArgs.Separator.ToCharArray()[0]);
+                                                            separatorChar: txtLoaderArgs.Separators[0]);
 
                                                                      
                 testData = mlContext.Data.ReadFromTextFile(Path.Combine(_outputPath, "testData.csv"),
                                                            columnsPlus,
                                                            hasHeader: txtLoaderArgs.HasHeader,
-                                                           separatorChar: txtLoaderArgs.Separator.ToCharArray()[0]);
+                                                           separatorChar: txtLoaderArgs.Separators[0]);
             }
 
             ConsoleHelpers.ConsoleWriteHeader("Show 4 transactions fraud (true) and 4 transactions not fraud (false) -  (traindata)");

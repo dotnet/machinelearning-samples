@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.LocalizationModule</name>
+    </assembly>
+    <member name="T:UnityEngine.LocalizationAsset">
+      <summary>
+        <para>An asset to represent a table of localized strings for one specific locale.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.LocalizationAsset.isEditorAsset">
+      <summary>
+        <para>Is this asset used to localize UI components of the Unity Editor</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.LocalizationAsset.localeIsoCode">
+      <summary>
+        <para>ISO Code used to identify the locale. ex: en-uk, zh-hans, ja</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.LocalizationAsset.#ctor">
+      <summary>
+        <para>Creates a new empty LocalizationAsset object.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.LocalizationAsset.GetLocalizedString(System.String)">
+      <summary>
+        <para>Get the localized string for the specified key.</para>
+      </summary>
+      <param name="original">Original string acting as key.</param>
+      <returns>
+        <para>Localized string matching the original in the LocalizationAsset locale</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.LocalizationAsset.SetLocalizedString(System.String,System.String)">
+      <summary>
+        <para>Set the localized string for the specified key</para>
+      </summary>
+      <param name="original">Original string acting as key.</param>
+      <param name="localized">Localized string matching the original in the LocalizationAsset locale</param>
+    </member>
+  </members>
+</doc>

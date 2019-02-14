@@ -7,6 +7,7 @@ open Microsoft.ML.Transforms
 open Microsoft.ML.Data
 
 module ModelBuilder =
+    open Microsoft.Data.DataView
 
     let create (mlContext : MLContext) (pipeline : IEstimator<ITransformer>) =
         (mlContext, pipeline)

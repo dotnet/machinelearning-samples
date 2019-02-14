@@ -7,6 +7,10 @@ module Model =
     [<CLIMutable>] 
     type SentimentIssue = 
         { 
+            [<LoadColumn(0)>]
+            Label : bool
+
+            [<LoadColumn(1)>]
             Text : string 
         }
 

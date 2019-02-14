@@ -6,6 +6,7 @@ using Microsoft.ML.Data;
 
 using BikeSharingDemand.DataStructures;
 using Common;
+using Microsoft.Data.DataView;
 
 namespace BikeSharingDemand
 {
@@ -24,40 +25,22 @@ namespace BikeSharingDemand
             var mlContext = new MLContext(seed: 0);
 
             // 1. Common data loading configuration
-            var textLoader = mlContext.Data.CreateTextReader(
-                                                    columns:new[]
-                                                            {
-                                                            new TextLoader.Column("Season", DataKind.R4, 2),
-                                                            new TextLoader.Column("Year", DataKind.R4, 3),
-                                                            new TextLoader.Column("Month", DataKind.R4, 4),
-                                                            new TextLoader.Column("Hour", DataKind.R4, 5),
-                                                            new TextLoader.Column("Holiday", DataKind.R4, 6),
-                                                            new TextLoader.Column("Weekday", DataKind.R4, 7),
-                                                            new TextLoader.Column("WorkingDay", DataKind.R4, 8),
-                                                            new TextLoader.Column("Weather", DataKind.R4, 9),
-                                                            new TextLoader.Column("Temperature", DataKind.R4, 10),
-                                                            new TextLoader.Column("NormalizedTemperature", DataKind.R4, 11),
-                                                            new TextLoader.Column("Humidity", DataKind.R4, 12),
-                                                            new TextLoader.Column("Windspeed", DataKind.R4, 13),
-                                                            new TextLoader.Column("Count", DataKind.R4, 16)
-                                                            },
-                                                    hasHeader: true,
-                                                    separatorChar: ',');
-              
-            var trainingDataView = textLoader.Read(TrainingDataLocation);
-            var testDataView = textLoader.Read(TestDataLocation);
+            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path:TrainingDataLocation, hasHeader:true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path:TestDataLocation, hasHeader:true, separatorChar: ',');
 
             // 2. Common data pre-process with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.CopyColumns("Count", "Label")
-                        // Concatenate all the numeric columns into a single features column
-                        .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
-                                                                            "Hour", "Holiday", "Weekday",
-                                                                            "Weather", "Temperature", "NormalizedTemperature",
-                                                                            "Humidity", "Windspeed"));
+
+            // Concatenate all the numeric columns into a single features column
+            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features,
+                                                     nameof(DemandObservation.Season), nameof(DemandObservation.Year), nameof(DemandObservation.Month),
+                                                     nameof(DemandObservation.Hour), nameof(DemandObservation.Holiday), nameof(DemandObservation.Weekday),
+                                                     nameof(DemandObservation.WorkingDay), nameof(DemandObservation.Weather), nameof(DemandObservation.Temperature),
+                                                     nameof(DemandObservation.NormalizedTemperature), nameof(DemandObservation.Humidity), nameof(DemandObservation.Windspeed))
+                                         .AppendCacheCheckpoint(mlContext);
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataProcessPipeline, 10);
-            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 10);
+            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 10);
 
             // Definition of regression trainers/algorithms to use
             //var regressionLearners = new (string name, IEstimator<ITransformer> value)[]
@@ -75,19 +58,19 @@ namespace BikeSharingDemand
 
             // 3. Phase for Training, Evaluation and model file persistence
             // Per each regression trainer: Train, Evaluate, and Save a different model
-            foreach (var learner in regressionLearners)
+            foreach (var trainer in regressionLearners)
             {
                 Console.WriteLine("=============== Training the current model ===============");
-                var trainingPipeline = dataProcessPipeline.Append(learner.value);
+                var trainingPipeline = dataProcessPipeline.Append(trainer.value);
                 var trainedModel = trainingPipeline.Fit(trainingDataView);
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 IDataView predictions = trainedModel.Transform(testDataView);
-                var metrics = mlContext.Regression.Evaluate(predictions, label: "Count", score: "Score");               
-                ConsoleHelper.PrintRegressionMetrics(learner.value.ToString(), metrics);
+                var metrics = mlContext.Regression.Evaluate(data:predictions, label:DefaultColumnNames.Label, score: DefaultColumnNames.Score);               
+                ConsoleHelper.PrintRegressionMetrics(trainer.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
-                string modelPath = $"{ModelsLocation}/{learner.name}Model.zip";
+                string modelPath = $"{ModelsLocation}/{trainer.name}Model.zip";
                 using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     mlContext.Model.Save(trainedModel, fs);
 

@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+| v0.10           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -52,23 +52,8 @@ The initial code is similar to the following:
 var mlContext = new MLContext(seed: 0);
 
 // STEP 1: Common data loading configuration
-var textLoader = mlContext.Data.CreateTextReader(
-                                                    new TextLoader.Arguments()
-                                                    {
-                                                        Separator = "\t",
-                                                        HasHeader = true,
-                                                        Column = new[]
-                                                        {
-                                                            new TextLoader.Column("Label", DataKind.R4, 0),
-                                                            new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                                            new TextLoader.Column("SepalWidth", DataKind.R4, 2),
-                                                            new TextLoader.Column("PetalLength", DataKind.R4, 3),
-                                                            new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                                        }
-                                                    });
-
-var trainingDataView = textLoader.Read(TrainDataPath);
-var testDataView = textLoader.Read(TestDataPath);
+var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
+var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
 
 // STEP 2: Common data process configuration with pipeline data transformations
 var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",

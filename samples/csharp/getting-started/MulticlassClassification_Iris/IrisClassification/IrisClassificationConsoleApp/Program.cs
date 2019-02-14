@@ -38,23 +38,9 @@ namespace MulticlassClassification_Iris
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var textLoader = mlContext.Data.CreateTextReader(
-                                                                new TextLoader.Arguments()
-                                                                {
-                                                                    Separator = "\t",
-                                                                    HasHeader = true,
-                                                                    Column = new[]
-                                                                    {
-                                                                        new TextLoader.Column("Label", DataKind.R4, 0),
-                                                                        new TextLoader.Column("SepalLength", DataKind.R4, 1),
-                                                                        new TextLoader.Column("SepalWidth", DataKind.R4, 2),
-                                                                        new TextLoader.Column("PetalLength", DataKind.R4, 3),
-                                                                        new TextLoader.Column("PetalWidth", DataKind.R4, 4),
-                                                                    }
-                                                                });
-
-            var trainingDataView = textLoader.Read(TrainDataPath);
-            var testDataView = textLoader.Read(TestDataPath);
+            var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
+            var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
+            
 
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
@@ -118,7 +104,7 @@ namespace MulticlassClassification_Iris
             //Score sample 2
             var resultprediction2 = predEngine.Predict(SampleIrisData.Iris2);
 
-            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {resultprediction2.Score[0]:0.####}");
+            Console.WriteLine($"Actual: Virginica.     Predicted probability: setosa:      {resultprediction2.Score[0]:0.####}");
             Console.WriteLine($"                                           versicolor:  {resultprediction2.Score[1]:0.####}");
             Console.WriteLine($"                                           virginica:   {resultprediction2.Score[2]:0.####}");
             Console.WriteLine();

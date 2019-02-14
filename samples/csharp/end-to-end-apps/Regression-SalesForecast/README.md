@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v0.10           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
@@ -67,29 +67,58 @@ However, when learning/researching the sample, you can focus just on one of the 
 
 #### 1. Build Model
 
-The first step you need to implement is to define the data columns to be loaded from the dataset files, like in the following code:
+STEP 1: Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ProductData. 
+
+[Schema in a class type](./src/eShopForecastModelsTrainer/ProductData.cs)
+
+```csharp
+ public class ProductData
+    {
+        // next,productId,year,month,units,avg,count,max,min,prev
+        //The index of column in LoadColumn(int index) should be matched with the position of columns in file.
+        [LoadColumn(0)]
+        public float next;
+
+        [LoadColumn(1)]
+        public string productId;
+
+        [LoadColumn(2)]
+        public float year;
+
+        [LoadColumn(3)]
+        public float month;
+
+        [LoadColumn(4)]
+        public float units;
+
+        [LoadColumn(5)]
+        public float avg;
+
+        [LoadColumn(6)]
+        public float count;
+
+        [LoadColumn(7)]
+        public float max;
+
+        [LoadColumn(8)]
+        public float min;
+
+        [LoadColumn(9)]
+        public float prev;
+    }
+```
 
 [Model build and train](./src/eShopForecastModelsTrainer/ProductModelHelper.cs)
 
-```csharp
-TextLoader textLoader = mlContext.Data.CreateTextReader(
-                            columns: new[] {
-                                new TextLoader.Column("next", DataKind.R4, 0 ),
-                                new TextLoader.Column("productId", DataKind.Text, 1 ),
-                                new TextLoader.Column("year", DataKind.R4, 2 ),
-                                new TextLoader.Column("month", DataKind.R4, 3 ),
-                                new TextLoader.Column("units", DataKind.R4, 4 ),
-                                new TextLoader.Column("avg", DataKind.R4, 5 ),
-                                new TextLoader.Column("count", DataKind.R4, 6 ),
-                                new TextLoader.Column("max", DataKind.R4, 7 ),
-                                new TextLoader.Column("min", DataKind.R4, 8 ),
-                                new TextLoader.Column("prev", DataKind.R4, 9 )
-                            },
-                            hasHeader:true,
-                            separatorChar:',');
+Load the dataset into the DataView. 
+
+```chsarp
+
+var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
+
 ```
 
-Then, the next step is to build the pipeline transformations and to specify what trainer/algorithm you are going to use.
+Build the pipeline transformations and to specify what trainer/algorithm you are going to use.
 In this case you are doing the following transformations:
 - Concat current features to a new Column named NumFeatures
 - Transform  productId using [one-hot encoding](https://en.wikipedia.org/wiki/One-hot)
@@ -97,16 +126,19 @@ In this case you are doing the following transformations:
 - Copy next column to rename it to "Label"
 - Specify the "Fast Tree Tweedie" Trainer as the algorithm to apply to the model
 
-After designing the pipeline, you can load the dataset into the DataView, although this step is just configuration, it is lazy and won't be loaded until training the model in the next step.
+You can load the dataset either before or after designing the pipeline. Although this step is just configuration, it is lazy and won't be loaded until training the model in the next step.
 
 ```csharp
-var trainingPipeline = mlContext.Transforms.Concatenate(outputColumn: "NumFeatures", "year", "month", "units", "avg", "count", "max", "min", "prev" )
-    .Append(mlContext.Transforms.Categorical.OneHotEncoding(inputColumn:"productId", outputColumn:"CatFeatures"))
-    .Append(mlContext.Transforms.Concatenate(outputColumn: "Features", "NumFeatures", "CatFeatures"))
-    .Append(mlContext.Transforms.CopyColumns("next", "Label"))
-    .Append(trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features"));
 
-var trainingDataView = textLoader.Read(dataPath);
+var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+
+var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFeatures, nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
+                nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: CatFeatures, inputColumnName: nameof(ProductData.productId)))
+                .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, NumFeatures, CatFeatures))
+                .Append(mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(ProductData.next)))
+                .Append(trainer);
+
 ```
 
 #### 2. Evaluate model with cross-validation
@@ -114,7 +146,7 @@ var trainingDataView = textLoader.Read(dataPath);
 In this case, the evaluation of the model is performed before training the model with a cross-validation approach, so you obtain metrics telling you how good is the accuracy of the model. 
 
 ```csharp
-var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn: "Label");
+var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn: DefaultColumnNames.Label);
             
 ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 ```
