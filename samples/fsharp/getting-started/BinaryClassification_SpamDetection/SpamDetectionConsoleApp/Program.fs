@@ -46,17 +46,16 @@ let main _argv =
 
     // Set up the MLContext, which is a catalog of components in ML.NET.
     let mlContext = MLContext(seed = Nullable 1)
-    let reader = 
-        mlContext.Data.CreateTextLoader(
+    
+    let data = 
+        mlContext.Data.ReadFromTextFile(trainDataPath,
             columns = 
                 [|
                     TextLoader.Column("LabelText" , Nullable DataKind.Text, 0)
                     TextLoader.Column("Message" , Nullable DataKind.Text, 1)
                 |],
-             hasHeader = false,
-             separatorChar = '\t')
-    
-    let data = reader.Read(trainDataPath)
+            hasHeader = false,
+            separatorChar = '\t')
     
     // Create the estimator which converts the text label to a bool then featurizes the text, and add a linear trainer.
     let estimator = 

@@ -23,8 +23,8 @@ let main argv =
     let mlContext = MLContext(seed = Nullable 1)    //Seed set to any number so you have a deterministic environment
 
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextLoader(
+    let fullData = 
+        mlContext.Data.ReadFromTextFile(dataPath,
             hasHeader = true,
             separatorChar = '\t',
             columns =
@@ -36,8 +36,6 @@ let main argv =
                     TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
                 |]
         )
-
-    let fullData = textLoader.Read dataPath
     
     //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
     let struct(trainingDataView, testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)

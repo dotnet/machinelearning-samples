@@ -28,24 +28,8 @@ let downcastPipeline (x : IEstimator<_>) =
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextLoader(
-            separatorChar = ',',
-            hasHeader = true,
-            columns = 
-                [|
-                    TextLoader.Column("VendorId", Nullable DataKind.Text, 0)
-                    TextLoader.Column("RateCode", Nullable DataKind.Text, 1)
-                    TextLoader.Column("PassengerCount", Nullable DataKind.R4, 2)
-                    TextLoader.Column("TripTime", Nullable DataKind.R4, 3)
-                    TextLoader.Column("TripDistance", Nullable DataKind.R4, 4)
-                    TextLoader.Column("PaymentType", Nullable DataKind.Text, 5)
-                    TextLoader.Column("FareAmount", Nullable DataKind.R4, 6)
-                |]
-            )
-
-    let baseTrainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
+    let baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(trainDataPath, hasHeader = true, separatorChar = ',')
+    let testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(testDataPath, hasHeader = true, separatorChar = ',')
 
     //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
     //let cnt = baseTrainingDataView.GetColumn<decimal>(mlContext, "FareAmount").Count()
