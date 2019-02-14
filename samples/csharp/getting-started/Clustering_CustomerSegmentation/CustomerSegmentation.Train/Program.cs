@@ -52,7 +52,7 @@ namespace CustomerSegmentation
                                                 ));
 
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
-                Common.ConsoleHelper.PeekDataViewInConsole<PivotObservation>(mlContext, pivotDataView, dataProcessPipeline, 10);
+                Common.ConsoleHelper.PeekDataViewInConsole(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
                 //STEP 3: Create the training pipeline                
