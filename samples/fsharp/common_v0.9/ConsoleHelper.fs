@@ -136,16 +136,27 @@ module ConsoleHelper =
         let transformer = pipeline.Fit dataView
         let transformedData = transformer.Transform dataView
 
-        // 'transformedData' is a 'promise' of data, lazy-loading.  call Preview  
-        //and iterate through the returned collection from preview.
-        transformedData.Preview(maxRows = numberOfRows).RowView
-        |> Seq.iter
-            (fun row ->
-                row.Values
-                |> Array.map(function KeyValue(k,v) -> sprintf "| %s: %O" k v)
-                |> Array.fold (+) "Row--> "
-                |> printfn "%s")
+        // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
+        // Convert to an enumerable of user-defined type.
+        let someRows = 
+            mlContext.CreateEnumerable<'TObservation>(transformedData, reuseRowObject = false)
+            // Take the specified number of rows
+            |> Seq.take numberOfRows
+            // Convert to List
+            |> Seq.toList
+
+        someRows
+        |> List.iter(fun row ->
+                        
+                        let lineToPrint =
+                            row.GetType().GetFields(BindingFlags.Instance ||| BindingFlags.Static ||| BindingFlags.NonPublic ||| BindingFlags.Public)
+                            |> Array.map(fun field -> sprintf "| %s: %O" field.Name (field.GetValue(row)))
+                            |> Array.fold (+) "Row--> "
+
+                        printfn "%s" lineToPrint
+            )
     
+        someRows
 
     let peekVectorColumnDataInConsole (mlContext : MLContext) columnName (dataView : IDataView) (pipeline : IEstimator<ITransformer>) numberOfRows =
         let msg = sprintf "Peek data in DataView: : Show %d rows with just the '%s' column" numberOfRows columnName
