@@ -66,7 +66,6 @@ namespace GitHubLabeler
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 2);
-            //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
 
             // STEP 3: Create the selected training algorithm/trainer
             IEstimator<ITransformer> trainer = null; 
@@ -113,8 +112,6 @@ namespace GitHubLabeler
             long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
             Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");
            
-            //(CDLTLL-Pending-TODO)
-            //
             ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
