@@ -61,8 +61,9 @@ namespace GitHubLabeler
                             .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "TitleFeaturized",inputColumnName:nameof(GitHubIssue.Title)))
                             .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "DescriptionFeaturized", inputColumnName: nameof(GitHubIssue.Description)))
                             .Append(mlContext.Transforms.Concatenate(outputColumnName:DefaultColumnNames.Features, "TitleFeaturized", "DescriptionFeaturized"))
-                            //Sample Caching the DataView so estimators iterating over the data multiple times, instead of always reading from file, using the cache might get better performance
-                            .AppendCacheCheckpoint(mlContext);  //In this sample, only when using OVA (Not SDCA) the cache improves the training time, since OVA works multiple times/iterations over the same data
+                            .AppendCacheCheckpoint(mlContext);  
+                            // Use in-memory cache for small/medium datasets to lower training time. 
+                            // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 2);
