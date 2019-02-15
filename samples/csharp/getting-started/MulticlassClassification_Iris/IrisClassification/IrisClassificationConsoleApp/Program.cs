@@ -46,7 +46,10 @@ namespace MulticlassClassification_Iris
             var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
                                                                                    "SepalWidth",
                                                                                    "PetalLength",
-                                                                                   "PetalWidth").AppendCacheCheckpoint(mlContext);
+                                                                                   "PetalWidth")
+                                                                       .AppendCacheCheckpoint(mlContext); 
+                                                                       // Use in-memory cache for small/medium datasets to lower training time. 
+                                                                       // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
             var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
