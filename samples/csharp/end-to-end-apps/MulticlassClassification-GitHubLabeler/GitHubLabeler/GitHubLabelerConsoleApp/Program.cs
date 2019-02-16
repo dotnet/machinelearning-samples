@@ -54,7 +54,7 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 0);
 
             // STEP 1: Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t', supportSparse: false);
              
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
