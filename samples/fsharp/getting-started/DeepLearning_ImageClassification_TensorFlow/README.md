@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
+| v0.10           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
 
 
 ## Problem
@@ -95,10 +95,11 @@ The second step is to define the estimator pipeline. Usually, when dealing with 
 
 ```fsharp
 let pipeline =
-    mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImagePath", "ImageReal")|])
-    |> ModelBuilder.append (mlContext.Transforms.Resize("ImageReal", "ImageReal", imageHeight, imageWidth))
-    |> ModelBuilder.append (mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave = channelsLast, offset = float32 mean) |]))
-    |> ModelBuilder.append (mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "input" |], [| "softmax2" |]));
+	EstimatorChain()
+		.Append(mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImageReal", "ImagePath")|]))
+		.Append(mlContext.Transforms.Resize("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
+		.Append(mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean) |]))
+		.Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2" |], [| "input" |]))
 ```
 You also need to check the neural network, and check the names of the input / output nodes. In order to inspect the model, you can use tools like [Netron](https://github.com/lutzroeder/netron), which is automatically installed with [Visual Studio Tools for AI](https://visualstudio.microsoft.com/downloads/ai-tools-vs/). 
 These names are used later in the definition of the estimation pipe: in the case of the inception network, the input tensor is named 'input' and the output is named 'softmax2'

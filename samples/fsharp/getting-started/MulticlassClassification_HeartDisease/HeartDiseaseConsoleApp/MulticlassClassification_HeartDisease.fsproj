@@ -6,21 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="DataStructures\DataStructures.fs" />
-    <Compile Include="..\..\..\..\common_v0.9\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+    <Compile Include="..\..\..\common_v0.9\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="0.10.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\Data\iris-test.txt" Link="Data\iris-test.txt" />
-    <Content Include="..\Data\iris-train.txt" Link="Data\iris-train.txt" />
   </ItemGroup>
 
 </Project>

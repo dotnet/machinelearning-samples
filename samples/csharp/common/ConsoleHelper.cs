@@ -166,52 +166,32 @@ namespace Common
             Console.WriteLine($"*************************************************");
         }
 
-        public static List<TObservation> PeekDataViewInConsole<TObservation>(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
-            where TObservation : class, new()
+        public static void PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
-            string msg = string.Format("Peek data in DataView: Showing {0} rows with the columns specified by TObservation class", numberOfRows.ToString());
+            string msg = string.Format("Peek data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
 
             //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
             var transformer = pipeline.Fit(dataView);
             var transformedData = transformer.Transform(dataView);
 
-            // 'transformedData' is a 'promise' of data, lazy-loading. Let's actually read it.
-            // Convert to an enumerable of user-defined type.
+            // 'transformedData' is a 'promise' of data, lazy-loading. call Preview  
+            //and iterate through the returned collection from preview.
 
-            //Preview<TSource>(this IDataReader<TSource> reader, TSource source, int maxRows = 100);
+            var preViewTransformedData = transformedData.Preview(maxRows: numberOfRows);
 
-            var someRows = mlContext.CreateEnumerable<TObservation>(transformedData, reuseRowObject: false)
-                                           // Take the specified number of rows
-                                           .Take(numberOfRows)
-                                           // Convert to List
-                                           .ToList();
-            // v0.9
-            //
-            //var someRows = transformedData.AsEnumerable<TObservation>(mlContext, reuseRowObject: false)
-            //                               // Take the specified number of rows
-            //                               .Take(numberOfRows)
-            //                               // Convert to List
-            //                               .ToList();
-
-            someRows.ForEach(row =>
-                                {
-                                    string lineToPrint = "Row--> ";
-
-                                    var fieldsInRow = row.GetType().GetFields(BindingFlags.Instance |
-                                                                              BindingFlags.Static |
-                                                                              BindingFlags.NonPublic |
-                                                                              BindingFlags.Public);
-                                    foreach (FieldInfo field in fieldsInRow)
-                                    {
-                                        lineToPrint += $"| {field.Name}: {field.GetValue(row)}";
-                                    }
-                                    Console.WriteLine(lineToPrint);
-                                });
-
-            return someRows;
+            foreach (var row in preViewTransformedData.RowView)
+            {
+                var ColumnCollection = row.Values;
+                string lineToPrint = "Row--> ";
+                foreach (KeyValuePair<string, object> column in ColumnCollection)
+                {
+                    lineToPrint += $"| {column.Key}:{column.Value}";
+                }
+                Console.WriteLine(lineToPrint + "\n");
+            }
         }
-
+      
         public static List<float[]> PeekVectorColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Peek data in DataView: : Show {0} rows with just the '{1}' column", numberOfRows, columnName );

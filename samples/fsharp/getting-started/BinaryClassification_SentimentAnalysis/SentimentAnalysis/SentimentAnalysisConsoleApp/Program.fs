@@ -27,7 +27,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     let testDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(testDataPath, hasHeader = true)
 
     // STEP 2: Common data process configuration with pipeline data transformations          
-    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features")
+    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Features", "Text")
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<SentimentIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore

@@ -8,6 +8,7 @@ open Microsoft.ML
 open Microsoft.ML.Data
 open Microsoft.ML.Transforms
 open Microsoft.ML.Transforms.Normalizers
+open Microsoft.ML.Core.Data
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -18,11 +19,17 @@ let testDataPath = sprintf @"%s/taxi-fare-test.csv" baseDatasetsLocation
 let baseModelsPath = @"../../../../MLModels"
 let modelPath = sprintf @"%s/TaxiFareModel.zip" baseModelsPath
 
+let downcastPipeline (x : IEstimator<_>) = 
+    match x with 
+    | :? IEstimator<ITransformer> as y -> y
+    | _ -> failwith "downcastPipeline: expecting a IEstimator<ITransformer>"
+
+
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 1: Common data loading configuration
     let textLoader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             separatorChar = ',',
             hasHeader = true,
             columns = 
@@ -47,16 +54,17 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
-        mlContext.Transforms.CopyColumns("FareAmount", "Label")
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId", "VendorIdEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode", "RateCodeEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "PassengerCount", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripTime", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripDistance", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
-        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
-        |> Common.ConsoleHelper.downcastPipeline
+        EstimatorChain()
+            .Append(mlContext.Transforms.CopyColumns("Label", "FareAmount"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorIdEncoded", "VendorId"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCodeEncoded", "RateCode"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentTypeEncoded", "PaymentType"))
+            .Append(mlContext.Transforms.Normalize("PassengerCount", "PassengerCount", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripTime", "TripTime", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripDistance", "TripDistance", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
+            .AppendCacheCheckpoint(mlContext)
+            |> downcastPipeline
 
     // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<TaxiTrip> mlContext trainingDataView dataProcessPipeline 5 |> ignore

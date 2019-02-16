@@ -34,7 +34,7 @@ let main argv =
 
     // 1. Common data loading configuration
     let textLoader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             columns = 
                 [|
                     TextLoader.Column("Season", Nullable DataKind.R4, 2)
@@ -61,7 +61,7 @@ let main argv =
 
     // 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
-        (mlContext.Transforms.CopyColumns("Count", "Label") |> downcastPipeline)
+        (mlContext.Transforms.CopyColumns("Label", "Count") |> downcastPipeline)
             .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
                                                      "Hour", "Holiday", "Weekday",
                                                      "Weather", "Temperature", "NormalizedTemperature",

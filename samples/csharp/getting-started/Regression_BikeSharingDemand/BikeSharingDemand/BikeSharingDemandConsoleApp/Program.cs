@@ -39,7 +39,7 @@ namespace BikeSharingDemand
                                          .AppendCacheCheckpoint(mlContext);
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
-            Common.ConsoleHelper.PeekDataViewInConsole<DemandObservation>(mlContext, trainingDataView, dataProcessPipeline, 10);
+            Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 10);
             Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 10);
 
             // Definition of regression trainers/algorithms to use

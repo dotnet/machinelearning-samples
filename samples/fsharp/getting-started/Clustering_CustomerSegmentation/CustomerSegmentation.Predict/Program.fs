@@ -111,7 +111,7 @@ let main _argv =
             mlContext.Model.Load(f)
         
         let reader = 
-            mlContext.Data.CreateTextReader(
+            mlContext.Data.CreateTextLoader(
                 columns = 
                     [| 
                         TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
@@ -123,7 +123,7 @@ let main _argv =
         let data = reader.Read(pivotCsv)
         
         //Apply data transformation to create predictions/clustering
-        let predictions = model.Transform(data).AsEnumerable<ClusteringPrediction>(mlContext, false) |> Seq.toArray
+        let predictions = mlContext.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
 
         //Generate data files with customer data grouped by clusters
         printHeader ["CSV Customer Segmentation"]

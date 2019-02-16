@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <MicrosoftMLVersion>0.9.0</MicrosoftMLVersion>
+    <MicrosoftMLVersion>0.10.0</MicrosoftMLVersion>
   </PropertyGroup>
 
 </Project>

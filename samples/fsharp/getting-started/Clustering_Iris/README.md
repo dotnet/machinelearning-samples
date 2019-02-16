@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v0.10           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -35,7 +35,7 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
 ```fsharp
     // STEP 1: Common data loading configuration
     let textLoader = 
-        mlContext.Data.CreateTextReader(
+        mlContext.Data.CreateTextLoader(
             hasHeader = true,
             separatorChar = '\t',
             columns =
@@ -61,7 +61,7 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
 
     // STEP 3: Create and train the model     
-    let trainer = mlContext.Clustering.Trainers.KMeans(features = "Features", clustersCount = 3)
+    let trainer = mlContext.Clustering.Trainers.KMeans(featureColumn = "Features", clustersCount = 3)
 
     let modelBuilder = 
         Common.ModelBuilder.create mlContext dataProcessPipeline

@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v0.10           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 ------------------------------------
 
@@ -45,7 +45,7 @@ The initial code is similar to the following:
 ```fsharp
     // STEP 1: Common data loading configuration
     let textLoader =
-        mlContext.Data.CreateTextReader (
+        mlContext.Data.CreateTextLoader(
             columns = 
                 [|
                     TextLoader.Column("Label", Nullable DataKind.Bool, 0)
@@ -60,7 +60,7 @@ The initial code is similar to the following:
 
 
     // STEP 2: Common data process configuration with pipeline data transformations          
-    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features")
+    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Features", "Text")
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder
     let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn = "Label", featureColumn = "Features")
