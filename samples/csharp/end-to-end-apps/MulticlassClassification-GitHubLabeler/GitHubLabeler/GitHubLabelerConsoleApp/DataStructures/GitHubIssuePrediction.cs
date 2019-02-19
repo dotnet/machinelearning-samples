@@ -9,5 +9,7 @@ namespace GitHubLabeler.DataStructures
     {
         [ColumnName("PredictedLabel")]
         public string Area;
+
+        public float[] Score;
     }
 }
