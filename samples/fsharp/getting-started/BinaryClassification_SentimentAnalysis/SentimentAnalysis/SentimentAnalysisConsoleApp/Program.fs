@@ -59,7 +59,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 let testSinglePrediction (mlContext : MLContext) =
     let sampleStatement = { Label = false; Text = "This is a very rude movie" }
     
-    let stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
+    use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
     let trainedModel = mlContext.Model.Load(stream)
     
     // Create prediction engine related to the loaded trained model

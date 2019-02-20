@@ -84,41 +84,14 @@ let main _ =
     let mlContext = MLContext seed
 
     let columns = 
-        [
+        [|
             // A boolean column depicting the 'label'.
-            TextLoader.Column("Label", Nullable DataKind.BL, 30)
+            yield TextLoader.Column("Label", Nullable DataKind.BL, 30)
             // 29 Features V1..V28 + Amount
-            TextLoader.Column("V1", Nullable DataKind.R4, 1)
-            TextLoader.Column("V2", Nullable DataKind.R4, 2)
-            TextLoader.Column("V3", Nullable DataKind.R4, 3)
-            TextLoader.Column("V4", Nullable DataKind.R4, 4)
-            TextLoader.Column("V5", Nullable DataKind.R4, 5)
-            TextLoader.Column("V6", Nullable DataKind.R4, 6)
-            TextLoader.Column("V7", Nullable DataKind.R4, 7)
-            TextLoader.Column("V8", Nullable DataKind.R4, 8)
-            TextLoader.Column("V9", Nullable DataKind.R4, 9)
-            TextLoader.Column("V10", Nullable DataKind.R4, 10)
-            TextLoader.Column("V11", Nullable DataKind.R4, 11)
-            TextLoader.Column("V12", Nullable DataKind.R4, 12)
-            TextLoader.Column("V13", Nullable DataKind.R4, 13)
-            TextLoader.Column("V14", Nullable DataKind.R4, 14)
-            TextLoader.Column("V15", Nullable DataKind.R4, 15)
-            TextLoader.Column("V16", Nullable DataKind.R4, 16)
-            TextLoader.Column("V17", Nullable DataKind.R4, 17)
-            TextLoader.Column("V18", Nullable DataKind.R4, 18)
-            TextLoader.Column("V19", Nullable DataKind.R4, 19)
-            TextLoader.Column("V20", Nullable DataKind.R4, 20)
-            TextLoader.Column("V21", Nullable DataKind.R4, 21)
-            TextLoader.Column("V22", Nullable DataKind.R4, 22)
-            TextLoader.Column("V23", Nullable DataKind.R4, 23)
-            TextLoader.Column("V24", Nullable DataKind.R4, 24)
-            TextLoader.Column("V25", Nullable DataKind.R4, 25)
-            TextLoader.Column("V26", Nullable DataKind.R4, 26)
-            TextLoader.Column("V27", Nullable DataKind.R4, 27)
-            TextLoader.Column("V28", Nullable DataKind.R4, 28)
-            TextLoader.Column("Amount", Nullable DataKind.R4, 29)
-        ]
-        |> List.toArray
+            for i in 1 .. 28 -> 
+                TextLoader.Column(sprintf "V%d" i, Nullable DataKind.R4, i)
+            yield TextLoader.Column("Amount", Nullable DataKind.R4, 29)
+        |]
 
     let loaderArgs = TextLoader.Arguments()
     loaderArgs.Column <- columns
@@ -161,42 +134,15 @@ let main _ =
     // Add the "StratificationColumn" that was added by classification.TrainTestSplit()
     // And Label is moved to column 0
     let columnsPlus = 
-        [
+        [|
             // A boolean column depicting the 'label'.
-            TextLoader.Column("Label", Nullable DataKind.BL, 0)
+            yield TextLoader.Column("Label", Nullable DataKind.BL, 0)
             // 30 Features V1..V28 + Amount + StratificationColumn
-            TextLoader.Column("V1", Nullable DataKind.R4, 1)
-            TextLoader.Column("V2", Nullable DataKind.R4, 2)
-            TextLoader.Column("V3", Nullable DataKind.R4, 3)
-            TextLoader.Column("V4", Nullable DataKind.R4, 4)
-            TextLoader.Column("V5", Nullable DataKind.R4, 5)
-            TextLoader.Column("V6", Nullable DataKind.R4, 6)
-            TextLoader.Column("V7", Nullable DataKind.R4, 7)
-            TextLoader.Column("V8", Nullable DataKind.R4, 8)
-            TextLoader.Column("V9", Nullable DataKind.R4, 9)
-            TextLoader.Column("V10", Nullable DataKind.R4, 10)
-            TextLoader.Column("V11", Nullable DataKind.R4, 11)
-            TextLoader.Column("V12", Nullable DataKind.R4, 12)
-            TextLoader.Column("V13", Nullable DataKind.R4, 13)
-            TextLoader.Column("V14", Nullable DataKind.R4, 14)
-            TextLoader.Column("V15", Nullable DataKind.R4, 15)
-            TextLoader.Column("V16", Nullable DataKind.R4, 16)
-            TextLoader.Column("V17", Nullable DataKind.R4, 17)
-            TextLoader.Column("V18", Nullable DataKind.R4, 18)
-            TextLoader.Column("V19", Nullable DataKind.R4, 19)
-            TextLoader.Column("V20", Nullable DataKind.R4, 20)
-            TextLoader.Column("V21", Nullable DataKind.R4, 21)
-            TextLoader.Column("V22", Nullable DataKind.R4, 22)
-            TextLoader.Column("V23", Nullable DataKind.R4, 23)
-            TextLoader.Column("V24", Nullable DataKind.R4, 24)
-            TextLoader.Column("V25", Nullable DataKind.R4, 25)
-            TextLoader.Column("V26", Nullable DataKind.R4, 26)
-            TextLoader.Column("V27", Nullable DataKind.R4, 27)
-            TextLoader.Column("V28", Nullable DataKind.R4, 28)
-            TextLoader.Column("Amount", Nullable DataKind.R4, 29)
-            TextLoader.Column("StratificationColumn", Nullable DataKind.R4, 30)
-        ]
-        |> List.toArray
+            for i in 1 .. 28 -> 
+                TextLoader.Column(sprintf "V%d" i, Nullable DataKind.R4, i)
+            yield TextLoader.Column("Amount", Nullable DataKind.R4, 29)
+            yield TextLoader.Column("StratificationColumn", Nullable DataKind.R4, 30)
+        |]
 
     let trainData, testData = 
 
