@@ -12,9 +12,9 @@ namespace mnist
     class Program
     {
 
-        static readonly string TrainDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-train.csv");
-        static readonly string TestDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-val.csv");
-        static readonly string ModelPath = Path.Combine(Environment.CurrentDirectory, "MLModels", "Model.zip");
+        static readonly string TrainDataPath = Path.Combine(Environment.CurrentDirectory, @"..\Data", "optdigits-train.csv");
+        static readonly string TestDataPath = Path.Combine(Environment.CurrentDirectory, @"..\Data", "optdigits-val.csv");
+        static readonly string ModelPath = Path.Combine(Environment.CurrentDirectory, @"..\MLModels", "Model.zip");
 
         static void Main(string[] args)
         {
