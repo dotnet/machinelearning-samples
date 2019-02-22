@@ -21,10 +21,10 @@ namespace GitHubLabeler
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";      
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelFilePathName = $"{BaseModelsPath}/GitHubLabelerModel.zip";
 
         public enum MyTrainerStrategy : int { SdcaMultiClassTrainer = 1, OVAAveragedPerceptronTrainer = 2 };
@@ -51,10 +51,10 @@ namespace GitHubLabeler
         {
             // Create MLContext to be shared across the model creation workflow objects 
             // Set a random seed for repeatable/deterministic results across multiple trainings.
-            var mlContext = new MLContext(seed: 0);
+            var mlContext = new MLContext(seed: 1);
 
             // STEP 1: Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t', supportSparse: false);
+            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(GetDataSetAbsolutePath(DataSetLocation), hasHeader: true, separatorChar:'\t', supportSparse: false);
              
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
@@ -140,7 +140,7 @@ namespace GitHubLabeler
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
@@ -148,7 +148,7 @@ namespace GitHubLabeler
 
         private static void TestSingleLabelPrediction(string modelFilePathName)
         {
-            var labeler = new Labeler(modelPath: ModelFilePathName);
+            var labeler = new Labeler(modelPath: GetDataSetAbsolutePath(ModelFilePathName));
             labeler.TestPredictionForSingleIssue();
         }
 
@@ -171,7 +171,7 @@ namespace GitHubLabeler
             }
 
             //This "Labeler" class could be used in a different End-User application (Web app, other console app, desktop app, etc.) 
-            var labeler = new Labeler(ModelPath, repoOwner, repoName, token);
+            var labeler = new Labeler(GetDataSetAbsolutePath(ModelPath), repoOwner, repoName, token);
 
             await labeler.LabelAllNewIssuesInGitHubRepo();
 
@@ -186,6 +186,15 @@ namespace GitHubLabeler
                                         .AddJsonFile("appsettings.json");
 
             Configuration = builder.Build();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+
+            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 }
