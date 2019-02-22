@@ -77,7 +77,7 @@ namespace MulticlassClassification_Iris
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -88,7 +88,7 @@ namespace MulticlassClassification_Iris
             //Test Classification Predictions with some hard-coded samples 
 
             ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
