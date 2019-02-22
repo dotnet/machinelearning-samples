@@ -284,5 +284,39 @@ namespace Common
             }
         }
 
+        public static string FindProjectFolderPath()
+        {
+            var assemblyPath = Assembly.GetEntryAssembly().Location;
+            var assemblyDirectory = Path.GetDirectoryName(assemblyPath);
+
+            string projectFolderPath;
+
+            if (assemblyDirectory.Contains(@"\Debug") || assemblyDirectory.Contains(@"\Release"))
+            {
+                string projectFile = Path.GetFileNameWithoutExtension(assemblyPath) + ".csproj";
+
+                var root = new DirectoryInfo(assemblyDirectory);
+
+                while (root.Parent != null)
+                {
+                    if (File.Exists(Path.Combine(root.FullName, projectFile)))
+                        break;
+
+                    root = root.Parent;
+
+                    if (root.Parent == null) // we could not find it (should not happen)
+                        projectFolderPath = assemblyDirectory;
+                }
+
+                projectFolderPath = root.FullName;
+            }
+            else
+            {
+                projectFolderPath = assemblyDirectory;
+            }
+
+            return projectFolderPath;
+        }
+
     }
 }
