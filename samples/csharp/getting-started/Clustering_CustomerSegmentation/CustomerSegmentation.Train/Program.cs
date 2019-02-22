@@ -17,12 +17,13 @@ namespace CustomerSegmentation
     {
         static void Main(string[] args)
         {
-            var assetsPath = PathHelper.GetAssetsPath(@"..\..\..\assets");
+            var assetsPath = @"./assets";
 
-            var transactionsCsv = Path.Combine(assetsPath, "inputs", "transactions.csv");
-            var offersCsv = Path.Combine(assetsPath, "inputs", "offers.csv");
-            var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
-            var modelZip = Path.Combine(assetsPath, "outputs", "retailClustering.zip");
+            // private static readonly string TrainDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-data.tsv";
+            var transactionsCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "transactions.csv");
+            var offersCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "offers.csv");
+            var pivotCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "pivot.csv");
+            var modelZip = Path.Combine(GetDataSetAbsolutePath(assetsPath), "outputs", "retailClustering.zip");
 
             try
             {
@@ -36,14 +37,14 @@ namespace CustomerSegmentation
                 var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
                                             columns: new[]
                                                         {
-                                                        new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
+                                                        new TextLoader.Column(DefaultColumnNames.Features, DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
                                                         new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
                                                         },
                                             hasHeader: true,
                                             separatorChar: ',');
 
                 //STEP 2: Configure data transformations in pipeline
-                var dataProcessPipeline = new PrincipalComponentAnalysisEstimator(env:mlContext, outputColumnName:"PCAFeatures", inputColumnName: "Features", rank: 2)
+                var dataProcessPipeline = new PrincipalComponentAnalysisEstimator(env:mlContext, outputColumnName:"PCAFeatures", inputColumnName: DefaultColumnNames.Features, rank: 2)
                                                 .Append(new OneHotEncodingEstimator(mlContext,
                                                 new[]
                                                 {
@@ -53,7 +54,7 @@ namespace CustomerSegmentation
 
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole(mlContext, pivotDataView, dataProcessPipeline, 10);
-                Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
+                Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, pivotDataView, dataProcessPipeline, 10);
 
                 //STEP 3: Create the training pipeline                
                 var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
@@ -82,6 +83,15 @@ namespace CustomerSegmentation
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
+           
+        }
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+
+            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 }
