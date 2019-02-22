@@ -14,10 +14,10 @@ namespace Clustering_Iris
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string DataPath = $"{BaseDatasetsLocation}/iris-full.txt";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/IrisModel.zip";
 
         private static void Main(string[] args)
@@ -26,7 +26,7 @@ namespace Clustering_Iris
             MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
             // STEP 1: Common data loading configuration            
-            IDataView fullData = mlContext.Data.ReadFromTextFile(path: DataPath,
+            IDataView fullData = mlContext.Data.ReadFromTextFile(path: GetDataSetAbsolutePath(DataPath),
                                                 columns:new[]
                                                             {
                                                                 new TextLoader.Column(DefaultColumnNames.Label, DataKind.R4, 0),
@@ -60,7 +60,7 @@ namespace Clustering_Iris
             ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
             // STEP5: Save/persist the model as a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("=============== End of training process ===============");
@@ -76,7 +76,7 @@ namespace Clustering_Iris
                 PetalWidth = 5.1f,
             };
             
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 ITransformer model = mlContext.Model.Load(stream);
                 // Create prediction engine related to the loaded trained model
@@ -90,6 +90,15 @@ namespace Clustering_Iris
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();           
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+
+            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 
