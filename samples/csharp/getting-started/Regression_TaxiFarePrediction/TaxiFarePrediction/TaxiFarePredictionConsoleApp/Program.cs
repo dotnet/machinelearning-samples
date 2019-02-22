@@ -21,11 +21,11 @@ namespace Regression_TaxiFarePrediction
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string TrainDataPath = $"{BaseDatasetsLocation}/taxi-fare-train.csv";
         private static string TestDataPath = $"{BaseDatasetsLocation}/taxi-fare-test.csv";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/TaxiFareModel.zip";
 
         private static string VendorIdEncoded = nameof(VendorIdEncoded);
@@ -53,8 +53,8 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
-            IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
+            IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(GetDataSetAbsolutePath(TrainDataPath), hasHeader: true, separatorChar: ',');
+            IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(GetDataSetAbsolutePath(TestDataPath), hasHeader: true, separatorChar: ',');
 
             //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
             var cnt = baseTrainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
@@ -95,7 +95,7 @@ namespace Regression_TaxiFarePrediction
 
             // STEP 6: Save/persist the trained model to a .ZIP file
 
-            using (var fs = File.Create(ModelPath))
+            using (var fs = File.Create(GetDataSetAbsolutePath(ModelPath)))
                 trainedModel.SaveTo(mlContext, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -122,7 +122,7 @@ namespace Regression_TaxiFarePrediction
 
             ///
             ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -145,7 +145,7 @@ namespace Regression_TaxiFarePrediction
                                                 string[] args)
         {
             ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -194,7 +194,7 @@ namespace Regression_TaxiFarePrediction
                 pl.col0(1);
 
                 int totalNumber = numberOfRecordsToRead;
-                var testData = new TaxiTripCsvReader().GetDataFromCsv(testDataSetPath, totalNumber).ToList();
+                var testData = new TaxiTripCsvReader().GetDataFromCsv(GetDataSetAbsolutePath(testDataSetPath), totalNumber).ToList();
 
                 //This code is the symbol to paint
                 char code = (char)9;
@@ -292,6 +292,15 @@ namespace Regression_TaxiFarePrediction
                 UseShellExecute = true
             };
             p.Start();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+
+            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
 
     }
