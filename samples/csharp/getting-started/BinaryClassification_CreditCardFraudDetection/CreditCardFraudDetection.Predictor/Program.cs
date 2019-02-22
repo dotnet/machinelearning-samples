@@ -1,4 +1,5 @@
 ﻿using CreditCardFraudDetection.Common;
+using System;
 using System.IO;
 
 namespace CreditCardFraudDetection.Predictor
@@ -7,9 +8,8 @@ namespace CreditCardFraudDetection.Predictor
     {
         static void Main(string[] args)
         {
-            var assetsPath = ConsoleHelpers.GetAssetsPath(@"..\..\..\assets");
-            var trainOutput = ConsoleHelpers.GetAssetsPath(@"..\..\..\..\CreditCardFraudDetection.Trainer\assets\output");
-
+            string assetsPath = GetDataSetAbsolutePath(@"..\..\..\assets");
+            string trainOutput = GetDataSetAbsolutePath(@"..\..\..\..\CreditCardFraudDetection.Trainer\assets\output");
 
             if (!File.Exists(Path.Combine(trainOutput, "testData.csv")) ||
                 !File.Exists(Path.Combine(trainOutput, "fastTree.zip"))){
@@ -40,6 +40,18 @@ namespace CreditCardFraudDetection.Predictor
             modelEvaluator.RunMultiplePredictions(numberOfTransactions);
 
             ConsoleHelpers.ConsolePressAnyKey();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            Console.WriteLine("\n" + $"Full Path: " + fullPath + "\n");
+
+            return fullPath;
         }
     }
 }
