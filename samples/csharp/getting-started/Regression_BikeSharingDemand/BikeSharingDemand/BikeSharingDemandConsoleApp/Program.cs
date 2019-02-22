@@ -15,8 +15,11 @@ namespace BikeSharingDemand
         private static string ModelsLocation = @"../../../../MLModels";
 
         private static string DatasetsLocation = @"../../../../Data";
-        private static string TrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
-        private static string TestDataLocation = $"{DatasetsLocation}/hour_test.csv";
+        private static string realtiveTrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
+        private static string relativeTestDataLocation = $"{DatasetsLocation}/hour_test.csv";
+
+        private static string TrainingDataLocation = GetDataSetAbsolutePath(realtiveTrainingDataLocation);
+        private static string TestDataLocation = GetDataSetAbsolutePath(relativeTestDataLocation);
         
         static void Main(string[] args)
         {
@@ -25,8 +28,8 @@ namespace BikeSharingDemand
             var mlContext = new MLContext(seed: 0);
 
             // 1. Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: GetDataSetAbsolutePath(TrainingDataLocation), hasHeader:true, separatorChar: ',');
-            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: GetDataSetAbsolutePath(TestDataLocation), hasHeader:true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: TrainingDataLocation, hasHeader:true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: TestDataLocation, hasHeader:true, separatorChar: ',');
 
             // 2. Common data pre-process with pipeline data transformations
 
@@ -70,8 +73,9 @@ namespace BikeSharingDemand
                 ConsoleHelper.PrintRegressionMetrics(trainer.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
-                string modelPath = $"{ModelsLocation}/{trainer.name}Model.zip";
-                using (var fs = new FileStream(GetDataSetAbsolutePath(modelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
+                string modelRelativeLocation = $"{ModelsLocation}/{trainer.name}Model.zip";
+                string modelPath = GetDataSetAbsolutePath(modelRelativeLocation);
+                using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     mlContext.Model.Save(trainedModel, fs);
 
                 Console.WriteLine("The model is saved to {0}", modelPath);
@@ -85,8 +89,9 @@ namespace BikeSharingDemand
             {
                 //Load current model from .ZIP file
                 ITransformer trainedModel;
-                string modelPath = $"{ModelsLocation}/{learner.name}Model.zip";
-                using (var stream = new FileStream(GetDataSetAbsolutePath(modelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
+                string modelRelativeLocation = $"{ModelsLocation}/{learner.name}Model.zip";
+                string modelPath = GetDataSetAbsolutePath(modelRelativeLocation);
+                using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     trainedModel = mlContext.Model.Load(stream);
                 }
@@ -96,7 +101,7 @@ namespace BikeSharingDemand
 
                 Console.WriteLine($"================== Visualize/test 10 predictions for model {learner.name}Model.zip ==================");
                 //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
-                ModelScoringTester.VisualizeSomePredictions(mlContext ,learner.name, GetDataSetAbsolutePath(TestDataLocation), predEngine, 10);
+                ModelScoringTester.VisualizeSomePredictions(mlContext ,learner.name, TestDataLocation, predEngine, 10);
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
@@ -109,7 +114,7 @@ namespace BikeSharingDemand
             Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
 
             string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
-            Console.WriteLine($"Full Path: " + fullPath);
+            Console.WriteLine("\n"+ $"Full Path: " + fullPath + "\n");
 
             return fullPath;
         }
