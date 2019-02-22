@@ -13,11 +13,11 @@ namespace MulticlassClassification_HeartDisease
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
+        private static string BaseDatasetsLocation = @"../Data";
         private static string TrainDataPath = $"{BaseDatasetsLocation}/HeartTraining.csv";
         private static string TestDataPath = $"{BaseDatasetsLocation}/HeartTest.csv";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
+        private static string BaseModelsPath = @"../MLModels";
         private static string ModelPath = $"{BaseModelsPath}/HeartClassification.zip";
 
         public static void Main(string[] args)
@@ -34,8 +34,8 @@ namespace MulticlassClassification_HeartDisease
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
 
-            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(path:TrainDataPath, hasHeader: true, separatorChar: ',');
-            var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(path:TestDataPath, hasHeader: true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(path: GetDataSetAbsolutePath(TrainDataPath), hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<HeartDataImport>(path: GetDataSetAbsolutePath(TestDataPath), hasHeader: true, separatorChar: ',');
 
             var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(HeartDataImport.Age), nameof(HeartDataImport.Sex),
                 nameof(HeartDataImport.Cp), nameof(HeartDataImport.TrestBps), nameof(HeartDataImport.Chol), nameof(HeartDataImport.Fbs), nameof(HeartDataImport.RestEcg), nameof(HeartDataImport.Thalac),
@@ -60,18 +60,17 @@ namespace MulticlassClassification_HeartDisease
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             Console.WriteLine("=============== Saving the model to a file ===============");
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("=============== Model Saved ============= ");
         }
 
-
         private static void TestPrediction(MLContext mlContext)
         {
             ITransformer trainedModel;
 
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -89,7 +88,15 @@ namespace MulticlassClassification_HeartDisease
                 Console.WriteLine($" 4: {prediction.Score[4]:0.###}");
                 Console.WriteLine();
             }
+        }
 
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+
+            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 
