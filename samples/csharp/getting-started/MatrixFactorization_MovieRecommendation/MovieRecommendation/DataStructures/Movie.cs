@@ -15,7 +15,7 @@ namespace MovieRecommendation.DataStructures
 
         private static String moviesdatasetpath = $"{Program.DatasetsLocation}/recommendation-movies.csv";
 
-        public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(() => LoadMovieData(moviesdatasetpath));
+        public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(() => LoadMovieData(Program.GetDataSetAbsolutePath(moviesdatasetpath)));
         
         public Movie()
         {
