@@ -17,4 +17,5 @@ type GitHubIssuePrediction =
     {
         [<ColumnName("PredictedLabel")>]
         Area : string
+        Score : float32 []
     }

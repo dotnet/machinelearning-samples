@@ -6,6 +6,7 @@ open Octokit
 open DataStructures
 
 open Common
+open Microsoft.ML.Data
 
 type GitHubClientFacade =
     {
@@ -46,13 +47,51 @@ let initialise modelPath repoOwner repoName accessToken =
     let predictionEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext)
     predictionEngine, gitHubClient
 
+type FullPrediction = 
+    {
+        PredictedLabel : string
+        Score : float32 
+        OriginalSchemaIndex : int
+    }
+
+let bestThreePredictions (predictionEngine : PredictionEngine<_,_>) (prediction : GitHubIssuePrediction) = 
+    let slotNames =
+        let mutable slotNames = Unchecked.defaultof<_>
+        predictionEngine.OutputSchema.["Score"].GetSlotNames(&slotNames)
+        slotNames
+    prediction.Score
+    |> Array.mapi (fun i s -> s, i) 
+    |> Array.sortDescending
+    |> Array.truncate 3
+    |> Array.map 
+        (fun (s,i) ->
+            { 
+                PredictedLabel = slotNames.GetItemOrDefault(i).ToString()
+                Score = s
+                OriginalSchemaIndex = i
+            }
+        )
+    
+
 /// Predict single, hard coded issue
 let testPredictionForSingleIssue ((predictionEngine : PredictionEngine<_,_>, _)) =
 
-    let singleIssue = { ID = "Any-ID"; Area = ""; Title = "Entity Framework crashes"; Description = "When connecting to the database, EF is crashing" }
+    let singleIssue = 
+        { ID = "Any-ID"
+          Area = ""
+          Title = "Crash in SqlConnection when using TransactionScope"
+          Description = "I'm using SqlClient in netcoreapp2.0. Sqlclient.Close() crashes in Linux but works on Windows" }
 
     //Predict label for single hard-coded issue
     let prediction = predictionEngine.Predict(singleIssue)
+    
+    let fullPredictions = bestThreePredictions predictionEngine prediction
+
+    printfn "1st Label: %s with score: %.12f" fullPredictions.[0].PredictedLabel fullPredictions.[0].Score
+    printfn "2nd Label: %s with score: %.12f" fullPredictions.[1].PredictedLabel fullPredictions.[1].Score
+    printfn "3rd Label: %s with score: %.12f" fullPredictions.[2].PredictedLabel fullPredictions.[2].Score
+
+
     printfn "=============== Single Prediction - Result: %s ===============" prediction.Area
 
 let private getNewIssues (client : GitHubClientFacade) = 

@@ -129,7 +129,7 @@ module ConsoleHelper =
 
     let peekDataViewInConsole<'TObservation when 'TObservation : (new : unit -> 'TObservation) and 'TObservation : not struct> (mlContext : MLContext) (dataView : IDataView) (pipeline : IEstimator<ITransformer>) numberOfRows =
         
-        let msg = sprintf "Peek data in DataView: Showing %d rows with the columns specified by TObservation class" numberOfRows
+        let msg = sprintf "Peek data in DataView: Showing %d rows with the columns" numberOfRows
         consoleWriteHeader msg
 
         //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
@@ -145,7 +145,7 @@ module ConsoleHelper =
                 row.Values
                 |> Array.map (function KeyValue(k,v) -> sprintf "| %s: %O" k v)
                 |> Array.fold (+) "Row--> "
-                |> printfn "%s"
+                |> printfn "%s\n"
             )
 
 

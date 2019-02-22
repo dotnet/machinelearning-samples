@@ -163,11 +163,15 @@ let testSingleLabelPrediction (configuration : IConfiguration) modelFilePathName
     |> Labeler.testPredictionForSingleIssue
 
 let predictLabelsAndUpdateGitHub (configuration : IConfiguration) modelPath =
+    printfn ".............Retrieving Issues from GITHUB repo, predicting label/s and assigning predicted label/s......"
+    
     let token =     configuration.["GitHubToken"];
     let repoOwner = configuration.["GitHubRepoOwner"]; //IMPORTANT: This can be a GitHub User or a GitHub Organization
     let repoName =  configuration.["GitHubRepoName"];
 
-    if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(repoOwner) || String.IsNullOrEmpty(repoName)) then
+    if String.IsNullOrEmpty(token) || token = "YOUR - GUID - GITHUB - TOKEN" ||
+            String.IsNullOrEmpty(repoOwner) || repoOwner = "YOUR-REPO-USER-OWNER-OR-ORGANIZATION" ||
+            String.IsNullOrEmpty(repoName) || repoName = "YOUR-REPO-SINGLE-NAME" then
         Console.Error.WriteLine()
         Console.Error.WriteLine("Error: please configure the credentials in the appsettings.json file")
         
