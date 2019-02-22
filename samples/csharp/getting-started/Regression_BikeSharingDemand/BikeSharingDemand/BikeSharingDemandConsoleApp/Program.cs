@@ -12,9 +12,9 @@ namespace BikeSharingDemand
 {
     internal static class Program
     {
-        private static string ModelsLocation = @"../MLModels";
+        private static string ModelsLocation = @"../../../../MLModels";
 
-        private static string DatasetsLocation = @"../Data";
+        private static string DatasetsLocation = @"../../../../Data";
         private static string TrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
         private static string TestDataLocation = $"{DatasetsLocation}/hour_test.csv";
         
@@ -101,11 +101,15 @@ namespace BikeSharingDemand
 
             Common.ConsoleHelper.ConsolePressAnyKey();
         }
+
         public static string GetDataSetAbsolutePath(string relativeDatasetPath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            Console.WriteLine($"Full Path: " + fullPath);
 
             return fullPath;
         }
