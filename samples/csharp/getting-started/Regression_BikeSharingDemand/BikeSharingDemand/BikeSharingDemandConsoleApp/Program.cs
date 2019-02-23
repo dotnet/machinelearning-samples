@@ -15,11 +15,11 @@ namespace BikeSharingDemand
         private static string ModelsLocation = @"../../../../MLModels";
 
         private static string DatasetsLocation = @"../../../../Data";
-        private static string realtiveTrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
-        private static string relativeTestDataLocation = $"{DatasetsLocation}/hour_test.csv";
+        private static string TrainingDataRelativeLocation = $"{DatasetsLocation}/hour_train.csv";
+        private static string TestDataRelativeLocation = $"{DatasetsLocation}/hour_test.csv";
 
-        private static string TrainingDataLocation = GetDataSetAbsolutePath(realtiveTrainingDataLocation);
-        private static string TestDataLocation = GetDataSetAbsolutePath(relativeTestDataLocation);
+        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativeLocation);
+        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativeLocation);
         
         static void Main(string[] args)
         {
@@ -111,8 +111,10 @@ namespace BikeSharingDemand
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
+            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
 
             string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            Console.WriteLine("\n" + $"Full Path: " + fullPath + "\n");
 
             return fullPath;
         }
