@@ -21,12 +21,17 @@ namespace Regression_TaxiFarePrediction
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/taxi-fare-train.csv";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/taxi-fare-test.csv";
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
 
-        private static string BaseModelsPath = @"../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/TaxiFareModel.zip";
+        private static string TrainDataPath = GetDataSetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetDataSetAbsolutePath(TestDataRelativePath);
+
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
+
+        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
 
         private static string VendorIdEncoded = nameof(VendorIdEncoded);
         private static string RateCodeEncoded = nameof(RateCodeEncoded);
@@ -53,8 +58,8 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(GetDataSetAbsolutePath(TrainDataPath), hasHeader: true, separatorChar: ',');
-            IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(GetDataSetAbsolutePath(TestDataPath), hasHeader: true, separatorChar: ',');
+            IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
+            IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
             //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
             var cnt = baseTrainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
@@ -95,7 +100,7 @@ namespace Regression_TaxiFarePrediction
 
             // STEP 6: Save/persist the trained model to a .ZIP file
 
-            using (var fs = File.Create(GetDataSetAbsolutePath(ModelPath)))
+            using (var fs = File.Create(ModelPath))
                 trainedModel.SaveTo(mlContext, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -122,7 +127,7 @@ namespace Regression_TaxiFarePrediction
 
             ///
             ITransformer trainedModel;
-            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -145,7 +150,7 @@ namespace Regression_TaxiFarePrediction
                                                 string[] args)
         {
             ITransformer trainedModel;
-            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -194,7 +199,7 @@ namespace Regression_TaxiFarePrediction
                 pl.col0(1);
 
                 int totalNumber = numberOfRecordsToRead;
-                var testData = new TaxiTripCsvReader().GetDataFromCsv(GetDataSetAbsolutePath(testDataSetPath), totalNumber).ToList();
+                var testData = new TaxiTripCsvReader().GetDataFromCsv(testDataSetPath, totalNumber).ToList();
 
                 //This code is the symbol to paint
                 char code = (char)9;
@@ -296,13 +301,13 @@ namespace Regression_TaxiFarePrediction
 
         public static string GetDataSetAbsolutePath(string relativeDatasetPath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
 
             return fullPath;
         }
-
     }
 
     public class TaxiTripCsvReader
