@@ -21,11 +21,14 @@ namespace GitHubLabeler
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../Data";
-        private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";      
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string DataSetRelativePath = $"{BaseDatasetsRelativePath}/corefx-issues-train.tsv";
+        private static string DataSetLocation = GetDataSetAbsolutePath(DataSetRelativePath);
 
-        private static string BaseModelsPath = @"../MLModels";
-        private static string ModelFilePathName = $"{BaseModelsPath}/GitHubLabelerModel.zip";
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/GitHubLabelerModel.zip";
+        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
+
 
         public enum MyTrainerStrategy : int { SdcaMultiClassTrainer = 1, OVAAveragedPerceptronTrainer = 2 };
 
@@ -35,14 +38,14 @@ namespace GitHubLabeler
             SetupAppConfiguration();
 
             //1. ChainedBuilderExtensions and Train the model
-            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.SdcaMultiClassTrainer);
+            BuildAndTrainModel(DataSetLocation, ModelPath, MyTrainerStrategy.SdcaMultiClassTrainer);
 
             //2. Try/test to predict a label for a single hard-coded Issue
-            TestSingleLabelPrediction(ModelFilePathName);
+            TestSingleLabelPrediction(ModelPath);
 
             //3. Predict Issue Labels and apply into a real GitHub repo
             // (Comment the next line if no real access to GitHub repo) 
-            await PredictLabelsAndUpdateGitHub(ModelFilePathName);
+            await PredictLabelsAndUpdateGitHub(ModelPath);
 
             Common.ConsoleHelper.ConsolePressAnyKey();
         }
@@ -54,7 +57,7 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 1);
 
             // STEP 1: Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(GetDataSetAbsolutePath(DataSetLocation), hasHeader: true, separatorChar:'\t', supportSparse: false);
+            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t', supportSparse: false);
              
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
@@ -140,7 +143,7 @@ namespace GitHubLabeler
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
-            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
@@ -148,7 +151,7 @@ namespace GitHubLabeler
 
         private static void TestSingleLabelPrediction(string modelFilePathName)
         {
-            var labeler = new Labeler(modelPath: GetDataSetAbsolutePath(ModelFilePathName));
+            var labeler = new Labeler(modelPath: ModelPath);
             labeler.TestPredictionForSingleIssue();
         }
 
@@ -171,7 +174,7 @@ namespace GitHubLabeler
             }
 
             //This "Labeler" class could be used in a different End-User application (Web app, other console app, desktop app, etc.) 
-            var labeler = new Labeler(GetDataSetAbsolutePath(ModelPath), repoOwner, repoName, token);
+            var labeler = new Labeler(ModelPath, repoOwner, repoName, token);
 
             await labeler.LabelAllNewIssuesInGitHubRepo();
 
@@ -190,9 +193,10 @@ namespace GitHubLabeler
 
         public static string GetDataSetAbsolutePath(string relativeDatasetPath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
 
             return fullPath;
         }
