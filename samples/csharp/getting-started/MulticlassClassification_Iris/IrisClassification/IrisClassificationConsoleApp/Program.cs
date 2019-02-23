@@ -12,12 +12,17 @@ namespace MulticlassClassification_Iris
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/iris-train.txt";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/iris-test.txt";
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/iris-train.txt";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/iris-test.txt";
 
-        private static string BaseModelsPath = @"../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/IrisClassificationModel.zip";
+        private static string TrainDataPath = GetDataSetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetDataSetAbsolutePath(TestDataRelativePath);
+
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/IrisClassificationModel.zip";
+
+        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
 
         private static void Main(string[] args)
         {
@@ -38,8 +43,8 @@ namespace MulticlassClassification_Iris
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(GetDataSetAbsolutePath(TrainDataPath), hasHeader: true);
-            var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(GetDataSetAbsolutePath(TestDataPath), hasHeader: true);
+            var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
+            var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
             
 
             // STEP 2: Common data process configuration with pipeline data transformations
@@ -77,7 +82,7 @@ namespace MulticlassClassification_Iris
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -88,7 +93,7 @@ namespace MulticlassClassification_Iris
             //Test Classification Predictions with some hard-coded samples 
 
             ITransformer trainedModel;
-            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -124,9 +129,12 @@ namespace MulticlassClassification_Iris
 
         public static string GetDataSetAbsolutePath(string relativeDatasetPath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            Console.WriteLine("\n" + $"Full Path: " + fullPath + "\n");
 
             return fullPath;
         }
