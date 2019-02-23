@@ -11,11 +11,13 @@ namespace CustomerSegmentation
     {
         static void Main(string[] args)
         {
-            var assetsPath = @"./assets";
-            var pivotCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "pivot.csv");
-            var modelZipFilePath = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "retailClustering.zip");
-            var plotSvg = Path.Combine(GetDataSetAbsolutePath(assetsPath), "outputs", "customerSegmentation.svg");
-            var plotCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "outputs", "customerSegmentation.csv");
+            var assetsRelativePath = @"../../../assets";
+            string assetsPath = GetDataSetAbsolutePath(assetsRelativePath);
+
+            var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
+            var modelZipFilePath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
+            var plotSvg = Path.Combine(assetsPath, "outputs", "customerSegmentation.svg");
+            var plotCsv = Path.Combine(assetsPath, "outputs", "customerSegmentation.csv");
 
             try
             {
@@ -36,9 +38,10 @@ namespace CustomerSegmentation
 
         public static string GetDataSetAbsolutePath(string relativeDatasetPath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
 
             return fullPath;
         }

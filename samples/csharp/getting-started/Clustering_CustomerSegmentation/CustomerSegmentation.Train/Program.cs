@@ -17,13 +17,13 @@ namespace CustomerSegmentation
     {
         static void Main(string[] args)
         {
-            var assetsPath = @"./assets";
+            string assetsRelativePath = @"../../../assets";
+            string assetsPath = GetDataSetAbsolutePath(assetsRelativePath);
 
-            // private static readonly string TrainDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-data.tsv";
-            var transactionsCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "transactions.csv");
-            var offersCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "offers.csv");
-            var pivotCsv = Path.Combine(GetDataSetAbsolutePath(assetsPath), "inputs", "pivot.csv");
-            var modelZip = Path.Combine(GetDataSetAbsolutePath(assetsPath), "outputs", "retailClustering.zip");
+            string transactionsCsv = Path.Combine(assetsPath, "inputs", "transactions.csv");
+            string offersCsv = Path.Combine(assetsPath, "inputs", "offers.csv");
+            string pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
+            string modelZip = Path.Combine(assetsPath, "outputs", "retailClustering.zip");
 
             try
             {
@@ -87,9 +87,10 @@ namespace CustomerSegmentation
         }
         public static string GetDataSetAbsolutePath(string relativeDatasetPath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
 
             return fullPath;
         }
