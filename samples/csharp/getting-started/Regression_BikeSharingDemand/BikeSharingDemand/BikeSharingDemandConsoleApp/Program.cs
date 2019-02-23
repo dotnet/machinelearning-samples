@@ -15,11 +15,11 @@ namespace BikeSharingDemand
         private static string ModelsLocation = @"../../../../MLModels";
 
         private static string DatasetsLocation = @"../../../../Data";
-        private static string TrainingDataRelativeLocation = $"{DatasetsLocation}/hour_train.csv";
-        private static string TestDataRelativeLocation = $"{DatasetsLocation}/hour_test.csv";
+        private static string TrainingDataRelativePath = $"{DatasetsLocation}/hour_train.csv";
+        private static string TestDataRelativePath = $"{DatasetsLocation}/hour_test.csv";
 
-        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativeLocation);
-        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativeLocation);
+        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativePath);
         
         static void Main(string[] args)
         {
