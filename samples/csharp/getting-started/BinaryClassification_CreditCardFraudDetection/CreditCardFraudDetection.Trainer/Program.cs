@@ -44,10 +44,8 @@ namespace CreditCardFraudDetection.Trainer
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
-            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
 
             string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
-            Console.WriteLine("\n" + $"Full Path: " + fullPath + "\n");
 
             return fullPath;
         }
