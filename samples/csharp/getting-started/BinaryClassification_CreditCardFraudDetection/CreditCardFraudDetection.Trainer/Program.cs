@@ -11,7 +11,7 @@ namespace CreditCardFraudDetection.Trainer
     {
         static void Main(string[] args)
         {
-            var AssetsRelativePath = @"..\..\..\assets";
+            var AssetsRelativePath = @"../../../assets";
 
             var assetsPath = GetDataSetAbsolutePath(AssetsRelativePath);
             var zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
@@ -45,7 +45,7 @@ namespace CreditCardFraudDetection.Trainer
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
 
             return fullPath;
         }
