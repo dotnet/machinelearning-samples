@@ -11,7 +11,9 @@ namespace CustomerSegmentation
     {
         static void Main(string[] args)
         {
-            var assetsPath = @"..\..\..\assets";
+            var assetsRelativePath = @"../../../assets";
+            string assetsPath = GetDataSetAbsolutePath(assetsRelativePath);
+
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
             var modelZipFilePath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
             var plotSvg = Path.Combine(assetsPath, "outputs", "customerSegmentation.svg");
@@ -32,6 +34,16 @@ namespace CustomerSegmentation
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 }

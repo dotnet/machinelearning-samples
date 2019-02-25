@@ -8,9 +8,10 @@ namespace ImageClassification.Predict
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            var assetsPath = ModelHelpers.GetAssetsPath(@"..\..\..\assets");
+            string assetsRelativePath = @"..\..\..\assets";
+            string assetsPath = GetDataSetAbsolutePath(assetsRelativePath);
 
             var tagsTsv = Path.Combine(assetsPath, "inputs", "data", "tags.tsv");
             var imagesFolder = Path.Combine(assetsPath, "inputs", "data");
@@ -27,6 +28,16 @@ namespace ImageClassification.Predict
             }
 
             ConsolePressAnyKey();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 }

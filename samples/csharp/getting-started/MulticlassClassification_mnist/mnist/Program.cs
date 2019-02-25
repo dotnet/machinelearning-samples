@@ -11,10 +11,17 @@ namespace mnist
 {
     class Program
     {
+        private static string BaseDatasetsRelativePath = @"../../../Data";
+        private static string TrianDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
+        private static string TestDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
 
-        static readonly string TrainDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-train.csv");
-        static readonly string TestDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-val.csv");
-        static readonly string ModelPath = Path.Combine(Environment.CurrentDirectory, "MLModels", "Model.zip");
+        private static string TrainDataPath = GetDataSetAbsolutePath(TrianDataRealtivePath);
+        private static string TestDataPath = GetDataSetAbsolutePath(TestDataRealtivePath);
+
+        private static string BaseModelsRelativePath = @"../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/Model.zip";
+
+        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -85,6 +92,15 @@ namespace mnist
             }
         }
 
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
+        }
 
         private static void TestSomePredictions(MLContext mlContext)
         {

@@ -15,8 +15,11 @@ namespace BikeSharingDemand
         private static string ModelsLocation = @"../../../../MLModels";
 
         private static string DatasetsLocation = @"../../../../Data";
-        private static string TrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
-        private static string TestDataLocation = $"{DatasetsLocation}/hour_test.csv";
+        private static string TrainingDataRelativePath = $"{DatasetsLocation}/hour_train.csv";
+        private static string TestDataRelativePath = $"{DatasetsLocation}/hour_test.csv";
+
+        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativePath);
         
         static void Main(string[] args)
         {
@@ -25,8 +28,8 @@ namespace BikeSharingDemand
             var mlContext = new MLContext(seed: 0);
 
             // 1. Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path:TrainingDataLocation, hasHeader:true, separatorChar: ',');
-            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path:TestDataLocation, hasHeader:true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: TrainingDataLocation, hasHeader:true, separatorChar: ',');
+            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: TestDataLocation, hasHeader:true, separatorChar: ',');
 
             // 2. Common data pre-process with pipeline data transformations
 
@@ -70,7 +73,8 @@ namespace BikeSharingDemand
                 ConsoleHelper.PrintRegressionMetrics(trainer.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
-                string modelPath = $"{ModelsLocation}/{trainer.name}Model.zip";
+                string modelRelativeLocation = $"{ModelsLocation}/{trainer.name}Model.zip";
+                string modelPath = GetDataSetAbsolutePath(modelRelativeLocation);
                 using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     mlContext.Model.Save(trainedModel, fs);
 
@@ -85,7 +89,8 @@ namespace BikeSharingDemand
             {
                 //Load current model from .ZIP file
                 ITransformer trainedModel;
-                string modelPath = $"{ModelsLocation}/{learner.name}Model.zip";
+                string modelRelativeLocation = $"{ModelsLocation}/{learner.name}Model.zip";
+                string modelPath = GetDataSetAbsolutePath(modelRelativeLocation);
                 using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     trainedModel = mlContext.Model.Load(stream);
@@ -100,7 +105,18 @@ namespace BikeSharingDemand
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
+        }
 
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            Console.WriteLine("\n" + $"Full Path: " + fullPath + "\n");
+
+            return fullPath;
         }
     }
 }

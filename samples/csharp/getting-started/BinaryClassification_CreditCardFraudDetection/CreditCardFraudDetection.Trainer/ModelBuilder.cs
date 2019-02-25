@@ -47,14 +47,14 @@ namespace CreditCardFraudDetection.Trainer
             //Get all the column names for the Features (All except the Label and the StratificationColumn)
             var featureColumnNames = _trainData.Schema.AsQueryable() 
                 .Select(column => column.Name) // Get the column names
-                .Where(name => name != "Label") // Do not include the Label column
+                .Where(name => name != DefaultColumnNames.Label) // Do not include the Label column
                 .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
                 .ToArray();
 
             var pipeline = _mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
-                            .Append(_mlContext.Transforms.Normalize(inputColumnName: "Features", outputColumnName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
-                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
-                                                                                      featureColumn: "Features",
+                            .Append(_mlContext.Transforms.Normalize(inputColumnName: DefaultColumnNames.Features, outputColumnName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
+                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: DefaultColumnNames.Label, 
+                                                                                      featureColumn: DefaultColumnNames.Features,
                                                                                       numLeaves: 20,
                                                                                       numTrees: 100,
                                                                                       minDatapointsInLeaves: 10,
@@ -62,7 +62,7 @@ namespace CreditCardFraudDetection.Trainer
 
             var model = pipeline.Fit(_trainData);
 
-            var metrics = _context.Evaluate(model.Transform(_testData), label:"Label");
+            var metrics = _context.Evaluate(model.Transform(_testData), label:DefaultColumnNames.Label);
 
             ConsoleHelpers.ConsoleWriteHeader($"Test Metrics:");
             Console.WriteLine("Acuracy: " + metrics.Accuracy);
