@@ -154,6 +154,8 @@ namespace GitHubLabeler
 
         private static async Task PredictLabelsAndUpdateGitHub(string ModelPath)
         {
+            Console.WriteLine(".............Retrieving Issues from GITHUB repo, predicting label/s and assigning predicted label/s......");
+
             var token = Configuration["GitHubToken"];
             var repoOwner = Configuration["GitHubRepoOwner"]; //IMPORTANT: This can be a GitHub User or a GitHub Organization
             var repoName = Configuration["GitHubRepoName"];

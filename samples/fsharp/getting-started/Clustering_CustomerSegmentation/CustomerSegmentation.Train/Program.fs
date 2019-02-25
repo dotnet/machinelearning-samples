@@ -76,8 +76,8 @@ let main _argv =
         //Create the MLContext to share across components for deterministic results
         let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic environment
         // STEP 1: Common data loading configuration
-        let textLoader = 
-            mlContext.Data.CreateTextLoader(
+        let pivotDataView = 
+            mlContext.Data.ReadFromTextFile(pivotCsv,
                 columns = 
                     [| 
                         TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
@@ -85,8 +85,6 @@ let main _argv =
                     |],
                 hasHeader = true,
                 separatorChar = ',')
-
-        let pivotDataView = textLoader.Read(pivotCsv)
         
         //STEP 2: Configure data transformations in pipeline
         let dataProcessPipeline =  
