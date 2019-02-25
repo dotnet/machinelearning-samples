@@ -16,11 +16,11 @@ namespace ProductRecommender
         //   ProductID	ProductID_Copurchased
         //   0	1
         //   0  2
-        private static string BaseDataSetRelativePath = @"../../../../Data";
+        private static string BaseDataSetRelativePath = @"../../../Data";
         private static string TrainingDataRelativePath = $"{BaseDataSetRelativePath}/Amazon0302.txt";
         private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
 
-        private static string BaseModelRelativePath = @"../../../../Model";
+        private static string BaseModelRelativePath = @"../../../Model";
         private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
         private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
 
