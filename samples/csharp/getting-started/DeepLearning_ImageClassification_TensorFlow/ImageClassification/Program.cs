@@ -9,7 +9,8 @@ namespace ImageClassification
     {
         static void Main(string[] args)
         {
-            var assetsPath = ModelHelpers.GetAssetsPath(@"..\..\..\assets");
+            string assetsRelativePath = @"..\..\..\assets";
+            string assetsPath = GetDataSetAbsolutePath(assetsRelativePath);
 
             var tagsTsv = Path.Combine(assetsPath, "inputs", "images", "tags.tsv");
             var imagesFolder = Path.Combine(assetsPath, "inputs", "images");
@@ -31,6 +32,16 @@ namespace ImageClassification
             }
 
             ConsoleHelpers.ConsolePressAnyKey();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 }

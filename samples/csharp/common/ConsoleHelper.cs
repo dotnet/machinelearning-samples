@@ -283,6 +283,5 @@ namespace Common
                 Console.WriteLine(line);
             }
         }
-
     }
 }

@@ -14,9 +14,16 @@ namespace MovieRecommenderModel
 
     class Program
     {
-        private static string TrainingDataLocation = @".\Data\ratings_train.csv";
-        private static string TestDataLocation = @".\Data\ratings_test.csv";
-        private static string ModelPath = @"..\..\..\Model\model.zip";
+        private static string BaseModelRelativePath = @"..\..\..\Model";
+        private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
+
+        private static string BaseDataSetRelativepath = @"../../../Data";
+        private static string TrainingDataRelativePath = $"{BaseDataSetRelativepath}/ratings_train.csv";
+        private static string TestDataRelativePath = $"{BaseDataSetRelativepath}/ratings_test.csv";
+
+        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativePath);
+        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
 
         private static string userIdFeaturized = nameof(userIdFeaturized);
         private static string movieIdFeaturized = nameof(movieIdFeaturized);
@@ -140,6 +147,16 @@ namespace MovieRecommenderModel
         public static float Sigmoid(float x)
         {
             return (float)(100 / (1 + Math.Exp(-x)));
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
     }
 

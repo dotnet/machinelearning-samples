@@ -16,9 +16,13 @@ namespace ProductRecommender
         //   ProductID	ProductID_Copurchased
         //   0	1
         //   0  2
-        private static string TrainingDataLocation = $"./Data/Amazon0302.txt";
+        private static string BaseDataSetRelativePath = @"../../../Data";
+        private static string TrainingDataRelativePath = $"{BaseDataSetRelativePath}/Amazon0302.txt";
+        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
 
-        private static string ModelPath = $"./Model/model.zip";
+        private static string BaseModelRelativePath = @"../../../Model";
+        private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
+        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -70,6 +74,16 @@ namespace ProductRecommender
             Console.WriteLine("\n For ProductID = 3 and  CoPurchaseProductID = 63 the predicted score is " + Math.Round(prediction.Score, 1));
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
+        }
+
+        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+
+            return fullPath;
         }
 
         public class Copurchase_prediction
