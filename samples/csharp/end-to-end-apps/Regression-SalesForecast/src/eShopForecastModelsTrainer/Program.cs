@@ -8,7 +8,7 @@ namespace eShopForecastModelsTrainer
 {
     class Program
     {
-        private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
+        private static readonly string BaseDatasetsRelativePath = @"../../../Data";
         private static readonly string CountryDataRealtivePath = $"{BaseDatasetsRelativePath}/countries.stats.csv";
         private static readonly string ProductDataRealtivePath = $"{BaseDatasetsRelativePath}/products.stats.csv";
 
