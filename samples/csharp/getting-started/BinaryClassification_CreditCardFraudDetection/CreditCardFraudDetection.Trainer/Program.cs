@@ -11,9 +11,9 @@ namespace CreditCardFraudDetection.Trainer
     {
         static void Main(string[] args)
         {
-            var relativeAssetsPath = @"..\..\..\assets";
+            var AssetsRelativePath = @"..\..\..\assets";
 
-            var assetsPath = GetDataSetAbsolutePath(relativeAssetsPath);
+            var assetsPath = GetDataSetAbsolutePath(AssetsRelativePath);
             var zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
             var dataSetFile = Path.Combine(assetsPath, "input", "creditcard.csv");
 
