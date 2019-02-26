@@ -10,7 +10,7 @@ namespace ImageClassification.Train
     {
         static void Main(string[] args)
         {
-            string assetsRelativePath = @"..\..\..\assets";
+            string assetsRelativePath = @"../../../assets";
             string assetsPath = GetDataSetAbsolutePath(assetsRelativePath);
 
             var tagsTsv = Path.Combine(assetsPath, "inputs", "data", "tags.tsv");
@@ -36,7 +36,7 @@ namespace ImageClassification.Train
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
 
             return fullPath;
         }

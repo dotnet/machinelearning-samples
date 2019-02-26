@@ -8,8 +8,8 @@ namespace CreditCardFraudDetection.Predictor
     {
         static void Main(string[] args)
         {
-            string assetsPath = GetDataSetAbsolutePath(@"..\..\..\assets");
-            string trainOutput = GetDataSetAbsolutePath(@"..\..\..\..\CreditCardFraudDetection.Trainer\assets\output");
+            string assetsPath = GetDataSetAbsolutePath(@"../../../assets");
+            string trainOutput = GetDataSetAbsolutePath(@"../../../../CreditCardFraudDetection.Trainer\assets\output");
 
             if (!File.Exists(Path.Combine(trainOutput, "testData.csv")) ||
                 !File.Exists(Path.Combine(trainOutput, "fastTree.zip"))){
@@ -47,7 +47,7 @@ namespace CreditCardFraudDetection.Predictor
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
 
             return fullPath;
         }

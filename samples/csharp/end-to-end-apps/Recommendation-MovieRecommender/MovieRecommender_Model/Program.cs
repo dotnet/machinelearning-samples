@@ -14,7 +14,7 @@ namespace MovieRecommenderModel
 
     class Program
     {
-        private static string BaseModelRelativePath = @"..\..\..\Model";
+        private static string BaseModelRelativePath = @"../../../Model";
         private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
 
         private static string BaseDataSetRelativepath = @"../../../Data";
@@ -140,8 +140,8 @@ namespace MovieRecommenderModel
             var sorted = body.Select(line => new { SortKey = Int32.Parse(line.Split(',')[3]), Line = line })
                              .OrderBy(x => x.SortKey)
                              .Select(x => x.Line);
-            File.WriteAllLines(@"..\..\..\Data\ratings_train.csv", dataset.Take(1).Concat(sorted.Take((int)(numLines * 0.9))));
-            File.WriteAllLines(@"..\..\..\Data\ratings_test.csv", dataset.Take(1).Concat(sorted.TakeLast((int)(numLines * 0.1))));
+            File.WriteAllLines(@"../../../Data\ratings_train.csv", dataset.Take(1).Concat(sorted.Take((int)(numLines * 0.9))));
+            File.WriteAllLines(@"../../../Data\ratings_test.csv", dataset.Take(1).Concat(sorted.TakeLast((int)(numLines * 0.1))));
         }
 
         public static float Sigmoid(float x)
@@ -154,7 +154,7 @@ namespace MovieRecommenderModel
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
 
             return fullPath;
         }

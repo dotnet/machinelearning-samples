@@ -48,10 +48,10 @@ namespace MulticlassClassification_Iris
             
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "SepalLength",
-                                                                                   "SepalWidth",
-                                                                                   "PetalLength",
-                                                                                   "PetalWidth")
+            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength),
+                                                                                   nameof(IrisData.SepalWidth),
+                                                                                   nameof(IrisData.PetalLength),
+                                                                                   nameof(IrisData.PetalWidth))
                                                                        .AppendCacheCheckpoint(mlContext); 
                                                                        // Use in-memory cache for small/medium datasets to lower training time. 
                                                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
@@ -131,10 +131,8 @@ namespace MulticlassClassification_Iris
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
-            Console.WriteLine($"Assembly Folder Path: " + assemblyFolderPath);
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
-            Console.WriteLine("\n" + $"Full Path: " + fullPath + "\n");
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
 
             return fullPath;
         }
