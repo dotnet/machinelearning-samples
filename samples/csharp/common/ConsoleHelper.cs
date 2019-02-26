@@ -1,15 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-
-using Microsoft.ML.Core.Data;
 using System.Collections.Generic;
 using Microsoft.ML.Data;
 using Microsoft.ML;
-
-using System.Reflection;
 using Microsoft.Data.DataView;
+using static Microsoft.ML.TrainCatalogBase;
 
 namespace Common
 {
@@ -104,12 +99,10 @@ namespace Common
 
         public static void PrintMulticlassClassificationFoldsAverageMetrics(
                                          string algorithmName,
-                                         (MultiClassClassifierMetrics metrics,
-                                          ITransformer model,
-                                          IDataView scoredTestData)[] crossValResults
+                                        CrossValidationResult<MultiClassClassifierMetrics>[] crossValResults
                                                                            )
         {
-            var metricsInMultipleFolds = crossValResults.Select(r => r.metrics);
+            var metricsInMultipleFolds = crossValResults.Select(r => r.Metrics);
 
             var microAccuracyValues = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
             var microAccuracyAverage = microAccuracyValues.Average();
