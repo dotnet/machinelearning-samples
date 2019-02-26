@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Core.Data;
-using OxyPlot;
+﻿using OxyPlot;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
@@ -46,8 +45,8 @@ namespace CustomerSegmentation.Model
             var data = _mlContext.Data.ReadFromTextFile(path:_pivotDataLocation,
                             columns: new[]
                                         {
-                                          new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                                          new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
+                                          new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
+                                          new TextLoader.Column(nameof(PivotData.LastName), DataKind.String, 32)
                                         },
                             hasHeader: true,
                             separatorChar: ',');
