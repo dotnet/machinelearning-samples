@@ -19,7 +19,7 @@ type GitHubClientFacade =
             |> Async.AwaitTask
             |> Async.RunSynchronously
             |> Seq.toList
-        let getAll' (issueRequest : RepositoryIssueRequest) = getAll client repoName repoOwner issueRequest
+        let getAll' (issueRequest : RepositoryIssueRequest) = getAll client repoOwner repoName issueRequest
 
         let updateIssue (client : GitHubClient) (repoOwner : string) (repoName : string) (issue : Issue) (issueUpdate : IssueUpdate) =
             client.Issue.Update(repoOwner, repoName, issue.Number, issueUpdate)
