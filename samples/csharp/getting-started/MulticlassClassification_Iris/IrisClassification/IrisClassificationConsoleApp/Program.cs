@@ -2,7 +2,6 @@
 using System.IO;
 
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML.Data;
 using MulticlassClassification_Iris.DataStructures;
 
@@ -57,7 +56,7 @@ namespace MulticlassClassification_Iris
                                                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
