@@ -4,7 +4,6 @@ using System.IO;
 using Microsoft.ML;
 using Common;
 using Clustering_Iris.DataStructures;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML.Data;
 using Microsoft.Data.DataView;
 
@@ -23,6 +22,8 @@ namespace Clustering_Iris
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/IrisModel.zip";
 
         private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
+        private static IDataView trainingDataView;
+        private static IDataView testingDataView;
 
         private static void Main(string[] args)
         {
@@ -33,17 +34,19 @@ namespace Clustering_Iris
             IDataView fullData = mlContext.Data.ReadFromTextFile(path: DataPath,
                                                 columns:new[]
                                                             {
-                                                                new TextLoader.Column(DefaultColumnNames.Label, DataKind.R4, 0),
-                                                                new TextLoader.Column(nameof(IrisData.SepalLength), DataKind.R4, 1),
-                                                                new TextLoader.Column(nameof(IrisData.SepalWidth), DataKind.R4, 2),
-                                                                new TextLoader.Column(nameof(IrisData.PetalLength), DataKind.R4, 3),
-                                                                new TextLoader.Column(nameof(IrisData.PetalWidth), DataKind.R4, 4),
+                                                                new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                new TextLoader.Column(nameof(IrisData.SepalLength), DataKind.Single, 1),
+                                                                new TextLoader.Column(nameof(IrisData.SepalWidth), DataKind.Single, 2),
+                                                                new TextLoader.Column(nameof(IrisData.PetalLength), DataKind.Single, 3),
+                                                                new TextLoader.Column(nameof(IrisData.PetalWidth), DataKind.Single, 4),
                                                             },
                                                 hasHeader:true,
                                                 separatorChar:'\t');
 
             //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
-            (IDataView trainingDataView, IDataView testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction: 0.2);
+            TrainCatalogBase.TrainTestData trainTestData = mlContext.Clustering.TrainTestSplit(fullData, testFraction: 0.2);
+            trainingDataView = trainTestData.TrainSet;
+            testingDataView = trainTestData.TestSet;
 
             //STEP 2: Process data transformations in pipeline
             var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth), nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth));
@@ -53,7 +56,7 @@ namespace Clustering_Iris
             Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 10);
 
             // STEP 3: Create and train the model     
-            var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
+            var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: DefaultColumnNames.Features, clustersCount: 3);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
             var trainedModel = trainingPipeline.Fit(trainingDataView);
 
