@@ -1,11 +1,8 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML.Data;
 using System;
 using System.IO;
 using mnist.DataStructures;
-
-
 
 namespace mnist
 {
@@ -41,8 +38,8 @@ namespace mnist
                 var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
-                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
-                            new TextLoader.Column("Number", DataKind.R4, 64)
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
+                            new TextLoader.Column("Number", DataKind.Single, 64)
                         },
                         hasHeader : false,
                         separatorChar : ','
@@ -52,8 +49,8 @@ namespace mnist
                 var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
-                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
-                            new TextLoader.Column("Number", DataKind.R4, 64)
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
+                            new TextLoader.Column("Number", DataKind.Single, 64)
                         },
                         hasHeader: false,
                         separatorChar: ','
@@ -63,7 +60,7 @@ namespace mnist
                 var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
 
                 // STEP 3: Set the training algorithm, then create and config the modelBuilder
-                var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: DefaultColumnNames.Features);
+                var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: "Number", featureColumnName: DefaultColumnNames.Features);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
 
                 // STEP 4: Train the model fitting to the DataSet
