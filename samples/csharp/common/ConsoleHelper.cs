@@ -74,17 +74,13 @@ namespace Common
 
         //(CDLTLL-Pending to Fix - Results --> ?)
 
-        public static void PrintRegressionFoldsAverageMetrics(string algorithmName,
-                                                              (RegressionMetrics metrics,
-                                                               ITransformer model,
-                                                               IDataView scoredTestData)[] crossValidationResults
-                                                             )
+        public static void PrintRegressionFoldsAverageMetrics(string algorithmName,CrossValidationResult<RegressionMetrics>[] crossValidationResults)
         {
-            var L1 = crossValidationResults.Select(r => r.metrics.L1);
-            var L2 = crossValidationResults.Select(r => r.metrics.L2);
-            var RMS = crossValidationResults.Select(r => r.metrics.L1);
-            var lossFunction = crossValidationResults.Select(r => r.metrics.LossFn);
-            var R2 = crossValidationResults.Select(r => r.metrics.RSquared);
+            var L1 = crossValidationResults.Select(r => r.Metrics.L1);
+            var L2 = crossValidationResults.Select(r => r.Metrics.L2);
+            var RMS = crossValidationResults.Select(r => r.Metrics.L1);
+            var lossFunction = crossValidationResults.Select(r => r.Metrics.LossFn);
+            var R2 = crossValidationResults.Select(r => r.Metrics.RSquared);
 
             Console.WriteLine($"*************************************************************************************************************");
             Console.WriteLine($"*       Metrics for {algorithmName} Regression model      ");

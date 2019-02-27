@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
 using Common;
 using Microsoft.ML.Data;

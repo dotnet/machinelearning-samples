@@ -1,5 +1,4 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using System;
 using System.IO;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace eShopForecastModelsTrainer
 
             var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
-            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
 
             var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFeatures, nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
                 nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
