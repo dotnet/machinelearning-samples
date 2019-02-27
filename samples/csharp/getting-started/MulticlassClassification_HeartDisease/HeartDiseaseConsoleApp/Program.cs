@@ -1,5 +1,4 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML.Data;
 using MulticlassClassification_HeartDisease.DataStructure;
 using System;
@@ -51,7 +50,7 @@ namespace MulticlassClassification_HeartDisease
             ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 5);
             ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 5);
 
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);        
             
             Console.WriteLine("=============== Training the model ===============");
