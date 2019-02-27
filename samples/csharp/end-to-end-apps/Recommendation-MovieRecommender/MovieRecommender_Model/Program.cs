@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
-using Microsoft.ML.Core.Data;
 
 namespace MovieRecommenderModel
 {
