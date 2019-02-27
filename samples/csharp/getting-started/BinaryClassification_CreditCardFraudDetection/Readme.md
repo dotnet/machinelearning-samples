@@ -40,7 +40,7 @@ Binary or binomial classification is the task of classifying the elements of a g
 
 To solve this problem, first you need to build a machine learning model. Then you train the model on existing training data, evaluate how good its accuracy is, and lastly you consume the model (deploying the built model in a different app) to predict a fraud for a sample credit card transaction.
 
-![Build -> Train -> Evaluate -> Consume](https://raw.githubusercontent.com/dotnet/machinelearning-samples/features/samples-new-api/samples/csharp/getting-started/shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
 
 ### 1. Build model
