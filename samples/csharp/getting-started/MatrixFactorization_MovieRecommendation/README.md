@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10   | Dynamic API | Updated to v0.9 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
+| v0.11   | Dynamic API | Updated to v0.9 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
 
 In this sample, you can see how to use ML.NET to build a movie recommendation engine. 
 
@@ -65,8 +65,8 @@ Here's the code which will be used to build the model:
  options.MatrixColumnIndexColumnName = userIdEncoded;
  options.MatrixRowIndexColumnName = movieIdEncoded;
  options.LabelColumnName = DefaultColumnNames.Label;
- options.NumIterations = 20;
- options.K = 100;
+ options.NumberOfIterations = 20;
+ options.ApproximationRank = 100;
 
 //STEP 4: Create the training pipeline 
  var trainingPipeLine = dataProcessingPipeline.Append(mlcontext.Recommendation().Trainers.MatrixFactorization(options));

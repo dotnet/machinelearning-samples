@@ -6,7 +6,6 @@ using MovieRecommendationConsoleApp.DataStructures;
 using MovieRecommendation.DataStructures;
 using Microsoft.ML.Data;
 using Microsoft.Data.DataView;
-using Microsoft.ML.Core.Data;
 using System.IO;
 
 namespace MovieRecommendation
@@ -51,8 +50,8 @@ namespace MovieRecommendation
             options.MatrixColumnIndexColumnName = userIdEncoded;
             options.MatrixRowIndexColumnName = movieIdEncoded;
             options.LabelColumnName = DefaultColumnNames.Label;
-            options.NumIterations = 20;
-            options.K = 100;
+            options.NumberOfIterations = 20;
+            options.ApproximationRank = 100;
 
             //STEP 4: Create the training pipeline 
             var trainingPipeLine = dataProcessingPipeline.Append(mlcontext.Recommendation().Trainers.MatrixFactorization(options));
