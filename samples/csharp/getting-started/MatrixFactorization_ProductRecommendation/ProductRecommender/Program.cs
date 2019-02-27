@@ -1,10 +1,7 @@
-﻿using Common;
-using Microsoft.ML;
-using Microsoft.ML.Core.Data;
+﻿using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace ProductRecommender
@@ -34,9 +31,9 @@ namespace ProductRecommender
             var traindata = mlContext.Data.ReadFromTextFile(path:TrainingDataLocation,
                                                       columns: new[]
                                                                 {
-                                                                    new TextLoader.Column(DefaultColumnNames.Label, DataKind.R4, 0),
-                                                                    new TextLoader.Column(name:nameof(ProductEntry.ProductID), type:DataKind.U4, source: new [] { new TextLoader.Range(0) }, keyCount: new KeyCount(262111)), 
-                                                                    new TextLoader.Column(name:nameof(ProductEntry.CoPurchaseProductID), type:DataKind.U4, source: new [] { new TextLoader.Range(1) }, keyCount: new KeyCount(262111))
+                                                                    new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                    new TextLoader.Column(name:nameof(ProductEntry.ProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(0) }, keyCount: new KeyCount(262111)), 
+                                                                    new TextLoader.Column(name:nameof(ProductEntry.CoPurchaseProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(1) }, keyCount: new KeyCount(262111))
                                                                 },
                                                       hasHeader: true,
                                                       separatorChar: '\t');
@@ -93,10 +90,10 @@ namespace ProductRecommender
 
         public class ProductEntry
         {
-            [KeyType(Count = 262111)]
+            [KeyType(count : 262111)]
             public uint ProductID { get; set; }
 
-            [KeyType(Count = 262111)]
+            [KeyType(count : 262111)]
             public uint CoPurchaseProductID { get; set; }
         }
     }
