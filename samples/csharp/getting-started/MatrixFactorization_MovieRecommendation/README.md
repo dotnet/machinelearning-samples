@@ -52,8 +52,8 @@ Here's the code which will be used to build the model:
   MLContext mlcontext = new MLContext();
 
  //STEP 2: Read the training data which will be used to train the movie recommendation model    
- //The schema for training data is defined by type 'TInput' in ReadFromTextFile<TInput>() method.
- IDataView trainingDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, ar:',');
+ //The schema for training data is defined by type 'TInput' in LoadFromTextFile<TInput>() method.
+ IDataView trainingDataView = mlcontext.Data.LoadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, ar:',');
 
 //STEP 3: Transform your data by encoding the two features userId and movieID. These encoded features will be provided as 
 //        to our MatrixFactorizationTrainer.
@@ -91,7 +91,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```CSharp 
 Console.WriteLine("=============== Evaluating the model ===============");
-IDataView testDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
+IDataView testDataView = mlcontext.Data.LoadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
 var prediction = model.Transform(testDataView);
 var metrics = mlcontext.Regression.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 ```
