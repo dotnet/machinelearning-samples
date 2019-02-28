@@ -29,7 +29,7 @@ let downcastPipeline (x : IEstimator<_>) =
 
 let classify (p : PredictionEngine<_,_>) x = 
     let prediction = p.Predict({LabelText = ""; Message = x})
-    printfn "The message '%s' is %b" x prediction.PredictedLabel
+    printfn "The message '%s' is %s" x (if prediction.PredictedLabel then "spam" else "not spam")
 
 [<EntryPoint>]
 let main _argv =
