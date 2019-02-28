@@ -41,8 +41,8 @@ The initial code is similar to the following:
 
 ```CSharp
 // STEP 1: Common data loading configuration
-IDataView trainingDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
-IDataView testDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
+IDataView trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
+IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 
 // STEP 2: Common data process configuration with pipeline data transformations          
 var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
