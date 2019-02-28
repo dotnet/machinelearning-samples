@@ -36,7 +36,7 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-IDataView fullData = mlContext.Data.ReadFromTextFile(path: DataPath,
+IDataView fullData = mlContext.Data.LoadFromTextFile(path: DataPath,
                                                 columns:new[]
                                                             {
                                                                 new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
