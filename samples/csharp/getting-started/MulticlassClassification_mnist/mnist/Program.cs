@@ -60,6 +60,7 @@ namespace mnist
                         );
 
                 // STEP 2: Common data process configuration with pipeline data transformations
+                // Use in-memory cache for small/medium datasets to lower training time. Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
                 var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
 
                 // STEP 3: Set the training algorithm, then create and config the modelBuilder
