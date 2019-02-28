@@ -27,8 +27,8 @@ namespace BikeSharingDemand
             var mlContext = new MLContext(seed: 0);
 
             // 1. Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: TrainingDataLocation, hasHeader:true, separatorChar: ',');
-            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path: TestDataLocation, hasHeader:true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<DemandObservation>(path: TrainingDataLocation, hasHeader:true, separatorChar: ',');
+            var testDataView = mlContext.Data.LoadFromTextFile<DemandObservation>(path: TestDataLocation, hasHeader:true, separatorChar: ',');
 
             // 2. Common data pre-process with pipeline data transformations
 
