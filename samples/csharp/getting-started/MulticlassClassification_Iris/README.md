@@ -52,8 +52,8 @@ The initial code is similar to the following:
 var mlContext = new MLContext(seed: 0);
 
 // STEP 1: Common data loading configuration
-var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
-var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
+var trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
+var testDataView = mlContext.Data.LoadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
 
 // STEP 2: Common data process configuration with pipeline data transformations
 var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
