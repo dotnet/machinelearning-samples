@@ -28,7 +28,7 @@ namespace ProductRecommender
 
             //STEP 2: Read the trained data using TextLoader by defining the schema for reading the product co-purchase dataset
             //        Do remember to replace amazon0302.txt with dataset from https://snap.stanford.edu/data/amazon0302.html
-            var traindata = mlContext.Data.ReadFromTextFile(path:TrainingDataLocation,
+            var traindata = mlContext.Data.LoadFromTextFile(path:TrainingDataLocation,
                                                       columns: new[]
                                                                 {
                                                                     new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
