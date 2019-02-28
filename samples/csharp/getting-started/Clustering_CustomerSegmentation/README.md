@@ -65,7 +65,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 #### Data Pre-Process
 
-The first thing to do is to join the data into a single view. Because we need to compare transactions made the users, we will build a pivot table, where the rows are the customers and the columns are the campaigns, and the cell value shows if the customer made related transaction during that campaign.
+The first thing to do is to join the data into a single view. Because we need to compare transactions made by the users, we will build a pivot table, where the rows are the customers and the columns are the campaigns, and the cell value shows if the customer made related transaction during that campaign.
 
 The pivot table is built executing the PreProcess function which is this case is implemented by loading the files data in memory and using Linq to join the data. But you could use any other approach depending on the size of your data, such as a relational database or any other approach:
 
@@ -116,7 +116,7 @@ Here's the code which will be used to build the model:
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
+var pivotDataView = mlContext.Data.LoadFromTextFile(path: pivotCsv,
                                             columns: new[]
                                                         {
                                                         new TextLoader.Column(DefaultColumnNames.Features, DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
@@ -128,7 +128,7 @@ var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
 /STEP 2: Configure data transformations in pipeline
                 var dataProcessPipeline = mlContext.Transforms.Projection.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: DefaultColumnNames.Features, rank: 2)
                  .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[]{
-                    new OneHotEncodingEstimator.ColumnInfo(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
+                    new OneHotEncodingEstimator.ColumnOptions(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
                                                      OneHotEncodingTransformer.OutputKind.Ind)
                 }));
 
@@ -179,7 +179,7 @@ In this case, the model is not predicting any value (like a regression task) or 
 The code below is how you use the model to create those clusters:
 
 ```csharp
-var data = _mlContext.Data.ReadFromTextFile(path:_pivotDataLocation,
+var data = _mlContext.Data.LoadFromTextFile(path:_pivotDataLocation,
                             columns: new[]
                                         {
                                           new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
@@ -190,7 +190,7 @@ var data = _mlContext.Data.ReadFromTextFile(path:_pivotDataLocation,
 
 //Apply data transformation to create predictions/clustering
 var tranfomedDataView = _trainedModel.Transform(data);
-var predictions = _mlContext.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
+var predictions = _mlContext.Data.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
                             .ToArray();
 ```
 

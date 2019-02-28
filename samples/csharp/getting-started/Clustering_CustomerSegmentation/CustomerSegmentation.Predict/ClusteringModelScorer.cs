@@ -42,7 +42,7 @@ namespace CustomerSegmentation.Model
 
         public void CreateCustomerClusters()
         {
-            var data = _mlContext.Data.ReadFromTextFile(path:_pivotDataLocation,
+            var data = _mlContext.Data.LoadFromTextFile(path:_pivotDataLocation,
                             columns: new[]
                                         {
                                           new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
@@ -53,7 +53,7 @@ namespace CustomerSegmentation.Model
             
             //Apply data transformation to create predictions/clustering
             var tranfomedDataView = _trainedModel.Transform(data);
-            var predictions = _mlContext.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
+            var predictions = _mlContext.Data.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
                             .ToArray();
 
             //Generate data files with customer data grouped by clusters

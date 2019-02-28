@@ -31,7 +31,7 @@ namespace CustomerSegmentation
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
                 // STEP 1: Common data loading configuration
-                var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
+                var pivotDataView = mlContext.Data.LoadFromTextFile(path: pivotCsv,
                                             columns: new[]
                                                         {
                                                         new TextLoader.Column(DefaultColumnNames.Features, DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
@@ -43,7 +43,7 @@ namespace CustomerSegmentation
                 //STEP 2: Configure data transformations in pipeline
                 var dataProcessPipeline = mlContext.Transforms.Projection.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: DefaultColumnNames.Features, rank: 2)
                  .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[]{
-                    new OneHotEncodingEstimator.ColumnInfo(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
+                    new OneHotEncodingEstimator.ColumnOptions(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
                                                      OneHotEncodingTransformer.OutputKind.Ind)
                 }));
 
