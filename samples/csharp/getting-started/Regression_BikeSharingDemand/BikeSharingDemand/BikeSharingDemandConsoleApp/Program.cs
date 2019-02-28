@@ -40,6 +40,8 @@ namespace BikeSharingDemand
                                                      nameof(DemandObservation.WorkingDay), nameof(DemandObservation.Weather), nameof(DemandObservation.Temperature),
                                                      nameof(DemandObservation.NormalizedTemperature), nameof(DemandObservation.Humidity), nameof(DemandObservation.Windspeed))
                                          .AppendCacheCheckpoint(mlContext);
+                                        // Use in-memory cache for small/medium datasets to lower training time. 
+                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 10);
