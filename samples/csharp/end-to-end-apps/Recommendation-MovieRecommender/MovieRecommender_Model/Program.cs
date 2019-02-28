@@ -58,7 +58,6 @@ namespace MovieRecommenderModel
             var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: userIdFeaturized, inputColumnName: nameof(MovieRating.userId))
                                           .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: movieIdFeaturized, inputColumnName: nameof(MovieRating.movieId))
                                           .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, userIdFeaturized, movieIdFeaturized))
-                                          //.AppendCacheCheckpoint(mlContext) // Add a data-cache step within a pipeline.
                                           .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {DefaultColumnNames.Features})));
 
             var preview = pipeline.Preview(trainingDataView, maxRows: 10);
