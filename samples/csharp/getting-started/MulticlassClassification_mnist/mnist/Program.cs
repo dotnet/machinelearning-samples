@@ -35,7 +35,7 @@ namespace mnist
             try
             {
                 // STEP 1: Common data loading configuration
-                var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
+                var trainData = mLContext.Data.LoadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
@@ -46,7 +46,7 @@ namespace mnist
                         );
 
                 
-                var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
+                var testData = mLContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),

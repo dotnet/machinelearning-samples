@@ -33,7 +33,7 @@ Building a model includes:
 The initial code is similar to the following:
 ```CSharp
 // STEP 1: Common data loading configuration
-var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
+var trainData = mLContext.Data.LoadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
@@ -44,7 +44,7 @@ var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
                         );
 
                 
-                var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
+var testData = mLContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
