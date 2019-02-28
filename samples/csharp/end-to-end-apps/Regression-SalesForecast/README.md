@@ -114,7 +114,7 @@ Load the dataset into the DataView.
 
 ```chsarp
 
-var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
+var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
 ```
 

@@ -38,7 +38,7 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training country forecasting model");
 
-            var trainingDataView = mlContext.Data.ReadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
             
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie(DefaultColumnNames.Label, DefaultColumnNames.Features);
 
