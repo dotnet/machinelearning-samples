@@ -17,12 +17,12 @@ namespace Clustering_Iris
         private static string BaseDatasetsRelativePath = @"../../../../Data";
         private static string DataSetRealtivePath = $"{BaseDatasetsRelativePath}/iris-full.txt";
 
-        private static string DataPath = GetDataSetAbsolutePath(DataSetRealtivePath);
+        private static string DataPath = GetAbsolutePath(DataSetRealtivePath);
 
         private static string BaseModelsRelativePath = @"../../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/IrisModel.zip";
 
-        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         private static void Main(string[] args)
         {
@@ -96,12 +96,12 @@ namespace Clustering_Iris
             Console.ReadKey();           
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
         }
