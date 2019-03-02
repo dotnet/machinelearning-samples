@@ -18,8 +18,8 @@ namespace BikeSharingDemand
         private static string TrainingDataRelativePath = $"{DatasetsLocation}/hour_train.csv";
         private static string TestDataRelativePath = $"{DatasetsLocation}/hour_test.csv";
 
-        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
-        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativePath);
+        private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetAbsolutePath(TestDataRelativePath);
         
         static void Main(string[] args)
         {
@@ -76,7 +76,7 @@ namespace BikeSharingDemand
 
                 //Save the model file that can be used by any application
                 string modelRelativeLocation = $"{ModelsLocation}/{trainer.name}Model.zip";
-                string modelPath = GetDataSetAbsolutePath(modelRelativeLocation);
+                string modelPath = GetAbsolutePath(modelRelativeLocation);
                 using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     mlContext.Model.Save(trainedModel, fs);
 
@@ -92,7 +92,7 @@ namespace BikeSharingDemand
                 //Load current model from .ZIP file
                 ITransformer trainedModel;
                 string modelRelativeLocation = $"{ModelsLocation}/{learner.name}Model.zip";
-                string modelPath = GetDataSetAbsolutePath(modelRelativeLocation);
+                string modelPath = GetAbsolutePath(modelRelativeLocation);
                 using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     trainedModel = mlContext.Model.Load(stream);
@@ -109,12 +109,12 @@ namespace BikeSharingDemand
             Common.ConsoleHelper.ConsolePressAnyKey();
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
         }
