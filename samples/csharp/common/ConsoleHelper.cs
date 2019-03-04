@@ -25,8 +25,6 @@ namespace Common
             Console.WriteLine($"-------------------------------------------------");
         }
 
-        //(CDLTLL-Pending to Fix - Results --> ?)
-        //
         public static void PrintRegressionMetrics(string name, RegressionMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
@@ -71,9 +69,7 @@ namespace Common
             Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
             Console.WriteLine($"************************************************************");
         }
-
-        //(CDLTLL-Pending to Fix - Results --> ?)
-
+       
         public static void PrintRegressionFoldsAverageMetrics(string algorithmName,CrossValidationResult<RegressionMetrics>[] crossValidationResults)
         {
             var L1 = crossValidationResults.Select(r => r.Metrics.L1);
@@ -153,6 +149,25 @@ namespace Common
             Console.WriteLine($"*       AvgMinScore: {metrics.AvgMinScore}");
             Console.WriteLine($"*       DBI is: {metrics.Dbi}");
             Console.WriteLine($"*************************************************");
+        }
+
+        public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
+        {
+            string msg = string.Format("Show data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
+            ConsoleWriteHeader(msg);
+
+            var preViewTransformedData = dataView.Preview(maxRows: numberOfRows);
+
+            foreach (var row in preViewTransformedData.RowView)
+            {
+                var ColumnCollection = row.Values;
+                string lineToPrint = "Row--> ";
+                foreach (KeyValuePair<string, object> column in ColumnCollection)
+                {
+                    lineToPrint += $"| {column.Key}:{column.Value}";
+                }
+                Console.WriteLine(lineToPrint + "\n");
+            }
         }
 
         public static void PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)

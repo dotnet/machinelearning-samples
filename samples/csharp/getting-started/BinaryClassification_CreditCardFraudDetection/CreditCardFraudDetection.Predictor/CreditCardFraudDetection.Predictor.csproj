@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <None Remove="assets\input\.gitignore" />
-    <None Remove="assets\output\.gitignore" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="assets\input\" />
-    <Folder Include="assets\output\" />
   </ItemGroup>
 
   <ItemGroup>
