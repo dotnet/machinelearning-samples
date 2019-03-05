@@ -49,6 +49,8 @@ To solve this problem, you build two independent ML models that take the followi
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev      |
 | **country stats**  | next, country, year, month, max, min, std, count, sales, med, prev   |
 
+[Explanation of Dataset](docs/Details-of-Datasets.md) - Goto this link for detailed information on dataset.
+
 ### ML task - [Regression](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#regression)
 
 The ML Task for this sample is a Regression, which is a supervised machine learning task that is used to predict the value of the next period (in this case the sales prediction) from a set of related features/variables.
