@@ -21,10 +21,10 @@ namespace MovieRecommendation
         private static string TestDataRelativePath = $"{DatasetsRelativePath}/recommendation-ratings-test.csv";
         private static string MoviesDataLocation = $"{DatasetsRelativePath}/movies.csv";
 
-        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
-        private static string TestDataLocation = GetDataSetAbsolutePath(TestDataRelativePath);
+        private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetAbsolutePath(TestDataRelativePath);
 
-        private static string ModelPath = GetDataSetAbsolutePath(ModelsRelativePath);
+        private static string ModelPath = GetAbsolutePath(ModelsRelativePath);
 
         private const float predictionuserId = 6;
         private const int predictionmovieId = 10;
@@ -89,12 +89,12 @@ namespace MovieRecommendation
             Console.ReadLine();
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
         }

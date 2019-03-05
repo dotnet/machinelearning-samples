@@ -112,7 +112,7 @@ let printImageNetProb (x : ImageNetDataProbability) =
     Console.ForegroundColor <- defaultForeground
     printf " with probability "
     Console.ForegroundColor <- probColor
-    printf "%f" x.Probability
+    printf "%0.7f" x.Probability
     Console.ForegroundColor <- defaultForeground
     printfn ""
 

@@ -73,7 +73,7 @@ let testSinglePrediction (mlContext : MLContext) =
     printfn 
         "Text: %s | Prediction: %s sentiment | Probability: %f"
         sampleStatement.Text
-        (if Convert.ToBoolean(resultprediction.Prediction) then "Toxic" else "Nice")
+        (if Convert.ToBoolean(resultprediction.Prediction) then "Negative" else "Positive")
         resultprediction.Probability
     printfn "=================================================="
 

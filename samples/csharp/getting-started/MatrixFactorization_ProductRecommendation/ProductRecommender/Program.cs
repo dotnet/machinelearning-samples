@@ -18,11 +18,11 @@ namespace ProductRecommender
         //   0  2
         private static string BaseDataSetRelativePath = @"../../../Data";
         private static string TrainingDataRelativePath = $"{BaseDataSetRelativePath}/Amazon0302.txt";
-        private static string TrainingDataLocation = GetDataSetAbsolutePath(TrainingDataRelativePath);
+        private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
 
         private static string BaseModelRelativePath = @"../../../Model";
         private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
-        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -76,12 +76,12 @@ namespace ProductRecommender
             Console.ReadKey();
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativeDatasetPath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath + "/" + relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
 
             return fullPath;
         }

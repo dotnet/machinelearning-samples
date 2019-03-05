@@ -204,7 +204,7 @@ let main _ =
     let model = pipeline.Fit trainData
 
     let metrics = classification.Evaluate (model.Transform (testData), "Label")   
-    printfn "Accuracy: %.2f" metrics.Accuracy 
+    printfn "Accuracy: %.12f" metrics.Accuracy 
 
     printfn "Saving model to file"
     let _ = 
