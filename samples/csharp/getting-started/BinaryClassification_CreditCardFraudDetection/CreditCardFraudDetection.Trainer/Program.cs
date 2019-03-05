@@ -20,7 +20,7 @@ namespace CreditCardFraudDetection.Trainer
         {
             //File paths
             string AssetsRelativePath = @"../../../assets";
-            string assetsPath = GetDataSetAbsolutePath(AssetsRelativePath);
+            string assetsPath = GetAbsolutePath(AssetsRelativePath);
             string zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
             string fullDataSetFilePath = Path.Combine(assetsPath, "input", "creditcard.csv");
             string trainDataSetFilePath = Path.Combine(assetsPath, "output", "testData.csv");
