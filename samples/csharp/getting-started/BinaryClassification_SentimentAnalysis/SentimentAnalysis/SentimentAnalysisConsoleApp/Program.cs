@@ -17,13 +17,13 @@ namespace SentimentAnalysisConsoleApp
         private static readonly string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-data.tsv";
         private static readonly string TestDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-test.tsv";
 
-        private static string TrainDataPath = GetDataSetAbsolutePath(TrainDataRelativePath);
-        private static string TestDataPath = GetDataSetAbsolutePath(TestDataRelativePath);
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static readonly string BaseModelsRelativePath = @"../../../../MLModels";
         private static readonly string ModelRelativePath = $"{BaseModelsRelativePath}/SentimentModel.zip";
 
-        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -103,12 +103,12 @@ namespace SentimentAnalysisConsoleApp
             Console.WriteLine($"==================================================");
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath , relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath , relativePath);
 
             return fullPath;
         }

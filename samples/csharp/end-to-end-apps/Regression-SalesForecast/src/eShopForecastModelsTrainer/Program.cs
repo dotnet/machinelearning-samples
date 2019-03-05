@@ -12,8 +12,8 @@ namespace eShopForecastModelsTrainer
         private static readonly string CountryDataRealtivePath = $"{BaseDatasetsRelativePath}/countries.stats.csv";
         private static readonly string ProductDataRealtivePath = $"{BaseDatasetsRelativePath}/products.stats.csv";
 
-        private static readonly string CountryDataPath = GetDataSetAbsolutePath(CountryDataRealtivePath);
-        private static readonly string ProductDataPath = GetDataSetAbsolutePath(ProductDataRealtivePath);
+        private static readonly string CountryDataPath = GetAbsolutePath(CountryDataRealtivePath);
+        private static readonly string ProductDataPath = GetAbsolutePath(ProductDataRealtivePath);
 
         static void Main(string[] args)
         {
@@ -34,7 +34,7 @@ namespace eShopForecastModelsTrainer
             ConsolePressAnyKey();
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativeDatasetPath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;

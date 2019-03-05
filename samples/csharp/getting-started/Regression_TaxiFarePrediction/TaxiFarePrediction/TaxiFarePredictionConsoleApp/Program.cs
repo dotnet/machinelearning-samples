@@ -21,13 +21,13 @@ namespace Regression_TaxiFarePrediction
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
         private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
 
-        private static string TrainDataPath = GetDataSetAbsolutePath(TrainDataRelativePath);
-        private static string TestDataPath = GetDataSetAbsolutePath(TestDataRelativePath);
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static string BaseModelsRelativePath = @"../../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
 
-        private static string ModelPath = GetDataSetAbsolutePath(ModelRelativePath);
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         private static string VendorIdEncoded = nameof(VendorIdEncoded);
         private static string RateCodeEncoded = nameof(RateCodeEncoded);
@@ -295,12 +295,12 @@ namespace Regression_TaxiFarePrediction
             p.Start();
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
         }

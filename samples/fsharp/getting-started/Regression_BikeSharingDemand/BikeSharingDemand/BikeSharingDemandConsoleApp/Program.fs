@@ -34,7 +34,7 @@ let main argv =
     let dataProcessPipeline =
         (mlContext.Transforms.CopyColumns("Label", "Count") |> downcastPipeline)
             .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
-                                                     "Hour", "Holiday", "Weekday",
+                                                     "Hour", "Holiday", "Weekday", "WorkingDay",
                                                      "Weather", "Temperature", "NormalizedTemperature",
                                                      "Humidity", "Windspeed"))
             .AppendCacheCheckpoint(mlContext)
@@ -60,7 +60,7 @@ let main argv =
     // 3. Phase for Training, Evaluation and model file persistence
     // Per each regression trainer: Train, Evaluate, and Save a different model
     for (learnerName, trainer) in regressionLearners do
-        printfn "================== Training the current model =================="
+        printfn "=============== Training the current model ==============="
         let trainingPipeline = dataProcessPipeline.Append(trainer)
         let trainedModel = trainingPipeline.Fit(trainingDataView)
         
