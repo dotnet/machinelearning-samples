@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v0.11           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -34,69 +34,58 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
 
 ```fsharp
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextLoader(
+    let fullData = 
+        mlContext.Data.LoadFromTextFile(dataPath,
             hasHeader = true,
             separatorChar = '\t',
             columns =
                 [|
-                    TextLoader.Column("Label", Nullable DataKind.R4, 0)
-                    TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
-                    TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
-                    TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
-                    TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
+                    TextLoader.Column("Label", DataKind.Single, 0)
+                    TextLoader.Column("SepalLength", DataKind.Single, 1)
+                    TextLoader.Column("SepalWidth", DataKind.Single, 2)
+                    TextLoader.Column("PetalLength", DataKind.Single, 3)
+                    TextLoader.Column("PetalWidth", DataKind.Single, 4)
                 |]
         )
-
-    let fullData = textLoader.Read dataPath
     
     //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
-    let struct(trainingDataView, testingDataView) = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
+    let trainingDataView, testingDataView = 
+        let split = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
+        split.TrainSet, split.TestSe
 
     //STEP 2: Process data transformations in pipeline
-    let dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
-
+    let dataProcessPipeline = 
+        mlContext.Transforms.Concatenate("Features", "SepalLength", "SepalWidth", "PetalLength", "PetalWidth") 
+        |> Common.ConsoleHelper.downcastPipeline
+        
     // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
     Common.ConsoleHelper.peekDataViewInConsole<IrisData> mlContext trainingDataView dataProcessPipeline 10 |> ignore
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
 
     // STEP 3: Create and train the model     
-    let trainer = mlContext.Clustering.Trainers.KMeans(featureColumn = "Features", clustersCount = 3)
+    let trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName = "Features", clustersCount = 3)
+    let trainingPipeline = dataProcessPipeline.Append(trainer)
 
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
-
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
 ```
 
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on the given data. To perform training you need to call the Fit() method.
 
 ```fsharp
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = trainingPipeline.Fit(trainingDataView)
 ```
 ### 3. Consume model
 After the model is build and trained, we can use the `Predict()` API to predict the cluster for an iris flower and calculate the distance from given flower parameters to each cluster (each centroid of a cluster).
 
 ```fsharp
-   let sampleIrisData = 
-        {
-            SepalLength = 3.3f
-            SepalWidth = 1.6f
-            PetalLength = 0.2f
-            PetalWidth = 5.1f
-        }
+    use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
+    let model = mlContext.Model.Load(stream)
+    // Create prediction engine related to the loaded trained model
+    let predEngine = model.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext)
 
-    //Create the clusters: Create data files and plot a chart
-    let prediction = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
-        |> Common.ModelScorer.predictSingle sampleIrisData
+    //Score
+    let resultprediction = predEngine.Predict(sampleIrisData)
 
-    printfn "Cluster assigned for setosa flowers: %d" prediction.SelectedClusterId```
+    printfn "Cluster assigned for setosa flowers: %d" resultprediction.SelectedClusterId
+
 ```
