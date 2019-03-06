@@ -5,11 +5,11 @@ using System.Linq;
 using PLplot;
 using System.Diagnostics;
 using Microsoft.ML;
-using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using Regression_TaxiFarePrediction.DataStructures;
 using Common;
 using Microsoft.ML.Data;
 using Microsoft.Data.DataView;
+using static Microsoft.ML.Transforms.NormalizingEstimator;
 
 namespace Regression_TaxiFarePrediction
 {
