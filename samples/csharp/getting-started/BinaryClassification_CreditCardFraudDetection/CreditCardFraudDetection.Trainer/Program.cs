@@ -1,6 +1,4 @@
-﻿using CreditCardFraudDetection.Common;
-using Microsoft.ML;
-using Microsoft.ML.Trainers;
+﻿using Microsoft.ML;
 using System.Linq;
 using System.IO;
 using System;
@@ -9,8 +7,8 @@ using Microsoft.Data.DataView;
 using Common;
 using static Microsoft.ML.TrainCatalogBase;
 using CreditCardFraudDetection.Common.DataModels;
-using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using System.IO.Compression;
+using static Microsoft.ML.Transforms.NormalizingEstimator;
 
 namespace CreditCardFraudDetection.Trainer
 {
