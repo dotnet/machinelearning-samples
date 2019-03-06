@@ -6,6 +6,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.ImageAnalytics;
 using ImageClassification.ImageData;
 using static ImageClassification.Model.ConsoleHelpers;
+using Microsoft.ML.Core.Data;
 
 namespace ImageClassification.Model
 {
@@ -50,14 +51,14 @@ namespace ImageClassification.Model
 
 
 
-            var data = mlContext.Data.LoadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
+            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
                             .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName:ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
-                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractingEstimator.ColumnOptions(name: "input",inputColumnName: ImageReal,  interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
+                            .Append(mlContext.Transforms.Resize(outputColumnName:ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
+                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransformer.ColumnInfo(name: "input",inputColumnName: ImageReal,  interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
                             .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:featurizerModelLocation, outputColumnNames: new[] { "softmax2_pre_activation" },inputColumnNames: new[] { "input" }))
-                            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression(labelColumnName:LabelTokey, featureColumnName:"softmax2_pre_activation"))
+                            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression(labelColumn:LabelTokey, featureColumn:"softmax2_pre_activation"))
                             .Append(mlContext.Transforms.Conversion.MapKeyToValue((PredictedLabelValue,DefaultColumnNames.PredictedLabel)));
 
             // Train the model
@@ -69,11 +70,11 @@ namespace ImageClassification.Model
             var trainData = model.Transform(data);
             var loadedModelOutputColumnNames = trainData.Schema
                 .Where(col => !col.IsHidden).Select(col => col.Name);
-            var trainData2 = mlContext.Data.CreateEnumerable<ImageNetPipeline>(trainData, false, true).ToList();
+            var trainData2 = mlContext.CreateEnumerable<ImageNetPipeline>(trainData, false, true).ToList();
             trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
             // Get some performance metric on the model using training data            
-            var sdcaContext = mlContext.MulticlassClassification;
+            var sdcaContext = new MulticlassClassificationCatalog(mlContext);
             ConsoleWriteHeader("Classification metrics");
             var metrics = sdcaContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
             Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
