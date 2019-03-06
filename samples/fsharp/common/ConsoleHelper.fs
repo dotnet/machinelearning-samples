@@ -4,7 +4,6 @@ module ConsoleHelper =
     open System
     open Microsoft.ML
     open Microsoft.ML.Data
-    open Microsoft.ML.Core.Data
     //open Microsoft.ML.Api
     open System.Reflection
     open Microsoft.Data.DataView
