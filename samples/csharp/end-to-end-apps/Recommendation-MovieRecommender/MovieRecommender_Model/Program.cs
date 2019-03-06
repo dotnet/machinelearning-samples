@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
-using Microsoft.ML.Core.Data;
 
 namespace MovieRecommenderModel
 {
@@ -39,7 +38,7 @@ namespace MovieRecommenderModel
             MLContext mlContext = new MLContext();
 
             //STEP 2: Read data from text file using TextLoader by defining the schema for reading the movie recommendation datasets and return dataview.
-            var trainingDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
 
             Console.WriteLine("=============== Reading Input Files ===============", color);
             Console.WriteLine();
@@ -71,7 +70,7 @@ namespace MovieRecommenderModel
             //STEP 6: Evaluate the model performance
             Console.WriteLine("=============== Evaluating the model ===============", color);
             Console.WriteLine();
-            var testDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.LoadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
 
             var prediction = model.Transform(testDataView);
 

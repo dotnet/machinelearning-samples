@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
 using Common;
 using Microsoft.ML.Data;
@@ -39,7 +38,7 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training country forecasting model");
 
-            var trainingDataView = mlContext.Data.ReadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
             
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie(DefaultColumnNames.Label, DefaultColumnNames.Features);
 

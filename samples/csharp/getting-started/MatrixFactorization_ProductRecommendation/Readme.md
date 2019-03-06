@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|0.10   | Dynamic API | Updated to v0.9 | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
+|0.11   | Dynamic API | Updated to v0.9 | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
 
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
@@ -61,12 +61,12 @@ Here's the code which will be used to build the model:
 
     //STEP 2: Read the trained data using TextLoader by defining the schema for reading the product co-purchase dataset
     //        Do remember to replace amazon0302.txt with dataset from https://snap.stanford.edu/data/amazon0302.html
-    var traindata = mlContext.Data.ReadFromTextFile(path:TrainingDataLocation,
+    var traindata = mlContext.Data.LoadFromTextFile(path:TrainingDataLocation,
                                                       columns: new[]
                                                                 {
-                                                                    new TextLoader.Column(DefaultColumnNames.Label, DataKind.R4, 0),
-                                                                    new TextLoader.Column(name:nameof(ProductEntry.ProductID), type:DataKind.U4, source: new [] { new TextLoader.Range(0) }, keyCount: new KeyCount(262111)), 
-                                                                    new TextLoader.Column(name:nameof(ProductEntry.CoPurchaseProductID), type:DataKind.U4, source: new [] { new TextLoader.Range(1) }, keyCount: new KeyCount(262111))
+                                                                    new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                    new TextLoader.Column(name:nameof(ProductEntry.ProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(0) }, keyCount: new KeyCount(262111)), 
+                                                                    new TextLoader.Column(name:nameof(ProductEntry.CoPurchaseProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(1) }, keyCount: new KeyCount(262111))
                                                                 },
                                                       hasHeader: true,
                                                       separatorChar: '\t');
@@ -115,10 +115,10 @@ The prediction engine creation takes in as input the following two classes.
 
     public class ProductEntry
     {
-            [KeyType(Count = 262111)]
+            [KeyType(count : 262111)]
             public uint ProductID { get; set; }
 
-            [KeyType(Count = 262111)]
+            [KeyType(count : 262111)]
             public uint CoPurchaseProductID { get; set; }
     }
 ```
