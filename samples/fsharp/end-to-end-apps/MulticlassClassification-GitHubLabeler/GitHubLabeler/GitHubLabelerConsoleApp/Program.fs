@@ -7,8 +7,8 @@ open Microsoft.Extensions.Configuration
 open Microsoft.ML
 open DataStructures
 open Microsoft.ML.Data
-open Microsoft.ML.Core.Data
 open System.Security.Cryptography
+open Microsoft.ML.Trainers
 
 
 let repoOwner = "a"
@@ -49,14 +49,14 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
             hasHeader = true,
             columns = 
                 [|
-                    TextLoader.Column("ID", Nullable DataKind.Text, 0)
-                    TextLoader.Column("Area", Nullable DataKind.Text, 1)
-                    TextLoader.Column("Title", Nullable DataKind.Text, 2)
-                    TextLoader.Column("Description", Nullable DataKind.Text, 3)
+                    TextLoader.Column("ID", DataKind.String, 0)
+                    TextLoader.Column("Area", DataKind.String, 1)
+                    TextLoader.Column("Title", DataKind.String, 2)
+                    TextLoader.Column("Description", DataKind.String, 3)
                 |]
         )
 
-    let trainingDataView = textLoader.Read([| dataSetLocation |])
+    let trainingDataView = textLoader.Load([| dataSetLocation |])
        
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
@@ -88,9 +88,9 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
                     DefaultColumnNames.Features,
                     numIterations = 10)
                 
-            let downcastTrainer (x : Training.ITrainerEstimator<_,_>) = 
+            let downcastTrainer (x : ITrainerEstimator<_,_>) = 
                 match x with 
-                | :? Training.ITrainerEstimator<_,_> as y -> y
+                | :? ITrainerEstimator<_,_> as y -> y
                 | _ -> failwith "downcastPipeline: expecting a ITrainerEstimator"
             
             let averagedPerceptronBinaryTrainer' = downcastTrainer averagedPerceptronBinaryTrainer
@@ -125,7 +125,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     printfn "Time Cross-Validating: %d miliSecs"  watchCrossValTime.ElapsedMilliseconds
            
     crossValidationResults
-    |> Array.map (function struct(a,b,c) -> (a,b,c)) //convert struct tuple for print function
+    |> Array.map (fun x -> x.Metrics, x.Model, x.ScoredHoldOutSet) //convert struct tuple for print function
     |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString())
 
     // STEP 5: Train the model fitting to the DataSet
