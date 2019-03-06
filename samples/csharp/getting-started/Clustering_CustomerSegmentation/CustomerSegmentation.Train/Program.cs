@@ -1,12 +1,10 @@
 ﻿using System;
 using System.IO;
-
 using Microsoft.ML;
-using Microsoft.ML.Transforms.Categorical;
-
 using CustomerSegmentation.DataStructures;
 using Common;
 using Microsoft.ML.Data;
+using Microsoft.ML.Transforms;
 
 namespace CustomerSegmentation
 {
