@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+| v0.11           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
@@ -38,28 +38,12 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
 
 ```fsharp
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextLoader(
-            separatorChar = ',',
-            hasHeader = true,
-            columns = 
-                [|
-                    TextLoader.Column("VendorId", Nullable DataKind.Text, 0)
-                    TextLoader.Column("RateCode", Nullable DataKind.Text, 1)
-                    TextLoader.Column("PassengerCount", Nullable DataKind.R4, 2)
-                    TextLoader.Column("TripTime", Nullable DataKind.R4, 3)
-                    TextLoader.Column("TripDistance", Nullable DataKind.R4, 4)
-                    TextLoader.Column("PaymentType", Nullable DataKind.Text, 5)
-                    TextLoader.Column("FareAmount", Nullable DataKind.R4, 6)
-                |]
-            )
-
-    let baseTrainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
+    let baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(trainDataPath, hasHeader = true, separatorChar = ',')
+    let testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(testDataPath, hasHeader = true, separatorChar = ',')
 
     //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
     //let cnt = baseTrainingDataView.GetColumn<decimal>(mlContext, "FareAmount").Count()
-    let trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
+    let trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
     //let cnt2 = trainingDataView.GetColumn<float>(mlContext, "FareAmount").Count()
 
     // STEP 2: Common data process configuration with pipeline data transformations
@@ -81,20 +65,17 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 5 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
+    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
 
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
+    let modelBuilder = dataProcessPipeline.Append trainer
+
 ```
 
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known fare values) to tune the parameters of the model. It is implemented in the `Fit()` API. To perform training we just call the method while providing the DataView.
 
 ```fsharp
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = modelBuilder.Fit trainingDataView
 ```
 
 ### 3. Evaluate model
@@ -102,10 +83,10 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```fsharp
     let metrics = 
-        (trainedModel, modelBuilder)
-        |> Common.ModelBuilder.evaluateRegressionModel testDataView "Label" "Score"
+        let predictions = trainedModel.Transform testDataView
+        mlContext.Regression.Evaluate(predictions, "Label", "Score")
 
-    Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metrics
+    Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metric
 ```
 
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
@@ -118,7 +99,7 @@ If you are not satisfied with the quality of the model, there are a variety of w
 After the model is trained, we can use the `Predict()` API to predict the fare amount for specified trip. 
 
 ```fsharp
-   //Sample: 
+    //Sample: 
     //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
     //VTS,1,1,1140,3.75,CRD,15.5
     let taxiTripSample = 
@@ -133,9 +114,11 @@ After the model is trained, we can use the `Predict()` API to predict the fare a
         };
 
     let resultprediction = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
-        |> Common.ModelScorer.predictSingle taxiTripSample
+        let model = 
+            use s = File.OpenRead(modelPath)
+            mlContext.Model.Load(s)
+        let predictionFunction = model.CreatePredictionEngine(mlContext);
+        predictionFunction.Predict taxiTripSample
 
     printfn "=============== Single Prediction  ==============="
     printfn "Predicted fare: %.4f, actual fare: 15.5" resultprediction.FareAmount
