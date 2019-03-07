@@ -21,8 +21,8 @@ namespace CreditCardFraudDetection.Trainer
             string assetsPath = GetAbsolutePath(AssetsRelativePath);
             string zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
             string fullDataSetFilePath = Path.Combine(assetsPath, "input", "creditcard.csv");
-            string trainDataSetFilePath = Path.Combine(assetsPath, "output", "testData.csv");
-            string testDataSetFilePath = Path.Combine(assetsPath, "output", "trainData.csv");
+            string trainDataSetFilePath = Path.Combine(assetsPath, "output", "trainData.csv"); 
+            string testDataSetFilePath = Path.Combine(assetsPath, "output", "testData.csv");
             string modelFilePath = Path.Combine(assetsPath, "output", "fastTree.zip");
             //
 
