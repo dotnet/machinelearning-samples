@@ -83,7 +83,7 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
             .Append(mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean)))
             .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2_pre_activation" |], [| "input" |]))
             .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
-            .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue(struct("PredictedLabelValue","PredictedLabel")))
     
     printHeader ["Training classification model"]
     let model = pipeline.Fit(data)
