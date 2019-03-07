@@ -23,10 +23,7 @@ namespace MovieRecommenderModel
         private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
         private static string TestDataLocation = GetAbsolutePath(TestDataRelativePath);
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
-
-        private static string userIdFeaturized = nameof(userIdFeaturized);
-        private static string movieIdFeaturized = nameof(movieIdFeaturized);
-
+        
         static void Main(string[] args)
         {
             Color color = Color.FromArgb(130,150,115);
@@ -54,9 +51,9 @@ namespace MovieRecommenderModel
 
             //STEP 4: Transform your data by encoding the two features userId and movieID.
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
-            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: userIdFeaturized, inputColumnName: nameof(MovieRating.userId))
-                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: movieIdFeaturized, inputColumnName: nameof(MovieRating.movieId))
-                                          .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, userIdFeaturized, movieIdFeaturized))
+            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "userIdFeaturized", inputColumnName: nameof(MovieRating.userId))
+                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "movieIdFeaturized", inputColumnName: nameof(MovieRating.movieId))
+                                          .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "userIdFeaturized", "movieIdFeaturized"))
                                           .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {DefaultColumnNames.Features})));
 
             var preview = pipeline.Preview(trainingDataView, maxRows: 10);
