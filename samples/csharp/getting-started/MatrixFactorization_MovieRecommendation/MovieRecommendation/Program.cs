@@ -28,9 +28,6 @@ namespace MovieRecommendation
         private const float predictionuserId = 6;
         private const int predictionmovieId = 10;
 
-        private static string userIdEncoded = nameof(userIdEncoded);
-        private static string movieIdEncoded = nameof(movieIdEncoded);
-
         static void Main(string[] args)
         {
             //STEP 1: Create MLContext to be shared across the model creation workflow objects 
@@ -42,13 +39,13 @@ namespace MovieRecommendation
 
             //STEP 3: Transform your data by encoding the two features userId and movieID. These encoded features will be provided as input
             //        to our MatrixFactorizationTrainer.
-            var dataProcessingPipeline = mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: userIdEncoded, inputColumnName: nameof(MovieRating.userId))
-                           .Append(mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: movieIdEncoded, inputColumnName: nameof(MovieRating.movieId)));
+            var dataProcessingPipeline = mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: nameof(MovieRating.userId))
+                           .Append(mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: "movieIdEncoded", inputColumnName: nameof(MovieRating.movieId)));
             
             //Specify the options for MatrixFactorization trainer
             MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
-            options.MatrixColumnIndexColumnName = userIdEncoded;
-            options.MatrixRowIndexColumnName = movieIdEncoded;
+            options.MatrixColumnIndexColumnName = "userIdEncoded";
+            options.MatrixRowIndexColumnName = "movieIdEncoded";
             options.LabelColumnName = DefaultColumnNames.Label;
             options.NumberOfIterations = 20;
             options.ApproximationRank = 100;
