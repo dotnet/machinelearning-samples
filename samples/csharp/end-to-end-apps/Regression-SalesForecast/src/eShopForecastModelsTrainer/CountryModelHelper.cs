@@ -10,10 +10,6 @@ namespace eShopForecastModelsTrainer
 {
     public class CountryModelHelper
     {
-        private static string NumFeatures = nameof(NumFeatures);
-        
-        private static string CatFeatures = nameof(CatFeatures);
-
         /// <summary>
         /// Train and save model for predicting next month country unit sales
         /// </summary>
@@ -42,12 +38,12 @@ namespace eShopForecastModelsTrainer
             
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie(DefaultColumnNames.Label, DefaultColumnNames.Features);
 
-            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFeatures, nameof(CountryData.year),
+            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(CountryData.year),
                                 nameof(CountryData.month), nameof(CountryData.max), nameof(CountryData.min),
                                 nameof(CountryData.std), nameof(CountryData.count), nameof(CountryData.sales),
                                 nameof(CountryData.med), nameof(CountryData.prev))
-                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: CatFeatures, inputColumnName: nameof(CountryData.country)))
-                        .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, NumFeatures, CatFeatures))
+                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(CountryData.country)))
+                        .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, "NumFeatures", "CatFeatures"))
                         .Append(mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(CountryData.next)))
                         .Append(trainer);
 
