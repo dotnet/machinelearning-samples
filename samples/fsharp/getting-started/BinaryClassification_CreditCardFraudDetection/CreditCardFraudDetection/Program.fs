@@ -125,8 +125,9 @@ let main _ =
     let featureColumnNames = 
         trainData.Schema
         |> Seq.map (fun column -> column.Name)
+        |> Seq.filter (fun name -> name <> "Time")
         |> Seq.filter (fun name -> name <> "Label")
-        |> Seq.filter (fun name -> name <> "StratificationColumn")
+        |> Seq.filter (fun name -> name <> "IdPreservationColumn")
         |> Seq.toArray
 
     let pipeline = 
