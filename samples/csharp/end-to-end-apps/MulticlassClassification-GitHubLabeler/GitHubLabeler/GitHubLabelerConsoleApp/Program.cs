@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.IO;
-
 // Requires following NuGet packages
 // NuGet package -> Microsoft.Extensions.Configuration
 // NuGet package -> Microsoft.Extensions.Configuration.Json
 using Microsoft.Extensions.Configuration;
-
 using Microsoft.ML;
-using Microsoft.ML.Transforms.Conversions;
-using Microsoft.ML.Core.Data;
-
 using Common;
 using GitHubLabeler.DataStructures;
 using Microsoft.ML.Data;
+using static Microsoft.ML.TrainCatalogBase;
 
 namespace GitHubLabeler
 {
@@ -57,7 +53,7 @@ namespace GitHubLabeler
             var mlContext = new MLContext(seed: 1);
 
             // STEP 1: Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t', allowSparse: false);
              
             // STEP 2: Common data process configuration with pipeline data transformations
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
@@ -109,13 +105,13 @@ namespace GitHubLabeler
             //Measure cross-validation time
             var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
 
-            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn:DefaultColumnNames.Label);
+            CrossValidationResult<MultiClassClassifierMetrics>[] crossValidationResults = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn:DefaultColumnNames.Label);
 
             //Stop measuring time
             watchCrossValTime.Stop();
             long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
-            Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");
-           
+            Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");           
+            
             ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
