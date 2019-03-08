@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML;
 using Octokit;
 using System.IO;
 using GitHubLabeler.DataStructures;
-using Common;
 using Microsoft.ML.Data;
 
 namespace GitHubLabeler
@@ -67,6 +65,8 @@ namespace GitHubLabeler
             var prediction = _predEngine.Predict(singleIssue);
 
             _fullPredictions = GetBestThreePredictions(prediction);
+
+            Console.WriteLine("==== Displaying prediction of Issue with Title = {0} and Description = {1} ====", singleIssue.Title, singleIssue.Description);
 
             Console.WriteLine("1st Label: " + _fullPredictions[0].PredictedLabel + " with score: " + _fullPredictions[0].Score);
             Console.WriteLine("2nd Label: " + _fullPredictions[1].PredictedLabel + " with score: " + _fullPredictions[1].Score);
