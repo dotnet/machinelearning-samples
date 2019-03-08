@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using movierecommender.Models;
 using movierecommender.Services;
 using Newtonsoft.Json;

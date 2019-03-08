@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Core.Data;
-using System.IO;
+﻿using System.IO;
 using Microsoft.ML;
 //using Microsoft.Extensions.Configuration;
 

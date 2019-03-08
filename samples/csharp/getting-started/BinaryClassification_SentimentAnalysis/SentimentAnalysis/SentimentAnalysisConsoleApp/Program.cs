@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 
@@ -14,12 +13,17 @@ namespace SentimentAnalysisConsoleApp
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static readonly string BaseDatasetsLocation = @"../Data";
-        private static readonly string TrainDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-data.tsv";
-        private static readonly string TestDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-test.tsv";
+        private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
+        private static readonly string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-data.tsv";
+        private static readonly string TestDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-test.tsv";
 
-        private static readonly string BaseModelsPath = @"../MLModels";
-        private static readonly string ModelPath = $"{BaseModelsPath}/SentimentModel.zip";
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
+
+        private static readonly string BaseModelsRelativePath = @"../../../../MLModels";
+        private static readonly string ModelRelativePath = $"{BaseModelsRelativePath}/SentimentModel.zip";
+
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -42,8 +46,8 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            IDataView trainingDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(GetDataSetAbsolutePath(TrainDataPath), hasHeader: true);
-            IDataView testDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(GetDataSetAbsolutePath(TestDataPath), hasHeader: true);
+            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
+            IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 
             // STEP 2: Common data process configuration with pipeline data transformations          
             var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
@@ -53,7 +57,7 @@ namespace SentimentAnalysisConsoleApp
             ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 1);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -69,7 +73,7 @@ namespace SentimentAnalysisConsoleApp
 
             // STEP 6: Save/persist the trained model to a .ZIP file
 
-            using (var fs = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlContext.Model.Save(trainedModel, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -83,7 +87,7 @@ namespace SentimentAnalysisConsoleApp
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
 
             ITransformer trainedModel;
-            using (var stream = new FileStream(GetDataSetAbsolutePath(ModelPath), FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlContext.Model.Load(stream);
             }
@@ -95,24 +99,18 @@ namespace SentimentAnalysisConsoleApp
             var resultprediction = predEngine.Predict(sampleStatement);
 
             Console.WriteLine($"=============== Single Prediction  ===============");
-            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
+            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Negative" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
             Console.WriteLine($"==================================================");
         }
 
-        public static string GetDataSetAbsolutePath(string relativeDatasetPath)
+        public static string GetAbsolutePath(string relativePath)
         {
-            string projectFolderPath = Common.ConsoleHelper.FindProjectFolderPath();
-            Console.WriteLine($"Base Path: " + projectFolderPath);
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
 
-            string fullPath = Path.Combine(projectFolderPath + "/" + relativeDatasetPath);
-            Console.WriteLine($"Full Path: " + fullPath);
+            string fullPath = Path.Combine(assemblyFolderPath , relativePath);
 
             return fullPath;
         }
-
-
-
-
-        
     }
 }

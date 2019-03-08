@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
-using Microsoft.ML.Core.Data;
 
 namespace MovieRecommenderModel
 {
@@ -14,13 +13,17 @@ namespace MovieRecommenderModel
 
     class Program
     {
-        private static string TrainingDataLocation = @".\Data\ratings_train.csv";
-        private static string TestDataLocation = @".\Data\ratings_test.csv";
-        private static string ModelPath = @"..\..\..\Model\model.zip";
+        private static string BaseModelRelativePath = @"../../../Model";
+        private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
 
-        private static string userIdFeaturized = nameof(userIdFeaturized);
-        private static string movieIdFeaturized = nameof(movieIdFeaturized);
+        private static string BaseDataSetRelativepath = @"../../../Data";
+        private static string TrainingDataRelativePath = $"{BaseDataSetRelativepath}/ratings_train.csv";
+        private static string TestDataRelativePath = $"{BaseDataSetRelativepath}/ratings_test.csv";
 
+        private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetAbsolutePath(TestDataRelativePath);
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
+        
         static void Main(string[] args)
         {
             Color color = Color.FromArgb(130,150,115);
@@ -32,7 +35,7 @@ namespace MovieRecommenderModel
             MLContext mlContext = new MLContext();
 
             //STEP 2: Read data from text file using TextLoader by defining the schema for reading the movie recommendation datasets and return dataview.
-            var trainingDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
 
             Console.WriteLine("=============== Reading Input Files ===============", color);
             Console.WriteLine();
@@ -48,10 +51,9 @@ namespace MovieRecommenderModel
 
             //STEP 4: Transform your data by encoding the two features userId and movieID.
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
-            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: userIdFeaturized, inputColumnName: nameof(MovieRating.userId))
-                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: movieIdFeaturized, inputColumnName: nameof(MovieRating.movieId))
-                                          .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, userIdFeaturized, movieIdFeaturized))
-                                          //.AppendCacheCheckpoint(mlContext) // Add a data-cache step within a pipeline.
+            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "userIdFeaturized", inputColumnName: nameof(MovieRating.userId))
+                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "movieIdFeaturized", inputColumnName: nameof(MovieRating.movieId))
+                                          .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "userIdFeaturized", "movieIdFeaturized"))
                                           .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {DefaultColumnNames.Features})));
 
             var preview = pipeline.Preview(trainingDataView, maxRows: 10);
@@ -65,7 +67,7 @@ namespace MovieRecommenderModel
             //STEP 6: Evaluate the model performance
             Console.WriteLine("=============== Evaluating the model ===============", color);
             Console.WriteLine();
-            var testDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.LoadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
 
             var prediction = model.Transform(testDataView);
 
@@ -133,13 +135,23 @@ namespace MovieRecommenderModel
             var sorted = body.Select(line => new { SortKey = Int32.Parse(line.Split(',')[3]), Line = line })
                              .OrderBy(x => x.SortKey)
                              .Select(x => x.Line);
-            File.WriteAllLines(@"..\..\..\Data\ratings_train.csv", dataset.Take(1).Concat(sorted.Take((int)(numLines * 0.9))));
-            File.WriteAllLines(@"..\..\..\Data\ratings_test.csv", dataset.Take(1).Concat(sorted.TakeLast((int)(numLines * 0.1))));
+            File.WriteAllLines(@"../../../Data\ratings_train.csv", dataset.Take(1).Concat(sorted.Take((int)(numLines * 0.9))));
+            File.WriteAllLines(@"../../../Data\ratings_test.csv", dataset.Take(1).Concat(sorted.TakeLast((int)(numLines * 0.1))));
         }
 
         public static float Sigmoid(float x)
         {
             return (float)(100 / (1 + Math.Exp(-x)));
+        }
+
+        public static string GetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
+
+            return fullPath;
         }
     }
 

@@ -13,7 +13,8 @@ namespace MovieRecommendation.DataStructures
 
         public String movieTitle;
 
-        private static String moviesdatasetpath = $"{Program.DatasetsLocation}/recommendation-movies.csv";
+        private static String moviesdatasetRelativepath = $"{Program.DatasetsRelativePath}/recommendation-movies.csv";
+        private static string moviesdatasetpath = Program.GetAbsolutePath(moviesdatasetRelativepath);
 
         public Lazy<List<Movie>> _movies = new Lazy<List<Movie>>(() => LoadMovieData(moviesdatasetpath));
         

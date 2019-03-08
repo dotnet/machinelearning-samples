@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v0.11           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
@@ -48,6 +48,8 @@ To solve this problem, you build two independent ML models that take the followi
 |----------|--------|
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev      |
 | **country stats**  | next, country, year, month, max, min, std, count, sales, med, prev   |
+
+[Explanation of Dataset](docs/Details-of-Datasets.md) - Goto this link for detailed information on dataset.
 
 ### ML task - [Regression](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#regression)
 
@@ -114,7 +116,7 @@ Load the dataset into the DataView.
 
 ```chsarp
 
-var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
+var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
 ```
 
@@ -130,7 +132,7 @@ You can load the dataset either before or after designing the pipeline. Although
 
 ```csharp
 
-var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
 
 var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFeatures, nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
                 nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
