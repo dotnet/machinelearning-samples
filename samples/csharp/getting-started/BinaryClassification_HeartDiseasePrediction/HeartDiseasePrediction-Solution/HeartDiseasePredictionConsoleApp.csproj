@@ -11,11 +11,15 @@
     <EmbeddedResource Remove="MLModels\**" />
     <None Remove="MLModels\**" />
   </ItemGroup>
+ 
   <ItemGroup>
-    <Content Include="..\Data\HeartTest.csv" Link="Data\HeartTest.csv" />
-    <Content Include="..\Data\HeartTraining.csv" Link="Data\HeartTraining.csv" />
+    <None Update="Data\HeartTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\HeartTraining.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Data\" />
   </ItemGroup>

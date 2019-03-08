@@ -9,14 +9,18 @@ namespace HeartDiseasePredictionConsoleApp
 {
     public class Program
     {
-        private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+        private static string BaseDatasetsRelativePath = @"../../../Data";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/HeartTraining.csv";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/HeartTest.csv";
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/HeartTraining.csv";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/HeartTest.csv";
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
-        private static string BaseModelsPath = @"../../../../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/HeartClassification.zip";
+
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/HeartClassification.zip";
+
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         public static void Main(string[] args)
         {
@@ -32,8 +36,8 @@ namespace HeartDiseasePredictionConsoleApp
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
 
-            var trainingDataView = mlContext.Data.LoadFromTextFile<HeartDataImport>(TrainDataPath, hasHeader: true, separatorChar: ';');
-            var testDataView = mlContext.Data.LoadFromTextFile<HeartDataImport>(TestDataPath, hasHeader: true, separatorChar: ';');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<HeartData>(TrainDataPath, hasHeader: true, separatorChar: ';');
+            var testDataView = mlContext.Data.LoadFromTextFile<HeartData>(TestDataPath, hasHeader: true, separatorChar: ';');
 
             var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
                 .Append(mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features));
@@ -114,6 +118,18 @@ namespace HeartDiseasePredictionConsoleApp
                 Console.WriteLine("");
                 Console.WriteLine("");
             }
+
+        }
+
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
 
         }
     }
