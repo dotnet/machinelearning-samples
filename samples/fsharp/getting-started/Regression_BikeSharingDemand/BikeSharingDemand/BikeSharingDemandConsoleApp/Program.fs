@@ -1,7 +1,6 @@
 ﻿
 open System
 open Microsoft.ML
-open Microsoft.ML.Core.Data
 open System.IO
 open DataStructures
 
@@ -26,8 +25,8 @@ let main argv =
     let mlContext = MLContext(seed = Nullable 0)
 
     // 1. Common data loading configuration
-    let trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(trainingDataLocation, hasHeader = true, separatorChar = ',')
-    let testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(testDataLocation, hasHeader = true, separatorChar = ',')
+    let trainingDataView = mlContext.Data.LoadFromTextFile<DemandObservation>(trainingDataLocation, hasHeader = true, separatorChar = ',')
+    let testDataView = mlContext.Data.LoadFromTextFile<DemandObservation>(testDataLocation, hasHeader = true, separatorChar = ',')
 
 
     // 2: Common data process configuration with pipeline data transformations

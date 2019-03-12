@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v0.11           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -63,30 +63,14 @@ The initial code is similar to the following:
     // Seed set to any number so you have a deterministic environment for repeateable results
     let seed = Nullable 1
     let mlContext = MLContext seed
-
-    let columns = 
-        [|
-            // A boolean column depicting the 'label'.
-            yield TextLoader.Column("Label", Nullable DataKind.BL, 30)
-            // 29 Features V1..V28 + Amount
-            for i in 1 .. 28 -> 
-                TextLoader.Column(sprintf "V%d" i, Nullable DataKind.R4, i)
-            yield TextLoader.Column("Amount", Nullable DataKind.R4, 29)
-
-    let loaderArgs = TextLoader.Arguments()
-    loaderArgs.Column <- columns
-    loaderArgs.HasHeader <- true
-    loaderArgs.Separators <- [| ',' |]
-    
-
 [...]
     let classification = BinaryClassificationCatalog mlContext
  
 [...]
 
     let trainData, testData = 
-        classification.TrainTestSplit (data, 0.2) 
-        |> fun x -> x.ToTuple ()
+        let y = mlContext.BinaryClassification.TrainTestSplit(data, 0.2, seed = Nullable 1u) 
+        y.TrainSet, y.TestSet
 
 [...]
 
@@ -98,7 +82,9 @@ The initial code is similar to the following:
         |> Seq.toArray
 
     let pipeline = 
-        mlContext.Transforms.Concatenate ("Features", featureColumnNames)
+        EstimatorChain()
+        |> fun x -> x.Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames))
+        |> fun x -> x.Append(mlContext.Transforms.DropColumns [|"Time"|])
         |> fun x -> 
             x.Append (
                 mlContext.Transforms.Normalize (
@@ -111,7 +97,7 @@ The initial code is similar to the following:
             x.Append (
                 mlContext.BinaryClassification.Trainers.FastTree(
                     "Label", 
-                    "Features", 
+                    "FeaturesNormalizedByMeanVar", 
                     numLeaves = 20, 
                     numTrees = 100, 
                     minDatapointsInLeaves = 10, 
@@ -136,7 +122,7 @@ We need this step to conclude how accurate our model is. To do so, the model fro
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 `````fsharp
-    let metrics = classification.Evaluate (model.Transform (testData), "Label")  
+    let metrics = mlContext.BinaryClassification.Evaluate(model.Transform (testData), "Label")   
 `````
 
 ### 4. Consume model

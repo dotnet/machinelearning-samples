@@ -5,6 +5,7 @@ open System.IO
 open Microsoft.ML
 open MulticlassClassification_Iris
 open MulticlassClassification_Iris.DataStructures
+open Microsoft.ML.Data
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -19,8 +20,8 @@ let modelPath = sprintf @"%s/IrisClassificationModel.zip" baseModelsPath
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     
     // STEP 1: Common data loading configuration
-    let trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
-    let testDataView = mlContext.Data.ReadFromTextFile<IrisData>(testDataPath, hasHeader = true)
+    let trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
+    let testDataView = mlContext.Data.LoadFromTextFile<IrisData>(testDataPath, hasHeader = true)
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
@@ -31,7 +32,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
                             .AppendCacheCheckpoint(mlContext)
 
     // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
+    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 
 

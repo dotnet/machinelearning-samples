@@ -7,8 +7,6 @@ open TaxiFarePrediction.DataStructures.DataStructures
 open Microsoft.ML
 open Microsoft.ML.Data
 open Microsoft.ML.Transforms
-open Microsoft.ML.Transforms.Normalizers
-open Microsoft.ML.Core.Data
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -28,12 +26,12 @@ let downcastPipeline (x : IEstimator<_>) =
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 1: Common data loading configuration
-    let baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(trainDataPath, hasHeader = true, separatorChar = ',')
-    let testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(testDataPath, hasHeader = true, separatorChar = ',')
+    let baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(trainDataPath, hasHeader = true, separatorChar = ',')
+    let testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(testDataPath, hasHeader = true, separatorChar = ',')
 
     //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
     //let cnt = baseTrainingDataView.GetColumn<decimal>(mlContext, "FareAmount").Count()
-    let trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
+    let trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
     //let cnt2 = trainingDataView.GetColumn<float>(mlContext, "FareAmount").Count()
 
     // STEP 2: Common data process configuration with pipeline data transformations
@@ -55,7 +53,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 5 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
+    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
 
     let modelBuilder = dataProcessPipeline.Append trainer
 
