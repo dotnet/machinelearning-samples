@@ -1,20 +1,24 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML.Data;
 using System;
 using System.IO;
 using mnist.DataStructures;
 
-
-
 namespace mnist
 {
     class Program
     {
+        private static string BaseDatasetsRelativePath = @"../../../Data";
+        private static string TrianDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
+        private static string TestDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
 
-        static readonly string TrainDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-train.csv");
-        static readonly string TestDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "optdigits-val.csv");
-        static readonly string ModelPath = Path.Combine(Environment.CurrentDirectory, "MLModels", "Model.zip");
+        private static string TrainDataPath = GetAbsolutePath(TrianDataRealtivePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRealtivePath);
+
+        private static string BaseModelsRelativePath = @"../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/Model.zip";
+
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -31,32 +35,33 @@ namespace mnist
             try
             {
                 // STEP 1: Common data loading configuration
-                var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
+                var trainData = mLContext.Data.LoadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
-                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
-                            new TextLoader.Column("Number", DataKind.R4, 64)
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
+                            new TextLoader.Column("Number", DataKind.Single, 64)
                         },
                         hasHeader : false,
                         separatorChar : ','
                         );
 
                 
-                var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
+                var testData = mLContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
-                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
-                            new TextLoader.Column("Number", DataKind.R4, 64)
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
+                            new TextLoader.Column("Number", DataKind.Single, 64)
                         },
                         hasHeader: false,
                         separatorChar: ','
                         );
 
                 // STEP 2: Common data process configuration with pipeline data transformations
+                // Use in-memory cache for small/medium datasets to lower training time. Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
                 var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
 
                 // STEP 3: Set the training algorithm, then create and config the modelBuilder
-                var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: DefaultColumnNames.Features);
+                var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: "Number", featureColumnName: DefaultColumnNames.Features);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
 
                 // STEP 4: Train the model fitting to the DataSet
@@ -85,6 +90,15 @@ namespace mnist
             }
         }
 
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
+        }
 
         private static void TestSomePredictions(MLContext mlContext)
         {

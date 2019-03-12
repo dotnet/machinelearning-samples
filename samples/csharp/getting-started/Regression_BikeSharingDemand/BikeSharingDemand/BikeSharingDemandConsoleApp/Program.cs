@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using System.IO;
 using Microsoft.ML.Data;
 
@@ -15,8 +14,11 @@ namespace BikeSharingDemand
         private static string ModelsLocation = @"../../../../MLModels";
 
         private static string DatasetsLocation = @"../../../../Data";
-        private static string TrainingDataLocation = $"{DatasetsLocation}/hour_train.csv";
-        private static string TestDataLocation = $"{DatasetsLocation}/hour_test.csv";
+        private static string TrainingDataRelativePath = $"{DatasetsLocation}/hour_train.csv";
+        private static string TestDataRelativePath = $"{DatasetsLocation}/hour_test.csv";
+
+        private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
+        private static string TestDataLocation = GetAbsolutePath(TestDataRelativePath);
         
         static void Main(string[] args)
         {
@@ -25,8 +27,8 @@ namespace BikeSharingDemand
             var mlContext = new MLContext(seed: 0);
 
             // 1. Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path:TrainingDataLocation, hasHeader:true, separatorChar: ',');
-            var testDataView = mlContext.Data.ReadFromTextFile<DemandObservation>(path:TestDataLocation, hasHeader:true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<DemandObservation>(path: TrainingDataLocation, hasHeader:true, separatorChar: ',');
+            var testDataView = mlContext.Data.LoadFromTextFile<DemandObservation>(path: TestDataLocation, hasHeader:true, separatorChar: ',');
 
             // 2. Common data pre-process with pipeline data transformations
 
@@ -37,6 +39,8 @@ namespace BikeSharingDemand
                                                      nameof(DemandObservation.WorkingDay), nameof(DemandObservation.Weather), nameof(DemandObservation.Temperature),
                                                      nameof(DemandObservation.NormalizedTemperature), nameof(DemandObservation.Humidity), nameof(DemandObservation.Windspeed))
                                          .AppendCacheCheckpoint(mlContext);
+                                        // Use in-memory cache for small/medium datasets to lower training time. 
+                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 10);
@@ -70,7 +74,8 @@ namespace BikeSharingDemand
                 ConsoleHelper.PrintRegressionMetrics(trainer.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
-                string modelPath = $"{ModelsLocation}/{trainer.name}Model.zip";
+                string modelRelativeLocation = $"{ModelsLocation}/{trainer.name}Model.zip";
+                string modelPath = GetAbsolutePath(modelRelativeLocation);
                 using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                     mlContext.Model.Save(trainedModel, fs);
 
@@ -85,7 +90,8 @@ namespace BikeSharingDemand
             {
                 //Load current model from .ZIP file
                 ITransformer trainedModel;
-                string modelPath = $"{ModelsLocation}/{learner.name}Model.zip";
+                string modelRelativeLocation = $"{ModelsLocation}/{learner.name}Model.zip";
+                string modelPath = GetAbsolutePath(modelRelativeLocation);
                 using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     trainedModel = mlContext.Model.Load(stream);
@@ -100,7 +106,16 @@ namespace BikeSharingDemand
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
+        }
 
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }

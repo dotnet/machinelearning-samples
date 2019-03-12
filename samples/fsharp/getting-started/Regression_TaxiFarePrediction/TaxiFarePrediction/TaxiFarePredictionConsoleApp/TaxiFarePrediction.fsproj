@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Remove="datasets\**" />
     <EmbeddedResource Remove="datasets\**" />
+    <EmbeddedResource Remove="Helpers\**" />
     <None Remove="datasets\**" />
   </ItemGroup>
 
@@ -15,10 +16,7 @@
     <None Include="..\Data\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv" />
     <None Include="..\Data\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv" />
     <Compile Include="DataStructures\DataStructures.fs" />
-    <Compile Include="..\..\..\..\common_v0.9\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
-    <Compile Include="..\..\..\..\common_v0.9\ModelBuilder.fs" Link="Common\ModelBuilder.fs" />
-    <Compile Include="..\..\..\..\common_v0.9\ModelScorer.fs" Link="Common\ModelScorer.fs" />
-    <Compile Include="..\..\..\..\common_v0.9\Pipeline.fs" Link="Common\Pipeline.fs" />
+    <Compile Include="..\..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,11 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="0.10.0" />
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="PLplot" Version="5.13.7" />
   </ItemGroup>
 
