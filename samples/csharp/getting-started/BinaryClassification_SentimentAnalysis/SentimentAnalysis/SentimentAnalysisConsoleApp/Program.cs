@@ -107,7 +107,7 @@ namespace SentimentAnalysisConsoleApp
 
         private static void DownloadDataIfNotExists(string dataPath)
         {
-            var downloadPath = "http://aka.ms/tlc-resources/benchmarks/WikiDetoxAnnotated160kRows.tsv";
+            var downloadPath = "https://aka.ms/tlc-resources/benchmarks/WikiDetoxAnnotated160kRows.tsv";
             var folderPath = GetAbsolutePath(BaseDatasetsRelativePath);
 
             if (!Directory.Exists(folderPath))
