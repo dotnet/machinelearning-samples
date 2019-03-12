@@ -14,11 +14,9 @@ namespace SentimentAnalysisConsoleApp
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
         private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
-        private static readonly string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-data.tsv";
-        private static readonly string TestDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-test.tsv";
+        private static readonly string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/wikiDetoxAnnotated160kRows.tsv";
 
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
-        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static readonly string BaseModelsRelativePath = @"../../../../MLModels";
         private static readonly string ModelRelativePath = $"{BaseModelsRelativePath}/SentimentModel.zip";
@@ -46,8 +44,9 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
-            IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
+            IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
+
+            var testTrainSplit = mlContext.BinaryClassification.TrainTestSplit(dataView, testFraction: 0.2);
 
             // STEP 2: Common data process configuration with pipeline data transformations          
             var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
@@ -62,11 +61,11 @@ namespace SentimentAnalysisConsoleApp
 
             // STEP 4: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
-            ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
+            ITransformer trainedModel = trainingPipeline.Fit(testTrainSplit.TrainSet);
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var predictions = trainedModel.Transform(testDataView);
+            var predictions = trainedModel.Transform(testTrainSplit.TestSet);
             var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
