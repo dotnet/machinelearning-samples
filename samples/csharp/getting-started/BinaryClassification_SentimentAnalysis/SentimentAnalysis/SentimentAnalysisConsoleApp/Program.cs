@@ -29,6 +29,8 @@ namespace SentimentAnalysisConsoleApp
             //Set a random seed for repeatable/deterministic results across multiple trainings.
             var mlContext = new MLContext(seed: 1);
 
+            DownloadDataIfNotExists(GetAbsolutePath(BaseDatasetsRelativePath));
+
             // Create, Train, Evaluate and Save a model
             BuildTrainEvaluateAndSaveModel(mlContext);
             Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
@@ -100,6 +102,25 @@ namespace SentimentAnalysisConsoleApp
             Console.WriteLine($"=============== Single Prediction  ===============");
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Negative" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
             Console.WriteLine($"==================================================");
+        }
+
+        private static void DownloadDataIfNotExists(string dataPath)
+        {
+            var downloadPath = "http://aka.ms/tlc-resources/benchmarks/WikiDetoxAnnotated160kRows.tsv";
+            var folderPath = GetAbsolutePath(BaseDatasetsRelativePath);
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            if (!File.Exists(dataPath))
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(new Uri(downloadPath), dataPath);
+                }
+            }
         }
 
         public static string GetAbsolutePath(string relativePath)
