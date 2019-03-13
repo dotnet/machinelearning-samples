@@ -112,7 +112,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Anomaly detection</h3>
-      <img src="images/Anomaly Detection.png" alt="anomaly detection chart" width="120" height="120"  align="middle">
+      <img src="images/anomaly-detection.png" alt="anomaly detection chart" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
