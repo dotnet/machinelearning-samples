@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v0.11           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 
@@ -105,23 +105,21 @@ Here's the code which will be used to build the model:
 //Create the MLContext to share across components for deterministic results
 let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic environment
 // STEP 1: Common data loading configuration
-let textLoader = 
-    mlContext.Data.CreateTextLoader(
+let pivotDataView = 
+    mlContext.Data.LoadFromTextFile(pivotCsv,
         columns = 
             [| 
-                TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
-                TextLoader.Column("LastName", Nullable DataKind.Text, 32)
+                TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                TextLoader.Column("LastName", DataKind.String, 32)
             |],
         hasHeader = true,
         separatorChar = ',')
-
-let pivotDataView = textLoader.Read(pivotCsv)
 
 //STEP 2: Configure data transformations in pipeline
 let dataProcessPipeline =  
     EstimatorChain()
         .Append(mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
-        .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnInfo("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnOptions("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
 
 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
 Common.ConsoleHelper.peekDataViewInConsole<PivotObservation> mlContext pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore
@@ -132,7 +130,7 @@ let trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount = 3
 let trainingPipeline = dataProcessPipeline.Append(trainer)
 ```
 
-In this case, `TextLoader` doesn't define explicitly each column, but declares a `Features` property made by the first 32 columns of the file; also declares the property `LastName` to the value of the last column.
+In this case, `LoadFromTextFile` doesn't define explicitly each column, but declares a `Features` property made by the first 32 columns of the file; also declares the property `LastName` to the value of the last column.
 
 Then, you need to apply some transformations to the data:
 1) Add a PCA column, using the `mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2)` Estimator, passing as parameter `rank = 2`, which means that we are reducing the features from 32 to 2 dimensions (*x* and *y*)
@@ -175,20 +173,20 @@ In this case, the model is not predicting any value (like a regression task) or 
 The code below is how you use the model to create those clusters:
 
 ```fsharp
-let reader = 
-    mlContext.Data.CreateTextReader(
+let data = 
+    mlContext.Data.LoadFromTextFile(
+        pivotCsv,
         columns = 
             [| 
-                TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
-                TextLoader.Column("LastName", Nullable DataKind.Text, 32)
+                TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                TextLoader.Column("LastName", DataKind.String, 32)
             |],
         hasHeader = true,
         separatorChar = ',')
 
-let data = reader.Read(pivotCsv)
-
 //Apply data transformation to create predictions/clustering
-let predictions = model.Transform(data).AsEnumerable<ClusteringPrediction>(mlContext, false) |> Seq.toArray
+let predictions = mlContext.Data.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
+
 ```
 
 Additionally, the method `SaveCustomerSegmentationPlotChart()` saves an scatter plot drawing the samples in each assigned cluster, using the [OxyPlot](http://www.oxyplot.org/) library.

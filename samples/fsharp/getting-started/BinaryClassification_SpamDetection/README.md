@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .tsv files | Spam detection | Two-class classification | SDCA (linear learner) |
+| v0.11           | Dynamic API | Up-to-date | Console app | .tsv files | Spam detection | Two-class classification | SDCA (linear learner) |
 
 In this sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict whether a text message is spam. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -85,25 +85,18 @@ After the model is trained, you can use the `Predict()` API to predict whether n
 // While our model is relatively good at detecting the difference, this skewness leads it to always
 // say the message is not spam. We deal with this by lowering the threshold of the predictor. In reality,
 // it is useful to look at the precision-recall curve to identify the best possible threshold.
-let newModel = 
-    let lastTransformer = 
-        BinaryPredictionTransformer<IPredictorProducing<float32>>(
-            mlContext, 
-            model.LastTransformer.Model, 
-            model.GetOutputSchema(data.Schema), 
-            model.LastTransformer.FeatureColumn, 
-            threshold = 0.15f, 
-            thresholdColumn = DefaultColumnNames.Probability);
-    let parts = model |> Seq.toArray
-    parts.[parts.Length - 1] <- lastTransformer :> _
-    TransformerChain<ITransformer>(parts)
-
+let classify = classifyWithThreshold 0.15f
 
 // Create a PredictionFunction from our model 
-let predictor = newModel.CreatePredictionEngine<SpamInput, SpamPrediction>(mlContext);
+let predictor = model.CreatePredictionEngine<SpamInput, SpamPrediction>(mlContext);
 
-// Make a prediction
-let prediction = p.Predict({LabelText = ""; Message = "That's a great idea. It should work."})
-printfn "The message '%s' is %b" x prediction.PredictedLabel
+// Test a few examples
+[
+    "That's a great idea. It should work."
+    "free medicine winner! congratulations"
+    "Yes we should meet over the weekend!"
+    "you win pills and free entry vouchers"
+] 
+|> List.iter (classify predictor)
 
 ```
