@@ -97,7 +97,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Clustering</h3>
-      <img src="images/clustering.png" alt="Clustering plotting" width="120" height="120"  align="middle">
+      <img src="images/Clustering.png" alt="Clustering plotting" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   ML task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar to each other than to those in other groups. It is an exploratory task. It does not classify items across particular labels.
@@ -124,7 +124,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Ranking</h3>
-      <img src="images/ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
+      <img src="images/Ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
   </td>
   <td width="35%">
   Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/dislike, context, interests, etc.
