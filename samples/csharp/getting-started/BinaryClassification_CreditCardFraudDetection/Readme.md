@@ -1,4 +1,4 @@
-# Fraud detection in credit cards based on binary classification and PCA
+# Fraud detection in credit cards based on binary classification and existing PCA-transformed dataset
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
