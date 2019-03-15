@@ -12,7 +12,7 @@ It is important to note that this sample uses the dynamic API with Estimators.
 ## Problem
 This problem is centered around predicting if credit card transaction (with its related info/variables) is a fraud or no. 
  
-The input information of the transactions contain only numerical input variables which are the result of PCA transformations. Unfortunately, due to confidentiality issues, the original features and additional background information are not available, but the way you build the model doesn't change.  
+The input dataset of the transactions contain only numerical input variables which are the result of previous PCA (Principal Component Analysis) transformations. Unfortunately, due to confidentiality issues, the original features and additional background information are not available, but the way you build the model doesn't change.  
 
 Features V1, V2, ... V28 are the principal components obtained with PCA, the only features which have not been transformed with PCA are 'Time' and 'Amount'. 
 
