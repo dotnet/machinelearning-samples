@@ -51,7 +51,7 @@ namespace ImageClassification.Model
 
 
 
-            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
+            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: false);
 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
                             .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
