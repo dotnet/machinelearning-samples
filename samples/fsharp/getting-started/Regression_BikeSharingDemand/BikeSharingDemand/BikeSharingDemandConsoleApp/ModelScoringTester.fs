@@ -4,6 +4,7 @@ open System
 open System.IO
 open DataStructures
 open Microsoft.ML
+open System.Globalization
 
 let readSampleDataFromCsvFile dataLocation numberOfRecordsToRead =
     File.ReadLines(dataLocation)
@@ -11,19 +12,19 @@ let readSampleDataFromCsvFile dataLocation numberOfRecordsToRead =
     |> Seq.filter(fun x -> not(String.IsNullOrEmpty(x)))
     |> Seq.map(fun x -> x.Split(','))
     |> Seq.map(fun x -> {
-        Season = Single.Parse(x.[2])
-        Year = Single.Parse(x.[3])
-        Month = Single.Parse(x.[4])
-        Hour = Single.Parse(x.[5])
-        Holiday = Single.Parse(x.[6])
-        Weekday = Single.Parse(x.[7])
-        WorkingDay = Single.Parse(x.[8])
-        Weather = Single.Parse(x.[9])
-        Temperature = Single.Parse(x.[10])
-        NormalizedTemperature = Single.Parse(x.[11])
-        Humidity = Single.Parse(x.[12])
-        Windspeed = Single.Parse(x.[13])
-        Count = Single.Parse(x.[16])
+        Season = Single.Parse(x.[2], CultureInfo.InvariantCulture)
+        Year = Single.Parse(x.[3], CultureInfo.InvariantCulture)
+        Month = Single.Parse(x.[4], CultureInfo.InvariantCulture)
+        Hour = Single.Parse(x.[5], CultureInfo.InvariantCulture)
+        Holiday = Single.Parse(x.[6], CultureInfo.InvariantCulture)
+        Weekday = Single.Parse(x.[7], CultureInfo.InvariantCulture)
+        WorkingDay = Single.Parse(x.[8], CultureInfo.InvariantCulture)
+        Weather = Single.Parse(x.[9], CultureInfo.InvariantCulture)
+        Temperature = Single.Parse(x.[10], CultureInfo.InvariantCulture)
+        NormalizedTemperature = Single.Parse(x.[11], CultureInfo.InvariantCulture)
+        Humidity = Single.Parse(x.[12], CultureInfo.InvariantCulture)
+        Windspeed = Single.Parse(x.[13], CultureInfo.InvariantCulture)
+        Count = Single.Parse(x.[16], CultureInfo.InvariantCulture)
     })
     |> Seq.take numberOfRecordsToRead
     |> Seq.toList
