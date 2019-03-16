@@ -21,7 +21,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | Name                                | Description                                                                                 | ML Tasks or area of focus                                                               | API status                                                               | Owner                       |
 |-------------------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------|-----------------------------|
 | [Chemical Molecular Data Format](https://mp.weixin.qq.com/s/x7mxim9uUoAfIEE_kvyFWg)  |  Demonstrates how to use the  ML.NET to predict chemical molecular data format.| Multi-Class classification | ML.NET v0.10 and .NET framework 4.6.1 | Kudos for Chen Qing Yang     |
-| [Chinese Samples](https://github.com/feiyun0112/machinelearning-samples.zh-cn)  | Consists of list of  ML.NET samples in Chinese | ML Tasks similar to taks in [Ml.NET Samples](https://github.com/dotnet/machinelearning-samples) | ML.NET v0.7 | Kudos for feiyun0112 |
+| [Other ML.Net Samples](https://github.com/feiyun0112/machinelearning-samples.zh-cn)  | Consists of list of  ML.NET samples in Chinese similar to [Ml.NET Samples](https://github.com/dotnet/machinelearning-samples) in English | ML Tasks similar to taks in [Ml.NET Samples](https://github.com/dotnet/machinelearning-samples) | ML.NET v0.7 | Kudos for feiyun0112 |
 
 
 Do you have any cool ML.NET sample that you'd like to share with the community?
