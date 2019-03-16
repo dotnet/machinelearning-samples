@@ -16,7 +16,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [Simple Linear Regression](https://github.com/jwood803/MLNetExamples/tree/master/MLNetExamples/SimpleRegression) | Predicts salary based off years of experience.  | Regression      | Uses Static API. Needs to migrate to Dynamic API  | Jon Wood, jwood803 | 
 | [ONNX model scoring](https://github.com/cosmincatalin/mxnet-onnx-mlnet) | Apache MXNet MLP model exported to ONNX and used in ML.NET  | Regression      |   | Cosmin Catalin, cosmincatalin | 
 
-
+**Chinese Samples**
 
 | Name                                | Description                                                                                 | ML Tasks or area of focus                                                               | API status                                                               | Owner                       |
 |-------------------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------|-----------------------------|
