@@ -75,9 +75,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Trainer", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\CreditCardFraudDetection.Trainer.csproj", "{5F5DBFC6-9B5D-4657-8249-AEBB776A28FD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction.Solution", "HeartDiseasePrediction.Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction-Solution", "HeartDiseasePrediction-Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeartDiseasePredictionConsoleApp", "getting-started\BinaryClassification_HeartDiseasePrediction\HeartDiseasePrediction-Solution\HeartDiseasePredictionConsoleApp.csproj", "{5EC556C4-A05C-406D-972D-B7B2F0609C8C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShampooSales.Solution", "ShampooSales.Solution", "{EBAF3549-3CBE-4FB6-927B-B97410464C80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShampooSales", "getting-started\TimeSeries_AnomalyDetection\AnomalyDetection\AnomalyDetectionConsoleApp\ShampooSales.csproj", "{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +251,14 @@ Global
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C}.Release|x64.ActiveCfg = Release|Any CPU
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C}.Release|x64.Build.0 = Release|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Debug|x64.Build.0 = Debug|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Release|x64.ActiveCfg = Release|Any CPU
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,6 +285,7 @@ Global
 		{35603EFE-94E1-499E-A44D-B0CDC0442C63} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{5F5DBFC6-9B5D-4657-8249-AEBB776A28FD} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C} = {70958053-9A93-47D5-A944-2BA34E475618}
+		{F082FBD3-48F7-4BED-8213-56FC5EB2E27A} = {EBAF3549-3CBE-4FB6-927B-B97410464C80}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
