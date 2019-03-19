@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace SpikeDetection.DataStructures
+namespace ShampooSales.DataStructures
 {
     public class ShampooSalesPrediction
     {
