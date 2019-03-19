@@ -111,3 +111,12 @@ phases:
     displayName: Build Mnist (MulticlassClassification)
     inputs:
       projects: '.\samples\csharp\getting-started\MulticlassClassification_mnist\MulticlassClassification_mnist.sln'
+
+
+ - phase: Time Series Anomaly Detection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Anomaly Detection (Time Series)
+    inputs:
+      projects: '.\samples\csharp\getting-started\TimeSeries_AnomalyDetection\AnomalyDetection.sln'
