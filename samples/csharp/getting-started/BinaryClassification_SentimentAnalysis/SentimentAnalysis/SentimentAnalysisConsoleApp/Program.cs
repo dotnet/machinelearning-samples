@@ -1,15 +1,12 @@
 ﻿using System;
 using System.IO;
-using Microsoft.ML.Core.Data;
+using System.Net;
 using Microsoft.ML;
-using Microsoft.ML.Trainers;
 using Microsoft.ML.Data;
 
 using SentimentAnalysisConsoleApp.DataStructures;
-using Microsoft.ML.Transforms.Text;
-using System.Data;
 using Common;
-
+using Microsoft.Data.DataView;
 
 namespace SentimentAnalysisConsoleApp
 {
@@ -17,12 +14,15 @@ namespace SentimentAnalysisConsoleApp
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-data.tsv";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/wikipedia-detox-250-line-test.tsv";
+        private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
+        private static readonly string DataRelativePath = $"{BaseDatasetsRelativePath}/wikiDetoxAnnotated40kRows.tsv";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/SentimentModel.zip";
+        private static string DataPath = GetAbsolutePath(DataRelativePath);
+
+        private static readonly string BaseModelsRelativePath = @"../../../../MLModels";
+        private static readonly string ModelRelativePath = $"{BaseModelsRelativePath}/SentimentModel.zip";
+
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args)
         {
@@ -32,7 +32,7 @@ namespace SentimentAnalysisConsoleApp
 
             // Create, Train, Evaluate and Save a model
             BuildTrainEvaluateAndSaveModel(mlContext);
-            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training processh ===============");
+            Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
             // Make a single test prediction loding the model from .ZIP file
             TestSinglePrediction(mlContext);
@@ -45,38 +45,29 @@ namespace SentimentAnalysisConsoleApp
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.CreateTextReader(                                                        
-                                                        columns:new[]
-                                                                    {
-                                                                    new TextLoader.Column("Label", DataKind.Bool, 0),
-                                                                    new TextLoader.Column("Text", DataKind.Text, 1)
-                                                                    },                                                     
-                                                        hasHeader:true,
-                                                        separatorChar:'\t'
-                                                        );
+            IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
 
-            IDataView trainingDataView = textLoader.Read(TrainDataPath);
-            IDataView testDataView = textLoader.Read(TestDataPath);
+            var testTrainSplit = mlContext.BinaryClassification.TrainTestSplit(dataView, testFraction: 0.2);
 
             // STEP 2: Common data process configuration with pipeline data transformations          
-            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features");
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole<SentimentIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 1);
+            ConsoleHelper.PeekDataViewInConsole(mlContext, dataView, dataProcessPipeline, 2);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, dataView, dataProcessPipeline, 1);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", featureColumn: "Features");
+            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
-            ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
+            ITransformer trainedModel = trainingPipeline.Fit(testTrainSplit.TrainSet);
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score");
+            var predictions = trainedModel.Transform(testTrainSplit.TestSet);
+            var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
@@ -92,8 +83,7 @@ namespace SentimentAnalysisConsoleApp
 
         // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
-        {
-            
+        {         
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
 
             ITransformer trainedModel;
@@ -109,9 +99,18 @@ namespace SentimentAnalysisConsoleApp
             var resultprediction = predEngine.Predict(sampleStatement);
 
             Console.WriteLine($"=============== Single Prediction  ===============");
-            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
+            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Non Toxic")} sentiment | Probability: {resultprediction.Probability} ");
             Console.WriteLine($"==================================================");
-            //
+        }
+        
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath , relativePath);
+
+            return fullPath;
         }
     }
 }

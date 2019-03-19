@@ -5,14 +5,11 @@ using System.Linq;
 using PLplot;
 using System.Diagnostics;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
-using Microsoft.ML.Transforms;
-using Microsoft.ML.Transforms.Categorical;
-using Microsoft.ML.Transforms.Normalizers;
-using static Microsoft.ML.Transforms.Normalizers.NormalizingEstimator;
 using Regression_TaxiFarePrediction.DataStructures;
 using Common;
 using Microsoft.ML.Data;
+using Microsoft.Data.DataView;
+using static Microsoft.ML.Transforms.NormalizingEstimator;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -20,12 +17,17 @@ namespace Regression_TaxiFarePrediction
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/taxi-fare-train.csv";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/taxi-fare-test.csv";
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/TaxiFareModel.zip";
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
+
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
+
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
@@ -48,44 +50,31 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.CreateTextReader(new[]
-                                                                    {
-                                                                        new TextLoader.Column("VendorId", DataKind.Text, 0),
-                                                                        new TextLoader.Column("RateCode", DataKind.Text, 1),
-                                                                        new TextLoader.Column("PassengerCount", DataKind.R4, 2),
-                                                                        new TextLoader.Column("TripTime", DataKind.R4, 3),
-                                                                        new TextLoader.Column("TripDistance", DataKind.R4, 4),
-                                                                        new TextLoader.Column("PaymentType", DataKind.Text, 5),
-                                                                        new TextLoader.Column("FareAmount", DataKind.R4, 6)
-                                                                    },
-                                                                     hasHeader: true,
-                                                                     separatorChar: ','
-                                                                    );
-
-            IDataView baseTrainingDataView = textLoader.Read(TrainDataPath);
-            IDataView testDataView = textLoader.Read(TestDataPath);
+            IDataView baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
+            IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
             //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
-            var cnt = baseTrainingDataView.GetColumn<float>(mlContext, "FareAmount").Count();
-            IDataView trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, "FareAmount", lowerBound: 1, upperBound: 150);
-            var cnt2 = trainingDataView.GetColumn<float>(mlContext, "FareAmount").Count();
+            var cnt = baseTrainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
+            IDataView trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
+            var cnt2 = trainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.CopyColumns("FareAmount", "Label")
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId", "VendorIdEncoded"))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode", "RateCodeEncoded"))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
-                            .Append(mlContext.Transforms.Normalize(inputName: "PassengerCount", mode: NormalizerMode.MeanVariance))
-                            .Append(mlContext.Transforms.Normalize(inputName: "TripTime", mode: NormalizerMode.MeanVariance))
-                            .Append(mlContext.Transforms.Normalize(inputName: "TripDistance", mode: NormalizerMode.MeanVariance))
-                            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"));
+            var dataProcessPipeline = mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(TaxiTrip.FareAmount))
+                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "VendorIdEncoded", inputColumnName: nameof(TaxiTrip.VendorId)))
+                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "RateCodeEncoded", inputColumnName: nameof(TaxiTrip.RateCode)))
+                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PaymentTypeEncoded",inputColumnName: nameof(TaxiTrip.PaymentType)))
+                            .Append(mlContext.Transforms.Normalize(outputColumnName: nameof(TaxiTrip.PassengerCount), mode: NormalizerMode.MeanVariance))
+                            .Append(mlContext.Transforms.Normalize(outputColumnName: nameof(TaxiTrip.TripTime), mode: NormalizerMode.MeanVariance))
+                            .Append(mlContext.Transforms.Normalize(outputColumnName: nameof(TaxiTrip.TripDistance), mode: NormalizerMode.MeanVariance))
+                            .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", nameof(TaxiTrip.PassengerCount)
+                            , nameof(TaxiTrip.TripTime), nameof(TaxiTrip.TripDistance)));
 
             // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole<TaxiTrip>(mlContext, trainingDataView, dataProcessPipeline, 5);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 5);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-            var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
+            var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -97,7 +86,7 @@ namespace Regression_TaxiFarePrediction
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
 
             IDataView predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.Regression.Evaluate(predictions, label: "Label", score: "Score");
+            var metrics = mlContext.Regression.Evaluate(predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
@@ -302,6 +291,15 @@ namespace Regression_TaxiFarePrediction
             p.Start();
         }
 
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
+        }
     }
 
     public class TaxiTripCsvReader

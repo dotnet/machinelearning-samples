@@ -1,0 +1,5 @@
+<linker>
+  <assembly fullname="ML.Core">
+    <type fullname="Microsoft.ML.Core" preserve="all" />
+  </assembly>
+</linker>

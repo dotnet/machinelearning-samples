@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
 using Common;
 using Microsoft.ML.Data;
@@ -35,38 +34,23 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training country forecasting model");
 
-            TextLoader textLoader = mlContext.Data.CreateTextReader(
-                                            columns:new[] {
-                                                new TextLoader.Column("next", DataKind.R4, 0 ),
-                                                new TextLoader.Column("country", DataKind.Text, 1 ),
-                                                new TextLoader.Column("year", DataKind.R4, 2 ),
-                                                new TextLoader.Column("month", DataKind.R4, 3 ),
-                                                new TextLoader.Column("max", DataKind.R4, 4 ),
-                                                new TextLoader.Column("min", DataKind.R4, 5 ),
-                                                new TextLoader.Column("std", DataKind.R4, 6 ),
-                                                new TextLoader.Column("count", DataKind.R4, 7 ),
-                                                new TextLoader.Column("sales", DataKind.R4, 8 ),
-                                                new TextLoader.Column("med", DataKind.R4, 9 ),
-                                                new TextLoader.Column("prev", DataKind.R4, 10 )
-                                            },
-                                            hasHeader:true,
-                                            separatorChar:','                                    
-                                        );
+            var trainingDataView = mlContext.Data.LoadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
+            
+            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(DefaultColumnNames.Label, DefaultColumnNames.Features);
 
-            var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
-
-            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumn: "NumFeatures", "year", "month", "max", "min", "std", "count", "sales", "med", "prev")
-                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(inputColumn:"country", outputColumn:"CatFeatures"))
-                        .Append(mlContext.Transforms.Concatenate(outputColumn:"Features", "NumFeatures", "CatFeatures"))
-                        .Append(mlContext.Transforms.CopyColumns("next", "Label"))
+            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(CountryData.year),
+                                nameof(CountryData.month), nameof(CountryData.max), nameof(CountryData.min),
+                                nameof(CountryData.std), nameof(CountryData.count), nameof(CountryData.sales),
+                                nameof(CountryData.med), nameof(CountryData.prev))
+                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(CountryData.country)))
+                        .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, "NumFeatures", "CatFeatures"))
+                        .Append(mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(CountryData.next)))
                         .Append(trainer);
-
-            var trainingDataView = textLoader.Read(dataPath);
 
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn: "Label");
+            var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn: DefaultColumnNames.Label);
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // Create and Train the model

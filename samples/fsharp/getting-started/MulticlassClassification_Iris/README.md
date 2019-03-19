@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+| v0.11           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -48,22 +48,8 @@ Building a model includes:
 The initial code is similar to the following:
 ```fsharp
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextReader(
-            separatorChar = '\t',
-            hasHeader = true,
-            columns = 
-                [|
-                    TextLoader.Column("Label", Nullable DataKind.R4, 0)
-                    TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
-                    TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
-                    TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
-                    TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
-                |]
-        )
-
-    let trainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
+    let trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
+    let testDataView = mlContext.Data.LoadFromTextFile<IrisData>(testDataPath, hasHeader = true)
     
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
@@ -71,10 +57,8 @@ The initial code is similar to the following:
         |> Common.ModelBuilder.appendCacheCheckpoint mlContext
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
+    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    let trainingPipeline = dataProcessPipeline.Append(trainer)
 ```
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known iris types) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
@@ -82,19 +66,15 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training we just call the method providing the training dataset (iris-train.txt file) in a DataView object.
 
 ```fsharp
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = trainingPipeline.Fit(trainingDataView)
 ```
 ### 3. Evaluate model
 We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `MulticlassClassification.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
 
 ```fsharp
-    let metrics = 
-        (trainedModel, modelBuilder)
-        |> Common.ModelBuilder.evaluateMultiClassClassificationModel testDataView "Label" "Score"
+    let metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score")
 
-    Common.ConsoleHelper.printMultiClassClassificationMetrics (trainer.ToString()) metrics
+    Common.ConsoleHelper.printMultiClassClassificationMetrics (trainer.ToString()) metric
 ```
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
 
@@ -103,21 +83,20 @@ If you are not satisfied with the quality of the model, there are a variety of w
 After the model is trained, we can use the `Predict()` API to predict the probability that this flower belongs to each iris type. 
 
 ```fsharp
-    //6. Test Sentiment Prediction with one sample text 
-    let modelScorer = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
-        
-    let prediction = modelScorer |> Common.ModelScorer.predictSingle DataStructures.TestIrisData.Iris1
-    printfn "Actual: setosa.     Predicted probability: setosa:      %.4f" prediction.Score.[0]
-    printfn "                                           versicolor:  %.4f" prediction.Score.[1]
-    printfn "                                           virginica:   %.4f" prediction.Score.[2]
-    printfn ""
+    // Create prediction engine related to the loaded trained model
+    let predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext)
 
+    //Score sample 1
+    let resultprediction1 = predEngine.Predict(DataStructures.SampleIrisData.Iris1)
+
+    printfn "Actual: setosa.     Predicted probability: setosa:      %.4f" resultprediction1.Score.[0]
+    printfn "                                           versicolor:  %.4f" resultprediction1.Score.[1]
+    printfn "                                           virginica:   %.4f" resultprediction1.Score.[2]
+    printfn ""
 ```
-Where `TestIrisData.Iris1` stores the information about the flower we'd like to predict the type for.
+Where `SampleIrisData.Iris1` stores the information about the flower we'd like to predict the type for.
 ```fsharp
-module TestIrisData =
+module SampleIrisData =
     let Iris1 = { IrisData.Empty with SepalLength = 5.1f; SepalWidth = 3.3f; PetalLength = 1.6f; PetalWidth= 0.2f}
     (...)
 ```

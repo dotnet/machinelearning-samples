@@ -20,6 +20,7 @@ namespace ImageClassification.ModelScorer
         private readonly string modelLocation;
         private readonly string labelsLocation;
         private readonly MLContext mlContext;
+        private static string ImageReal = nameof(ImageReal);
 
         public TFModelScorer(string dataLocation, string imagesFolder, string modelLocation, string labelsLocation)
         {
@@ -66,18 +67,12 @@ namespace ImageClassification.ModelScorer
             Console.WriteLine($"Training file: {dataLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight}), image mean: {ImageNetSettings.mean}");
 
-            TextLoader loader = mlContext.Data.CreateTextReader(
-                                                    columns: new[] 
-                                                                {
-                                                                  new TextLoader.Column("ImagePath", DataKind.Text, 0),
-                                                                });
+            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
 
-            var data = loader.Read(new MultiFileSource(dataLocation));
-
-            var pipeline = mlContext.Transforms.LoadImages(imageFolder: imagesFolder, columns: ("ImagePath", "ImageReal"))
-                            .Append(mlContext.Transforms.Resize("ImageReal", "ImageReal", ImageNetSettings.imageHeight, ImageNetSettings.imageWidth))
-                            .Append(mlContext.Transforms.ExtractPixels(new[] { new ImagePixelExtractorTransform.ColumnInfo("ImageReal", "input", interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
-                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation, new[] { "input" }, new[] { "softmax2" }));
+            var pipeline = mlContext.Transforms.LoadImages(imageFolder: imagesFolder, columns: (outputColumnName: ImageReal, inputColumnName: nameof(ImageNetData.ImagePath)))
+                            .Append(mlContext.Transforms.Resize(outputColumnName: ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
+                            .Append(mlContext.Transforms.ExtractPixels(columns: new[] { new ImagePixelExtractorTransformer.ColumnInfo(name: InceptionSettings.inputTensorName, inputColumnName: ImageReal, interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean) }))
+                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:modelLocation, outputColumnNames:new[] { InceptionSettings.outputTensorName }, inputColumnNames: new[] { InceptionSettings.inputTensorName } ));
 
             var modeld = pipeline.Fit(data);
 

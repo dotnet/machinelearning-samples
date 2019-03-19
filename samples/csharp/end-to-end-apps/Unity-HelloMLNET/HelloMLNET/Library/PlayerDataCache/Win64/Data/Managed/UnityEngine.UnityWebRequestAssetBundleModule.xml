@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<doc>
+  <members>
+    <assembly>
+      <name>UnityEngine.UnityWebRequestAssetBundleModule</name>
+    </assembly>
+    <member name="T:UnityEngine.Networking.DownloadHandlerAssetBundle">
+      <summary>
+        <para>A DownloadHandler subclass specialized for downloading AssetBundles.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Networking.DownloadHandlerAssetBundle.assetBundle">
+      <summary>
+        <para>Returns the downloaded AssetBundle, or null. (Read Only)</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.#ctor(System.String,System.UInt32)">
+      <summary>
+        <para>Standard constructor for non-cached asset bundles.</para>
+      </summary>
+      <param name="url">The nominal (pre-redirect) URL at which the asset bundle is located.</param>
+      <param name="crc">A checksum to compare to the downloaded data for integrity checking, or zero to skip integrity checking.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.#ctor(System.String,System.UInt32,System.UInt32)">
+      <summary>
+        <para>Simple versioned constructor. Caches downloaded asset bundles.</para>
+      </summary>
+      <param name="url">The nominal (pre-redirect) URL at which the asset bundle is located.</param>
+      <param name="crc">A checksum to compare to the downloaded data for integrity checking, or zero to skip integrity checking.</param>
+      <param name="version">Current version number of the asset bundle at url. Increment to redownload.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.#ctor(System.String,UnityEngine.Hash128,System.UInt32)">
+      <summary>
+        <para>Versioned constructor. Caches downloaded asset bundles.</para>
+      </summary>
+      <param name="url">The nominal (pre-redirect) URL at which the asset bundle is located.</param>
+      <param name="crc">A checksum to compare to the downloaded data for integrity checking, or zero to skip integrity checking.</param>
+      <param name="hash">A hash object defining the version of the asset bundle.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.#ctor(System.String,System.String,UnityEngine.Hash128,System.UInt32)">
+      <summary>
+        <para>Versioned constructor. Caches downloaded asset bundles to a customized cache path.</para>
+      </summary>
+      <param name="url">The nominal (pre-redirect) URL at which the asset bundle is located.</param>
+      <param name="hash">A hash object defining the version of the asset bundle.</param>
+      <param name="crc">A checksum to compare to the downloaded data for integrity checking, or zero to skip integrity checking.</param>
+      <param name="cachedBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <param name="name">AssetBundle name which is used as the customized cache path.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.#ctor(System.String,UnityEngine.CachedAssetBundle,System.UInt32)">
+      <summary>
+        <para>Versioned constructor. Caches downloaded asset bundles to a customized cache path.</para>
+      </summary>
+      <param name="url">The nominal (pre-redirect) URL at which the asset bundle is located.</param>
+      <param name="hash">A hash object defining the version of the asset bundle.</param>
+      <param name="crc">A checksum to compare to the downloaded data for integrity checking, or zero to skip integrity checking.</param>
+      <param name="cachedBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <param name="name">AssetBundle name which is used as the customized cache path.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.GetContent(UnityEngine.Networking.UnityWebRequest)">
+      <summary>
+        <para>Returns the downloaded AssetBundle, or null.</para>
+      </summary>
+      <param name="www">A finished UnityWebRequest object with DownloadHandlerAssetBundle attached.</param>
+      <returns>
+        <para>The same as DownloadHandlerAssetBundle.assetBundle</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.GetData">
+      <summary>
+        <para>Not implemented. Throws &lt;a href="http:msdn.microsoft.comen-uslibrarysystem.notsupportedexception"&gt;NotSupportedException&lt;a&gt;.</para>
+      </summary>
+      <returns>
+        <para>Not implemented.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.DownloadHandlerAssetBundle.GetText">
+      <summary>
+        <para>Not implemented. Throws &lt;a href="http:msdn.microsoft.comen-uslibrarysystem.notsupportedexception"&gt;NotSupportedException&lt;a&gt;.</para>
+      </summary>
+      <returns>
+        <para>Not implemented.</para>
+      </returns>
+    </member>
+    <member name="T:UnityEngine.Networking.UnityWebRequestAssetBundle">
+      <summary>
+        <para>Helpers for downloading asset bundles using UnityWebRequest.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.String)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.Uri)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.String,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.Uri,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.String,System.UInt32,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.Uri,System.UInt32,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.String,UnityEngine.Hash128,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.Uri,UnityEngine.Hash128,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.String,UnityEngine.CachedAssetBundle,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.UnityWebRequestAssetBundle.GetAssetBundle(System.Uri,UnityEngine.CachedAssetBundle,System.UInt32)">
+      <summary>
+        <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
+      </summary>
+      <param name="uri">The URI of the asset bundle to download.</param>
+      <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+      <param name="version">An integer version number, which will be compared to the cached version of the asset bundle to download. Increment this number to force Unity to redownload a cached asset bundle.
+
+Analogous to the version parameter for WWW.LoadFromCacheOrDownload.</param>
+      <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+      <param name="cachedAssetBundle">A structure used to download a given version of AssetBundle to a customized cache path.</param>
+      <returns>
+        <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
+      </returns>
+    </member>
+    <member name="A:UnityEngine.UnityWebRequestAssetBundleModule">
+      <summary>
+        <para>The UnityWebRequestAudio module provides the DownloadHandlerAssetBundle class to use UnityWebRequest to download Asset Bundles.</para>
+      </summary>
+    </member>
+  </members>
+</doc>

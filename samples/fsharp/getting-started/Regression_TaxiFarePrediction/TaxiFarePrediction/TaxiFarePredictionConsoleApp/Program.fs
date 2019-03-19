@@ -7,7 +7,6 @@ open TaxiFarePrediction.DataStructures.DataStructures
 open Microsoft.ML
 open Microsoft.ML.Data
 open Microsoft.ML.Transforms
-open Microsoft.ML.Transforms.Normalizers
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -18,75 +17,63 @@ let testDataPath = sprintf @"%s/taxi-fare-test.csv" baseDatasetsLocation
 let baseModelsPath = @"../../../../MLModels"
 let modelPath = sprintf @"%s/TaxiFareModel.zip" baseModelsPath
 
+let downcastPipeline (x : IEstimator<_>) = 
+    match x with 
+    | :? IEstimator<ITransformer> as y -> y
+    | _ -> failwith "downcastPipeline: expecting a IEstimator<ITransformer>"
+
+
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextReader(
-            separatorChar = ',',
-            hasHeader = true,
-            columns = 
-                [|
-                    TextLoader.Column("VendorId", Nullable DataKind.Text, 0)
-                    TextLoader.Column("RateCode", Nullable DataKind.Text, 1)
-                    TextLoader.Column("PassengerCount", Nullable DataKind.R4, 2)
-                    TextLoader.Column("TripTime", Nullable DataKind.R4, 3)
-                    TextLoader.Column("TripDistance", Nullable DataKind.R4, 4)
-                    TextLoader.Column("PaymentType", Nullable DataKind.Text, 5)
-                    TextLoader.Column("FareAmount", Nullable DataKind.R4, 6)
-                |]
-            )
-
-    let baseTrainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
+    let baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(trainDataPath, hasHeader = true, separatorChar = ',')
+    let testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(testDataPath, hasHeader = true, separatorChar = ',')
 
     //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
     //let cnt = baseTrainingDataView.GetColumn<decimal>(mlContext, "FareAmount").Count()
-    let trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
+    let trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, "FareAmount", lowerBound = 1., upperBound = 150.)
     //let cnt2 = trainingDataView.GetColumn<float>(mlContext, "FareAmount").Count()
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
-        mlContext.Transforms.CopyColumns("FareAmount", "Label")
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId", "VendorIdEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode", "RateCodeEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentType", "PaymentTypeEncoded"))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "PassengerCount", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripTime", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Normalize(inputName = "TripDistance", mode = NormalizingEstimator.NormalizerMode.MeanVariance))
-        |> Common.ModelBuilder.append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
-        |> Common.ConsoleHelper.downcastPipeline
+        EstimatorChain()
+            .Append(mlContext.Transforms.CopyColumns("Label", "FareAmount"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorIdEncoded", "VendorId"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCodeEncoded", "RateCode"))
+            .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentTypeEncoded", "PaymentType"))
+            .Append(mlContext.Transforms.Normalize("PassengerCount", "PassengerCount", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripTime", "TripTime", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripDistance", "TripDistance", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
+            .AppendCacheCheckpoint(mlContext)
+            |> downcastPipeline
 
     // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<TaxiTrip> mlContext trainingDataView dataProcessPipeline 5 |> ignore
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 5 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
+    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
 
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
+    let modelBuilder = dataProcessPipeline.Append trainer
 
     // STEP 4: Train the model fitting to the DataSet
     //The pipeline is trained on the dataset that has been loaded and transformed.
     printfn "=============== Training the model ==============="
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = modelBuilder.Fit trainingDataView
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
     let metrics = 
-        (trainedModel, modelBuilder)
-        |> Common.ModelBuilder.evaluateRegressionModel testDataView "Label" "Score"
+        let predictions = trainedModel.Transform testDataView
+        mlContext.Regression.Evaluate(predictions, "Label", "Score")
 
     Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
     printfn "=============== Saving the model to a file ==============="
-    (trainedModel, modelBuilder)
-    |> Common.ModelBuilder.saveModelAsFile modelPath
+    use fs = File.OpenWrite(modelPath)
+    mlContext.Model.Save(trainedModel, fs)
 
 
 let testSinglePrediction (mlContext : MLContext) =
@@ -105,9 +92,11 @@ let testSinglePrediction (mlContext : MLContext) =
         };
 
     let resultprediction = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
-        |> Common.ModelScorer.predictSingle taxiTripSample
+        let model = 
+            use s = File.OpenRead(modelPath)
+            mlContext.Model.Load(s)
+        let predictionFunction = model.CreatePredictionEngine(mlContext);
+        predictionFunction.Predict taxiTripSample
 
     printfn "=============== Single Prediction  ==============="
     printfn "Predicted fare: %.4f, actual fare: 15.5" resultprediction.FareAmount
@@ -133,8 +122,10 @@ let plotRegressionChart (mlContext : MLContext) testDataSetPath numberOfRecordsT
         |> Array.take numMaxRecords
     
     let modelScorer = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
+        use s = File.OpenRead(modelPath)
+        mlContext.Model.Load(s)
+
+    let predFunction = modelScorer.CreatePredictionEngine(mlContext)
 
     use pl = new PLStream()
     // use SVG backend and write to SineWaves.svg in current directory
@@ -190,7 +181,7 @@ let plotRegressionChart (mlContext : MLContext) testDataSetPath numberOfRecordsT
     for i in 0 .. testData.Length - 1 do
 
         //Make Prediction
-        let farePrediction = modelScorer |> Common.ModelScorer.predictSingle testData.[i]
+        let farePrediction = predFunction.Predict testData.[i]
   
         let x = [| float testData.[i].FareAmount |]
         let y = [| float farePrediction.FareAmount |]

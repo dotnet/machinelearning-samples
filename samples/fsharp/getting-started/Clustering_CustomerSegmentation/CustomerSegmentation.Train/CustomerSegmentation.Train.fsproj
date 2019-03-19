@@ -6,25 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\common\ConsoleHelper.fs">
-      <Link>common\ConsoleHelper.fs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\ModelBuilder.fs">
-      <Link>common\ModelBuilder.fs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\ModelScorer.fs">
-      <Link>common\ModelScorer.fs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\Pipeline.fs">
-      <Link>common\Pipeline.fs</Link>
-    </Compile>
-    <Compile Include="DataStructures.fs" />
-    <Compile Include="Helper.fs" />
+    <EmbeddedResource Remove="DataStructures\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="0.7.0" />
-    <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
+
 </Project>

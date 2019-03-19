@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.9           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v0.11           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 ------------------------------------
 
@@ -44,29 +44,19 @@ The initial code is similar to the following:
 
 ```fsharp
     // STEP 1: Common data loading configuration
-    let textLoader =
-        mlContext.Data.CreateTextReader (
-            columns = 
-                [|
-                    TextLoader.Column("Label", Nullable DataKind.Bool, 0)
-                    TextLoader.Column("Text", Nullable DataKind.Text, 1)
-                |],
-            hasHeader = true,
-            separatorChar = '\t'
-        )
-
-    let trainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
-
+    let trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(trainDataPath, hasHeader = true)
+    let testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(testDataPath, hasHeader = true)
 
     // STEP 2: Common data process configuration with pipeline data transformations          
-    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Text", "Features")
+    let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Features", "Text")
 
-    // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn = "Label", featureColumn = "Features")
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
+    // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
+    Common.ConsoleHelper.peekDataViewInConsole<SentimentIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore
+    Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
+
+    // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
+    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    let trainingPipeline = dataProcessPipeline.Append(trainer)
 ```
 
 ### 2. Train model
@@ -75,9 +65,7 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training you need to call the Fit() method while providing the training dataset (wikipedia-detox-250-line-data.tsv file) in a DataView object.
 
 ```fsharp
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = trainingPipeline.Fit(trainingDataView)
 ```
 
 ### 3. Evaluate model
@@ -87,6 +75,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```fsharp
     // STEP 5: Evaluate the model and show accuracy stats
+    printfn "===== Evaluating Model's accuracy with Test data ====="
     let predictions = trainedModel.Transform testDataView
     let metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score")
 
@@ -102,9 +91,9 @@ After the model is trained, we can use the `Predict()` API to predict the sentim
 
 ```fsharp
     // Create prediction engine related to the loaded trained model
-    let predEngine = trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext)
+    let predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext)
 
     //Score
-    let resultprediction = predEngine.Predict(sampleStatement)
+    let resultprediction = predEngine.Predict(sampleStatement
 ```
 Where in `resultprediction.PredictionLabel` will be either true or false depending if it is a positive or negative predicted sentiment.

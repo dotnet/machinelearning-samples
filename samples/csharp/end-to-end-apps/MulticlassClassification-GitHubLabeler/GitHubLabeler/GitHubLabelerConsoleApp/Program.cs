@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.IO;
-
 // Requires following NuGet packages
 // NuGet package -> Microsoft.Extensions.Configuration
 // NuGet package -> Microsoft.Extensions.Configuration.Json
 using Microsoft.Extensions.Configuration;
-
 using Microsoft.ML;
-using Microsoft.ML.Transforms.Conversions;
-using Microsoft.ML.Core.Data;
-
 using Common;
 using GitHubLabeler.DataStructures;
 using Microsoft.ML.Data;
+using static Microsoft.ML.TrainCatalogBase;
 
 namespace GitHubLabeler
 {
@@ -21,11 +17,14 @@ namespace GitHubLabeler
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
-        private static string DataSetLocation = $"{BaseDatasetsLocation}/corefx-issues-train.tsv";      
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string DataSetRelativePath = $"{BaseDatasetsRelativePath}/corefx-issues-train.tsv";
+        private static string DataSetLocation = GetAbsolutePath(DataSetRelativePath);
 
-        private static string BaseModelsPath = @"../../../../MLModels";
-        private static string ModelFilePathName = $"{BaseModelsPath}/GitHubLabelerModel.zip";
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/GitHubLabelerModel.zip";
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
+
 
         public enum MyTrainerStrategy : int { SdcaMultiClassTrainer = 1, OVAAveragedPerceptronTrainer = 2 };
 
@@ -35,14 +34,14 @@ namespace GitHubLabeler
             SetupAppConfiguration();
 
             //1. ChainedBuilderExtensions and Train the model
-            BuildAndTrainModel(DataSetLocation, ModelFilePathName, MyTrainerStrategy.SdcaMultiClassTrainer);
+            BuildAndTrainModel(DataSetLocation, ModelPath, MyTrainerStrategy.SdcaMultiClassTrainer);
 
             //2. Try/test to predict a label for a single hard-coded Issue
-            TestSingleLabelPrediction(ModelFilePathName);
+            TestSingleLabelPrediction(ModelPath);
 
             //3. Predict Issue Labels and apply into a real GitHub repo
             // (Comment the next line if no real access to GitHub repo) 
-            await PredictLabelsAndUpdateGitHub(ModelFilePathName);
+            await PredictLabelsAndUpdateGitHub(ModelPath);
 
             Common.ConsoleHelper.ConsolePressAnyKey();
         }
@@ -51,33 +50,22 @@ namespace GitHubLabeler
         {
             // Create MLContext to be shared across the model creation workflow objects 
             // Set a random seed for repeatable/deterministic results across multiple trainings.
-            var mlContext = new MLContext(seed: 0);
+            var mlContext = new MLContext(seed: 1);
 
             // STEP 1: Common data loading configuration
-            TextLoader textLoader = mlContext.Data.CreateTextReader(
-                                        columns:new[]
-                                                    {
-                                                        new TextLoader.Column("ID", DataKind.Text, 0),
-                                                        new TextLoader.Column("Area", DataKind.Text, 1),
-                                                        new TextLoader.Column("Title", DataKind.Text, 2),
-                                                        new TextLoader.Column("Description", DataKind.Text, 3),
-                                                    },
-                                        hasHeader:true,
-                                        separatorChar:'\t');
-
-            var trainingDataView = textLoader.Read(DataSetLocation);
-
+            var trainingDataView = mlContext.Data.LoadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t', allowSparse: false);
+             
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Area", "Label")
-                            .Append(mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
-                            .Append(mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
-                            .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"))
-                            //Sample Caching the DataView so estimators iterating over the data multiple times, instead of always reading from file, using the cache might get better performance
-                            .AppendCacheCheckpoint(mlContext);  //In this sample, only when using OVA (Not SDCA) the cache improves the training time, since OVA works multiple times/iterations over the same data
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
+                            .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "TitleFeaturized",inputColumnName:nameof(GitHubIssue.Title)))
+                            .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "DescriptionFeaturized", inputColumnName: nameof(GitHubIssue.Description)))
+                            .Append(mlContext.Transforms.Concatenate(outputColumnName:DefaultColumnNames.Features, "TitleFeaturized", "DescriptionFeaturized"))
+                            .AppendCacheCheckpoint(mlContext);  
+                            // Use in-memory cache for small/medium datasets to lower training time. 
+                            // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            Common.ConsoleHelper.PeekDataViewInConsole<GitHubIssue>(mlContext, trainingDataView, dataProcessPipeline, 2);
-            //Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 2);
+            Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 2);
 
             // STEP 3: Create the selected training algorithm/trainer
             IEstimator<ITransformer> trainer = null; 
@@ -107,7 +95,7 @@ namespace GitHubLabeler
 
             //Set the trainer/algorithm and map label to value (original readable state)
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-                    .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(DefaultColumnNames.PredictedLabel));
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
@@ -117,15 +105,13 @@ namespace GitHubLabeler
             //Measure cross-validation time
             var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
 
-            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numFolds: 6, labelColumn:"Label");
+            CrossValidationResult<MultiClassClassifierMetrics>[] crossValidationResults = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn:DefaultColumnNames.Label);
 
             //Stop measuring time
             watchCrossValTime.Stop();
             long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
-            Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");
-           
-            //(CDLTLL-Pending-TODO)
-            //
+            Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");           
+            
             ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
@@ -161,19 +147,21 @@ namespace GitHubLabeler
 
         private static void TestSingleLabelPrediction(string modelFilePathName)
         {
-            var labeler = new Labeler(modelPath: ModelFilePathName);
+            var labeler = new Labeler(modelPath: ModelPath);
             labeler.TestPredictionForSingleIssue();
         }
 
         private static async Task PredictLabelsAndUpdateGitHub(string ModelPath)
         {
+            Console.WriteLine(".............Retrieving Issues from GITHUB repo, predicting label/s and assigning predicted label/s......");
+
             var token = Configuration["GitHubToken"];
             var repoOwner = Configuration["GitHubRepoOwner"]; //IMPORTANT: This can be a GitHub User or a GitHub Organization
             var repoName = Configuration["GitHubRepoName"];
 
-            if (string.IsNullOrEmpty(token) ||
-                string.IsNullOrEmpty(repoOwner) ||
-                string.IsNullOrEmpty(repoName))
+            if (string.IsNullOrEmpty(token) || token == "YOUR - GUID - GITHUB - TOKEN" ||
+                string.IsNullOrEmpty(repoOwner) || repoOwner == "YOUR-REPO-USER-OWNER-OR-ORGANIZATION" ||
+                string.IsNullOrEmpty(repoName) || repoName == "YOUR-REPO-SINGLE-NAME" )
             {
                 Console.Error.WriteLine();
                 Console.Error.WriteLine("Error: please configure the credentials in the appsettings.json file");
@@ -197,6 +185,16 @@ namespace GitHubLabeler
                                         .AddJsonFile("appsettings.json");
 
             Configuration = builder.Build();
+        }
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }

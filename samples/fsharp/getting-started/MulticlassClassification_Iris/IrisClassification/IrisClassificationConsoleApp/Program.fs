@@ -3,10 +3,9 @@
 open System
 open System.IO
 open Microsoft.ML
-open Microsoft.ML.Data
-open MulticlassClassification_Iris.DataStructures
-open Common
 open MulticlassClassification_Iris
+open MulticlassClassification_Iris.DataStructures
+open Microsoft.ML.Data
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -21,85 +20,80 @@ let modelPath = sprintf @"%s/IrisClassificationModel.zip" baseModelsPath
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     
     // STEP 1: Common data loading configuration
-    let textLoader = 
-        mlContext.Data.CreateTextReader(
-            separatorChar = '\t',
-            hasHeader = true,
-            columns = 
-                [|
-                    TextLoader.Column("Label", Nullable DataKind.R4, 0)
-                    TextLoader.Column("SepalLength", Nullable DataKind.R4, 1)
-                    TextLoader.Column("SepalWidth", Nullable DataKind.R4, 2)
-                    TextLoader.Column("PetalLength", Nullable DataKind.R4, 3)
-                    TextLoader.Column("PetalWidth", Nullable DataKind.R4, 4)
-                |]
-        )
+    let trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
+    let testDataView = mlContext.Data.LoadFromTextFile<IrisData>(testDataPath, hasHeader = true)
 
-    let trainingDataView = textLoader.Read trainDataPath
-    let testDataView = textLoader.Read testDataPath
-    
     // STEP 2: Common data process configuration with pipeline data transformations
-    let dataProcessPipeline =
-        mlContext.Transforms.Concatenate("Features", [| "SepalLength"; "SepalWidth"; "PetalLength"; "PetalWidth"|])
-        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
+    let dataProcessPipeline = 
+        mlContext.Transforms.Concatenate("Features", "SepalLength",
+                                                     "SepalWidth",
+                                                     "PetalLength",
+                                                     "PetalWidth")
+                            .AppendCacheCheckpoint(mlContext)
 
-    // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
-    let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
+    // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
+    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    let trainingPipeline = dataProcessPipeline.Append(trainer)
+
+
+
 
     // STEP 4: Train the model fitting to the DataSet
+
     //Measure training time
     let watch = System.Diagnostics.Stopwatch.StartNew()
 
     printfn "=============== Training the model ==============="
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = trainingPipeline.Fit(trainingDataView)
 
     //Stop measuring time
     watch.Stop()
-    let elapsedMs = watch.ElapsedMilliseconds
-    printfn "***** Training time: %f seconds *****" ((float)elapsedMs/1000.0) 
+    let elapsedMs = float watch.ElapsedMilliseconds
+    printfn "***** Training time: %f seconds *****" (elapsedMs/1000.)
+
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
-    let metrics = 
-        (trainedModel, modelBuilder)
-        |> Common.ModelBuilder.evaluateMultiClassClassificationModel testDataView "Label" "Score"
+    let predictions = trainedModel.Transform(testDataView)
+    let metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score")
 
     Common.ConsoleHelper.printMultiClassClassificationMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
-    (trainedModel, modelBuilder)
-    |> Common.ModelBuilder.saveModelAsFile modelPath
+    use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
+    mlContext.Model.Save(trainedModel, fs);
 
+    printfn "The model is saved to %s" modelPath
 
 
 let testSomePredictions (mlContext : MLContext) =
-
     //Test Classification Predictions with some hard-coded samples 
-    let modelScorer = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
-        
-    let prediction = modelScorer |> Common.ModelScorer.predictSingle DataStructures.TestIrisData.Iris1
-    printfn "Actual: setosa.     Predicted probability: setosa:      %.4f" prediction.Score.[0]
-    printfn "                                           versicolor:  %.4f" prediction.Score.[1]
-    printfn "                                           virginica:   %.4f" prediction.Score.[2]
+    use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
+    let trainedModel = mlContext.Model.Load(stream);
+
+    // Create prediction engine related to the loaded trained model
+    let predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext)
+
+    //Score sample 1
+    let resultprediction1 = predEngine.Predict(DataStructures.SampleIrisData.Iris1)
+
+    printfn "Actual: setosa.     Predicted probability: setosa:      %.4f" resultprediction1.Score.[0]
+    printfn "                                           versicolor:  %.4f" resultprediction1.Score.[1]
+    printfn "                                           virginica:   %.4f" resultprediction1.Score.[2]
     printfn ""
 
-    let prediction = modelScorer |> Common.ModelScorer.predictSingle DataStructures.TestIrisData.Iris2
-    printfn "Actual: virginica.  Predicted probability: setosa:      %.4f" prediction.Score.[0]
-    printfn "                                           versicolor:  %.4f" prediction.Score.[1]
-    printfn "                                           virginica:   %.4f" prediction.Score.[2]
+    //Score sample 2
+    let resultprediction2 = predEngine.Predict(DataStructures.SampleIrisData.Iris2);
+    printfn "Actual: virginica.  Predicted probability: setosa:      %.4f" resultprediction2.Score.[0]
+    printfn "                                           versicolor:  %.4f" resultprediction2.Score.[1]
+    printfn "                                           virginica:   %.4f" resultprediction2.Score.[2]
     printfn ""
 
-    let prediction = modelScorer |> Common.ModelScorer.predictSingle DataStructures.TestIrisData.Iris3
-    printfn "Actual: versicolor. Predicted probability: setosa:      %.4f" prediction.Score.[0]
-    printfn "                                           versicolor:  %.4f" prediction.Score.[1]
-    printfn "                                           virginica:   %.4f" prediction.Score.[2]
+    //Score sample 3
+    let resultprediction2 = predEngine.Predict(DataStructures.SampleIrisData.Iris3);
+    printfn "Actual: versicolor. Predicted probability: setosa:      %.4f" resultprediction2.Score.[0]
+    printfn "                                           versicolor:  %.4f" resultprediction2.Score.[1]
+    printfn "                                           virginica:   %.4f" resultprediction2.Score.[2]
     printfn ""
 
 
@@ -117,6 +111,6 @@ let main argv =
     testSomePredictions mlContext
 
     printfn "=============== End of process, hit any key to finish ==============="
-    ConsoleHelper.consolePressAnyKey()
+    Console.ReadKey() |> ignore
 
     0 // return an integer exit code

@@ -6,6 +6,7 @@ open Octokit
 open DataStructures
 
 open Common
+open Microsoft.ML.Data
 
 type GitHubClientFacade =
     {
@@ -18,7 +19,7 @@ type GitHubClientFacade =
             |> Async.AwaitTask
             |> Async.RunSynchronously
             |> Seq.toList
-        let getAll' (issueRequest : RepositoryIssueRequest) = getAll client repoName repoOwner issueRequest
+        let getAll' (issueRequest : RepositoryIssueRequest) = getAll client repoOwner repoName issueRequest
 
         let updateIssue (client : GitHubClient) (repoOwner : string) (repoName : string) (issue : Issue) (issueUpdate : IssueUpdate) =
             client.Issue.Update(repoOwner, repoName, issue.Number, issueUpdate)
@@ -32,29 +33,65 @@ type GitHubClientFacade =
             updateIssue = updateIssue'
         }
 
-type Labeler = ((MLContext * Runtime.Data.TransformerChain<Core.Data.ITransformer> * Runtime.Data.PredictionFunction<GitHubIssue, GitHubIssuePrediction>)) * GitHubClientFacade
 
-let initialise modelPath repoOwner repoName accessToken : Labeler =
+let initialise modelPath repoOwner repoName accessToken =
     let mlContext = MLContext(seed = Nullable 1)
 
-    let modelScorer = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.loadModelFromZipFile modelPath
+    let trainedModel = 
+        use f = IO.File.OpenRead(modelPath)
+        mlContext.Model.Load(f)
 
     let productInformation = ProductHeaderValue "MLGitHubLabeler"
     let client = GitHubClient(productInformation, Credentials = Credentials(accessToken))
     let gitHubClient = GitHubClientFacade.init client repoOwner repoName
-    modelScorer, gitHubClient
+    let predictionEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext)
+    predictionEngine, gitHubClient
+
+type FullPrediction = 
+    {
+        PredictedLabel : string
+        Score : float32 
+        OriginalSchemaIndex : int
+    }
+
+let bestThreePredictions (predictionEngine : PredictionEngine<_,_>) (prediction : GitHubIssuePrediction) = 
+    let slotNames =
+        let mutable slotNames = Unchecked.defaultof<_>
+        predictionEngine.OutputSchema.["Score"].GetSlotNames(&slotNames)
+        slotNames
+    prediction.Score
+    |> Array.mapi (fun i s -> s, i) 
+    |> Array.sortDescending
+    |> Array.truncate 3
+    |> Array.map 
+        (fun (s,i) ->
+            { 
+                PredictedLabel = slotNames.GetItemOrDefault(i).ToString()
+                Score = s
+                OriginalSchemaIndex = i
+            }
+        )
+    
 
 /// Predict single, hard coded issue
-let testPredictionForSingleIssue ((modelScorer, _) : Labeler) =
+let testPredictionForSingleIssue ((predictionEngine : PredictionEngine<_,_>, _)) =
 
-    let singleIssue = { ID = "Any-ID"; Area = ""; Title = "Entity Framework crashes"; Description = "When connecting to the database, EF is crashing" }
+    let singleIssue = 
+        { ID = "Any-ID"
+          Area = ""
+          Title = "Crash in SqlConnection when using TransactionScope"
+          Description = "I'm using SqlClient in netcoreapp2.0. Sqlclient.Close() crashes in Linux but works on Windows" }
 
     //Predict label for single hard-coded issue
-    let prediction = 
-        modelScorer
-        |> Common.ModelScorer.predictSingle singleIssue
+    let prediction = predictionEngine.Predict(singleIssue)
+    
+    let fullPredictions = bestThreePredictions predictionEngine prediction
+
+    printfn "1st Label: %s with score: %.12f" fullPredictions.[0].PredictedLabel fullPredictions.[0].Score
+    printfn "2nd Label: %s with score: %.12f" fullPredictions.[1].PredictedLabel fullPredictions.[1].Score
+    printfn "3rd Label: %s with score: %.12f" fullPredictions.[2].PredictedLabel fullPredictions.[2].Score
+
+
     printfn "=============== Single Prediction - Result: %s ===============" prediction.Area
 
 let private getNewIssues (client : GitHubClientFacade) = 
@@ -69,10 +106,8 @@ let private getNewIssues (client : GitHubClientFacade) =
     // Filter out pull requests and issues that are older than minId
     |> List.filter(fun (i : Issue) -> not(i.HtmlUrl.Contains("/pull/")))
     
-let private predict (issue : GitHubIssue) modelScorer =
-    let prediction = 
-        modelScorer
-        |> Common.ModelScorer.predictSingle issue
+let private predict (issue : GitHubIssue) (predictionEngine : PredictionEngine<_,_>) =
+    let prediction = predictionEngine.Predict issue
     prediction.Area
 
 let private predictLabel (issue : Issue) =
@@ -96,10 +131,10 @@ let private applyLabel (issue : Issue) label client =
     printfn "Issue %d : \"%s\" \t was labeled as: %s" issue.Number issue.Title label
 
 /// Label all issues that are not labeled yet
-let LabelAllNewIssuesInGitHubRepo ((modelScorer, client) : Labeler) =
+let LabelAllNewIssuesInGitHubRepo (predictionEngine, client) =
     let newIssues = client |> getNewIssues
 
 
     for issue in newIssues do
-        let label = predictLabel issue modelScorer
+        let label = predictLabel issue predictionEngine
         client |> applyLabel issue label
