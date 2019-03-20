@@ -31,7 +31,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 Building a model includes: 
 
-* Define the data's schema maped to the datasets to load (`wikiDetoxAnnotated40kRows.tsv`) with a TextLoader
+* Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
 
 * Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `FeaturizeText`)
 
