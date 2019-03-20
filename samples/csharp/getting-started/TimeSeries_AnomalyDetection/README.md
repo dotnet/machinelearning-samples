@@ -16,7 +16,7 @@ To solve this problem, we will build an ML model that takes as inputs:
 and predicts the spikes/anomolous trends in shampoo sales.
 
 ## Dataset
-The dataset is available in this url https://datamarket.com/data/set/22r0/sales-of-shampoo-over-a-three-year-period#!ds=22r0&display=line
+The dataset is available at [DataMart](https://datamarket.com/data/set/22r0/sales-of-shampoo-over-a-three-year-period#!ds=22r0&display=line)
 
 ## ML task - TimeSeries-Anomaly Detection
 Anomaly detection is the process of detecting outliers in the data. Time Series Anomaly Detection is a new module that's a bit different from the other anomaly detection models. The Time Series Anomaly Detection module is designed for time series data. It's intended to use to analyze trends over time. The algorithm identifies potentially anomalous trends in the time series data. It flags deviations from the trend's direction or magnitude.
