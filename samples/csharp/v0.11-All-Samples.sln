@@ -75,7 +75,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditCardFraudDetection.Trainer", "getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\CreditCardFraudDetection.Trainer.csproj", "{5F5DBFC6-9B5D-4657-8249-AEBB776A28FD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction-Solution", "HeartDiseasePrediction-Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction.Solution", "HeartDiseasePrediction.Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeartDiseasePredictionConsoleApp", "getting-started\BinaryClassification_HeartDiseasePrediction\HeartDiseasePrediction-Solution\HeartDiseasePredictionConsoleApp.csproj", "{5EC556C4-A05C-406D-972D-B7B2F0609C8C}"
 EndProject
