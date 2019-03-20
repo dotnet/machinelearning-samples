@@ -79,6 +79,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction.Solu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeartDiseasePredictionConsoleApp", "getting-started\BinaryClassification_HeartDiseasePrediction\HeartDiseasePrediction-Solution\HeartDiseasePredictionConsoleApp.csproj", "{5EC556C4-A05C-406D-972D-B7B2F0609C8C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreditRiskDetection.Solution", "CreditRiskDetection.Solution", "{69DA9C36-A966-47EE-9795-185EAE42A8A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreditRiskDetection", "getting-started\AnomalyDetection_CreditRisk\CreditRiskDetection\CreditRiskDetectionConsoleApp\CreditRiskDetection.csproj", "{2DDFB320-DB81-463F-BD88-48E900AD73F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -247,6 +251,14 @@ Global
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C}.Release|x64.ActiveCfg = Release|Any CPU
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C}.Release|x64.Build.0 = Release|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,6 +285,7 @@ Global
 		{35603EFE-94E1-499E-A44D-B0CDC0442C63} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{5F5DBFC6-9B5D-4657-8249-AEBB776A28FD} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{5EC556C4-A05C-406D-972D-B7B2F0609C8C} = {70958053-9A93-47D5-A944-2BA34E475618}
+		{2DDFB320-DB81-463F-BD88-48E900AD73F9} = {69DA9C36-A966-47EE-9795-185EAE42A8A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
