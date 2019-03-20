@@ -89,7 +89,7 @@ namespace CreditRisk
             PeekDataViewInConsole(mlContext, trainData, dataProcessingPipeline, 2);
 
             // Set the training algorithm
-            IEstimator<ITransformer> trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(featureColumnName: DefaultColumnNames.Features, rank: 10, oversampling: 10);
+            IEstimator<ITransformer> trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(featureColumnName: DefaultColumnNames.Features);
 
             //Append the trainer to dataprocessingPipeLine
             IEstimator<ITransformer> trainingPipeLine = dataProcessingPipeline.Append(trainer);
