@@ -21,7 +21,7 @@ namespace CustomerSegmentation
 
             try
             {
-                MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic results
+                MLContext mlContext = new MLContext();  //Seed set to any number so you have a deterministic results
 
                 //Create the clusters: Create data files and plot a chart
                 var clusteringModelScorer = new ClusteringModelScorer(mlContext, pivotCsv, plotSvg, plotCsv);
