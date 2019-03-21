@@ -31,19 +31,22 @@ namespace CreditRisk
             // 2. Specify how training data is going to be loaded into the DataView
             IDataView dataView = mlContext.Data.LoadFromTextFile<CustomerCreditData>(DataPath, separatorChar: ' ');
             //var peak1 = dataView.Preview();
-
+            
             var trainTestData = mlContext.AnomalyDetection.TrainTestSplit(dataView, 0.2);
             var trainData = trainTestData.TrainSet;
             var testData = trainTestData.TestSet;
 
+            //var peak2 = trainTestData.TrainSet.Preview();
+            //var peak3 = trainTestData.TestSet.Preview();
+
             //count the number of anomalies in test data
-            var t=mlContext.Data.CreateEnumerable<CustomerCreditData>(testData, reuseRowObject: false)
+            var testDataAbnoramlCount =mlContext.Data.CreateEnumerable<CustomerCreditData>(testData, reuseRowObject: false)
                                            .Where(x => x.Label == 2)              
                                            .ToList().Count;
 
+            //var filteredTrainData = mlContext.Data.FilterRowsByColumn(trainTestData.TrainSet, columnName: "Label", lowerBound: 1, upperBound: 2);
 
-            //var peak2 = trainTestData.TrainSet.Preview();
-            //var peak3 = trainTestData.TestSet.Preview();
+
             //string[] featureColumnNames = dataView.Schema.AsQueryable().Select(column => column.Name).ToArray();
 
             // 2. Create a pipeline to prepare your data
@@ -51,23 +54,23 @@ namespace CreditRisk
             //Transform Categorical features into Numeric values
             //Concatenate numeric features and transformed categorical features
             //Drop Label column from the pipeLine because Anomaly Detection trainer trains on unsupervised data.
-            IEstimator<ITransformer> dataProcessingPipeline = mlContext.Transforms.Concatenate("NumFeatures", nameof(CustomerCreditData.numOfMonths),
+            IEstimator<ITransformer> dataProcessingPipeline = mlContext.Transforms.Concatenate("NumericFeatures", nameof(CustomerCreditData.NumOfMonths),
                                 nameof(CustomerCreditData.CreditAmount), nameof(CustomerCreditData.InstallmentRate), nameof(CustomerCreditData.ResidentSince),
-                                nameof(CustomerCreditData.age), nameof(CustomerCreditData.NumberOfExistingCredits), nameof(CustomerCreditData.NumberOfLiablePeople))
+                                nameof(CustomerCreditData.Age), nameof(CustomerCreditData.NumberOfExistingCredits), nameof(CustomerCreditData.NumberOfLiablePeople))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "ExistingCheckingAccountStatusEncoded", inputColumnName: nameof(CustomerCreditData.ExistingCheckingAccountStatus)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CreditHistoryEncoded", inputColumnName: nameof(CustomerCreditData.CreditHistory)))
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PurposeEncoded", inputColumnName: nameof(CustomerCreditData.purpose)))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PurposeEncoded", inputColumnName: nameof(CustomerCreditData.Purpose)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "SavingAccountBondsEncoded", inputColumnName: nameof(CustomerCreditData.SavingAccountBonds)))
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "employedSinceEncoded", inputColumnName: nameof(CustomerCreditData.employedSince)))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "employedSinceEncoded", inputColumnName: nameof(CustomerCreditData.EmployedSince)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "StatusAndSexEncoded", inputColumnName: nameof(CustomerCreditData.StatusAndSex)))
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "gurantorsEncoded", inputColumnName: nameof(CustomerCreditData.gurantors)))
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "propertyEncoded", inputColumnName: nameof(CustomerCreditData.property)))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "gurantorsEncoded", inputColumnName: nameof(CustomerCreditData.Gurantors)))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "propertyEncoded", inputColumnName: nameof(CustomerCreditData.Property)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "OtherInstallmentPlansEncoded", inputColumnName: nameof(CustomerCreditData.OtherInstallmentPlans)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "HousingEncoded", inputColumnName: nameof(CustomerCreditData.Housing)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "JobStatusEncoded", inputColumnName: nameof(CustomerCreditData.JobStatus)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "TelephoneEncoded", inputColumnName: nameof(CustomerCreditData.Telephone)))
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "IsForeignWorkerEncoded", inputColumnName: nameof(CustomerCreditData.IsForeignWorker)))
-                .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "NumFeatures",
+                .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "NumericFeatures",
                 "ExistingCheckingAccountStatusEncoded",
                 "CreditHistoryEncoded",
                 "PurposeEncoded",
@@ -83,13 +86,14 @@ namespace CreditRisk
                  "IsForeignWorkerEncoded"
                 ))
                 .Append(mlContext.Transforms.DropColumns(nameof(CustomerCreditData.Label)));
-
+               
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             //  Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, dataView, dataProcessPipeline, 1);
             PeekDataViewInConsole(mlContext, trainData, dataProcessingPipeline, 2);
 
             // Set the training algorithm
             IEstimator<ITransformer> trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(featureColumnName: DefaultColumnNames.Features);
+                
 
             //Append the trainer to dataprocessingPipeLine
             IEstimator<ITransformer> trainingPipeLine = dataProcessingPipeline.Append(trainer);

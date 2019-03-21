@@ -11,13 +11,13 @@ namespace AnomalyDetection.DataStructures
        public string ExistingCheckingAccountStatus { get; set; }
 
        [LoadColumn(1)]
-       public float numOfMonths { get; set; }
+       public float NumOfMonths { get; set; }
 
        [LoadColumn(2)]
        public string CreditHistory { get; set; }
 
        [LoadColumn(3)]
-       public string purpose { get; set; }
+       public string Purpose { get; set; }
 
        [LoadColumn(4)]
        public float CreditAmount { get; set; }
@@ -26,7 +26,7 @@ namespace AnomalyDetection.DataStructures
        public string SavingAccountBonds { get; set; }
 
        [LoadColumn(6)]
-       public string employedSince { get; set; }
+       public string EmployedSince { get; set; }
 
        [LoadColumn(7)]
        public float InstallmentRate { get; set; }
@@ -35,16 +35,16 @@ namespace AnomalyDetection.DataStructures
        public string StatusAndSex { get; set; }
 
        [LoadColumn(9)]
-       public string gurantors { get; set; }
+       public string Gurantors { get; set; }
 
        [LoadColumn(10)]
        public float ResidentSince { get; set; }
       
        [LoadColumn(11)]
-       public string property { get; set; }
+       public string Property { get; set; }
       
        [LoadColumn(12)]
-       public float age { get; set; }
+       public float Age { get; set; }
       
        [LoadColumn(13)]
        public string OtherInstallmentPlans { get; set; }
