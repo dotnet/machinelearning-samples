@@ -30,7 +30,7 @@ namespace GitHubLabeler
             _repoOwner = repoOwner;
             _repoName = repoName;
            
-            _mlContext = new MLContext(seed:1);
+            _mlContext = new MLContext();
 
             //Load model from file
             
