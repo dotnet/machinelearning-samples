@@ -118,7 +118,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
   </td>
   <td>
-      <h4>Coming soon</h4>
+      <h4>Spike Detection-Shampoo Sales &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
