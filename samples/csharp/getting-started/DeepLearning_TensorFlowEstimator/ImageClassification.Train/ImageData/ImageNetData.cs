@@ -20,8 +20,7 @@ namespace ImageClassification.ImageData
              .Select(x => x.Split('\t'))
              .Select(x => new ImageNetData()
              {
-                 ImagePath = Path.Combine(folder,x[0]),
-                 Label = x[1],
+                 ImagePath = Path.Combine(folder,x[0])
              });
         }
     }
