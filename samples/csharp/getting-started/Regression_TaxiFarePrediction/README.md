@@ -41,8 +41,8 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
 MLContext mlContext = new MLContext(seed: 0);
 
 // STEP 1: Common data loading configuration
-IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
-IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
+IDataView baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
+IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
 //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
 var cnt = baseTrainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
