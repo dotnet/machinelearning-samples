@@ -1,6 +1,6 @@
 
 
-# WebAPI sample optimized for scalability and performance when runnig/scoring an ML.NET model
+# ASP.NET Core WebAPI sample optimized for scalability and performance when runnig/scoring an ML.NET model
 
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
