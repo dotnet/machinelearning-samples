@@ -2,8 +2,9 @@
 
 # WebAPI sample optimized for scalability and performance when runnig/scoring an ML.NET model
 
+
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
+|----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v0.11           | Up-to-date | ASP.NET Core 2.2 WebAPI | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
 
 
