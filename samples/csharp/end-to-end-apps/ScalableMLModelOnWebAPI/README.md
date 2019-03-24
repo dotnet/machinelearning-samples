@@ -12,7 +12,7 @@
 
 For a much more detailed explanation, including design diagrams, read the following blog post:
 
-**Blog Post**:
+**Detailed Blog Post** for further documentation:
 
 [How to optimize and run ML.NET models on scalable ASP.NET Core WebAPIs or web apps](https://devblogs.microsoft.com/cesardelatorre/how-to-optimize-and-run-ml-net-models-on-scalable-asp-net-core-webapis-or-web-apps/)
 
