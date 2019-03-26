@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scalable.Model", "src\Scalable.Model\Scalable.Model.csproj", "{296F091E-EE9A-4BF3-84C1-276794DD1B38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scalable.WebAPI", "src\Scalable.WebAPI\Scalable.WebAPI.csproj", "{885FD382-4813-4DB9-93B5-A8A692C21467}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{296F091E-EE9A-4BF3-84C1-276794DD1B38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{296F091E-EE9A-4BF3-84C1-276794DD1B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{296F091E-EE9A-4BF3-84C1-276794DD1B38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{296F091E-EE9A-4BF3-84C1-276794DD1B38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{885FD382-4813-4DB9-93B5-A8A692C21467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{885FD382-4813-4DB9-93B5-A8A692C21467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{885FD382-4813-4DB9-93B5-A8A692C21467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{885FD382-4813-4DB9-93B5-A8A692C21467}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E75EF81-F1AD-491B-9DE4-AFFCEFEC3ACE}
+	EndGlobalSection
+EndGlobal
