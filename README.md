@@ -120,6 +120,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <td>
       <h4>Spike Detection-Shampoo Sales &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+    <h4>Spike Detection-PowerMeter Readings &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/SpikeDetection_PowerMeterReadings">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
