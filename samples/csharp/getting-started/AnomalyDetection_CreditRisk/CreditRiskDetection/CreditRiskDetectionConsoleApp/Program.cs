@@ -8,6 +8,7 @@ using System.Linq;
 using static Microsoft.ML.Transforms.NormalizingEstimator;
 using System.IO.Compression;
 using System.Collections.Generic;
+using Microsoft.ML.Transforms;
 
 namespace CreditRisk
 {
@@ -30,7 +31,6 @@ namespace CreditRisk
 
             // 2. Specify how training data is going to be loaded into the DataView
             IDataView dataView = mlContext.Data.LoadFromTextFile<CustomerCreditData>(DataPath, separatorChar: ' ');
-            //var peak1 = dataView.Preview();
             
             var trainTestData = mlContext.AnomalyDetection.TrainTestSplit(dataView, 0.2);
             var trainData = trainTestData.TrainSet;
@@ -38,14 +38,18 @@ namespace CreditRisk
 
             //var peak2 = trainTestData.TrainSet.Preview();
             //var peak3 = trainTestData.TestSet.Preview();
+            var filteredTrainData = mlContext.Data.FilterRowsByColumn(trainData, columnName: "Label", lowerBound: 1, upperBound: 2);
+            var peak4 = filteredTrainData.Preview();
 
             //count the number of anomalies in test data
-            var testDataAbnoramlCount =mlContext.Data.CreateEnumerable<CustomerCreditData>(testData, reuseRowObject: false)
-                                           .Where(x => x.Label == 2)              
+            var testDataAbnoramlCount = mlContext.Data.CreateEnumerable<CustomerCreditData>(testData, reuseRowObject: false)
+                                           .Where(x => x.Label == 2)
                                            .ToList().Count;
 
-            //var filteredTrainData = mlContext.Data.FilterRowsByColumn(trainTestData.TrainSet, columnName: "Label", lowerBound: 1, upperBound: 2);
-
+            //While evaulating, model checks for the lable values 0,1 .But our dataset contains Label contains values 1 and 2. 
+            //So we need to convert them as 1->0 and 2->1.
+            var keyList = new List<float>() { 1.0F, 2.0F };
+            var valueList = new List<float>() { 0.0F, 1.0F };
 
             //string[] featureColumnNames = dataView.Schema.AsQueryable().Select(column => column.Name).ToArray();
 
@@ -85,14 +89,16 @@ namespace CreditRisk
                  "TelephoneEncoded",
                  "IsForeignWorkerEncoded"
                 ))
-                .Append(mlContext.Transforms.DropColumns(nameof(CustomerCreditData.Label)));
+                .Append(mlContext.Transforms.Conversion.ValueMap(keyList, valueList, new[] { new ColumnOptions("LabelValue", "Label") }))
+
+                ;//.Append(mlContext.Transforms.Normalize(DefaultColumnNames.Features, mode: NormalizerMode.MinMax));
                
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             //  Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, dataView, dataProcessPipeline, 1);
-            PeekDataViewInConsole(mlContext, trainData, dataProcessingPipeline, 2);
+            PeekDataViewInConsole(mlContext, filteredTrainData, dataProcessingPipeline, 2);
 
             // Set the training algorithm
-            IEstimator<ITransformer> trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(featureColumnName: DefaultColumnNames.Features);
+            IEstimator<ITransformer> trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(featureColumnName: DefaultColumnNames.Features, rank : 10);
                 
 
             //Append the trainer to dataprocessingPipeLine
@@ -100,18 +106,18 @@ namespace CreditRisk
 
             // 3. Get a model by training the pipeline that was built.
             Console.WriteLine("Creating and Training a model for Anomaly Detection using ML.NET");
-            ITransformer model = trainingPipeLine.Fit(trainData);
+            ITransformer model = trainingPipeLine.Fit(filteredTrainData);
 
             // 4. Evaluate the model to see how well it performs on different dataset (test data).
             Console.WriteLine("Training of model is complete \nEvaluating the model with test data");
 
             IDataView transformedData = model.Transform(testData);
-            var metrics = mlContext.AnomalyDetection.Evaluate(transformedData);
+            var metrics = mlContext.AnomalyDetection.Evaluate(transformedData, "LabelValue");
 
             // Getting the data of the newly created column as an IEnumerable of IidSpikePrediction.
             var results = mlContext.Data.CreateEnumerable<CustomerCreditDataPrediction>(transformedData, reuseRowObject: false).ToList();
-
             var outliers = results.Where(x => x.Score < 0.1).ToList();
+            var r = results.Where(x => x.PredictedLabel == false).ToList();
 
             Console.WriteLine("Number of Records that are at risk = {0}", outliers.Count);
 
