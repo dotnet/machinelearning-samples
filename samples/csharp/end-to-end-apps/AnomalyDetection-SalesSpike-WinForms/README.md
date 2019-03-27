@@ -11,6 +11,8 @@ Shampoo Sales Spike Detection is a simple application which builds and consumes 
 
 This is an end-to-end sample which shows how you can use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) and anomaly detection in a WinForms application.
 
+This app is written in .NET Framework, so you must manually restore the nuget packages before running the app.
+
 ## App Features
 * This is an end-to-end WinForms App that will:
     1. Prompt the user to input a dataset file for model training (in this case we have provided `shampoo-sales.csv` that you can use)
