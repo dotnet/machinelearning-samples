@@ -115,7 +115,7 @@ foreach (var p in predictions)
 ![ChangepointDetection](./docs/images/ChangePointDetection.png)
 
 ## Build Model pipeLine 
-Create an Estimator by choosing a trainer/learning algorithm (such as DetectIIDSpike) to train the model with.
+Create an Estimator by choosing a trainer/learning algorithm (such as DetectIidChangePoint) to train the model with.
 
 ```
 //STEP 2: Set the training algorithm    
