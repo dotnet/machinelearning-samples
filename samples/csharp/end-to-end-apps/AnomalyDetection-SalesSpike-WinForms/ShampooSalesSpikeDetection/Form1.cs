@@ -19,12 +19,13 @@ namespace ShampooSalesSpikeDetection
 {
     public partial class Form1 : Form
     {
-        private Hashtable hashTable = null;
-        private Hashtable hashTable2 = null;
         private DataTable dataTable = null;
         private string filePath = "";
         private int confidenceLevel = 0;
         private int pValue = 0;
+        Tuple<string, string> tup = null;
+        Dictionary<int, Tuple<string, string>> dict = new Dictionary<int, Tuple<string, string>>();
+
         public Form1()
         {
             InitializeComponent();
@@ -49,11 +50,8 @@ namespace ShampooSalesSpikeDetection
             // Set filepath from text from filepath textbox
             filePath = filePathTextbox.Text;
 
-            // Num Sales (key) -> Month (value)
-            hashTable = new Hashtable();
-            // Month (key) -> int (value) for x-axis
-            hashTable2 = new Hashtable();
-            
+            dict = new Dictionary<int, Tuple<string, string>>();
+
             if (filePath != "")
             {
                 // Reset text in anomaly textbox
@@ -83,7 +81,6 @@ namespace ShampooSalesSpikeDetection
             int a = 0;
             string xAxis = "";
             string yAxis = "";
-            string key = "";
 
             string[] dataset = File.ReadAllLines(filePath);
             dataCol = commaSeparatedRadio.Checked ? dataset[0].Split(',') : dataset[0].Split('\t');
@@ -99,14 +96,9 @@ namespace ShampooSalesSpikeDetection
                 dataCol = commaSeparatedRadio.Checked ? line.Split(',') : line.Split('\t');
                 dataTable.Rows.Add(dataCol);
 
-                // Get quantity on y axis (e.g. number of sales) as string
-                key = dataCol[1];
+                tup = new Tuple<string, string>(dataCol[0], dataCol[1]);
+                dict.Add(a, tup);
 
-                // Use number of sales as key to date (year-month)
-                hashTable.Add(key, dataCol[0]);
-
-                // Use date (year-month) as key to integer a
-                hashTable2.Add(dataCol[0], a);
                 a++;
             }
 
@@ -159,38 +151,30 @@ namespace ShampooSalesSpikeDetection
             IDataView transformedData = trainedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ShampooSalesPrediction>(transformedData, reuseRowObject: false);
 
-            var key = "";
-            int m = 0;
+            // Index key for dictionary (date, sales)
+            int a = 0;
 
             foreach (var prediction in predictions)
             {
                 // Check if anomaly is predicted (indicated by an alert)
                 if (prediction.Prediction[0] == 1)
                 {
-                    // Get the value that is predicted to be an anomaly
-                    double numPredicted = prediction.Prediction[1];
+                    // Get the date (year-month) where spike is detected
+                    var xAxisDate = dict[a].Item1;
+                    // Get the number of sales which was detected to be a spike
+                    var yAxisSalesNum = dict[a].Item2;
 
-                    // Use prediction (converted to string) as key to get date from first hashtable
-                    // to be able to print out corresponding date to user
-                    key = Math.Round(numPredicted, 3).ToString();
-    
-                    var dateAxisValue = hashTable[key];
-
-                    // Use date as key to get int number from second hashtable
-                    // to use as x-axis coordinates for anomaly points/markers
-                    var xVal = (hashTable2[dateAxisValue]);
-                    m = Convert.ToInt32(hashTable2[dateAxisValue]);
-                    
                     // Add anomaly points to graph
                     // and set point/marker options
-                    graph.Series["Series1"].Points[m].SetValueXY(xVal, key);
-                    graph.Series["Series1"].Points[m].MarkerStyle = MarkerStyle.Star4;
-                    graph.Series["Series1"].Points[m].MarkerSize = 10;
-                    graph.Series["Series1"].Points[m].MarkerColor = Color.DarkRed;
+                    graph.Series["Series1"].Points[a].SetValueXY(a, yAxisSalesNum);
+                    graph.Series["Series1"].Points[a].MarkerStyle = MarkerStyle.Star4;
+                    graph.Series["Series1"].Points[a].MarkerSize = 10;
+                    graph.Series["Series1"].Points[a].MarkerColor = Color.DarkRed;
                     
                     // Print out anomalies as text for user
-                    anomalyText.Text = anomalyText.Text + "Anomaly detected in " + dateAxisValue + ": " + key + "\n";
+                    anomalyText.Text = anomalyText.Text + "Anomaly detected in " + xAxisDate + ": " + yAxisSalesNum + "\n";
                 }
+                a++;
             }
             Console.WriteLine("");
         }
