@@ -89,7 +89,6 @@ namespace ShampooSalesSpikeDetection
 
             dataTable.Columns.Add(dataCol[0]);
             dataTable.Columns.Add(dataCol[1]);
-            // TO DO: Move this down??? Set x and y axes names to header names
             xAxis = dataCol[0];
             yAxis = dataCol[1];
 
