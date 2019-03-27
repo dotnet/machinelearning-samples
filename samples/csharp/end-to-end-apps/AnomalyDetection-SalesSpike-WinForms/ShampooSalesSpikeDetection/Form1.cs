@@ -167,11 +167,11 @@ namespace ShampooSalesSpikeDetection
             var mlcontext = new MLContext();
 
             // STEP 1: Common data loading configuration
-            IDataView dataView = mlcontext.Data.LoadFromTextFile<AnomalyExample>(path: filePath, hasHeader:true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
+            IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: filePath, hasHeader:true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
             // Set up IidSpikeDetector arguments
-            string outputColumnName = nameof(AnomalyPrediction.Prediction);
-            string inputColumnName = nameof(AnomalyExample.numReported);
+            string outputColumnName = nameof(ShampooSalesPrediction.Prediction);
+            string inputColumnName = nameof(ShampooSalesData.numSales);
 
             // STEP 2: Set the training algorithm    
             var trainingPipeline = mlcontext.Transforms.IidSpikeEstimator(outputColumnName, inputColumnName, confidenceLevel, pValue);
@@ -181,7 +181,7 @@ namespace ShampooSalesSpikeDetection
 
             // Apply data transformation to create predictions
             IDataView transformedData = trainedModel.Transform(dataView);
-            var predictions = mlcontext.Data.CreateEnumerable<AnomalyPrediction>(transformedData, reuseRowObject: false);
+            var predictions = mlcontext.Data.CreateEnumerable<ShampooSalesPrediction>(transformedData, reuseRowObject: false);
 
             var key = "";
             int m = 0;
@@ -228,22 +228,6 @@ namespace ShampooSalesSpikeDetection
                 }
             }
             Console.WriteLine("");
-        }
-        
-        public class AnomalyExample
-        {
-            [LoadColumn(0)]
-            public string Month;
-
-            [LoadColumn(1)]
-            public float numReported { get; set; }
-        }
-
-        // Vector to hold Alert, Score, and P-Value values
-        public class AnomalyPrediction
-        {
-            [VectorType(3)]
-            public double[] Prediction { get; set; }
         }
 
         private void setConfLevelandPValue()
