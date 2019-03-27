@@ -1,10 +1,10 @@
-# SpikeDetection of Shampoo sales
+# Spike Detection and Change Point Detection of Shampoo sales
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v0.12         | Dynamic API | Up-to-date | Console app | .csv files | SpikeDetection of Shampoo sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
-In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect spikes in shampoo sales. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
+In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect **spikes** and **Change points** in shampoo sales. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
 
 ## Problem
 We are having data on shampoo sales over 3 years period in which the sales are high and normal. we identify sudden spikes in shampoo sales so that we can use this spiked data to analyze trends in sales of shampoo. 
