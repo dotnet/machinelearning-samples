@@ -13,9 +13,13 @@ namespace ShampooSalesSpikeDetection
         private static string DatasetPath = GetAbsolutePath(DatasetRelativePath);
 
         private static string BaseModelsRelativePath = @"../../../MLModels";
-        private static string ModelRelativePath = $"{BaseModelsRelativePath}/ShampooSalesModel.zip";
+        private static string ModelRelativePath1 = $"{BaseModelsRelativePath}/ShampooSalesSpikeModel.zip";
+        private static string ModelRelativePath2 = $"{BaseModelsRelativePath}/ShampooSalesChangePointModel.zip";
 
-        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
+
+        private static string SpikeModelPath = GetAbsolutePath(ModelRelativePath1);
+        private static string ChangePointModelPath = GetAbsolutePath(ModelRelativePath2);
+
 
         static void Main()
         {
@@ -29,11 +33,14 @@ namespace ShampooSalesSpikeDetection
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: DatasetPath, hasHeader: true, separatorChar: ',');
 
             // Detect temporay changes (spikes) in the pattern
-            ITransformer trainedModel = DetectSpike(mlcontext,size,dataView);
+            ITransformer trainedSpikeModel = DetectSpike(mlcontext, size, dataView);
 
             // Detect persistent change in the pattern
-            // DetectChangepoint(mlcontext, size, dataView);
-            SaveModel(mlcontext, trainedModel);
+            ITransformer trainedChangePointModel =  DetectChangepoint(mlcontext, size, dataView);
+
+            // Save models
+            SaveModel(mlcontext, trainedSpikeModel, SpikeModelPath);
+            SaveModel(mlcontext, trainedChangePointModel, ChangePointModelPath);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
 
@@ -75,13 +82,48 @@ namespace ShampooSalesSpikeDetection
             return trainedModel;
         }
 
-        private static void SaveModel(MLContext mlcontext, ITransformer trainedModel)
+        private static ITransformer DetectChangepoint(MLContext mlcontext, int size, IDataView dataView)
+        {
+            Console.WriteLine("Detect Persistent changes in pattern");
+
+            //STEP 2: Set the training algorithm    
+            var trainingPipeLine = mlcontext.Transforms.IidChangePointEstimator(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
+
+            //STEP 3:Train the model by fitting the dataview
+            Console.WriteLine("=============== Training the model Using Change Point Detection Algorithm===============");
+            ITransformer trainedModel = trainingPipeLine.Fit(dataView);
+            Console.WriteLine("=============== End of training process ===============");
+
+            //Apply data transformation to create predictions.
+            IDataView transformedData = trainedModel.Transform(dataView);
+            var predictions = mlcontext.Data.CreateEnumerable<ShampooSalesPrediction>(transformedData, reuseRowObject: false);
+
+            Console.WriteLine($"{nameof(ShampooSalesPrediction.Prediction)} column obtained post-transformation.");
+            Console.WriteLine("Alert\tScore\tP-Value\tMartingale value");
+
+            foreach (var p in predictions)
+            {
+                if (p.Prediction[0] == 1)
+                {
+                    Console.WriteLine("{0}\t{1:0.00}\t{2:0.00}\t{3:0.00}  <-- alert is on, predicted changepoint", p.Prediction[0], p.Prediction[1], p.Prediction[2], p.Prediction[3]);
+                }
+                else
+                {
+                    Console.WriteLine("{0}\t{1:0.00}\t{2:0.00}\t{3:0.00}", p.Prediction[0], p.Prediction[1], p.Prediction[2], p.Prediction[3]);
+                }
+            }
+            Console.WriteLine("");
+
+            return trainedModel;
+        }
+
+        private static void SaveModel(MLContext mlcontext, ITransformer trainedModel, string modelPath)
         {
             Console.WriteLine("=============== Saving model ===============");
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 mlcontext.Model.Save(trainedModel, fs);
 
-            Console.WriteLine("The model is saved to {0}", ModelPath);
+            Console.WriteLine("The model is saved to {0}", modelPath);
         }
 
         public static string GetAbsolutePath(string relativePath)

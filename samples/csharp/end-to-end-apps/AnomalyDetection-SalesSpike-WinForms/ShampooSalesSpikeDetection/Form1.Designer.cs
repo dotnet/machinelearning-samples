@@ -53,9 +53,15 @@ namespace ShampooSalesSpikeDetection
             this.label3 = new System.Windows.Forms.Label();
             this.graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.openFileExplorer = new System.Windows.Forms.OpenFileDialog();
+            this.spikeDetectionRadio = new System.Windows.Forms.RadioButton();
+            this.changePointDetectionRadio = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.graph)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // debugInstructionsLabel
@@ -70,7 +76,7 @@ namespace ShampooSalesSpikeDetection
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(379, 130);
+            this.button1.Location = new System.Drawing.Point(451, 130);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(107, 46);
@@ -94,7 +100,7 @@ namespace ShampooSalesSpikeDetection
             // 
             this.filePathTextbox.Location = new System.Drawing.Point(22, 138);
             this.filePathTextbox.Name = "filePathTextbox";
-            this.filePathTextbox.Size = new System.Drawing.Size(350, 31);
+            this.filePathTextbox.Size = new System.Drawing.Size(422, 31);
             this.filePathTextbox.TabIndex = 4;
             // 
             // dataGridView1
@@ -121,7 +127,7 @@ namespace ShampooSalesSpikeDetection
             // 
             this.commaSeparatedRadio.AutoSize = true;
             this.commaSeparatedRadio.Checked = true;
-            this.commaSeparatedRadio.Location = new System.Drawing.Point(22, 195);
+            this.commaSeparatedRadio.Location = new System.Drawing.Point(13, 19);
             this.commaSeparatedRadio.Name = "commaSeparatedRadio";
             this.commaSeparatedRadio.Size = new System.Drawing.Size(221, 29);
             this.commaSeparatedRadio.TabIndex = 9;
@@ -132,7 +138,7 @@ namespace ShampooSalesSpikeDetection
             // tabSeparatedRadio
             // 
             this.tabSeparatedRadio.AutoSize = true;
-            this.tabSeparatedRadio.Location = new System.Drawing.Point(22, 242);
+            this.tabSeparatedRadio.Location = new System.Drawing.Point(13, 66);
             this.tabSeparatedRadio.Name = "tabSeparatedRadio";
             this.tabSeparatedRadio.Size = new System.Drawing.Size(185, 29);
             this.tabSeparatedRadio.TabIndex = 10;
@@ -229,19 +235,60 @@ namespace ShampooSalesSpikeDetection
             this.graph.TabIndex = 19;
             this.graph.Text = "graph";
             // 
+            // spikeDetectionRadio
+            // 
+            this.spikeDetectionRadio.AutoSize = true;
+            this.spikeDetectionRadio.Checked = true;
+            this.spikeDetectionRadio.Location = new System.Drawing.Point(16, 22);
+            this.spikeDetectionRadio.Name = "spikeDetectionRadio";
+            this.spikeDetectionRadio.Size = new System.Drawing.Size(194, 29);
+            this.spikeDetectionRadio.TabIndex = 20;
+            this.spikeDetectionRadio.TabStop = true;
+            this.spikeDetectionRadio.Text = "Spike Detection";
+            this.spikeDetectionRadio.UseVisualStyleBackColor = true;
+            this.spikeDetectionRadio.CheckedChanged += new System.EventHandler(this.RadioButton1_CheckedChanged);
+            // 
+            // changePointDetectionRadio
+            // 
+            this.changePointDetectionRadio.AutoSize = true;
+            this.changePointDetectionRadio.Location = new System.Drawing.Point(16, 69);
+            this.changePointDetectionRadio.Name = "changePointDetectionRadio";
+            this.changePointDetectionRadio.Size = new System.Drawing.Size(270, 29);
+            this.changePointDetectionRadio.TabIndex = 21;
+            this.changePointDetectionRadio.Text = "Change Point Detection";
+            this.changePointDetectionRadio.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.commaSeparatedRadio);
+            this.panel1.Controls.Add(this.tabSeparatedRadio);
+            this.panel1.Location = new System.Drawing.Point(22, 175);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(244, 116);
+            this.panel1.TabIndex = 22;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.spikeDetectionRadio);
+            this.panel2.Controls.Add(this.changePointDetectionRadio);
+            this.panel2.Location = new System.Drawing.Point(272, 175);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(288, 116);
+            this.panel2.TabIndex = 23;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1841, 1231);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.graph);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.anomalyText);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.tabSeparatedRadio);
-            this.Controls.Add(this.commaSeparatedRadio);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.filePathTextbox);
@@ -256,6 +303,10 @@ namespace ShampooSalesSpikeDetection
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             //((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.graph)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -281,6 +332,10 @@ namespace ShampooSalesSpikeDetection
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataVisualization.Charting.Chart graph;
         private System.Windows.Forms.OpenFileDialog openFileExplorer;
+        private System.Windows.Forms.RadioButton spikeDetectionRadio;
+        private System.Windows.Forms.RadioButton changePointDetectionRadio;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
     }
 }
 

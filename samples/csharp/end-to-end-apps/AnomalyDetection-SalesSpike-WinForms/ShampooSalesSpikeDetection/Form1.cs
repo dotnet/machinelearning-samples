@@ -148,7 +148,10 @@ namespace ShampooSalesSpikeDetection
             // Step 2: Load model
             // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see Spike_Model)
             ITransformer trainedModel;
-            using (FileStream stream = new FileStream(@"../../../Spike_Model/MLModels/ShampooSalesModel.zip", FileMode.Open, FileAccess.Read, FileShare.Read))
+
+            string modelPath = spikeDetectionRadio.Checked ? @"../../../Spike_Model/MLModels/ShampooSalesSpikeModel.zip" : @"../../../Spike_Model/MLModels/ShampooSalesChangePointModel.zip";
+
+            using (FileStream stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlcontext.Model.Load(stream);
             }
@@ -186,6 +189,11 @@ namespace ShampooSalesSpikeDetection
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
 
         }
