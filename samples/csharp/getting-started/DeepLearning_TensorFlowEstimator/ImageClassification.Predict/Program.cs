@@ -13,7 +13,7 @@ namespace ImageClassification.Predict
             string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
-            var tagsTsv = Path.Combine(assetsPath, "inputs", "data", "tags.tsv");
+            var tagsTsv = Path.Combine(assetsPath, "inputs", "data", "images_list.tsv");
             var imagesFolder = Path.Combine(assetsPath, "inputs", "data");
             var imageClassifierZip = Path.Combine(assetsPath, "inputs", "imageClassifier.zip");
 
