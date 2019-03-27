@@ -83,6 +83,7 @@ namespace ShampooSalesSpikeDetection
             int a = 0;
             string xAxis = "";
             string yAxis = "";
+            string key = "";
 
             string[] dataset = File.ReadAllLines(filePath);
             dataCol = commaSeparatedRadio.Checked ? dataset[0].Split(',') : dataset[0].Split('\t');
@@ -94,41 +95,17 @@ namespace ShampooSalesSpikeDetection
 
             foreach (string line in dataset.Skip(1))
             {
-                string zeroString = "0.";
-
                 // Add next row of data
                 dataCol = commaSeparatedRadio.Checked ? line.Split(',') : line.Split('\t');
                 dataTable.Rows.Add(dataCol);
 
-                // Get quantity on y axis (e.g. number of sales) & convert to double
-                string numberVal = dataCol[1];
-                double doub = Convert.ToDouble(dataCol[1]);
+                // Get quantity on y axis (e.g. number of sales) as string
+                key = dataCol[1];
 
-                // Get digits after the decimal point 0s to zeroString 
-                // Number of 0s to add is # of decimal points in the number
-                var subS = numberVal.Substring(numberVal.LastIndexOf('.') + 1);
-                if (numberVal.Contains("."))
-                {
-                    for (int i = 0; i < subS.Length; i++)
-                    {
-                        zeroString = zeroString + "0";
-                    }
-                }
-                else
-                {
-                    zeroString = zeroString + "0";
-                }
+                // Use number of sales as key to date (year-month)
+                hashTable.Add(key, dataCol[0]);
 
-                var key = doub.ToString(zeroString);
-                if (hashTable.ContainsKey(key))
-                {
-                    key = key + a.ToString();
-                    hashTable.Add(key, dataCol[0]);
-                }
-                else
-                {
-                    hashTable.Add(key, dataCol[0]);
-                }
+                // Use date (year-month) as key to integer a
                 hashTable2.Add(dataCol[0], a);
                 a++;
             }
@@ -190,24 +167,13 @@ namespace ShampooSalesSpikeDetection
                 // Check if anomaly is predicted (indicated by an alert)
                 if (prediction.Prediction[0] == 1)
                 {
-                    // Get the value which is predicted to be an anomaly
+                    // Get the value that is predicted to be an anomaly
                     double numPredicted = prediction.Prediction[1];
 
-                    // If value is a whole number, add .0 to end to match key
-                    // then convert to string to be able to use as key in hashtable (to get month of anomaly)
-                    if (!numPredicted.ToString().Contains("."))
-                    {
-                        key = numPredicted.ToString("0.0");
-                    }
-                    // If value is a decimal number, round
-                    // then convert to string
-                    else
-                    {
-                        key = Math.Round(numPredicted, 3).ToString();
-                    }
-                    
                     // Use prediction (converted to string) as key to get date from first hashtable
                     // to be able to print out corresponding date to user
+                    key = Math.Round(numPredicted, 3).ToString();
+    
                     var dateAxisValue = hashTable[key];
 
                     // Use date as key to get int number from second hashtable
