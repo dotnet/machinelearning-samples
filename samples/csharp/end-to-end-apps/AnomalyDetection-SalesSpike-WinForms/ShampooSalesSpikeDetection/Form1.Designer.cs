@@ -30,6 +30,8 @@ namespace ShampooSalesSpikeDetection
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.LegendItem legendItem1 = new System.Windows.Forms.DataVisualization.Charting.LegendItem();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.debugInstructionsLabel = new System.Windows.Forms.Label();
@@ -50,10 +52,6 @@ namespace ShampooSalesSpikeDetection
             this.anomalyText = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.confTextBox = new System.Windows.Forms.TextBox();
-            this.pValueTextbox = new System.Windows.Forms.TextBox();
             this.openFileExplorer = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
@@ -63,7 +61,7 @@ namespace ShampooSalesSpikeDetection
             // debugInstructionsLabel
             // 
             this.debugInstructionsLabel.AutoSize = true;
-            this.debugInstructionsLabel.Location = new System.Drawing.Point(17, 116);
+            this.debugInstructionsLabel.Location = new System.Drawing.Point(17, 105);
             this.debugInstructionsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.debugInstructionsLabel.Name = "debugInstructionsLabel";
             this.debugInstructionsLabel.Size = new System.Drawing.Size(154, 25);
@@ -72,7 +70,7 @@ namespace ShampooSalesSpikeDetection
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(535, 105);
+            this.button1.Location = new System.Drawing.Point(379, 130);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(107, 46);
@@ -94,7 +92,7 @@ namespace ShampooSalesSpikeDetection
             // 
             // filePathTextbox
             // 
-            this.filePathTextbox.Location = new System.Drawing.Point(178, 113);
+            this.filePathTextbox.Location = new System.Drawing.Point(22, 138);
             this.filePathTextbox.Name = "filePathTextbox";
             this.filePathTextbox.Size = new System.Drawing.Size(350, 31);
             this.filePathTextbox.TabIndex = 4;
@@ -123,7 +121,7 @@ namespace ShampooSalesSpikeDetection
             // 
             this.commaSeparatedRadio.AutoSize = true;
             this.commaSeparatedRadio.Checked = true;
-            this.commaSeparatedRadio.Location = new System.Drawing.Point(22, 183);
+            this.commaSeparatedRadio.Location = new System.Drawing.Point(22, 195);
             this.commaSeparatedRadio.Name = "commaSeparatedRadio";
             this.commaSeparatedRadio.Size = new System.Drawing.Size(221, 29);
             this.commaSeparatedRadio.TabIndex = 9;
@@ -134,7 +132,7 @@ namespace ShampooSalesSpikeDetection
             // tabSeparatedRadio
             // 
             this.tabSeparatedRadio.AutoSize = true;
-            this.tabSeparatedRadio.Location = new System.Drawing.Point(22, 230);
+            this.tabSeparatedRadio.Location = new System.Drawing.Point(22, 242);
             this.tabSeparatedRadio.Name = "tabSeparatedRadio";
             this.tabSeparatedRadio.Size = new System.Drawing.Size(185, 29);
             this.tabSeparatedRadio.TabIndex = 10;
@@ -200,6 +198,17 @@ namespace ShampooSalesSpikeDetection
             chartArea1.AxisY.Title = "Sales";
             chartArea1.Name = "ChartArea1";
             this.graph.ChartAreas.Add(chartArea1);
+            legendItem1.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Marker;
+            legendItem1.MarkerBorderColor = System.Drawing.Color.Maroon;
+            legendItem1.MarkerBorderWidth = 0;
+            legendItem1.MarkerColor = System.Drawing.Color.Maroon;
+            legendItem1.MarkerSize = 15;
+            legendItem1.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Star4;
+            legendItem1.Name = "Anomaly";
+            legend1.CustomItems.Add(legendItem1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.graph.Legends.Add(legend1);
             this.graph.Location = new System.Drawing.Point(694, 410);
             this.graph.Name = "graph";
             this.graph.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Berry;
@@ -207,9 +216,12 @@ namespace ShampooSalesSpikeDetection
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.IsVisibleInLegend = false;
             series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
             series1.Name = "Series1";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series2.IsVisibleInLegend = false;
+            series2.Legend = "Legend1";
             series2.Name = "Series2";
             this.graph.Series.Add(series1);
             this.graph.Series.Add(series2);
@@ -217,50 +229,12 @@ namespace ShampooSalesSpikeDetection
             this.graph.TabIndex = 19;
             this.graph.Text = "graph";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(264, 183);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(127, 25);
-            this.label4.TabIndex = 20;
-            this.label4.Text = "Confidence:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(264, 230);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(91, 25);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "P-value:";
-            // 
-            // confTextBox
-            // 
-            this.confTextBox.Location = new System.Drawing.Point(398, 181);
-            this.confTextBox.Name = "confTextBox";
-            this.confTextBox.Size = new System.Drawing.Size(73, 31);
-            this.confTextBox.TabIndex = 22;
-            // 
-            // pValueTextbox
-            // 
-            this.pValueTextbox.Location = new System.Drawing.Point(398, 230);
-            this.pValueTextbox.Name = "pValueTextbox";
-            this.pValueTextbox.Size = new System.Drawing.Size(73, 31);
-            this.pValueTextbox.TabIndex = 23;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1841, 1231);
-            this.Controls.Add(this.pValueTextbox);
-            this.Controls.Add(this.confTextBox);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.graph);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.anomalyText);
@@ -280,7 +254,7 @@ namespace ShampooSalesSpikeDetection
             this.Text = "Anomaly Detection";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-           // ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.graph)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -306,10 +280,6 @@ namespace ShampooSalesSpikeDetection
         private System.Windows.Forms.RichTextBox anomalyText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataVisualization.Charting.Chart graph;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox confTextBox;
-        private System.Windows.Forms.TextBox pValueTextbox;
         private System.Windows.Forms.OpenFileDialog openFileExplorer;
     }
 }

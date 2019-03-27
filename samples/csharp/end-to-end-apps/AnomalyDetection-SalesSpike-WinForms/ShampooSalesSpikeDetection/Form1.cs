@@ -21,8 +21,6 @@ namespace ShampooSalesSpikeDetection
     {
         private DataTable dataTable = null;
         private string filePath = "";
-        private int confidenceLevel = 0;
-        private int pValue = 0;
         Tuple<string, string> tup = null;
         Dictionary<int, Tuple<string, string>> dict = new Dictionary<int, Tuple<string, string>>();
 
@@ -49,30 +47,37 @@ namespace ShampooSalesSpikeDetection
         {
             // Set filepath from text from filepath textbox
             filePath = filePathTextbox.Text;
-
-            dict = new Dictionary<int, Tuple<string, string>>();
-
-            if (filePath != "")
+            
+            // Checkk if file exists
+            if (File.Exists(filePath))
             {
-                // Reset text in anomaly textbox
-                anomalyText.Text = "";
+                dict = new Dictionary<int, Tuple<string, string>>();
 
-                // Display preview of dataset and graph
-                displayDataTableAndGraph();
+                if (filePath != "")
+                {
+                    // Reset text in anomaly textbox
+                    anomalyText.Text = "";
 
-                // Set confidence level and p-value
-                setConfLevelandPValue();
+                    // Display preview of dataset and graph
+                    displayDataTableAndGraph();
 
-                // Use ML.NET to detect anomalies and then mark them on the graph
-                detectAnomalies();
+                    // Load a trained model to detect anomalies and then mark them on the graph
+                    detectAnomalies();
 
+                }
+                // If file path textbox is empty, prompt user to input file path
+                else
+                {
+                    MessageBox.Show("Please input file path.");
+                }
             }
-            // If file path textbox is empty, prompt user to input file path
             else
             {
-                MessageBox.Show("Please input file path.");
+                MessageBox.Show("File does not exist. Try finding the file again.");
             }
         }
+    
+
 
         private void displayDataTableAndGraph()
         {
@@ -118,12 +123,15 @@ namespace ShampooSalesSpikeDetection
             graph.Series["Series1"].XValueMember = xAxis;
             graph.Series["Series1"].YValueMembers = yAxis;
 
+            graph.Legends["Legend1"].Enabled = true;
+
             graph.ChartAreas["ChartArea1"].AxisX.MajorGrid.LineWidth = 0;
             graph.ChartAreas["ChartArea1"].AxisX.Interval = a / 10;
 
             graph.ChartAreas["ChartArea1"].AxisY.Maximum = yMax;
             graph.ChartAreas["ChartArea1"].AxisY.Minimum = yMin;
             graph.ChartAreas["ChartArea1"].AxisY.Interval = yMax / 10;
+
 
             graph.DataBind();
 
@@ -134,20 +142,18 @@ namespace ShampooSalesSpikeDetection
             // Create MLContext to be shared across the model creation workflow objects 
             var mlcontext = new MLContext();
 
-            // STEP 1: Common data loading configuration
-            IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: filePath, hasHeader:true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
+            // STEP 1: Common data loading configuration for new data
+            IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: filePath, hasHeader: true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
-            // Set up IidSpikeDetector arguments
-            string outputColumnName = nameof(ShampooSalesPrediction.Prediction);
-            string inputColumnName = nameof(ShampooSalesData.numSales);
-
-            // STEP 2: Set the training algorithm    
-            var trainingPipeline = mlcontext.Transforms.IidSpikeEstimator(outputColumnName, inputColumnName, confidenceLevel, pValue);
-
-            // STEP 3:Train the model by fitting the dataview
-            ITransformer trainedModel = trainingPipeline.Fit(dataView);
-
-            // Apply data transformation to create predictions
+            // Step 2: Load model
+            // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see Spike_Model)
+            ITransformer trainedModel;
+            using (FileStream stream = new FileStream(@"../../../Spike_Model/MLModels/ShampooSalesModel.zip", FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                trainedModel = mlcontext.Model.Load(stream);
+            }
+           
+            // Step 3: Apply data transformation to create predictions
             IDataView transformedData = trainedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ShampooSalesPrediction>(transformedData, reuseRowObject: false);
 
@@ -179,22 +185,6 @@ namespace ShampooSalesSpikeDetection
             Console.WriteLine("");
         }
 
-        private void setConfLevelandPValue()
-        {
-            // Set confidence level and P-value
-            // If no values set, 95 and 4 are default values
-            if (confTextBox.Text == "")
-            {
-                confTextBox.Text = "95";
-            }
-            if (pValueTextbox.Text == "")
-            {
-                pValueTextbox.Text = "9";
-            }
-            confidenceLevel = Convert.ToInt32(confTextBox.Text);
-            pValue = Convert.ToInt32(pValueTextbox.Text);
-
-        }
         private void Form1_Load(object sender, EventArgs e)
         {
 
