@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ShampooSalesSpikeDetection.Properties
+namespace ShampooSalesAnomalyDetection.Properties
 {
 
 

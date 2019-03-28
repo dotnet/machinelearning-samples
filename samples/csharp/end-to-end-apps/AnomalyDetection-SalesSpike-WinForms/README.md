@@ -1,4 +1,4 @@
-# Spike Detection of Shampoo Sales
+# Anomaly Detection of Shampoo Sales
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
@@ -7,43 +7,50 @@
 ![Alt Text](https://github.com/briacht/machinelearning-samples/raw/master/samples/csharp/end-to-end-apps/AnomalyDetection-SalesSpike-WinForms/ShampooSalesSpikeDetection/images/shampoosales.gif)
 
 ## Overview
-Shampoo Sales Spike Detection is a simple application which builds and consumes a time series anomaly detection model to detect spikes in shampoo sales.
+Shampoo Sales Anomaly Detection is a simple application which builds and consumes time series anomaly detection models to detect spikes and change points in shampoo sales.
 
 This is an end-to-end sample which shows how you can use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) and anomaly detection in a WinForms application.
 
-This app is written in .NET Framework, so you must manually restore the nuget packages before running the app.
+Note: This app is written in .NET Framework, so you must manually restore the nuget packages before running the app.
 
 ## App Features
-* This is an end-to-end WinForms App that will:
-    1. Prompt the user to input a dataset file for model training (in this case we have provided `shampoo-sales.csv` that you can use)
-    2. Prompt the user to indicate if the data in the file is separated by commas or tabs
-    3. Prompt the user to provide a confidence level and p-value (if left blank, it will default to confidence level: 95, p-value: 9, which works well for the shampoo sales dataset)
-    4. Display the data in a table format so that the user can inspect the data columns
-    5. Display the data as a time series line graph
-    6. Detect and display the anomalies both in a textual format and as markers in the line graph
-* Time Series Anomaly Detection
-    * This application builds a time series anomaly detection model using the Shampoo Sales dataset.
-    * The model training code uses the [IidSpikeDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidspikedetector?view=ml-dotnet).
+* WinForms App:
+    1. Prompts the user to input a dataset file for anomaly detection (in this case we have provided `shampoo-sales.csv` that you can use)
+    2. Prompts the user to indicate if the data in the file is separated by commas or tabs
+    3. Prompts the user to indicate if they want to see spikes or change points in the data
+    4. Displays the data in a table format so that the user can inspect the data columns
+    5. Displays the data as a time series line graph
+    6. Loads 
+    7. Detects and displays the anomalies both in a textual format and as markers in the line graph
+
+* Time Series Anomaly Detection Console App
+    1. Builds and trains a time series anomaly detection model using the Shampoo Sales dataset for both spike detection and change point detection.
+    2. Uses confidence level and p-value as algorithm hyperparameters.
+    * Uses [IidSpikeDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidspikedetector?view=ml-dotnet) and [IidChangePointDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidchangepointdetector?view=ml-dotnet).
 
 ### Dataset
 The `shampoo-sales.csv` dataset is from [DataMart](https://datamarket.com/data/set/22r0/sales-of-shampoo-over-a-three-year-period#!ds=22r0&display=line).
 
-You can try out other datasets, but note that the WinForms app works only with datasets that have headers (you can specify the character separator at runtime).
-
 ## Problem
-This problem is focused on finding spikes in shampoo sales over a 3 year period, which can then be helpful in analyzing trends or abnormal behavior in sales.
+This problem is focused on finding spikes and change points in shampoo sales over a 3 year period, which can then be helpful in analyzing trends or abnormal behavior in sales.
 
 To solve this problem, we will build an ML model that takes as inputs:
 * Date (Year 1 - 3 and Month)
 * Number of shampoo sales
 
-and will generate an alert if/where a spike in shampoo sales is detected.
+and will generate an alert if/where a spike or change point in shampoo sales is detected.
 
 ## ML task - Time Series Anomaly Detection
 Anomaly detection is the process of detecting outliers in data. The goal of time series anomaly detection is the identification of rare items, events, or observations which raise suspicions by differing significantly from the majority of the time series data.
 
+The process of building and training models is the same for spike detection and change point detection; the only difference is the algorithm that you use (`IidSpikeDetector` vs. `IidChangePointDetector`)
+
+### Spike Detection
+
+### Change Point Detection
+
 ## Solution
-To solve this problem, you build and train an ML model on existing data to demonstrate time series anomaly detection. The Prediction output column will then provide the Alerts where the model predicted the anomalies to be in the dataset.
+To solve this problem, you build and train two ML models on existing data to demonstrate time series anomaly detection. The Prediction output columns will then provide the Alerts where the models predicted the anomalies to be in the dataset.
 
 ### 1. Build model
 
@@ -51,9 +58,9 @@ Building a model includes:
 
 * Preparing and loading the data from (`shampoo-sales.csv`) to an IDataView.
 
-* Creating an Estimator by choosing a trainer/learning algorithm (in this case `DetectIIDSpike`) and setting parameters (in this case confidence level and p-value).
+* Creating an Estimator by choosing a trainer/learning algorithm (e.g. `IidSpikeDetector` or `IidChangePointDetector`) and setting parameters (in this case confidence level and p-value).
 
-The initial code is similar to the following:
+The initial code for Spike Detection is similar to the following:
 
 ```CSharp
 // Create MLContext object

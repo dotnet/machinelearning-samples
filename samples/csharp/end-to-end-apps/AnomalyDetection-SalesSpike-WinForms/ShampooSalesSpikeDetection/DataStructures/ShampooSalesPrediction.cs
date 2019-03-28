@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ShampooSalesSpikeDetection
+namespace ShampooSalesAnomalyDetection
 {
     class ShampooSalesPrediction
     {

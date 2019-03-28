@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28719.210
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShampooSalesSpikeDetection", "ShampooSalesSpikeDetection\ShampooSalesSpikeDetection.csproj", "{8B051595-03CD-4026-91BB-403F90CF8526}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShampooSalesAnomalyDetection", "ShampooSalesSpikeDetection\ShampooSalesAnomalyDetection.csproj", "{8B051595-03CD-4026-91BB-403F90CF8526}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike_Model", "Spike_Model\Spike_Model.csproj", "{B5F45A34-C15D-4190-9354-2C81DF1E9B30}"
 EndProject

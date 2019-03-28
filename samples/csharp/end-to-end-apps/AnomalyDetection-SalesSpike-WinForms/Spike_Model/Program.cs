@@ -3,7 +3,7 @@ using Microsoft.ML;
 using System.IO;
 using Microsoft.Data.DataView;
 
-namespace ShampooSalesSpikeDetection
+namespace ShampooSalesAnomalyDetection
 {
     internal static class Program
    {
@@ -38,7 +38,7 @@ namespace ShampooSalesSpikeDetection
             // Detect persistent change in the pattern
             ITransformer trainedChangePointModel =  DetectChangepoint(mlcontext, size, dataView);
 
-            // Save models
+
             SaveModel(mlcontext, trainedSpikeModel, SpikeModelPath);
             SaveModel(mlcontext, trainedChangePointModel, ChangePointModelPath);
 

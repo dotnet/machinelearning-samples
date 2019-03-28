@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ShampooSalesSpikeDetection.Properties
+namespace ShampooSalesAnomalyDetection.Properties
 {
 
 
@@ -44,7 +44,7 @@ namespace ShampooSalesSpikeDetection.Properties
             {
                 if ((resourceMan == null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ShampooSalesSpikeDetection.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ShampooSalesAnomalyDetection.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

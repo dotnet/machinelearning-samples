@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace ShampooSalesSpikeDetection
+namespace ShampooSalesAnomalyDetection
 {
     public partial class Form1 : Form
     {
@@ -145,17 +145,26 @@ namespace ShampooSalesSpikeDetection
             // STEP 1: Common data loading configuration for new data
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: filePath, hasHeader: true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
-            // Step 2: Load model
+            // Step 2: Load & use model
             // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see Spike_Model)
+            if (spikeDet.Checked)
+            {
+                loadAndUseModel(mlcontext, dataView, @"../../../Spike_Model/MLModels/ShampooSalesSpikeModel.zip", "Spike", Color.DarkRed);
+            }
+            if (changePointDet.Checked)
+            {
+                loadAndUseModel(mlcontext, dataView, @"../../../Spike_Model/MLModels/ShampooSalesChangePointModel.zip", "Change point", Color.DarkBlue);
+            }
+        }
+
+        private void loadAndUseModel(MLContext mlcontext, IDataView dataView, String modelPath, String type, Color color)
+        {
             ITransformer trainedModel;
-
-            string modelPath = spikeDetectionRadio.Checked ? @"../../../Spike_Model/MLModels/ShampooSalesSpikeModel.zip" : @"../../../Spike_Model/MLModels/ShampooSalesChangePointModel.zip";
-
             using (FileStream stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 trainedModel = mlcontext.Model.Load(stream);
             }
-           
+
             // Step 3: Apply data transformation to create predictions
             IDataView transformedData = trainedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ShampooSalesPrediction>(transformedData, reuseRowObject: false);
@@ -178,14 +187,21 @@ namespace ShampooSalesSpikeDetection
                     graph.Series["Series1"].Points[a].SetValueXY(a, yAxisSalesNum);
                     graph.Series["Series1"].Points[a].MarkerStyle = MarkerStyle.Star4;
                     graph.Series["Series1"].Points[a].MarkerSize = 10;
-                    graph.Series["Series1"].Points[a].MarkerColor = Color.DarkRed;
-                    
-                    // Print out anomalies as text for user
-                    anomalyText.Text = anomalyText.Text + "Anomaly detected in " + xAxisDate + ": " + yAxisSalesNum + "\n";
+                    graph.Series["Series1"].Points[a].MarkerColor = color;
+
+                    // Print out anomalies as text for user &
+                    // change color of text accordingly
+                    string text = type + " detected in " + xAxisDate + ": " + yAxisSalesNum + "\n";
+                    anomalyText.SelectionColor = color;
+                    anomalyText.AppendText(text);
+
+                    // Change row color in table where anomalies occur
+                    DataGridViewRow row = dataGridView1.Rows[a];
+                    row.DefaultCellStyle.BackColor = color;
+                    row.DefaultCellStyle.ForeColor = Color.White;
                 }
                 a++;
             }
-            Console.WriteLine("");
         }
 
         private void Form1_Load(object sender, EventArgs e)
