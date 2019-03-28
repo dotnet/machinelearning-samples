@@ -24,6 +24,8 @@ namespace SpamDetectionConsoleApp
             {
                 using (var client = new WebClient())
                 {
+                    //The code below will download a dataset from a third-party, UCI (link), and may be governed by separate third-party terms. 
+                    //By proceeding, you agree to those separate terms.
                     client.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip", "spam.zip");
                 }
 

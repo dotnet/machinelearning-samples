@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+| v0.11           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
@@ -41,12 +41,12 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
 MLContext mlContext = new MLContext(seed: 0);
 
 // STEP 1: Common data loading configuration
-IDataView baseTrainingDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
-IDataView testDataView = mlContext.Data.ReadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
+IDataView baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
+IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
 //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
 var cnt = baseTrainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
-IDataView trainingDataView = mlContext.Data.FilterByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
+IDataView trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
 var cnt2 = trainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
 
 
@@ -62,7 +62,7 @@ var dataProcessPipeline = mlContext.Transforms.CopyColumns(outputColumnName: Def
                             , nameof(TaxiTrip.TripTime), nameof(TaxiTrip.TripDistance)));
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 

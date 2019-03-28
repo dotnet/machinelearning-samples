@@ -2,8 +2,8 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-open Microsoft.ML.Transforms.Categorical
 open Common
+open Microsoft.ML.Transforms
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -76,23 +76,21 @@ let main _argv =
         //Create the MLContext to share across components for deterministic results
         let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic environment
         // STEP 1: Common data loading configuration
-        let textLoader = 
-            mlContext.Data.CreateTextLoader(
+        let pivotDataView = 
+            mlContext.Data.LoadFromTextFile(pivotCsv,
                 columns = 
                     [| 
-                        TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
-                        TextLoader.Column("LastName", Nullable DataKind.Text, 32)
+                        TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                        TextLoader.Column("LastName", DataKind.String, 32)
                     |],
                 hasHeader = true,
                 separatorChar = ',')
-
-        let pivotDataView = textLoader.Read(pivotCsv)
         
         //STEP 2: Configure data transformations in pipeline
         let dataProcessPipeline =  
             EstimatorChain()
                 .Append(mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnInfo("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnOptions("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
         
         // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
         Common.ConsoleHelper.peekDataViewInConsole<PivotObservation> mlContext pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore

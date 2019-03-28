@@ -32,7 +32,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  <tr>
    <td width="25%">
       <h3>Binary classification</h3>
-      <img src="images/Binary Classification.png" alt="Binary classification chart" width="120" height="120"  align="middle">
+      <img src="images/sentiment-analysis.png" alt="Binary classification chart" align="middle">
   </td>
   <td width="35%">
   Task of classifying the elements of a given set into two groups, predicting which group each one belongs to.
@@ -42,29 +42,29 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
       <h4>Spam Detection &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/BinaryClassification_SpamDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SpamDetection">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>Fraud detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>Heart disease detection &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/BinaryClassification_HeartDiseasePrediction">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
  <tr>
    <td width="25%">
       <h3>Multi-class classification</h3>
-      <img src="images/Multiple Classification.png" alt="Multi-class classification" width="120" height="120"  align="middle">
+      <img src="images/issue-labeler.png" alt="Multi-class classification" align="middle">
   </td>
   <td width="35%">
   Task of classifying instances into one of three or more classes, predicting which group each one belongs to.
   </td>
   <td>
       <h4>Issues classification &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Heart Disease &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_HeartDisease">C#</a> &nbsp; &nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <a href="samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
+      <h4>Iris flowers classification &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>      
       <h4>MNIST &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/MulticlassClassification_mnist">C#</a> &nbsp; &nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
  <tr>
    <td width="25%">
       <h3>Regression</h3>
-      <img src="images/Regression.png" alt="regression icon" width="120" height="120"  align="middle">
+      <img src="images/price-prediction.png" alt="regression icon" align="middle">
   </td>
   <td width="35%">
   The task is to predict a numeric value with given input variable data. It is widely used for forecasting and 'how much / how many' predictions.
@@ -75,13 +75,13 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h4>Sales forecast &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/end-to-end-apps/Regression-SalesForecast">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
       <h4>Demand prediction &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/Regression_BikeSharingDemand">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
  <tr>
    <td width="25%">
       <h3>Recommendation</h3>
-      <img src="images/Recommendation.png" alt="Recommendations icon" width="120" height="120"  align="middle">
+      <img src="images/product-recommendation.png" alt="Recommendations icon" align="middle">
   </td>
   <td width="35%">
   Recommender systems are typically based on content based and collaborative filtering methods. A collaborative method predicts what items/products a user might like based on his past actions/likes/ratings compared to other users. 
@@ -97,7 +97,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Clustering</h3>
-      <img src="images/Clustering.png" alt="Clustering plotting" width="120" height="120"  align="middle">
+      <img src="images/clustering.png" alt="Clustering plotting" align="middle">
   </td>
   <td width="35%">
   ML task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar to each other than to those in other groups. It is an exploratory task. It does not classify items across particular labels.
@@ -112,19 +112,22 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Anomaly detection</h3>
-      <img src="images/Anomaly Detection.png" alt="anomaly detection chart" width="120" height="120"  align="middle">
+      <img src="images/anomaly-detection.png" alt="anomaly detection chart" lign="middle">
   </td>
   <td width="35%">
   Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
   </td>
   <td>
-      <h4>Coming soon</h4>
+      <h4>Spike Detection-Shampoo Sales &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+    <h4>Spike Detection-PowerMeter Readings &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
    <td width="25%">
       <h3>Ranking</h3>
-      <img src="images/Ranking.png" alt="Ranking logo" width="120" height="120"  align="middle">
+      <img src="images/ranking.png" alt="Ranking logo" align="middle">
   </td>
   <td width="35%">
   Construction of ranking models for information retrieval systems so the items are ordered/ranked based on user's input variables such as likes/dislike, context, interests, etc.
@@ -136,7 +139,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
    <td width="25%">
       <h3>Deep Learning</h3>
-      <img src="images/Deep Learning.png" alt="DeepLearning logo" width="120" height="120"  align="middle">
+      <img src="images/image-classification.png" alt="DeepLearning logo"align="middle">
   </td>
   <td width="35%">
   Deep learning is a subset of machine learning. Deep learning architectures such as deep neural networks, are usually applied to fields such as computer vision (object detection, image classification, style transfer), speech recognition, natural language processing and audio recognition. 
@@ -149,6 +152,35 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <h4>ONNX with ML.NET - Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr> 
+ </table>
+
+**Real Time ML.Net Samples:** The below samples are created for real time scenarios like Scalable WebAPI services, Datasets stored in Database etc.
+
+ <table>
+ <tr>
+   <td width="25%">
+      <h3><b>Sample Name</b></h3>
+  </td>
+  <td>
+      <h3 width="35%"><b>Description</b></h3>
+  </td>
+  <td>
+      <h3><b>ML Scenarios</b></h3>
+  </td>
+ </tr>
+ <tr>
+   <td width="25%">
+      <h3>Scalable WebAPI</h3>
+      <img src="images/web.png" alt="Binary classification chart" align="middle">
+  </td>
+  <td width="35%">
+   This sample explains how to optimize your code when running an ML.NET model on an ASP.NET Core WebAPI service
+  </td>
+    <td>
+      <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
+  </td>
+ </tr>
  </table>
 
 **NuGet feed configuration:** Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such as 0.9, 0.10, 0.11, etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.11.0-preview-27128-1), not available in the regular NuGet feed.

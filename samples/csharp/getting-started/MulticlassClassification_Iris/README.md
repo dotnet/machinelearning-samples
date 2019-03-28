@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+| v0.11           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -52,8 +52,8 @@ The initial code is similar to the following:
 var mlContext = new MLContext(seed: 0);
 
 // STEP 1: Common data loading configuration
-var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
-var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
+var trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
+var testDataView = mlContext.Data.LoadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
 
 // STEP 2: Common data process configuration with pipeline data transformations
 var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
@@ -62,7 +62,7 @@ var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLen
                                                                        "PetalWidth" );
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder                         
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 

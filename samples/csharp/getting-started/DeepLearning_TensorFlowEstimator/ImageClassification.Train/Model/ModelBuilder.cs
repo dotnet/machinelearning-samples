@@ -51,7 +51,7 @@ namespace ImageClassification.Model
 
 
 
-            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
+            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: false);
 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
                             .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
@@ -74,9 +74,9 @@ namespace ImageClassification.Model
             trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
             // Get some performance metric on the model using training data            
-            var sdcaContext = new MulticlassClassificationCatalog(mlContext);
+            var classificationContext = new MulticlassClassificationCatalog(mlContext);
             ConsoleWriteHeader("Classification metrics");
-            var metrics = sdcaContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
+            var metrics = classificationContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
             Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
             Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 

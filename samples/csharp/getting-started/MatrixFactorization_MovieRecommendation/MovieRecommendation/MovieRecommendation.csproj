@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <None Remove="Common\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="recommendation-movies.csv" />
     <None Remove="recommendation-ratings-test.csv" />
     <None Remove="recommendation-ratings-train.csv" />

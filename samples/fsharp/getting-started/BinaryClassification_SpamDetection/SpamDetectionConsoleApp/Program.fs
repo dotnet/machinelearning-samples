@@ -4,8 +4,6 @@ open Microsoft.ML
 open Microsoft.ML.Data
 open System.Net
 open System.IO.Compression
-open Microsoft.ML.Core.Data
-open Microsoft.ML.Transforms.Conversions
 
 [<CLIMutable>]
 type SpamInput = 
@@ -27,9 +25,9 @@ let downcastPipeline (x : IEstimator<_>) =
     | :? IEstimator<ITransformer> as y -> y
     | _ -> failwith "downcastPipeline: expecting a IEstimator<ITransformer>"
 
-let classify (p : PredictionEngine<_,_>) x = 
+let classifyWithThreshold threshold (p : PredictionEngine<_,_>) x = 
     let prediction = p.Predict({LabelText = ""; Message = x})
-    printfn "The message '%s' is %b" x prediction.PredictedLabel
+    printfn "The message '%s' is %s" x (if prediction.Probability > threshold then "spam" else "not spam")
 
 [<EntryPoint>]
 let main _argv =
@@ -46,22 +44,21 @@ let main _argv =
 
     // Set up the MLContext, which is a catalog of components in ML.NET.
     let mlContext = MLContext(seed = Nullable 1)
-    let reader = 
-        mlContext.Data.CreateTextLoader(
+    
+    let data = 
+        mlContext.Data.LoadFromTextFile(trainDataPath,
             columns = 
                 [|
-                    TextLoader.Column("LabelText" , Nullable DataKind.Text, 0)
-                    TextLoader.Column("Message" , Nullable DataKind.Text, 1)
+                    TextLoader.Column("LabelText" , DataKind.String, 0)
+                    TextLoader.Column("Message" , DataKind.String, 1)
                 |],
-             hasHeader = false,
-             separatorChar = '\t')
-    
-    let data = reader.Read(trainDataPath)
+            hasHeader = false,
+            separatorChar = '\t')
     
     // Create the estimator which converts the text label to a bool then featurizes the text, and add a linear trainer.
     let estimator = 
         EstimatorChain()
-            .Append(mlContext.Transforms.Conversion.ValueMap(["ham"; "spam"], [false; true],[| struct ("Label", "LabelText") |]))
+            .Append(mlContext.Transforms.Conversion.ValueMap(["ham"; "spam"], [false; true], ColumnOptions("Label","LabelText")))
             .Append(mlContext.Transforms.Text.FeaturizeText("Features", "Message"))
             .AppendCacheCheckpoint(mlContext)
             .Append(mlContext.BinaryClassification.Trainers.StochasticDualCoordinateAscent("Label", "Features"))
@@ -71,7 +68,7 @@ let main _argv =
     // evaluates it on the remaining fold. We are using 5 folds so we get back 5 sets of scores.
     // Let's compute the average AUC, which should be between 0.5 and 1 (higher is better).
     let cvResults = mlContext.BinaryClassification.CrossValidate(data, downcastPipeline estimator, numFolds = 5);
-    let avgAuc = cvResults |> Seq.map (fun struct (metrics,_,_) -> metrics.Auc) |> Seq.average
+    let avgAuc = cvResults |> Seq.map (fun x -> x.Metrics.Auc) |> Seq.average
     printfn "The AUC is %f" avgAuc
     
     // Now let's train a model on the full dataset to help us get better results
@@ -81,22 +78,10 @@ let main _argv =
     // While our model is relatively good at detecting the difference, this skewness leads it to always
     // say the message is not spam. We deal with this by lowering the threshold of the predictor. In reality,
     // it is useful to look at the precision-recall curve to identify the best possible threshold.
-    let newModel = 
-        let lastTransformer = 
-            BinaryPredictionTransformer<IPredictorProducing<float32>>(
-                mlContext, 
-                model.LastTransformer.Model, 
-                model.GetOutputSchema(data.Schema), 
-                model.LastTransformer.FeatureColumn, 
-                threshold = 0.15f, 
-                thresholdColumn = DefaultColumnNames.Probability);
-        let parts = model |> Seq.toArray
-        parts.[parts.Length - 1] <- lastTransformer :> _
-        TransformerChain<ITransformer>(parts)
-
-
+    let classify = classifyWithThreshold 0.15f
+    
     // Create a PredictionFunction from our model 
-    let predictor = newModel.CreatePredictionEngine<SpamInput, SpamPrediction>(mlContext);
+    let predictor = model.CreatePredictionEngine<SpamInput, SpamPrediction>(mlContext);
 
     // Test a few examples
     [

@@ -1,6 +1,7 @@
 ﻿module DataStructures
 
-open Microsoft.ML.Runtime.Api
+open Microsoft.ML.Data
+
 
 [<CLIMutable>]
 type GitHubIssue =
@@ -16,4 +17,5 @@ type GitHubIssuePrediction =
     {
         [<ColumnName("PredictedLabel")>]
         Area : string
+        Score : float32 []
     }

@@ -5,11 +5,10 @@ open System
 open System.IO
 open Microsoft.Extensions.Configuration
 open Microsoft.ML
-open Microsoft.ML.Runtime.Data
-open Microsoft.ML.Runtime.Learners
-open Microsoft.ML.Runtime.Training
-open Microsoft.ML.Runtime
 open DataStructures
+open Microsoft.ML.Data
+open System.Security.Cryptography
+open Microsoft.ML.Trainers
 
 
 let repoOwner = "a"
@@ -32,6 +31,10 @@ let setupAppConfiguration () =
     let builder = ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json")
     builder.Build()
 
+let downcastPipeline (x : IEstimator<_>) = 
+    match x with 
+    | :? IEstimator<ITransformer> as y -> y
+    | _ -> failwith "downcastPipeline: expecting a IEstimator<ITransformer>"
 
 let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
 
@@ -41,30 +44,29 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
 
     // STEP 1: Common data loading configuration
     let textLoader =
-        mlContext.Data.TextReader(
-            TextLoader.Arguments(
-                Separator = "tab",
-                HasHeader = true,
-                Column = 
-                    [|
-
-                        TextLoader.Column("ID", Nullable DataKind.Text, 0)
-                        TextLoader.Column("Area", Nullable DataKind.Text, 1)
-                        TextLoader.Column("Title", Nullable DataKind.Text, 2)
-                        TextLoader.Column("Description", Nullable DataKind.Text, 3)
-                    |]
-            )
+        mlContext.Data.CreateTextLoader(
+            separatorChar = '\t',
+            hasHeader = true,
+            columns = 
+                [|
+                    TextLoader.Column("ID", DataKind.String, 0)
+                    TextLoader.Column("Area", DataKind.String, 1)
+                    TextLoader.Column("Title", DataKind.String, 2)
+                    TextLoader.Column("Description", DataKind.String, 3)
+                |]
         )
 
-    let trainingDataView = textLoader.Read([| dataSetLocation |])
+    let trainingDataView = textLoader.Load([| dataSetLocation |])
        
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
-        mlContext.Transforms.Categorical.MapValueToKey("Area", "Label")
-            |> Common.ModelBuilder.append (mlContext.Transforms.Text.FeaturizeText("Title", "TitleFeaturized"))
-            |> Common.ModelBuilder.append (mlContext.Transforms.Text.FeaturizeText("Description", "DescriptionFeaturized"))
-            |> Common.ModelBuilder.append (mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"))
-            |> Common.ModelBuilder.downcastPipeline
+        EstimatorChain()
+            .Append(mlContext.Transforms.Conversion.MapValueToKey("Label", "Area"))
+            .Append(mlContext.Transforms.Text.FeaturizeText("TitleFeaturized", "Title"))
+            .Append(mlContext.Transforms.Text.FeaturizeText("DescriptionFeaturized", "Description"))
+            .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized", "DescriptionFeaturized"))
+            .AppendCacheCheckpoint(mlContext)
+        |> downcastPipeline
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<DataStructures.GitHubIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore
@@ -77,7 +79,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
             mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(
                 DefaultColumnNames.Label, 
                 DefaultColumnNames.Features)
-            |> ModelBuilder.downcastPipeline
+            |> downcastPipeline
 
         | MyTrainerStrategy.OVAAveragedPerceptronTrainer ->
             let averagedPerceptronBinaryTrainer = 
@@ -86,45 +88,49 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
                     DefaultColumnNames.Features,
                     numIterations = 10)
                 
-            // Because of variant generics used in the C# model the trainer has to be downcasted
-            // to ITrainerEstimator<ISingleFeaturePredictionTransformer<IPredictorProducing<float32>>, IPredictorProducing<float32>>
-            // type, otherwise F# won't allow it.
-            let downcastTrainer (a: ITrainerEstimator<'a, 'b>) =
-                match a with
-                | :? ITrainerEstimator<ISingleFeaturePredictionTransformer<IPredictorProducing<float32>>, IPredictorProducing<float32>> as p -> p
-                | _ -> failwith "The pipeline has to be an instance of IEstimator<ITransformer>."
-
+            let downcastTrainer (x : ITrainerEstimator<_,_>) = 
+                match x with 
+                | :? ITrainerEstimator<_,_> as y -> y
+                | _ -> failwith "downcastPipeline: expecting a ITrainerEstimator"
+            
             let averagedPerceptronBinaryTrainer' = downcastTrainer averagedPerceptronBinaryTrainer
 
             // Compose an OVA (One-Versus-All) trainer with the BinaryTrainer.
             // In this strategy, a binary classification algorithm is used to train one classifier for each class, "
             // which distinguishes that class from all other classes. Prediction is then performed by running these binary classifiers, "
             // and choosing the prediction with the highest confidence score.
-            new Ova(mlContext, averagedPerceptronBinaryTrainer')
-            |> ModelBuilder.downcastPipeline
+            mlContext.MulticlassClassification.Trainers.OneVersusAll(averagedPerceptronBinaryTrainer')
+            |> downcastPipeline
 
     //Set the trainer/algorithm
     let modelBuilder = 
-        Common.ModelBuilder.create mlContext dataProcessPipeline
-        |> Common.ModelBuilder.addTrainer trainer
-        |> Common.ModelBuilder.addEstimator (mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
+        dataProcessPipeline
+            .Append(trainer)
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
 
     
     // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
     // in order to evaluate and get the model's accuracy metrics
     printfn "=============== Cross-validating to get model's accuracy metrics ==============="
-    let crossValResults = 
-        modelBuilder
-        |> ModelBuilder.crossValidateAndEvaluateMulticlassClassificationModel trainingDataView 6 "Label"
-        |> Array.map(fun struct (a,b,c) -> (a,b,c))
+
+    //Measure cross-validation time
+    let watchCrossValTime = System.Diagnostics.Stopwatch.StartNew()
+
+    let crossValidationResults = 
+        mlContext.MulticlassClassification.CrossValidate(data = trainingDataView, estimator = downcastPipeline modelBuilder, numFolds = 6, labelColumn = DefaultColumnNames.Label)
         
-    Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString()) crossValResults
+
+    //Stop measuring time
+    watchCrossValTime.Stop()
+    printfn "Time Cross-Validating: %d miliSecs"  watchCrossValTime.ElapsedMilliseconds
+           
+    crossValidationResults
+    |> Array.map (fun x -> x.Metrics, x.Model, x.ScoredHoldOutSet) //convert struct tuple for print function
+    |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString())
 
     // STEP 5: Train the model fitting to the DataSet
     printfn "=============== Training the model ==============="
-    let trainedModel = 
-        modelBuilder
-        |> Common.ModelBuilder.train trainingDataView
+    let trainedModel = modelBuilder.Fit(trainingDataView)
 
 
     // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
@@ -134,17 +140,16 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
         Title = "WebSockets communication is slow in my machine"
         Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." 
     }
-    let prediction = 
-        Common.ModelScorer.create mlContext
-        |> Common.ModelScorer.setTrainedModel trainedModel
-        |> Common.ModelScorer.predictSingle issue
+    let predEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext)
+    let prediction =  predEngine.Predict(issue)
 
     printfn "=============== Single Prediction just-trained-model - Result: %s ===============" prediction.Area
 
     // STEP 6: Save/persist the trained model to a .ZIP file
     printfn "=============== Saving the model to a file ==============="
-    (trainedModel, modelBuilder)
-    |> Common.ModelBuilder.saveModelAsFile modelPath
+    do 
+        use f = File.Open(modelPath,FileMode.Create)
+        mlContext.Model.Save(trainedModel, f)
 
     Common.ConsoleHelper.consoleWriteHeader "Training process finalized"
 
@@ -158,11 +163,15 @@ let testSingleLabelPrediction (configuration : IConfiguration) modelFilePathName
     |> Labeler.testPredictionForSingleIssue
 
 let predictLabelsAndUpdateGitHub (configuration : IConfiguration) modelPath =
+    printfn ".............Retrieving Issues from GITHUB repo, predicting label/s and assigning predicted label/s......"
+    
     let token =     configuration.["GitHubToken"];
     let repoOwner = configuration.["GitHubRepoOwner"]; //IMPORTANT: This can be a GitHub User or a GitHub Organization
     let repoName =  configuration.["GitHubRepoName"];
 
-    if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(repoOwner) || String.IsNullOrEmpty(repoName)) then
+    if String.IsNullOrEmpty(token) || token = "YOUR - GUID - GITHUB - TOKEN" ||
+            String.IsNullOrEmpty(repoOwner) || repoOwner = "YOUR-REPO-USER-OWNER-OR-ORGANIZATION" ||
+            String.IsNullOrEmpty(repoName) || repoName = "YOUR-REPO-SINGLE-NAME" then
         Console.Error.WriteLine()
         Console.Error.WriteLine("Error: please configure the credentials in the appsettings.json file")
         

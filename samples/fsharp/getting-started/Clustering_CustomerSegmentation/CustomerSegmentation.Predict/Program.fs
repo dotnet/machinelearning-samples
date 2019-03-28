@@ -110,20 +110,19 @@ let main _argv =
             use f = File.OpenRead modelZipFilePath
             mlContext.Model.Load(f)
         
-        let reader = 
-            mlContext.Data.CreateTextLoader(
+        let data = 
+            mlContext.Data.LoadFromTextFile(
+                pivotCsv,
                 columns = 
                     [| 
-                        TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
-                        TextLoader.Column("LastName", Nullable DataKind.Text, 32)
+                        TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                        TextLoader.Column("LastName", DataKind.String, 32)
                     |],
                 hasHeader = true,
                 separatorChar = ',')
-
-        let data = reader.Read(pivotCsv)
         
         //Apply data transformation to create predictions/clustering
-        let predictions = mlContext.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
+        let predictions = mlContext.Data.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
 
         //Generate data files with customer data grouped by clusters
         printHeader ["CSV Customer Segmentation"]

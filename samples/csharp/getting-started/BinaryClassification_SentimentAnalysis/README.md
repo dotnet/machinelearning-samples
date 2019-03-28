@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v0.11           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -31,7 +31,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 Building a model includes: 
 
-* Define the data's schema maped to the datasets to read (`wikipedia-detox-250-line-data.tsv` and `wikipedia-detox-250-line-test.tsv`) with a DataReader
+* Define the data's schema maped to the datasets to load (`wikiDetoxAnnotated40kRows.tsv`) with a TextLoader. Split the dataset into train and test in ratio of 80:20
 
 * Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `FeaturizeText`)
 
@@ -41,25 +41,26 @@ The initial code is similar to the following:
 
 ```CSharp
 // STEP 1: Common data loading configuration
-IDataView trainingDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
-IDataView testDataView = mlContext.Data.ReadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
+IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
+
+var testTrainSplit = mlContext.BinaryClassification.TrainTestSplit(dataView, testFraction: 0.2);
 
 // STEP 2: Common data process configuration with pipeline data transformations          
 var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
 
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
- var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+ var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
 
-To perform training you need to call the `Fit()` method while providing the training dataset (`wikipedia-detox-250-line-data.tsv` file) in a DataView object.
+To perform training you need to call the `Fit()` method while providing the training dataset in a DataView object.
 
 ```CSharp
-ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
+ITransformer trainedModel = trainingPipeline.Fit(testTrainSplit.TrainSet);
 ```
 
 Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
@@ -71,7 +72,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 ```CSharp
-var predictions = trainedModel.Transform(testDataView);
+var predictions = trainedModel.Transform(testTrainSplit.TestSet);
 var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
 
 ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);

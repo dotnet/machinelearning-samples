@@ -1,8 +1,8 @@
-# Fraud detection in credit cards based on binary classification and PCA
+# Fraud detection in credit cards based on binary classification and existing PCA-transformed dataset
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v0.11           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -12,7 +12,7 @@ It is important to note that this sample uses the dynamic API with Estimators.
 ## Problem
 This problem is centered around predicting if credit card transaction (with its related info/variables) is a fraud or no. 
  
-The input information of the transactions contain only numerical input variables which are the result of PCA transformations. Unfortunately, due to confidentiality issues, the original features and additional background information are not available, but the way you build the model doesn't change.  
+The input dataset of the transactions contain only numerical input variables which are the result of previous PCA (Principal Component Analysis) transformations. Unfortunately, due to confidentiality issues, the original features and additional background information are not available, but the way you build the model doesn't change.  
 
 Features V1, V2, ... V28 are the principal components obtained with PCA, the only features which have not been transformed with PCA are 'Time' and 'Amount'. 
 
@@ -40,17 +40,17 @@ Binary or binomial classification is the task of classifying the elements of a g
 
 To solve this problem, first you need to build a machine learning model. Then you train the model on existing training data, evaluate how good its accuracy is, and lastly you consume the model (deploying the built model in a different app) to predict a fraud for a sample credit card transaction.
 
-![Build -> Train -> Evaluate -> Consume](https://raw.githubusercontent.com/dotnet/machinelearning-samples/features/samples-new-api/samples/csharp/getting-started/shared_content/modelpipeline.png)
+![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
 
 ### 1. Build model
 Building a model includes:
 
-- Define the data's schema maped to the datasets to read with a DataReader
+- Preapre the data and split data for training and tests
 
-- Split data for training and tests
+- Load the data with TextLoader by speccifying the type name that holds data's schema to be mapped with datasets.
 
-- Create an Estimator and transform the data with a ConcatEstimator() and Normalize by Mean Variance. 
+- Create an Estimator and transform the data with a Concatenate() and Normalize by Mean Variance. 
 
 - Choosing a trainer/learning algorithm (FastTree) to train the model with.
 
@@ -64,72 +64,40 @@ The initial code is similar to the following:
     MLContext mlContext = new MLContext(seed:1);
 
 [...]
-    TextLoader.Column[] columns = new[] {
-           // A boolean column depicting the 'label'.
-           new TextLoader.Column("Label", DataKind.BL, 30),
-           // 29 Features V1..V28 + Amount
-           new TextLoader.Column("V1", DataKind.R4, 1 ),
-           new TextLoader.Column("V2", DataKind.R4, 2 ),
-           new TextLoader.Column("V3", DataKind.R4, 3 ),
-           new TextLoader.Column("V4", DataKind.R4, 4 ),
-           new TextLoader.Column("V5", DataKind.R4, 5 ),
-           new TextLoader.Column("V6", DataKind.R4, 6 ),
-           new TextLoader.Column("V7", DataKind.R4, 7 ),
-           new TextLoader.Column("V8", DataKind.R4, 8 ),
-           new TextLoader.Column("V9", DataKind.R4, 9 ),
-           new TextLoader.Column("V10", DataKind.R4, 10 ),
-           new TextLoader.Column("V11", DataKind.R4, 11 ),
-           new TextLoader.Column("V12", DataKind.R4, 12 ),
-           new TextLoader.Column("V13", DataKind.R4, 13 ),
-           new TextLoader.Column("V14", DataKind.R4, 14 ),
-           new TextLoader.Column("V15", DataKind.R4, 15 ),
-           new TextLoader.Column("V16", DataKind.R4, 16 ),
-           new TextLoader.Column("V17", DataKind.R4, 17 ),
-           new TextLoader.Column("V18", DataKind.R4, 18 ),
-           new TextLoader.Column("V19", DataKind.R4, 19 ),
-           new TextLoader.Column("V20", DataKind.R4, 20 ),
-           new TextLoader.Column("V21", DataKind.R4, 21 ),
-           new TextLoader.Column("V22", DataKind.R4, 22 ),
-           new TextLoader.Column("V23", DataKind.R4, 23 ),
-           new TextLoader.Column("V24", DataKind.R4, 24 ),
-           new TextLoader.Column("V25", DataKind.R4, 25 ),
-           new TextLoader.Column("V26", DataKind.R4, 26 ),
-           new TextLoader.Column("V27", DataKind.R4, 27 ),
-           new TextLoader.Column("V28", DataKind.R4, 28 ),
-           new TextLoader.Column("Amount", DataKind.R4, 29 )
-       };
 
-   TextLoader.Arguments txtLoaderArgs = new TextLoader.Arguments
-                                               {
-                                                   Column = columns,
-                                                   // First line of the file is a header, not a data row.
-                                                   HasHeader = true,
-                                                   Separator = ","
-                                               };
-
-
-[...]
-    var classification = new BinaryClassificationCatalog(mlContext);
-
-    (trainData, testData) = classification.TrainTestSplit(data, testFraction: 0.2);
+// Prepare data and create Train/Test split datasets
+    PrepDatasets(mlContext, fullDataSetFilePath, trainDataSetFilePath, testDataSetFilePath);
 
 [...]
 
-    //Get all the column names for the Features (All except the Label and the StratificationColumn)
-    var featureColumnNames = _trainData.Schema.AsQueryable() 
-        .Select(column => column.Name) // Get the column names
-        .Where(name => name != "Label") // Do not include the Label column
-        .Where(name => name != "StratificationColumn") //Do not include the StratificationColumn
+// Load Datasets
+ IDataView trainingDataView = mlContext.Data.LoadFromTextFile<TransactionObservation>(trainDataSetFilePath, separatorChar: ',', hasHeader: true);
+   IDataView testDataView = mlContext.Data.LoadFromTextFile<TransactionObservation>(testDataSetFilePath, separatorChar: ',', hasHeader: true);
+    
+[...]
+
+   //Get all the feature column names (All except the Label and the IdPreservationColumn)
+    string[] featureColumnNames = trainDataView.Schema.AsQueryable()
+        .Select(column => column.Name)                               // Get alll the column names
+        .Where(name => name != nameof(TransactionObservation.Label)) // Do not include the Label column
+        .Where(name => name != "IdPreservationColumn")               // Do not include the IdPreservationColumn/StratificationColumn
+        .Where(name => name != "Time")                               // Do not include the Time column. Not needed as feature column
         .ToArray();
 
-    var pipeline = _mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
-                            .Append(_mlContext.Transforms.Normalize(inputColumnName: "Features", outputColumnName: "FeaturesNormalizedByMeanVar", mode: NormalizerMode.MeanVariance))                       
-                            .Append(_mlContext.BinaryClassification.Trainers.FastTree(labelColumn: "Label", 
-                                                                                      featureColumn: "Features",
-                                                                                      numLeaves: 20,
-                                                                                      numTrees: 100,
-                                                                                      minDatapointsInLeaves: 10,
-                                                                                      learningRate: 0.2));
+    // Create the data process pipeline
+    IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
+                                            .Append(mlContext.Transforms.DropColumns(new string[] { "Time" }))
+                                            .Append(mlContext.Transforms.Normalize(inputColumnName: DefaultColumnNames.Features,
+                                                                                 outputColumnName: "FeaturesNormalizedByMeanVar",
+                                                                                 mode: NormalizerMode.MeanVariance));
+
+    // Set the training algorithm
+    IEstimator<ITransformer> trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: nameof(TransactionObservation.Label),
+                                            featureColumnName: "FeaturesNormalizedByMeanVar",
+                                            numLeaves: 20,
+                                            numTrees: 100,
+                                            minDatapointsInLeaves: 10,
+                                            learningRate: 0.2);
 
 `````
 
@@ -139,7 +107,7 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training you need to call the `Fit()` method while providing the training dataset (`trainData.csv`) in a DataView object.
 
 `````csharp    
-    var model = pipeline.Fit(_trainData);
+    ITransformer model = pipeline.Fit(_trainData);
 `````
 
 ### 3. Evaluate model
@@ -148,7 +116,7 @@ We need this step to conclude how accurate our model is. To do so, the model fro
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 `````csharp
-    var metrics = _context.Evaluate(model.Transform(_testData), "Label");
+    EvaluateModel(mlContext, model, testDataView, trainerName);
 `````
 
 ### 4. Consume model
@@ -167,9 +135,9 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
 
 [...]
 
-    mlContext.CreateEnumerable<TransactionObservation>(dataTest, reuseRowObject: false)
+    mlContext.Data.CreateEnumerable<TransactionObservation>(inputDataForPredictions, reuseRowObject: false)
                         .Where(x => x.Label == true)
-                        .Take(numberOfTransactions)
+                        .Take(numberOfPredictions)
                         .Select(testData => testData)
                         .ToList()
                         .ForEach(testData => 
@@ -181,9 +149,9 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
                                     });
 [...]
 
-    mlContext.CreateEnumerable<TransactionObservation>(dataTest, reuseRowObject: false)
+    mlContext.Data.CreateEnumerable<TransactionObservation>(inputDataForPredictions, reuseRowObject: false)
                         .Where(x => x.Label == false)
-                        .Take(numberOfTransactions)
+                        .Take(numberOfPredictions)
                         .ToList()
                         .ForEach(testData =>
                                     {

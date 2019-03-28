@@ -2,7 +2,6 @@
 using System.IO;
 
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML.Data;
 using MulticlassClassification_Iris.DataStructures;
 
@@ -12,12 +11,17 @@ namespace MulticlassClassification_Iris
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsLocation = @"../../../../Data";
-        private static string TrainDataPath = $"{BaseDatasetsLocation}/iris-train.txt";
-        private static string TestDataPath = $"{BaseDatasetsLocation}/iris-test.txt";
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/iris-train.txt";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/iris-test.txt";
 
-        private static string BaseModelsPath = @"../../../../MLModels";
-        private static string ModelPath = $"{BaseModelsPath}/IrisClassificationModel.zip";
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
+
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/IrisClassificationModel.zip";
+
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         private static void Main(string[] args)
         {
@@ -38,18 +42,21 @@ namespace MulticlassClassification_Iris
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            var trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
-            var testDataView = mlContext.Data.ReadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
+            var trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(TrainDataPath, hasHeader: true);
+            var testDataView = mlContext.Data.LoadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
             
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
-                                                                                   "SepalWidth",
-                                                                                   "PetalLength",
-                                                                                   "PetalWidth").AppendCacheCheckpoint(mlContext);
+            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength),
+                                                                                   nameof(IrisData.SepalWidth),
+                                                                                   nameof(IrisData.PetalLength),
+                                                                                   nameof(IrisData.PetalWidth))
+                                                                       .AppendCacheCheckpoint(mlContext); 
+                                                                       // Use in-memory cache for small/medium datasets to lower training time. 
+                                                                       // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Label", featureColumn: "Features");
+            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -69,7 +76,7 @@ namespace MulticlassClassification_Iris
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score");
+            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, DefaultColumnNames.Label, DefaultColumnNames.Score);
 
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
@@ -117,6 +124,16 @@ namespace MulticlassClassification_Iris
             Console.WriteLine($"                                           virginica:   {resultprediction3.Score[2]:0.####}");
             Console.WriteLine();
 
+        }
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }
