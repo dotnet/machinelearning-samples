@@ -337,3 +337,4 @@ samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiRegressionDistr
 TaxiFareModel.zip
 
 **/MLModels/*.zip
+/samples/csharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder
