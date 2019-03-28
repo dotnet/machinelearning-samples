@@ -146,14 +146,14 @@ namespace ShampooSalesAnomalyDetection
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: filePath, hasHeader: true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
             // Step 2: Load & use model
-            // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see Spike_Model)
+            // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see AnomalyDetectionConsoleApp)
             if (spikeDet.Checked)
             {
-                loadAndUseModel(mlcontext, dataView, @"../../../Spike_Model/MLModels/ShampooSalesSpikeModel.zip", "Spike", Color.DarkRed);
+                loadAndUseModel(mlcontext, dataView, @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesSpikeModel.zip", "Spike", Color.DarkRed);
             }
             if (changePointDet.Checked)
             {
-                loadAndUseModel(mlcontext, dataView, @"../../../Spike_Model/MLModels/ShampooSalesChangePointModel.zip", "Change point", Color.DarkBlue);
+                loadAndUseModel(mlcontext, dataView, @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesChangePointModel.zip", "Change point", Color.DarkBlue);
             }
         }
 

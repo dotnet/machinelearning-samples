@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28719.210
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShampooSalesAnomalyDetection", "ShampooSalesSpikeDetection\ShampooSalesAnomalyDetection.csproj", "{8B051595-03CD-4026-91BB-403F90CF8526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike_Model", "Spike_Model\Spike_Model.csproj", "{B5F45A34-C15D-4190-9354-2C81DF1E9B30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnomalyDetectionConsoleApp", "AnomalyDetectionConsoleApp\AnomalyDetectionConsoleApp.csproj", "{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,14 @@ Global
 		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|x64.ActiveCfg = Release|x64
 		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|x64.Build.0 = Release|x64
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Debug|x64.Build.0 = Debug|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Release|x64.ActiveCfg = Release|Any CPU
-		{B5F45A34-C15D-4190-9354-2C81DF1E9B30}.Release|x64.Build.0 = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|x64.Build.0 = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|x64.ActiveCfg = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
