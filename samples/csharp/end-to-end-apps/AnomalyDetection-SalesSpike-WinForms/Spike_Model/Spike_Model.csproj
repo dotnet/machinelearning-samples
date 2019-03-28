@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <None Update="Data\shampoo-sales.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
