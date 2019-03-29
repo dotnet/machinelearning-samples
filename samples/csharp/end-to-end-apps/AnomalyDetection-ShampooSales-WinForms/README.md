@@ -4,7 +4,7 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v0.11         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Shampoo Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
-![Alt Text](./ShampooSalesSpikeDetection/images/shampoosales.gif)
+![Alt Text](./ShampooSalesAnomalyDetection/images/shampoosales.gif)
 
 ## Overview
 Shampoo Sales Anomaly Detection is a simple application which builds and consumes time series anomaly detection models to detect [spikes](#spike-detection) and [change points](#change-point-detection) in shampoo sales.
