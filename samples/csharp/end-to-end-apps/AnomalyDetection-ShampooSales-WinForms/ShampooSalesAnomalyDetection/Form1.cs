@@ -147,13 +147,31 @@ namespace ShampooSalesAnomalyDetection
 
             // Step 2: Load & use model
             // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see AnomalyDetectionConsoleApp)
+            string spikeModelPath = @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesSpikeModel.zip";
+            string changePointModelPath = @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesChangePointModel.zip";
+
             if (spikeDet.Checked)
             {
-                loadAndUseModel(mlcontext, dataView, @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesSpikeModel.zip", "Spike", Color.DarkRed);
+                if (File.Exists(spikeModelPath))
+                {
+                    loadAndUseModel(mlcontext, dataView, spikeModelPath, "Spike", Color.DarkRed);
+                }
+                else
+                {
+                    MessageBox.Show("Spike detection model does not exist. Please run model training console app first.");
+                }
             }
             if (changePointDet.Checked)
             {
-                loadAndUseModel(mlcontext, dataView, @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesChangePointModel.zip", "Change point", Color.DarkBlue);
+
+                if (File.Exists(changePointModelPath))
+                {
+                    loadAndUseModel(mlcontext, dataView, changePointModelPath, "Change point", Color.DarkBlue);
+                }
+                else
+                {
+                    MessageBox.Show("Change point detection model does not exist. Please run model training console app first.");
+                }
             }
         }
 
