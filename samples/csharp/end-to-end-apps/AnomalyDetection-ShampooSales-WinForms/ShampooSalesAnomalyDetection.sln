@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28719.210
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnomalyDetectionConsoleApp", "AnomalyDetectionConsoleApp\AnomalyDetectionConsoleApp.csproj", "{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShampooSalesAnomalyDetection", "ShampooSalesAnomalyDetection\ShampooSalesAnomalyDetection.csproj", "{8B051595-03CD-4026-91BB-403F90CF8526}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Debug|x64.Build.0 = Debug|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|x64.ActiveCfg = Release|Any CPU
+		{BEFD552F-4D22-4D86-97E8-177C14D4B2D2}.Release|x64.Build.0 = Release|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|x64.ActiveCfg = Debug|x64
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|x64.Build.0 = Debug|x64
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|x64.ActiveCfg = Release|x64
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DF01FBE-19B3-401E-8A69-EAE343E0AF38}
+	EndGlobalSection
+EndGlobal
