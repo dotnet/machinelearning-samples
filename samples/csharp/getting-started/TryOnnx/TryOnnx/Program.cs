@@ -14,15 +14,17 @@ namespace TryOnnx
     {
         public static void Main()
         {
-            var modelFilePath = Path.Combine("Model","model.onnx");
-            var dataFile = @"images/images.tsv";
-            var imagesFolder = Path.GetDirectoryName(dataFile);
-            var tagsTsv = Path.Combine("images", "tags.tsv");
+            var assetsRelativePath = @"../../../assets";
+            string assetsPath = GetAbsolutePath(assetsRelativePath);
+            //var squeezemodelFilePath = Path.Combine(assetsPath, "Model","model.onnx");
+            var yoloModelPath = Path.Combine(assetsPath, "Model","yolo", "tiny-yolov2-1.2.onnx");
+            var imagesFolder = Path.Combine(assetsPath,"images");
+            var tagsTsv = Path.Combine(assetsPath,"images", "tags.tsv");
 
+            var modelFilePath = yoloModelPath;
 
-            var labelsTxt = Path.Combine("inception", "imagenet_comp_graph_label_strings.txt");
-            var customInceptionPb = Path.Combine("inception_custom", "model_tf.pb");
-            var customLabelsTxt = Path.Combine("inception_custom", "labels.txt");
+            var labelsTxt = Path.Combine(assetsPath, "inception", "imagenet_comp_graph_label_strings.txt");
+          
 
             try
             {
@@ -37,6 +39,16 @@ namespace TryOnnx
             }
 
             Console.ReadLine();
+        }
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }

@@ -24,6 +24,9 @@ namespace TryOnnx
         private readonly MLContext mlContext;
         private static string ImageReal = nameof(ImageReal);
 
+        private IList<YoloBoundingBox> _boxes = new List<YoloBoundingBox>();
+        private readonly YoloWinMlParser _parser = new YoloWinMlParser();
+
         public OnnxModelScorer(string dataLocation, string imagesFolder, string modelLocation, string labelsLocation)
         {
             this.dataLocation = dataLocation;
@@ -35,8 +38,8 @@ namespace TryOnnx
 
         public struct ImageNetSettings
         {
-            public const int imageHeight = 224;
-            public const int imageWidth = 224;
+            public const int imageHeight = 416;
+            public const int imageWidth = 416;
             public const float mean = 117;
             public const bool channelsLast = true;
         }
@@ -47,10 +50,10 @@ namespace TryOnnx
             // which is installed by Visual Studio AI Tools
 
             // input tensor name
-            public const string inputTensorName = "data_0";
+            public const string inputTensorName = "image";
 
             // output tensor name
-            public const string outputTensorName = "softmaxout_1";
+            public const string outputTensorName = "grid";
         }
 
         public void Score()
@@ -71,14 +74,14 @@ namespace TryOnnx
 
             var data = mlContext.Data.LoadFromTextFile<ImageNetData>(dataLocation, hasHeader: true);
 
-            var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "ImageReal", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "ImageReal", interleavePixelColors: ImageNetSettings.channelsLast) )
+            var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
+                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "image", interleavePixelColors: ImageNetSettings.channelsLast))
                             .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { InceptionSettings.outputTensorName }, inputColumnNames: new[] { InceptionSettings.inputTensorName }));
 
             var model = pipeline.Fit(data);
 
-            var predictionEngine =  mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model);
 
             return predictionEngine;
         }
@@ -98,20 +101,35 @@ namespace TryOnnx
             var testData = ImageNetData.ReadFromCsv(testLocation, imagesFolder);
 
             foreach (var sample in testData)
-            {
-                var probs = model.Predict(sample).PredictedLabels;
-                var imageData = new ImageNetDataProbability()
                 {
-                    ImagePath = sample.ImagePath,
-                    Label = sample.Label
-                };
-                (imageData.PredictedLabel, imageData.Probability) = ModelHelpers.GetBestLabel(labels, probs);
-                ConsoleWrite(imageData);
-                yield return imageData;
-            }
+                var probabilities = model.Predict(sample).PredictedLabels;
+                IList<YoloBoundingBox> list = InterpretScores(probabilities);
+        }
+            return null;
+
+            //foreach (var sample in testData)
+            //{
+            //    //var x= model.OutputSchema[]
+            //    var l = model.Predict(sample);
+            //    var probs = model.Predict(sample).PredictedLabels;
+            //    var imageData = new ImageNetDataProbability()
+            //    {
+            //        ImagePath = sample.ImagePath,
+            //        Label = sample.Label
+            //    };
+            //    (imageData.PredictedLabel, imageData.Probability) = ModelHelpers.GetBestLabel(labels, probs);
+            //    ConsoleWrite(imageData);
+            //    yield return imageData;
+            //}
         }
 
-        public static void ConsoleWrite(ImageNetDataProbability imageData)
+        public IList<YoloBoundingBox> InterpretScores(float[] probs)
+        {
+            
+        return _parser.ParseOutputs(probs);
+    }
+
+    public static void ConsoleWrite(ImageNetDataProbability imageData)
         {
             var defaultForeground = Console.ForegroundColor;
             var labelColor = ConsoleColor.Magenta;
