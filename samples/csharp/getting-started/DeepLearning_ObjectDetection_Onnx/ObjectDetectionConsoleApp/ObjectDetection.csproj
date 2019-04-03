@@ -23,4 +23,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="assets\Model\" />
+  </ItemGroup>
+
 </Project>

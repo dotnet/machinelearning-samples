@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
+using System.Net;
 
 namespace ObjectDetection
 {
@@ -12,7 +14,7 @@ namespace ObjectDetection
             var modelFilePath = Path.Combine(assetsPath, "Model", "TinyYolo2_model.onnx");
             var imagesFolder = Path.Combine(assetsPath,"images");
             var tagsTsv = Path.Combine(assetsPath,"images", "tags.tsv");
-            
+
             try
             {
                 var modelScorer = new OnnxModelScorer(tagsTsv, imagesFolder, modelFilePath);

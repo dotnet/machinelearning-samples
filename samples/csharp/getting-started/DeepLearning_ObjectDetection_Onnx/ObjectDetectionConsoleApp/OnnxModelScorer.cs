@@ -44,17 +44,16 @@ namespace ObjectDetection
 
         public void Score()
         {
-            var model = LoadModel(imagesLocation, imagesFolder, modelLocation);
+            var model = LoadModel(imagesFolder, modelLocation);
 
             PredictDataUsingModel(imagesLocation, imagesFolder, model);
         }
 
-        private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string imagesLocation, string imagesFolder, string modelLocation)
+        private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string imagesFolder, string modelLocation)
         {
             Console.WriteLine("Read model");
             Console.WriteLine($"Model location: {modelLocation}");
             Console.WriteLine($"Images folder: {imagesFolder}");
-            Console.WriteLine($"Training file: {imagesLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight})");
 
             var data = mlContext.Data.LoadFromTextFile<ImageNetData>(imagesLocation, hasHeader: true);
@@ -75,7 +74,9 @@ namespace ObjectDetection
                                                                   string imagesFolder,
                                                                   PredictionEngine<ImageNetData, ImageNetPrediction> model)
         {
-            Console.WriteLine("Identify the objects in the images");
+            Console.WriteLine($"Tags file location: {imagesLocation}");
+            Console.WriteLine("");
+            Console.WriteLine("=====Identify the objects in the images=====");
             Console.WriteLine("");
 
             var testData = ImageNetData.ReadFromCsv(imagesLocation, imagesFolder);
