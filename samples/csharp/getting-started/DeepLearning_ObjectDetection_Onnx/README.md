@@ -54,7 +54,7 @@ You need to follow next steps in order to execute the classification test:
 
 1) **Set VS default startup project:** Set `ObjectDetection` as starting project in Visual Studio.
 2)  **Run the training model console app:** Hit F5 in Visual Studio. At the end of the execution, the output will be similar to this screenshot:
-![image](./docs/output/Console_output.png)
+![image](./docs/Output/Console_output.png)
 
 
 ##  Code Walkthrough
@@ -130,7 +130,7 @@ Define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
         }
 ```
 
-![inspecting neural network with netron](./docs/netron/netron.png)
+![inspecting neural network with netron](./docs/Netron/netron.PNG)
 
 Finally, we extract the prediction engine after *fitting* the estimator pipeline. The prediction engine receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`), and then returns and object of type `ImagePrediction`.  
 
