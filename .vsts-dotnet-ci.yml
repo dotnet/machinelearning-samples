@@ -126,7 +126,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Shampoo Sales spike and change Detection E2E (Time Series)
     inputs:
-      projects: '.\samples\csharp\getting-started\AnomalyDetection-ShampooSales-WinForms\ShampooSalesAnomalyDetection.sln'
+      projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-ShampooSales-WinForms\ShampooSalesAnomalyDetection.sln'
 
 - phase: PowerConsumptionAnomalyDetection
   queue: Hosted VS2017
@@ -135,3 +135,11 @@ phases:
     displayName: Build Power Anomaly Detection (Time Series)
     inputs:
       projects: '.\samples\csharp\getting-started\TimeSeries_PowerAnomalyDetection\PowerAnomalyDetection.sln'
+
+- phase: YoloOnnxScorer
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Onnx scorer (Object Detection)
+    inputs:
+      projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
