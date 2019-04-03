@@ -111,3 +111,11 @@ phases:
     displayName: Build Mnist (MulticlassClassification)
     inputs:
       projects: '.\samples\csharp\getting-started\MulticlassClassification_mnist\MulticlassClassification_mnist.sln'
+
+- phase: ShampooSalesSpikeAndChangeDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Shampoo Sales spike and change Detection (Time Series)
+    inputs:
+      projects: '.\samples\csharp\getting-started\SpikeDetection_ShampooSales\ShampooSales.sln'     
