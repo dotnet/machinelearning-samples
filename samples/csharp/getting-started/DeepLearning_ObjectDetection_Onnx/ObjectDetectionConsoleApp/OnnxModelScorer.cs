@@ -27,7 +27,6 @@ namespace ObjectDetection
         {
             public const int imageHeight = 416;
             public const int imageWidth = 416;
-            public const bool channelsLast = true;
         }
 
         public struct TinyYoloModelSettings
