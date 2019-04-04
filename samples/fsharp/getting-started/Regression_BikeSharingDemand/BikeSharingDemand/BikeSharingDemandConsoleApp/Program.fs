@@ -47,8 +47,8 @@ let main argv =
     let regressionLearners : (string * IEstimator<ITransformer>) array =
         [|
             "FastTree", mlContext.Regression.Trainers.FastTree() |> downcastPipeline
-            "Poisson", mlContext.Regression.Trainers.PoissonRegression() |> downcastPipeline
-            "SDCA", mlContext.Regression.Trainers.StochasticDualCoordinateAscent() |> downcastPipeline
+            "Poisson", mlContext.Regression.Trainers.LbfgsPoissonRegression() |> downcastPipeline
+            "SDCA", mlContext.Regression.Trainers.Sdca() |> downcastPipeline
             "FastTreeTweedie", mlContext.Regression.Trainers.FastTreeTweedie() |> downcastPipeline
             //Other possible learners that could be included
             //...FastForestRegressor...
@@ -65,7 +65,7 @@ let main argv =
         
         printfn "===== Evaluating Model's accuracy with Test data ====="
         let predictions = trainedModel.Transform(testDataView)
-        let metrics = mlContext.Regression.Evaluate(predictions, label = "Count", score = "Score")
+        let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = "Count", scoreColumnName = "Score")
         Common.ConsoleHelper.printRegressionMetrics learnerName metrics
         
 
@@ -73,7 +73,7 @@ let main argv =
         //Save the model file that can be used by any application
         let modelPath = sprintf "%s/%sModel.zip" modelsLocation learnerName
         use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
-        mlContext.Model.Save(trainedModel, fs);
+        mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 
         printfn "The model is saved to %s" modelPath
  
@@ -85,10 +85,10 @@ let main argv =
         //Load current model from .ZIP file
         let modelPath = sprintf "%s/%sModel.zip" modelsLocation learnerName
         use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
-        let trainedModel = mlContext.Model.Load stream
+        let trainedModel, inputSchema = mlContext.Model.Load stream
 
         // Create prediction engine related to the loaded trained model
-        let predEngine = trainedModel.CreatePredictionEngine<DemandObservation, DemandPrediction>(mlContext)
+        let predEngine = mlContext.Model.CreatePredictionEngine<DemandObservation, DemandPrediction>(trainedModel)
         printfn "================== Visualize/test 10 predictions for model %sModel.zip ==================" learnerName
 
         //Visualize 10 tests comparing prediction with actual/observed values from the test dataset
