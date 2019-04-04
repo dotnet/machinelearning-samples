@@ -49,7 +49,7 @@ To solve this problem, you build two independent ML models that take the followi
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev      |
 | **country stats**  | next, country, year, month, max, min, std, count, sales, med, prev   |
 
-[Explanation of Dataset](docs/Details-of-Datasets.md) - Goto this link for detailed information on dataset.
+[Explanation of Dataset](docs/Details-of-Dataset.md) - Goto this link for detailed information on dataset.
 
 ### ML task - [Regression](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#regression)
 
