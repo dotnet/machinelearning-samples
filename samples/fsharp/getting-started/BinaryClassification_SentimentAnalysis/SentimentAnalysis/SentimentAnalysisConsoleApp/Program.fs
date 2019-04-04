@@ -29,7 +29,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = "Label", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 
     // STEP 4: Train the model fitting to the DataSet
@@ -45,7 +45,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 6: Save/persist the trained model to a .ZIP file
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
-    mlContext.Model.Save(trainedModel, fs)
+    mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 
     printfn "The model is saved to %s" modelPath
 
@@ -55,10 +55,10 @@ let testSinglePrediction (mlContext : MLContext) =
     let sampleStatement = { Label = false; Text = "This is a very rude movie" }
     
     use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
-    let trainedModel = mlContext.Model.Load(stream)
+    let trainedModel,inputSchema = mlContext.Model.Load(stream)
     
     // Create prediction engine related to the loaded trained model
-    let predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext)
+    let predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel)
 
     //Score
     let resultprediction = predEngine.Predict(sampleStatement)
