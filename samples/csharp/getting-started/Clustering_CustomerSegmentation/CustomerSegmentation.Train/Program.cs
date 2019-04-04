@@ -32,25 +32,23 @@ namespace CustomerSegmentation
                 var pivotDataView = mlContext.Data.LoadFromTextFile(path: pivotCsv,
                                             columns: new[]
                                                         {
-                                                        new TextLoader.Column(DefaultColumnNames.Features, DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
+                                                        new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
                                                         new TextLoader.Column(nameof(PivotData.LastName), DataKind.String, 32)
                                                         },
                                             hasHeader: true,
                                             separatorChar: ',');
 
                 //STEP 2: Configure data transformations in pipeline
-                var dataProcessPipeline = mlContext.Transforms.Projection.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: DefaultColumnNames.Features, rank: 2)
-                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[]{
-                    new OneHotEncodingEstimator.ColumnOptions(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
-                                                     OneHotEncodingTransformer.OutputKind.Ind)
-                }));
+                var dataProcessPipeline = mlContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2)
+                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "LastNameKey", inputColumnName: nameof(PivotData.LastName), OneHotEncodingEstimator.OutputKind.Indicator));
+                
 
                 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
                 Common.ConsoleHelper.PeekDataViewInConsole(mlContext, pivotDataView, dataProcessPipeline, 10);
-                Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, pivotDataView, dataProcessPipeline, 10);
+                Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
                 //STEP 3: Create the training pipeline                
-                var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: DefaultColumnNames.Features, clustersCount: 3);
+                var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
 
                 //STEP 4: Train the model fitting to the pivotDataView
@@ -60,13 +58,13 @@ namespace CustomerSegmentation
                 //STEP 5: Evaluate the model and show accuracy stats
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 var predictions = trainedModel.Transform(pivotDataView);
-                var metrics = mlContext.Clustering.Evaluate(predictions, score: DefaultColumnNames.Score, features: DefaultColumnNames.Features);
+                var metrics = mlContext.Clustering.Evaluate(predictions, scoreColumnName: "Score", featureColumnName: "Features");
 
                 ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
                 //STEP 6: Save/persist the trained model to a .ZIP file
                 using (var fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write))
-                    mlContext.Model.Save(trainedModel, fs);
+                    mlContext.Model.Save(trainedModel, pivotDataView.Schema, fs);
 
                 Console.WriteLine("The model is saved to {0}", modelZip);
             }
