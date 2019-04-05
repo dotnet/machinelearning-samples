@@ -95,7 +95,7 @@ namespace myApp
             var transformedData = trainedModel.Transform(dataView);
 
             // Getting the data of the newly created column as an IEnumerable
-            IEnumerable<SpikePrediction> predictionColumn =
+            IEnumerable<SpikePrediction> predictions =
                 mlContext.Data.CreateEnumerable<SpikePrediction>(transformedData, false);
             
             var colCDN = dataView.GetColumn<float>("ConsumptionDiffNormalized").ToArray();
@@ -106,7 +106,7 @@ namespace myApp
             Console.WriteLine("Date              \tReadingDiff\tAlert\tScore\tP-Value");
 
             int i = 0;
-            foreach (var p in predictionColumn)
+            foreach (var p in predictions)
             {
                 if (p.Prediction[0] == 1)
                 {
