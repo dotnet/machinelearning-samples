@@ -59,6 +59,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerSegmentation.Predic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeartDiseasePredictionConsoleApp", "getting-started\BinaryClassification_HeartDiseasePrediction\HeartDiseasePrediction-Solution\HeartDiseasePredictionConsoleApp.csproj", "{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticlassClassification_Iris", "getting-started\MulticlassClassification_Iris\IrisClassification\IrisClassificationConsoleApp\MulticlassClassification_Iris.csproj", "{59D19F59-7F69-4182-A430-A37BFBE64DD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,14 @@ Global
 		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|x64.ActiveCfg = Release|Any CPU
 		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|x64.Build.0 = Release|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Debug|x64.Build.0 = Debug|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Release|x64.ActiveCfg = Release|Any CPU
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +145,7 @@ Global
 		{03D6F4A5-AFE7-4C9C-AAF8-5EBE68E4F9D8} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
 		{877A1BC6-6FCF-411C-AEC9-64E8CF92E636} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
 		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B} = {70958053-9A93-47D5-A944-2BA34E475618}
+		{59D19F59-7F69-4182-A430-A37BFBE64DD2} = {ABAB9675-956E-4F6C-8467-6E0231C454E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
