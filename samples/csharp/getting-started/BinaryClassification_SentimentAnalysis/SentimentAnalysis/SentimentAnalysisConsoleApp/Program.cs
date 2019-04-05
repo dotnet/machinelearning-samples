@@ -1,12 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-
 using SentimentAnalysisConsoleApp.DataStructures;
 using Common;
-using Microsoft.Data.DataView;
+using static Microsoft.ML.DataOperationsCatalog;
 
 namespace SentimentAnalysisConsoleApp
 {
@@ -47,34 +44,45 @@ namespace SentimentAnalysisConsoleApp
             // STEP 1: Common data loading configuration
             IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
 
-            var testTrainSplit = mlContext.BinaryClassification.TrainTestSplit(dataView, testFraction: 0.2);
+            TrainTestData trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
+            IDataView trainingData = trainTestSplit.TrainSet;
+            IDataView testData = trainTestSplit.TestSet;
 
             // STEP 2: Common data process configuration with pipeline data transformations          
-            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             ConsoleHelper.PeekDataViewInConsole(mlContext, dataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, dataView, dataProcessPipeline, 1);
+            //Peak the transformed features column
+            //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", dataView, dataProcessPipeline, 1);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
+            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
+
+            //Measure training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
             // STEP 4: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
-            ITransformer trainedModel = trainingPipeline.Fit(testTrainSplit.TrainSet);
+            ITransformer trainedModel = trainingPipeline.Fit(trainingData);
+
+            //Stop measuring time
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine($"***** Training time: {elapsedMs / 1000} seconds *****");
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            var predictions = trainedModel.Transform(testTrainSplit.TestSet);
-            var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+            var predictions = trainedModel.Transform(testData);
+            var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
 
             using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
+                mlContext.Model.Save(trainedModel,trainingData.Schema, fs);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
@@ -89,17 +97,17 @@ namespace SentimentAnalysisConsoleApp
             ITransformer trainedModel;
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                trainedModel = mlContext.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
             }
 
             // Create prediction engine related to the loaded trained model
-            var predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext);
+            var predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
 
             //Score
             var resultprediction = predEngine.Predict(sampleStatement);
 
             Console.WriteLine($"=============== Single Prediction  ===============");
-            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Non Toxic")} sentiment | Probability: {resultprediction.Probability} ");
+            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Non Toxic")} sentiment | Probability of being toxic: {resultprediction.Probability} ");
             Console.WriteLine($"==================================================");
         }
         
