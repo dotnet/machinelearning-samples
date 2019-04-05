@@ -69,7 +69,7 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
        
-        public static void PrintRegressionFoldsAverageMetrics(string algorithmName,CrossValidationResult<RegressionMetrics>[] crossValidationResults)
+        public static void PrintRegressionFoldsAverageMetrics(string algorithmName, IReadOnlyList<CrossValidationResult<RegressionMetrics>> crossValidationResults)
         {
             var L1 = crossValidationResults.Select(r => r.Metrics.MeanAbsoluteError);
             var L2 = crossValidationResults.Select(r => r.Metrics.MeanSquaredError);
