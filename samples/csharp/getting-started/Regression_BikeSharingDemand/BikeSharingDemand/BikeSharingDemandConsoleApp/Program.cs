@@ -1,11 +1,9 @@
 ﻿using System;
 using Microsoft.ML;
 using System.IO;
-using Microsoft.ML.Data;
-
 using BikeSharingDemand.DataStructures;
 using Common;
-using Microsoft.Data.DataView;
+using Microsoft.ML.Data;
 
 namespace BikeSharingDemand
 {
@@ -33,7 +31,7 @@ namespace BikeSharingDemand
             // 2. Common data pre-process with pipeline data transformations
 
             // Concatenate all the numeric columns into a single features column
-            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features,
+            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features",
                                                      nameof(DemandObservation.Season), nameof(DemandObservation.Year), nameof(DemandObservation.Month),
                                                      nameof(DemandObservation.Hour), nameof(DemandObservation.Holiday), nameof(DemandObservation.Weekday),
                                                      nameof(DemandObservation.WorkingDay), nameof(DemandObservation.Weather), nameof(DemandObservation.Temperature),
@@ -44,15 +42,15 @@ namespace BikeSharingDemand
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 10);
-            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 10);
+            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 10);
 
             // Definition of regression trainers/algorithms to use
             //var regressionLearners = new (string name, IEstimator<ITransformer> value)[]
             (string name, IEstimator<ITransformer> value)[] regressionLearners =
             {
                 ("FastTree", mlContext.Regression.Trainers.FastTree()),
-                ("Poisson", mlContext.Regression.Trainers.PoissonRegression()),
-                ("SDCA", mlContext.Regression.Trainers.StochasticDualCoordinateAscent()),
+                ("Poisson", mlContext.Regression.Trainers.LbfgsPoissonRegression()),
+                ("SDCA", mlContext.Regression.Trainers.Sdca()),
                 ("FastTreeTweedie", mlContext.Regression.Trainers.FastTreeTweedie()),
                 //Other possible learners that could be included
                 //...FastForestRegressor...
@@ -70,14 +68,14 @@ namespace BikeSharingDemand
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 IDataView predictions = trainedModel.Transform(testDataView);
-                var metrics = mlContext.Regression.Evaluate(data:predictions, label:DefaultColumnNames.Label, score: DefaultColumnNames.Score);               
+                var metrics = mlContext.Regression.Evaluate(data:predictions, labelColumnName:"Label", scoreColumnName: "Score");               
                 ConsoleHelper.PrintRegressionMetrics(trainer.value.ToString(), metrics);
 
                 //Save the model file that can be used by any application
                 string modelRelativeLocation = $"{ModelsLocation}/{trainer.name}Model.zip";
                 string modelPath = GetAbsolutePath(modelRelativeLocation);
                 using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                    mlContext.Model.Save(trainedModel, fs);
+                    mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
 
                 Console.WriteLine("The model is saved to {0}", modelPath);
             }
@@ -90,15 +88,16 @@ namespace BikeSharingDemand
             {
                 //Load current model from .ZIP file
                 ITransformer trainedModel;
+                DataViewSchema inputSchema;
                 string modelRelativeLocation = $"{ModelsLocation}/{learner.name}Model.zip";
                 string modelPath = GetAbsolutePath(modelRelativeLocation);
                 using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    trainedModel = mlContext.Model.Load(stream);
+                    trainedModel = mlContext.Model.Load(stream, out inputSchema);
                 }
 
                 // Create prediction engine related to the loaded trained model
-                var predEngine = trainedModel.CreatePredictionEngine<DemandObservation, DemandPrediction>(mlContext);
+                var predEngine = mlContext.Model.CreatePredictionEngine<DemandObservation, DemandPrediction>(trainedModel);
 
                 Console.WriteLine($"================== Visualize/test 10 predictions for model {learner.name}Model.zip ==================");
                 //Visualize 10 tests comparing prediction with actual/observed values from the test dataset

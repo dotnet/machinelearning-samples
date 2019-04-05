@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|0.11   | Dynamic API | Updated to v0.9 | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
+|1.0.0-preview   | Dynamic API | Up-to-date | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
 
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
@@ -64,7 +64,7 @@ Here's the code which will be used to build the model:
     var traindata = mlContext.Data.LoadFromTextFile(path:TrainingDataLocation,
                                                       columns: new[]
                                                                 {
-                                                                    new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                    new TextLoader.Column("Label", DataKind.Single, 0),
                                                                     new TextLoader.Column(name:nameof(ProductEntry.ProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(0) }, keyCount: new KeyCount(262111)), 
                                                                     new TextLoader.Column(name:nameof(ProductEntry.CoPurchaseProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(1) }, keyCount: new KeyCount(262111))
                                                                 },
@@ -76,7 +76,7 @@ Here's the code which will be used to build the model:
             MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
             options.MatrixColumnIndexColumnName = nameof(ProductEntry.ProductID);
             options.MatrixRowIndexColumnName = nameof(ProductEntry.CoPurchaseProductID);
-            options.LabelColumnName= DefaultColumnNames.Label;
+            options.LabelColumnName= "Label";
             options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
             options.Alpha = 0.01;
             options.Lambda = 0.025;
@@ -128,7 +128,7 @@ Once the prediction engine has been created you can predict scores of two produc
 ```CSharp
     //STEP 6: Create prediction engine and predict the score for Product 63 being co-purchased with Product 3.
     //        The higher the score the higher the probability for this particular productID being co-purchased 
-    var predictionengine = model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(ctx);
+    var predictionengine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
     var prediction = predictionengine.Predict(
                              new ProductEntry()
                              {

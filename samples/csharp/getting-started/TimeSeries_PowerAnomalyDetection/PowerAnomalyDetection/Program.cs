@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Data.DataView;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using Microsoft.ML.Transforms.TimeSeries;
 
 namespace myApp
 {
@@ -27,73 +25,88 @@ namespace myApp
             public double[] Prediction { get; set; }
         }
 
-        private static string DatasetsLocation = @"../../../Data";
-        private static string TrainingData = $"{DatasetsLocation}/power-export_min.csv";
+        private static string DatasetsRelativePath = @"../../../Data";
+        private static string TrainingDatarelativePath = $"{DatasetsRelativePath}/power-export_min.csv";
 
-        public static IDataView LoadPowerDataMin(MLContext ml)
-        {
-            var dataView = ml.Data.LoadFromTextFile<MeterData>(
-                TrainingData,
-                separatorChar: ',',
-                hasHeader: true);
+        private static string TrainingDataPath = GetAbsolutePath(TrainingDatarelativePath);
 
-            // take a peek to make sure data is loaded
-            //var col = dataView.GetColumn<float>(ml, "ConsumptionDiffNormalized").ToArray(); 
+        private static string BaseModelsRelativePath = @"../../../../Models";
+        private static string ModelRelativePath = $"{BaseModelsRelativePath}/PowerAnomalyDetectionModel.zip";
 
-            return dataView;
-        }
+        private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         static void Main()
         {
-            var ml = new MLContext();
+            var mlContext = new MLContext(seed:0);
 
             // load data
-            var dataView = LoadPowerDataMin(ml);
+            var dataView = mlContext.Data.LoadFromTextFile<MeterData>(
+               TrainingDatarelativePath,
+               separatorChar: ',',
+               hasHeader: true);
 
             // transform options
-            BuildTrainEvaluateModel(ml, dataView);  // using SsaSpikeEstimator
+            BuildTrainModel(mlContext, dataView);  // using SsaSpikeEstimator
+
+            DetectAnomalies(mlContext, dataView);
 
             Console.WriteLine("\nPress any key to exit");
             Console.Read();
         }
 
 
-        public static void BuildTrainEvaluateModel(MLContext ml, IDataView dataView)
+        public static void BuildTrainModel(MLContext mlContext, IDataView dataView)
         {
             // Configure the Estimator
             const int PValueSize = 30;
             const int SeasonalitySize = 30;
             const int TrainingSize = 90;
-            const int ConfidenceInterval = 98;
+            const int ConfidenceInterval = 98;            
 
             string outputColumnName = nameof(SpikePrediction.Prediction);
-            string inputColumnName = nameof(MeterData.ConsumptionDiffNormalized);  
+            string inputColumnName = nameof(MeterData.ConsumptionDiffNormalized);
 
-            var estimator = ml.Transforms.SsaSpikeEstimator(
-                outputColumnName, 
-                inputColumnName, 
-                confidence: ConfidenceInterval, 
-                pvalueHistoryLength: PValueSize, 
-                trainingWindowSize: TrainingSize, 
+            var trainigPipeLine = mlContext.Transforms.DetectSpikeBySsa(
+                outputColumnName,
+                inputColumnName,
+                confidence: ConfidenceInterval,
+                pvalueHistoryLength: PValueSize,
+                trainingWindowSize: TrainingSize,
                 seasonalityWindowSize: SeasonalitySize);
 
-            var model = estimator.Fit(dataView);
+            ITransformer trainedModel = trainigPipeLine.Fit(dataView);
 
-            var transformedData = model.Transform(dataView);
+            // STEP 6: Save/persist the trained model to a .ZIP file
+            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                mlContext.Model.Save(trainedModel, dataView.Schema, fs);
+
+            Console.WriteLine("The model is saved to {0}", ModelPath);
+            Console.WriteLine("");
+        }
+
+        public static void DetectAnomalies(MLContext mlContext,IDataView dataView)
+        {
+            ITransformer trainedModel;
+            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
+            }
+
+            var transformedData = trainedModel.Transform(dataView);
 
             // Getting the data of the newly created column as an IEnumerable
-            IEnumerable<SpikePrediction> predictionColumn = 
-                ml.Data.CreateEnumerable<SpikePrediction>(transformedData, false);
+            IEnumerable<SpikePrediction> predictions =
+                mlContext.Data.CreateEnumerable<SpikePrediction>(transformedData, false);
             
-            var colCDN = dataView.GetColumn<float>(ml, "ConsumptionDiffNormalized").ToArray();
-            var colTime = dataView.GetColumn<DateTime>(ml, "time").ToArray();
-            
+            var colCDN = dataView.GetColumn<float>("ConsumptionDiffNormalized").ToArray();
+            var colTime = dataView.GetColumn<DateTime>("time").ToArray();
+
             // Output the input data and predictions
-            Console.WriteLine($"{outputColumnName} column obtained post-transformation.");
+            Console.WriteLine("======Displaying anomalies in the Power meter data=========");
             Console.WriteLine("Date              \tReadingDiff\tAlert\tScore\tP-Value");
 
             int i = 0;
-            foreach (var p in predictionColumn)
+            foreach (var p in predictions)
             {
                 if (p.Prediction[0] == 1)
                 {
@@ -106,6 +119,16 @@ namespace myApp
                 Console.ResetColor();
                 i++;
             }
+        }
+
+        public static string GetAbsolutePath(string relativeDatasetPath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativeDatasetPath);
+
+            return fullPath;
         }
     }
 }
