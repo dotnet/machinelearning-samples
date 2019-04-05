@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrisClustering.Solution", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreditCardFraudDetection.Solution", "CreditCardFraudDetection.Solution", "{D447649D-768F-44E8-8ECA-C711CD882DBB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowEstimator.Solution", "TensorFlowEstimator.Solution", "{BB78093B-4EEE-401F-95E2-4BE7C5C420D4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MovieRecommendation.Solution", "MovieRecommendation.Solution", "{74A614C0-E1E2-4FB0-A246-96F04A654528}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SalesForecast.Solution", "SalesForecast.Solution", "{A56C7785-F74C-41F4-92C7-E98CB2287B90}"
@@ -27,15 +25,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductRecommendation.Solut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeSharingDemand", "getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\BikeSharingDemand.csproj", "{6E091170-BA63-4DF3-9C71-62DA2157ABB2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpamDetection.Solution", "SpamDetection.Solution", "{F2E5968C-1788-480B-A68D-6C1F6AD6E4AE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction.Solution", "HeartDiseasePrediction.Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ObjectDetection.Solution", "ObjectDetection.Solution", "{59A36AB2-2801-4AF3-A5AA-38B069375F4D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShampooSalesSpikeDetect.Solution", "ShampooSalesSpikeDetect.Solution", "{48D14A80-C613-42C4-9A6F-7737B7751893}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShampooSalesSpikeDetectE2E.Solution", "ShampooSalesSpikeDetectE2E.Solution", "{9EA8E9CA-7217-43FC-800F-70CF866D3996}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerAnomalyDetection.Solution", "PowerAnomalyDetection.Solution", "{417CA47F-36DE-4F6E-B53D-330D2B373ECF}"
 EndProject
