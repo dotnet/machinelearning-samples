@@ -1,12 +1,6 @@
 # Breaking changes from ML.NET v0.11 to v1.0.0-preview impacting ML.NET Samples.md 
 
-1.Breaking changes 
-
- 
-
-Severity    Code    Description    Project    File    Line    Suppression State 
-
-Error    CS0234    The type or namespace name 'Data' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    6    Active 
+1. Error    CS0234    The type or namespace name 'Data' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    6    Active 
 
  
 
@@ -14,9 +8,7 @@ Fix: Remove the namespace  using Microsoft.Data.DataView;
 
  
 
-Severity    Code    Description    Project    File    Line    Suppression State 
-
-Error    CS0246    The type or namespace name 'MultiClassClassifierMetrics' could not be found (are you missing a using directive or an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    59    Active 
+2. Error    CS0246    The type or namespace name 'MultiClassClassifierMetrics' could not be found (are you missing a using directive or an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    59    Active 
 
  
 
@@ -30,61 +22,41 @@ Fix: add nuget package for Microsoft.ML.FastTree
 
  
 
-Error: Severity    Code    Description    Project    File    Line    Suppression State 
+3. Error: Severity    Code    Description    Project    File    Line    Suppression State 
 
  
 
 PoissonRegression has been changed as LbfgsPoissonRegression 
 
-Error    CS1061    'RegressionCatalog.RegressionTrainers' does not contain a definition for 'PoissonRegression' and no accessible extension method 'PoissonRegression' accepting a first argument of type 'RegressionCatalog.RegressionTrainers' could be found (are you missing a using directive or an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\Program.cs    51    Active 
-
- 
+4. Error    CS1061    'RegressionCatalog.RegressionTrainers' does not contain a definition for 'PoissonRegression' and no accessible extension method 'PoissonRegression' accepting a first argument of type 'RegressionCatalog.RegressionTrainers' could be found (are you missing a using directive or an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\Program.cs    51    Active 
 
 Fix: change PoissonRegression to  LbfgsPoissonRegression 
 
- 
-
-We need to pass schema of training data  while Saving model to file using  mlContext.Model.Save() method 
-
- 
+5. We need to pass schema of training data  while Saving model to file using  mlContext.Model.Save() method 
 
 Error: Severity    Code    Description    Project    File    Line    Suppression State 
 
 Error    CS1501    No overload for method 'Save' takes 2 arguments    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\Program.cs    77    Active 
 
- 
-
 Fix: use mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs); 
 
-mlContext.Model.Load() method signature is changed such that it accepts an out variable  I.e when you load the model, it  outputs schema of training data in out variable. 
+6. mlContext.Model.Load() method signature is changed such that it accepts an out variable  I.e when you load the model, it  outputs schema of training data in out variable. 
 
 Error: 
 
 Severity    Code    Description    Project    File    Line    Suppression State 
 
-Error    CS1501    No overload for method 'Load' takes 1 arguments    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\Program.cs    95    Active 
-
- 
+ Error    CS1501    No overload for method 'Load' takes 1 arguments    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\Program.cs    95    Active 
 
 Fix: change mlContext.Model.Load(stream) to mlContext.Model.Load(stream, out  intpuSchema_variable) 
 
- 
-
-CreatePredictionEngineFunction moved from ITransformer to MLContext. 
-
- 
+7. CreatePredictionEngineFunction moved from ITransformer to MLContext. 
 
 Error  :  CS1061    'ITransformer' does not contain a definition for 'CreatePredictionEngine' and no accessible extension method 'CreatePredictionEngine' accepting a first argument of type 'ITransformer' could be found (are you missing a using directive or an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\Program.cs    99    Active 
 
- 
-
 Fix: change trainedModel.PredictionEngine(mlContext) to  mlContext.Model.CreatePredictionEngine<DemandObservation, DemandPrediction>(trainedModel); 
 
- 
-
-The property names of classes RegressionMetrics, CalibratedBinaryClassificationMetrics, ClusteringMetrics , MulticlassClassificationMetrics are changed to have more readable name as below. 
-
- 
+8. The property names of classes RegressionMetrics, CalibratedBinaryClassificationMetrics, ClusteringMetrics , MulticlassClassificationMetrics are changed to have more readable name as below. 
 
 LossFn  -  LossFunction 
 
@@ -105,63 +77,35 @@ Dbi - DaviesBouldinIndex
 AccuracyMicro - MicroAccuracy 
 
 AccuracyMacro - 
-
  
 
-MlContext object is removed form method signature I.e IDataView.GetColumn<t>(mlContext, columnName) 
-
+9. MlContext object is removed form method signature I.e IDataView.GetColumn<t>(mlContext, columnName) 
  
-
-Error: 
-
-Severity    Code    Description    Project    File    Line    Suppression State 
-
 Error    CS1501    No overload for method 'GetColumn' takes 2 arguments    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    207    Active 
-
- 
 
 Fix: remove mlContext from method call IDataView.GetColumn<t>() 
 
-Change the name from MultiClassClassifierMetrics to MulticlassClassificationMetrics 
+10. Change the name from MultiClassClassifierMetrics to MulticlassClassificationMetrics 
 
 Error: Severity    Code    Description    Project    File    Line    Suppression State 
 
 Error    CS0246    The type or namespace name 'MultiClassClassifierMetrics' could not be found (are you missing a using directive or an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    58    Active 
 
- 
-
-C 
-
-TrainTestSplit should be inside MLContext.Data 
-
-Severity    Code    Description    Project    File    Line    Suppression State 
-
- 
+11. TrainTestSplit should be inside MLContext.Data 
 
 Error    CS0246    The type or namespace name 'TrainTestData' could not be found (are you missing a using directive or an assembly reference?)    CreditCardFraudDetection.Trainer    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\Program.cs    65    Active 
-
  
-
 Fix: change mlContext.BinaryClassification.TrainTestSplit() to mlContext.Data.TrainTestSplit() 
 
-The class TrainTestData is been moved from TrainCatalogBase to DataOperationsCatalog 
+12. The class TrainTestData is been moved from TrainCatalogBase to DataOperationsCatalog 
 
 Error    CS0426    The type name 'TrainTestData' does not exist in the type 'TrainCatalogBase'    Clustering_Iris    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\Clustering_Iris\IrisClustering\IrisClusteringConsoleApp\Program.cs    45    Active 
 
- 
-
- 
-
-Severity    Code    Description    Project    File    Line    Suppression State 
-
-Error    CS0103    The name 'NormalizerMode' does not exist in the current context    CreditCardFraudDetection.Trainer    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\Program.cs    102    Active 
-
- 
+13. Error    CS0103    The name 'NormalizerMode' does not exist in the current context    CreditCardFraudDetection.Trainer    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\Program.cs    102    Active 
 
 Fix: change to NormalizationCatalog.NormalizeMeanVariance 
 
-Severity    Code    Description    Project    File    Line    Suppression State 
-
+14. install nuget package  Microsoft.ML.FastTree v.1.0.0-preview
 Error    CS1061    'BinaryClassificationCatalog.BinaryClassificationTrainers' does not contain a definition for 'FastTree' and no accessible extension method 'FastTree' accepting a first argument of type 'BinaryClassificationCatalog.BinaryClassificationTrainers' could be found (are you missing a using directive or an assembly reference?)    CreditCardFraudDetection.Trainer    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\Program.cs    109    Active 
 
 Severity    Code    Description    Project    File    Line    Suppression State 
