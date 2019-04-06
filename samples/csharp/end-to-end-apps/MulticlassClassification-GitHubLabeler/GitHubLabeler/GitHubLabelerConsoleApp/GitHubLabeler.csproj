@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
@@ -32,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Common\" />
   </ItemGroup>
 
   <ItemGroup>
