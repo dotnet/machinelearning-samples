@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v1.0.0-preview           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -70,9 +70,14 @@ The initial code is similar to the following:
 
 [...]
 
-// Load Datasets
- IDataView trainingDataView = mlContext.Data.LoadFromTextFile<TransactionObservation>(trainDataSetFilePath, separatorChar: ',', hasHeader: true);
-   IDataView testDataView = mlContext.Data.LoadFromTextFile<TransactionObservation>(testDataSetFilePath, separatorChar: ',', hasHeader: true);
+//Load the original single dataset
+    IDataView originalFullData = mlContext.Data.LoadFromTextFile<TransactionObservation>(fullDataSetFilePath, separatorChar: er: true);
+                 
+    // Split the data 80:20 into train and test sets, train and evaluate.
+    TrainTestData trainTestData = mlContext.Data.TrainTestSplit(originalFullData, testFraction: 0.2, seed: 1);
+    IDataView trainData = trainTestData.TrainSet;
+    IDataView testData = trainTestData.TestSet;
+
     
 [...]
 
@@ -85,18 +90,17 @@ The initial code is similar to the following:
         .ToArray();
 
     // Create the data process pipeline
-    IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
+    IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate("Features", featureColumnNames)
                                             .Append(mlContext.Transforms.DropColumns(new string[] { "Time" }))
-                                            .Append(mlContext.Transforms.Normalize(inputColumnName: DefaultColumnNames.Features,
-                                                                                 outputColumnName: "FeaturesNormalizedByMeanVar",
-                                                                                 mode: NormalizerMode.MeanVariance));
+                                            .Append(mlContext.Transforms.NormalizeMeanVariance(inputColumnName: "Features",
+                                                                                 outputColumnName: "FeaturesNormalizedByMeanVar"));
 
     // Set the training algorithm
     IEstimator<ITransformer> trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: nameof(TransactionObservation.Label),
                                             featureColumnName: "FeaturesNormalizedByMeanVar",
-                                            numLeaves: 20,
-                                            numTrees: 100,
-                                            minDatapointsInLeaves: 10,
+                                            numberOfLeaves: 20,
+                                            numberOfTrees: 100,
+                                            minimumExampleCountPerLeaf: 10,
                                             learningRate: 0.2);
 
 `````
@@ -126,12 +130,13 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
 [...]
 
    ITransformer model;
+   DataViewSchema inputSchema;
    using (var file = File.OpenRead(_modelfile))
    {
-       model = mlContext.Model.Load(file);
+       model = mlContext.Model.Load(file, out inputSchema);
    }
 
-   var predictionEngine = model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(mlContext);
+   var predictionEngine = mlContext.Model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(model);
 
 [...]
 

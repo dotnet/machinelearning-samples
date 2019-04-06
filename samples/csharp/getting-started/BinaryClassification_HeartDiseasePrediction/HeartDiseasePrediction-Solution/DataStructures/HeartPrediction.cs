@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace HeartDiseasePredictionConsoleApp.DataStructure
+namespace HeartDiseasePredictionConsoleApp.DataStructures
 {
     public class HeartPrediction
     {

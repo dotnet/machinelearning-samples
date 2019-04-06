@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using HeartDiseasePredictionConsoleApp.DataStructure;
+using HeartDiseasePredictionConsoleApp.DataStructures;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 
@@ -40,7 +40,7 @@ namespace HeartDiseasePredictionConsoleApp
             var testDataView = mlContext.Data.LoadFromTextFile<HeartData>(TestDataPath, hasHeader: true, separatorChar: ';');
 
             var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
-                .Append(mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features));
+                .Append(mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features"));
 
             Console.WriteLine("=============== Training the model ===============");
             var trainedModel = pipeline.Fit(trainingDataView);
@@ -53,15 +53,15 @@ namespace HeartDiseasePredictionConsoleApp
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
 
-            var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+            var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "Label", scoreColumnName: "Score");
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*       Metrics for {trainedModel.ToString()} binary classification model      ");
             Console.WriteLine($"*-----------------------------------------------------------");
             Console.WriteLine($"*       Accuracy: {metrics.Accuracy:P2}");
-            Console.WriteLine($"*       Auc:      {metrics.Auc:P2}");
-            Console.WriteLine($"*       Auprc:  {metrics.Auprc:P2}");
+            Console.WriteLine($"*       Area Under Roc Curve:      {metrics.AreaUnderRocCurve:P2}");
+            Console.WriteLine($"*       Area Under PrecisionRecall Curve:  {metrics.AreaUnderPrecisionRecallCurve:P2}");
             Console.WriteLine($"*       F1Score:  {metrics.F1Score:P2}");
             Console.WriteLine($"*       LogLoss:  {metrics.LogLoss:#.##}");
             Console.WriteLine($"*       LogLossReduction:  {metrics.LogLossReduction:#.##}");
@@ -74,7 +74,7 @@ namespace HeartDiseasePredictionConsoleApp
             Console.WriteLine("");
             Console.WriteLine("=============== Saving the model to a file ===============");
             using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
+                mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("=============== Model Saved ============= ");
@@ -84,12 +84,13 @@ namespace HeartDiseasePredictionConsoleApp
         private static void TestPrediction(MLContext mlContext)
         {
             ITransformer trainedModel;
+            DataViewSchema inputSchema;
 
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                trainedModel = mlContext.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream, out inputSchema);
             }
-            var predictionEngine = trainedModel.CreatePredictionEngine<HeartData, HeartPrediction>(mlContext);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<HeartData, HeartPrediction>(trainedModel);
 
            
 

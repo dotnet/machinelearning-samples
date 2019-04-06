@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HeartDiseasePredictionConsoleApp.DataStructure
+namespace HeartDiseasePredictionConsoleApp.DataStructures
 {
     public class HeartSampleData
     {

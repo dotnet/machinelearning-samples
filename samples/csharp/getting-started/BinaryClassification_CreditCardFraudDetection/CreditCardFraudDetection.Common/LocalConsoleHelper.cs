@@ -1,11 +1,5 @@
-﻿using CreditCardFraudDetection.Common.DataModels;
-using Microsoft.Data.DataView;
-using Microsoft.ML;
-using Microsoft.ML.Data;
-using System;
-using System.Collections;
+﻿using Microsoft.ML.Data;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
 namespace CreditCardFraudDetection.Common

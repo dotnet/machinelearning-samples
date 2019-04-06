@@ -1,12 +1,9 @@
 ﻿using System;
 using Microsoft.ML;
-using Microsoft.ML.Trainers;
-
 using MovieRecommendationConsoleApp.DataStructures;
 using MovieRecommendation.DataStructures;
-using Microsoft.ML.Data;
-using Microsoft.Data.DataView;
 using System.IO;
+using Microsoft.ML.Trainers;
 
 namespace MovieRecommendation
 {
@@ -42,11 +39,11 @@ namespace MovieRecommendation
             var dataProcessingPipeline = mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: nameof(MovieRating.userId))
                            .Append(mlcontext.Transforms.Conversion.MapValueToKey(outputColumnName: "movieIdEncoded", inputColumnName: nameof(MovieRating.movieId)));
             
-            //Specify the options for MatrixFactorization trainer
+            //Specify the options for MatrixFactorization trainer            
             MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
             options.MatrixColumnIndexColumnName = "userIdEncoded";
             options.MatrixRowIndexColumnName = "movieIdEncoded";
-            options.LabelColumnName = DefaultColumnNames.Label;
+            options.LabelColumnName = "Label";
             options.NumberOfIterations = 20;
             options.ApproximationRank = 100;
 
@@ -61,11 +58,11 @@ namespace MovieRecommendation
             Console.WriteLine("=============== Evaluating the model ===============");
             IDataView testDataView = mlcontext.Data.LoadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true, separatorChar: ','); 
             var prediction = model.Transform(testDataView);
-            var metrics = mlcontext.Regression.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
-            Console.WriteLine("The model evaluation metrics rms:" + metrics.Rms);
+            var metrics = mlcontext.Regression.Evaluate(prediction, labelColumnName: "Label", scoreColumnName: "Score");
+            Console.WriteLine("The model evaluation metrics RootMeanSquaredError:" + metrics.RootMeanSquaredError);
             
             //STEP 7:  Try/test a single prediction by predicting a single movie rating for a specific user
-            var predictionengine = model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlcontext);
+            var predictionengine = mlcontext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(model);
             /* Make a single movie rating prediction, the scores are for a particular user and will range from 1 - 5. 
                The higher the score the higher the likelyhood of a user liking a particular movie.
                You can recommend a movie to a user if say rating > 3.5.*/
