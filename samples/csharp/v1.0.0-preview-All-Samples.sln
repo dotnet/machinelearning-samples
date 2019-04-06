@@ -71,6 +71,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopForecastModelsTrainer"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestObjectPoolingConsoleApp", "end-to-end-apps\Regression-SalesForecast\src\TestObjectPoolingConsoleApp\TestObjectPoolingConsoleApp.csproj", "{F42FA597-EA36-48C6-A6E7-F0D78D4EF9D6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowScorer.Solution", "TensorFlowScorer.Solution", "{EE2FC8A3-0AC2-48A6-BC02-5C18A7E6814D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Score", "getting-started\DeepLearning_ImageClassification_TensorFlow\ImageClassification\ImageClassification.Score.csproj", "{C1A29617-448B-48F2-AC34-1533FB9D660C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -239,6 +243,14 @@ Global
 		{F42FA597-EA36-48C6-A6E7-F0D78D4EF9D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F42FA597-EA36-48C6-A6E7-F0D78D4EF9D6}.Release|x64.ActiveCfg = Release|Any CPU
 		{F42FA597-EA36-48C6-A6E7-F0D78D4EF9D6}.Release|x64.Build.0 = Release|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Debug|x64.Build.0 = Debug|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Release|x64.ActiveCfg = Release|Any CPU
+		{C1A29617-448B-48F2-AC34-1533FB9D660C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -264,6 +276,7 @@ Global
 		{EF0B8B59-6114-4F69-9191-54192D176755} = {A56C7785-F74C-41F4-92C7-E98CB2287B90}
 		{D80D5DBC-ACB8-4137-8F6C-FF82948C8752} = {A56C7785-F74C-41F4-92C7-E98CB2287B90}
 		{F42FA597-EA36-48C6-A6E7-F0D78D4EF9D6} = {A56C7785-F74C-41F4-92C7-E98CB2287B90}
+		{C1A29617-448B-48F2-AC34-1533FB9D660C} = {EE2FC8A3-0AC2-48A6-BC02-5C18A7E6814D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
