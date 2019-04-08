@@ -56,6 +56,7 @@ let main _argv =
             separatorChar = '\t')
     
     // Create the estimator which converts the text label to a bool then featurizes the text, and add a linear trainer.
+    printfn "=============== Training the model ==============="
     let estimator = 
         EstimatorChain()
             .Append(mlContext.Transforms.Conversion.MapValue("Label", dict ["ham", false; "spam", true], "LabelText"))
@@ -67,9 +68,10 @@ let main _argv =
     // Cross-validation splits our dataset into 'folds', trains a model on some folds and 
     // evaluates it on the remaining fold. We are using 5 folds so we get back 5 sets of scores.
     // Let's compute the average AUC, which should be between 0.5 and 1 (higher is better).
+    printfn "=============== Cross-validating to get model's accuracy metrics ==============="
     let cvResults = mlContext.BinaryClassification.CrossValidate(data, downcastPipeline estimator, numberOfFolds = 5);
     let avgAuc = cvResults |> Seq.map (fun x -> x.Metrics.AreaUnderRocCurve) |> Seq.average
-    printfn "The AUC is %f" avgAuc
+    printfn "The AUC is %.15f" avgAuc
     
     // Now let's train a model on the full dataset to help us get better results
     let model = estimator.Fit(data)
@@ -82,7 +84,8 @@ let main _argv =
     
     // Create a PredictionFunction from our model 
     let predictor = mlContext.Model.CreatePredictionEngine<SpamInput, SpamPrediction>(model);
-
+    
+    printfn "=============== Predictions for below data==============="
     // Test a few examples
     [
         "That's a great idea. It should work."
@@ -92,6 +95,7 @@ let main _argv =
     ] 
     |> List.iter (classify predictor)
 
+    printfn "=============== End of process, hit any key to finish =============== "
     Console.ReadLine() |> ignore
     0
 

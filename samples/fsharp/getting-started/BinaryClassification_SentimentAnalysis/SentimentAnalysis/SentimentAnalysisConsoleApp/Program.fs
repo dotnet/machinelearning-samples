@@ -10,31 +10,45 @@ open SentimentAnalysis.DataStructures.Model
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
 let baseDatasetsLocation = @"../../../../Data"
-let trainDataPath = sprintf @"%s/wikipedia-detox-250-line-data.tsv" baseDatasetsLocation
-let testDataPath = sprintf @"%s/wikipedia-detox-250-line-test.tsv" baseDatasetsLocation
+let dataPath = sprintf @"%s/wikiDetoxAnnotated40kRows.tsv" baseDatasetsLocation
 
 let baseModelsPath = @"../../../../MLModels";
 let modelPath = sprintf @"%s/SentimentModel.zip" baseModelsPath
 
+let absolutePath relativePath = 
+    let dataRoot = FileInfo(Reflection.Assembly.GetExecutingAssembly().Location)
+    Path.Combine(dataRoot.Directory.FullName, relativePath)
+
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     // STEP 1: Common data loading configuration
-    let trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(trainDataPath, hasHeader = true)
-    let testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(testDataPath, hasHeader = true)
+    let dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(dataPath, hasHeader = true)
+    
+    let trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction=0.2)
+    let trainingDataView = trainTestSplit.TrainSet
+    let testDataView = trainTestSplit.TestSet
 
     // STEP 2: Common data process configuration with pipeline data transformations          
     let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Features", "Text")
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<SentimentIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore
-    Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
+    //Peak the transformed features column
+    //Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
     let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = "Label", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
+    
+    //Measure training time
+    let watch = System.Diagnostics.Stopwatch.StartNew()
 
     // STEP 4: Train the model fitting to the DataSet
     printfn "=============== Training the model ==============="
     let trainedModel = trainingPipeline.Fit(trainingDataView)
+    
+    //Stop measuring time
+    watch.Stop()
+    printfn "***** Training time: %d seconds *****" (int(round(watch.Elapsed.TotalSeconds)))
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
@@ -47,7 +61,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
     mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 
-    printfn "The model is saved to %s" modelPath
+    printfn "The model is saved to %s" (absolutePath modelPath)
 
 
 // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.

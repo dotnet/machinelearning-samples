@@ -115,11 +115,11 @@ let printImageNetProb (x : ImageNetDataProbability) =
     printfn ""
 
 let score dataLocation imagesFolder inputModelLocation labelsTxt = 
-    printfn "Read model"
+    printHeader ["Read model"]
     printfn "Model location: %s" inputModelLocation
     printfn "Images folder: %s" imagesFolder
     printfn "Training file: %s" dataLocation
-    printfn "Default parameters: image size =(%d,%d), image mean: %d" imageHeight imageWidth mean
+    printfn "Default parameters: image size=(%d,%d), image mean: %d" imageHeight imageWidth mean
     let mlContext = MLContext(seed = Nullable 1)
     let data = mlContext.Data.LoadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
