@@ -26,13 +26,13 @@ namespace ShampooSalesAnomalyDetection
             // Create MLContext to be shared across the model creation workflow objects 
             MLContext mlcontext = new MLContext();
 
-            // Assign the Number of records in dataset file to cosntant variable
+            // Assign the Number of records in dataset file to constant variable
             const int size = 36;
 
             // STEP 1: Common data loading configuration
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ShampooSalesData>(path: DatasetPath, hasHeader: true, separatorChar: ',');
 
-            // Detect temporay changes (spikes) in the pattern
+            // Detect temporary changes (spikes) in the pattern
             ITransformer trainedSpikeModel = DetectSpike(mlcontext, size, dataView);
 
             // Detect persistent change in the pattern
