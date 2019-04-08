@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v1.0.0-preview          | Dynamic API | up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -43,14 +43,17 @@ The initial code is similar to the following:
 // STEP 1: Common data loading configuration
 IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
 
-var testTrainSplit = mlContext.BinaryClassification.TrainTestSplit(dataView, testFraction: 0.2);
+TrainTestData trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
+IDataView trainingData = trainTestSplit.TrainSet;
+IDataView testData = trainTestSplit.TestSet;
 
 // STEP 2: Common data process configuration with pipeline data transformations          
-var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: DefaultColumnNames.Features, inputColumnName:nameof(SentimentIssue.Text));
+var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
+
 
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
- var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
+var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features");
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
@@ -72,8 +75,8 @@ We need this step to conclude how accurate our model operates on new data. To do
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 ```CSharp
-var predictions = trainedModel.Transform(testTrainSplit.TestSet);
-var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+var predictions = trainedModel.Transform(testData);
+var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
 ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 ```
@@ -88,10 +91,10 @@ After the model is trained, you can use the `Predict()` API to predict the senti
 
 ```CSharp
 // Create prediction engine related to the loaded trained model
-var predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext);
+var predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
 
 //Score
 var resultprediction = predEngine.Predict(sampleStatement);
 ```
 
-Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a negative or positive predicted sentiment.
+Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a Toxic or Non toxic predicted sentiment.

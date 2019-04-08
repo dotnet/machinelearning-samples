@@ -2,13 +2,10 @@
 using System.Linq;
 using System.IO;
 using System;
-using Microsoft.ML.Data;
-using Microsoft.Data.DataView;
 using Common;
-using static Microsoft.ML.TrainCatalogBase;
 using CreditCardFraudDetection.Common.DataModels;
 using System.IO.Compression;
-using static Microsoft.ML.Transforms.NormalizingEstimator;
+using static Microsoft.ML.DataOperationsCatalog;
 
 namespace CreditCardFraudDetection.Trainer
 {
@@ -47,7 +44,7 @@ namespace CreditCardFraudDetection.Trainer
             EvaluateModel(mlContext, model, testDataView, trainerName);
 
             // Save model
-            SaveModel(mlContext, model, modelFilePath);
+            SaveModel(mlContext, model, modelFilePath, trainingDataView.Schema);
 
             Console.WriteLine("=============== Press any key ===============");
             Console.ReadKey();
@@ -66,7 +63,7 @@ namespace CreditCardFraudDetection.Trainer
                 IDataView originalFullData = mlContext.Data.LoadFromTextFile<TransactionObservation>(fullDataSetFilePath, separatorChar: ',', hasHeader: true);
                              
                 // Split the data 80:20 into train and test sets, train and evaluate.
-                TrainTestData trainTestData = mlContext.BinaryClassification.TrainTestSplit(originalFullData, testFraction: 0.2, seed: 1);
+                TrainTestData trainTestData = mlContext.Data.TrainTestSplit(originalFullData, testFraction: 0.2, seed: 1);
                 IDataView trainData = trainTestData.TrainSet;
                 IDataView testData = trainTestData.TestSet;
 
@@ -98,22 +95,21 @@ namespace CreditCardFraudDetection.Trainer
                 .ToArray();
 
             // Create the data process pipeline
-            IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames)
+            IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate("Features", featureColumnNames)
                                             .Append(mlContext.Transforms.DropColumns(new string[] { "Time" }))
-                                            .Append(mlContext.Transforms.Normalize(inputColumnName: DefaultColumnNames.Features,
-                                                                                 outputColumnName: "FeaturesNormalizedByMeanVar",
-                                                                                 mode: NormalizerMode.MeanVariance));
+                                            .Append(mlContext.Transforms.NormalizeMeanVariance(inputColumnName: "Features",
+                                                                                 outputColumnName: "FeaturesNormalizedByMeanVar"));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainDataView, dataProcessPipeline, 1);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainDataView, dataProcessPipeline, 1);
           
             // Set the training algorithm
             IEstimator<ITransformer> trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: nameof(TransactionObservation.Label),
                                                                                                 featureColumnName: "FeaturesNormalizedByMeanVar",
-                                                                                                numLeaves: 20,
-                                                                                                numTrees: 100,
-                                                                                                minDatapointsInLeaves: 10,
+                                                                                                numberOfLeaves: 20,
+                                                                                                numberOfTrees: 100,
+                                                                                                minimumExampleCountPerLeaf: 10,
                                                                                                 learningRate: 0.2);
 
             IEstimator <ITransformer> trainingPipeline = dataProcessPipeline.Append(trainer);
@@ -135,8 +131,8 @@ namespace CreditCardFraudDetection.Trainer
             var predictions = model.Transform(testDataView);
 
             var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, 
-                                                                  label: nameof(TransactionObservation.Label), 
-                                                                  score: DefaultColumnNames.Score);
+                                                                  labelColumnName: nameof(TransactionObservation.Label), 
+                                                                  scoreColumnName: "Score");
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainerName, metrics);
 
@@ -185,10 +181,10 @@ namespace CreditCardFraudDetection.Trainer
             }
         }
 
-        private static void SaveModel(MLContext mlContext, ITransformer model, string modelFilePath)
+        private static void SaveModel(MLContext mlContext, ITransformer model, string modelFilePath, DataViewSchema trainingDataSchema)
         {
             using (var fs = new FileStream(modelFilePath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(model, fs);
+                mlContext.Model.Save(model,trainingDataSchema,fs);
 
             Console.WriteLine("Saved model to " + modelFilePath);
         }

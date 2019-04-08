@@ -32,9 +32,10 @@ namespace CustomerSegmentation.Model
 
         public ITransformer LoadModelFromZipFile(string modelPath)
         {
+            DataViewSchema inputSchema;
             using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                _trainedModel = _mlContext.Model.Load(stream);
+                _trainedModel = _mlContext.Model.Load(stream, out inputSchema);
             }
 
             return _trainedModel;
