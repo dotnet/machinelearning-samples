@@ -17,6 +17,9 @@ let downcastPipeline (pipeline : IEstimator<'a>) =
     | :? IEstimator<ITransformer> as p -> p
     | _ -> failwith "The pipeline has to be an instance of IEstimator<ITransformer>."
 
+let absolutePath relativePath = 
+    let dataRoot = FileInfo(Reflection.Assembly.GetExecutingAssembly().Location)
+    Path.Combine(dataRoot.Directory.FullName, relativePath)
 
 [<EntryPoint>]
 let main argv =
@@ -78,7 +81,7 @@ let main argv =
         use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
         mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 
-        printfn "The model is saved to %s" modelPath
+        printfn "The model is saved to %s" (absolutePath modelPath)
  
     // 4. Try/test Predictions with the created models
     // The following test predictions could be implemented/deployed in a different application (production apps)
