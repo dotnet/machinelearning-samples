@@ -35,26 +35,25 @@ The initial code is similar to the following:
 ```fsharp
 // Set up the MLContext, which is a catalog of components in ML.NET.
 let mlContext = MLContext(seed = Nullable 1)
-let reader = 
-    mlContext.Data.CreateTextReader(
-        columns = 
-            [|
-                TextLoader.Column("LabelText" , Nullable DataKind.Text, 0)
-                TextLoader.Column("Message" , Nullable DataKind.Text, 1)
-            |],
-            hasHeader = false,
-            separatorChar = '\t')
 
-let data = reader.Read(trainDataPath)
+let data = 
+	mlContext.Data.LoadFromTextFile(trainDataPath,
+		columns = 
+			[|
+				TextLoader.Column("LabelText" , DataKind.String, 0)
+				TextLoader.Column("Message" , DataKind.String, 1)
+			|],
+		hasHeader = false,
+		separatorChar = '\t')
 
-// Create the estimator which converts the text label to a key sorted by value (with ham < spam we get ham -> false and spam -> true)
-// then featurizes the text, and add a linear trainer.
+// Create the estimator which converts the text label to a bool then featurizes the text, and add a linear trainer.
+printfn "=============== Training the model ==============="
 let estimator = 
-    EstimatorChain()
-        .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelText", "Label", sort = ValueToKeyMappingTransformer.SortOrder.Value))
-        .Append(mlContext.Transforms.Text.FeaturizeText("Message","Features"))
-        .AppendCacheCheckpoint(mlContext)
-        .Append(mlContext.BinaryClassification.Trainers.StochasticDualCoordinateAscent("Label", "Features"))
+	EstimatorChain()
+		.Append(mlContext.Transforms.Conversion.MapValue("Label", dict ["ham", false; "spam", true], "LabelText"))
+		.Append(mlContext.Transforms.Text.FeaturizeText("Features", "Message"))
+		.AppendCacheCheckpoint(mlContext)
+		.Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression("Label", "Features"))
 ```
 
 ### 2. Evaluate model
@@ -62,9 +61,9 @@ let estimator =
 For this dataset, we will use [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) to evaluate our model. This will partition the data into 5 'folds', train 5 models (on each combination of 4 folds), and test them on the fold that wasn't used in training.
 
 ```fsharp
-let cvResults = mlContext.BinaryClassification.CrossValidate(data, downcastPipeline estimator, numFolds = 5);
-let avgAuc = cvResults |> Seq.map (fun struct (metrics,_,_) -> metrics.Auc) |> Seq.average
-printfn "The AUC is %f" avgAuc
+let cvResults = mlContext.BinaryClassification.CrossValidate(data, downcastPipeline estimator, numberOfFolds = 5);
+let avgAuc = cvResults |> Seq.map (fun x -> x.Metrics.AreaUnderRocCurve) |> Seq.average
+printfn "The AUC is %.15f" avgAuc
 ```
 
 Note that usually we evaluate a model after training it. However, cross-validation includes the model training part so we don't need to do `Fit()` first. However, we will later train the model on the full dataset to take advantage of the additional data.
@@ -88,15 +87,15 @@ After the model is trained, you can use the `Predict()` API to predict whether n
 let classify = classifyWithThreshold 0.15f
 
 // Create a PredictionFunction from our model 
-let predictor = model.CreatePredictionEngine<SpamInput, SpamPrediction>(mlContext);
+let predictor = mlContext.Model.CreatePredictionEngine<SpamInput, SpamPrediction>(model);
 
+printfn "=============== Predictions for below data==============="
 // Test a few examples
 [
-    "That's a great idea. It should work."
-    "free medicine winner! congratulations"
-    "Yes we should meet over the weekend!"
-    "you win pills and free entry vouchers"
+	"That's a great idea. It should work."
+	"free medicine winner! congratulations"
+	"Yes we should meet over the weekend!"
+	"you win pills and free entry vouchers"
 ] 
 |> List.iter (classify predictor)
-
 ```

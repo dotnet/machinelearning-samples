@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v1.0.0-preview           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 ------------------------------------
 
@@ -44,18 +44,22 @@ The initial code is similar to the following:
 
 ```fsharp
     // STEP 1: Common data loading configuration
-    let trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(trainDataPath, hasHeader = true)
-    let testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(testDataPath, hasHeader = true)
+    let dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(dataPath, hasHeader = true)
+    
+    let trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction=0.2)
+    let trainingDataView = trainTestSplit.TrainSet
+    let testDataView = trainTestSplit.TestSet
 
     // STEP 2: Common data process configuration with pipeline data transformations          
     let dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Features", "Text")
 
     // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
     Common.ConsoleHelper.peekDataViewInConsole<SentimentIssue> mlContext trainingDataView dataProcessPipeline 2 |> ignore
-    Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
+    //Peak the transformed features column
+    //Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 1 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = "Label", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 ```
 
@@ -94,6 +98,6 @@ After the model is trained, we can use the `Predict()` API to predict the sentim
     let predEngine= trainedModel.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(mlContext)
 
     //Score
-    let resultprediction = predEngine.Predict(sampleStatement
+    let resultprediction = predEngine.Predict(sampleStatement)
 ```
 Where in `resultprediction.PredictionLabel` will be either true or false depending if it is a positive or negative predicted sentiment.
