@@ -5,9 +5,8 @@ using System.Text;
 
 namespace mnist.DataStructures
 {
-    class OutPutNum
+    class OutPutData
     {
-
         [ColumnName("Score")]
         public float[] Score;
     }
