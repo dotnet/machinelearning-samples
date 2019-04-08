@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v1.0.0-preview | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -50,8 +50,8 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
     
     //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
     let trainingDataView, testingDataView = 
-        let split = mlContext.Clustering.TrainTestSplit(fullData, testFraction = 0.2)
-        split.TrainSet, split.TestSe
+        let split = mlContext.Data.TrainTestSplit(fullData, testFraction = 0.2)
+        split.TrainSet, split.TestSet
 
     //STEP 2: Process data transformations in pipeline
     let dataProcessPipeline = 
@@ -63,8 +63,9 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 10 |> ignore
 
     // STEP 3: Create and train the model     
-    let trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName = "Features", clustersCount = 3)
+    let trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName = "Features", numberOfClusters = 3)
     let trainingPipeline = dataProcessPipeline.Append(trainer)
+    let trainedModel = trainingPipeline.Fit(trainingDataView)
 
 ```
 
@@ -79,9 +80,9 @@ After the model is build and trained, we can use the `Predict()` API to predict 
 
 ```fsharp
     use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
-    let model = mlContext.Model.Load(stream)
+    let model,inputSchema = mlContext.Model.Load(stream)
     // Create prediction engine related to the loaded trained model
-    let predEngine = model.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext)
+    let predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(model)
 
     //Score
     let resultprediction = predEngine.Predict(sampleIrisData)
