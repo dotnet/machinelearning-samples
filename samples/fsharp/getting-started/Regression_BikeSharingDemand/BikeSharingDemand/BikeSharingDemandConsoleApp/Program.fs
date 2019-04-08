@@ -3,6 +3,7 @@ open System
 open Microsoft.ML
 open System.IO
 open DataStructures
+open Microsoft.ML.Data
 
 let modelsLocation = @"../../../../MLModels"
 
@@ -31,12 +32,14 @@ let main argv =
 
     // 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline =
-        (mlContext.Transforms.CopyColumns("Label", "Count") |> downcastPipeline)
+        EstimatorChain()
             .Append(mlContext.Transforms.Concatenate("Features", "Season", "Year", "Month",
                                                      "Hour", "Holiday", "Weekday", "WorkingDay",
                                                      "Weather", "Temperature", "NormalizedTemperature",
                                                      "Humidity", "Windspeed"))
             .AppendCacheCheckpoint(mlContext)
+            // Use in-memory cache for small/medium datasets to lower training time. 
+            // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
         |> downcastPipeline
 
     // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
@@ -65,7 +68,7 @@ let main argv =
         
         printfn "===== Evaluating Model's accuracy with Test data ====="
         let predictions = trainedModel.Transform(testDataView)
-        let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = "Count", scoreColumnName = "Score")
+        let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = "Label", scoreColumnName = "Score")
         Common.ConsoleHelper.printRegressionMetrics learnerName metrics
         
 
