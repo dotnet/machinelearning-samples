@@ -69,7 +69,7 @@ let main argv =
         printfn "===== Evaluating Model's accuracy with Test data ====="
         let predictions = trainedModel.Transform(testDataView)
         let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = "Label", scoreColumnName = "Score")
-        Common.ConsoleHelper.printRegressionMetrics learnerName metrics
+        Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metrics
         
 
 
