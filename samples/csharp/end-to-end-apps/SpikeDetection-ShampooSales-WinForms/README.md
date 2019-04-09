@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Shampoo Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
+| v1.0.0-preview         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Shampoo Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
 ![Alt Text](./ShampooSalesAnomalyDetection/images/shampoosales.gif)
 
@@ -77,7 +77,7 @@ IDataView dataView = mlcontext.Data.LoadFromTextFile<AnomalyExample>(path: fileP
 string outputColumnName = nameof(AnomalyPrediction.Prediction);
 string inputColumnName = nameof(AnomalyExample.numReported);
 
-var trainingPipeline = mlcontext.Transforms.IidSpikeEstimator(outputColumnName, inputColumnName, confidenceLevel, pValue);
+var trainingPipeLine = mlcontext.Transforms.DetectIidSpike(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales),confidence: 95, pvalueHistoryLength: size / 4);
 ```
 
 ### 2. Train model
@@ -100,7 +100,7 @@ ITransformer trainedModel;
 // Load model
 using (FileStream stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
 {
-    trainedModel = mlcontext.Model.Load(stream);
+    trainedModel = mlcontext.Model.Load(stream,out var modelInputSchema);
 }
 
 // Apply data transformation to create predictions
