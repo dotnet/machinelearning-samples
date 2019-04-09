@@ -18,7 +18,7 @@ namespace CustomerSegmentation
             string transactionsCsv = Path.Combine(assetsPath, "inputs", "transactions.csv");
             string offersCsv = Path.Combine(assetsPath, "inputs", "offers.csv");
             string pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
-            string modelZip = Path.Combine(assetsPath, "outputs", "retailClustering.zip");
+            string modelPath = Path.Combine(assetsPath, "outputs", "retailClustering.zip");
 
             try
             {
@@ -63,10 +63,9 @@ namespace CustomerSegmentation
                 ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
                 //STEP 6: Save/persist the trained model to a .ZIP file
-                using (var fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write))
-                    mlContext.Model.Save(trainedModel, pivotDataView.Schema, fs);
+                mlContext.Model.Save(trainedModel, pivotDataView.Schema, modelPath);
 
-                Console.WriteLine("The model is saved to {0}", modelZip);
+                Console.WriteLine("The model is saved to {0}", modelPath);
             }
             catch (Exception ex)
             {

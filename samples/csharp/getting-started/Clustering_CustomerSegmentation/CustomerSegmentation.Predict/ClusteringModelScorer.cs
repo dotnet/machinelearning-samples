@@ -30,14 +30,9 @@ namespace CustomerSegmentation.Model
             _mlContext = mlContext;
         }
 
-        public ITransformer LoadModelFromZipFile(string modelPath)
+        public ITransformer LoadModel(string modelPath)
         {
-            DataViewSchema inputSchema;
-            using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                _trainedModel = _mlContext.Model.Load(stream, out inputSchema);
-            }
-
+            _trainedModel = _mlContext.Model.Load(modelPath, out var modelInputSchema);
             return _trainedModel;
         }
 
