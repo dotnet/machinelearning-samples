@@ -34,7 +34,7 @@ namespace GitHubLabeler
             SetupAppConfiguration();
 
             //1. ChainedBuilderExtensions and Train the model
-            BuildAndTrainModel(DataSetLocation, ModelPath, MyTrainerStrategy.SdcaMultiClassTrainer);
+            BuildAndTrainModel(DataSetLocation, ModelPath, MyTrainerStrategy.OVAAveragedPerceptronTrainer);
 
             //2. Try/test to predict a label for a single hard-coded Issue
             TestSingleLabelPrediction(ModelPath);
