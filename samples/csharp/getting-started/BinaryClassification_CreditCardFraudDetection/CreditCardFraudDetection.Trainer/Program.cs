@@ -21,7 +21,6 @@ namespace CreditCardFraudDetection.Trainer
             string trainDataSetFilePath = Path.Combine(assetsPath, "output", "trainData.csv"); 
             string testDataSetFilePath = Path.Combine(assetsPath, "output", "testData.csv");
             string modelFilePath = Path.Combine(assetsPath, "output", "fastTree.zip");
-            //
 
             // Unzip the original dataset as it is too large for GitHub repo if not zipped
             UnZipDataSet(zipDataSet, fullDataSetFilePath);
@@ -183,8 +182,7 @@ namespace CreditCardFraudDetection.Trainer
 
         private static void SaveModel(MLContext mlContext, ITransformer model, string modelFilePath, DataViewSchema trainingDataSchema)
         {
-            using (var fs = new FileStream(modelFilePath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(model,trainingDataSchema,fs);
+            mlContext.Model.Save(model,trainingDataSchema, modelFilePath);
 
             Console.WriteLine("Saved model to " + modelFilePath);
         }
