@@ -77,8 +77,7 @@ namespace myApp
             ITransformer trainedModel = trainigPipeLine.Fit(dataView);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, dataView.Schema, fs);
+            mlContext.Model.Save(trainedModel, dataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
             Console.WriteLine("");
@@ -86,11 +85,7 @@ namespace myApp
 
         public static void DetectAnomalies(MLContext mlContext,IDataView dataView)
         {
-            ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
-            }
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             var transformedData = trainedModel.Transform(dataView);
 
