@@ -24,5 +24,11 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Models\model.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
 
