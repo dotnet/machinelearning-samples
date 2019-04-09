@@ -95,6 +95,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scalable.Model", "end-to-en
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scalable.WebAPI", "end-to-end-apps\ScalableMLModelOnWebAPI\src\Scalable.WebAPI\Scalable.WebAPI.csproj", "{2B5409B5-3CEE-432E-963A-3AD71C12B896}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShampooSalesE2E.Solution", "ShampooSalesE2E.Solution", "{6D589303-EC5C-405C-B9F6-06FE3500FCCB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnomalyDetectionConsoleApp", "end-to-end-apps\AnomalyDetection-ShampooSales-WinForms\AnomalyDetectionConsoleApp\AnomalyDetectionConsoleApp.csproj", "{31CB7321-5324-4296-9CFE-AB9BF9ED5004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShampooSalesAnomalyDetection", "end-to-end-apps\AnomalyDetection-ShampooSales-WinForms\ShampooSalesAnomalyDetection\ShampooSalesAnomalyDetection.csproj", "{8B051595-03CD-4026-91BB-403F90CF8526}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowScorer.Solution", "TensorFlowScorer.Solution", "{4F49A908-25A6-4CC0-A9AC-1FC4072834CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Score", "getting-started\DeepLearning_ImageClassification_TensorFlow\ImageClassification\ImageClassification.Score.csproj", "{E87A197D-7132-47F1-A4D7-75A1D264C60A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -319,6 +329,30 @@ Global
 		{2B5409B5-3CEE-432E-963A-3AD71C12B896}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B5409B5-3CEE-432E-963A-3AD71C12B896}.Release|x64.ActiveCfg = Release|Any CPU
 		{2B5409B5-3CEE-432E-963A-3AD71C12B896}.Release|x64.Build.0 = Release|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Debug|x64.Build.0 = Debug|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Release|x64.ActiveCfg = Release|Any CPU
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004}.Release|x64.Build.0 = Release|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|x64.ActiveCfg = Debug|x64
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Debug|x64.Build.0 = Debug|x64
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|x64.ActiveCfg = Release|x64
+		{8B051595-03CD-4026-91BB-403F90CF8526}.Release|x64.Build.0 = Release|x64
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Debug|x64.Build.0 = Debug|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Release|x64.ActiveCfg = Release|Any CPU
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -351,6 +385,9 @@ Global
 		{BD2407DD-A929-4DF7-BF16-0C1EAD7A0D5D} = {33E14CDF-9FD4-494F-8B12-9F4309F93977}
 		{FD5B2260-F240-44C5-88D5-CABCD8649D8C} = {F84EBD4C-C163-42C2-9014-72E857976B1F}
 		{2B5409B5-3CEE-432E-963A-3AD71C12B896} = {F84EBD4C-C163-42C2-9014-72E857976B1F}
+		{31CB7321-5324-4296-9CFE-AB9BF9ED5004} = {6D589303-EC5C-405C-B9F6-06FE3500FCCB}
+		{8B051595-03CD-4026-91BB-403F90CF8526} = {6D589303-EC5C-405C-B9F6-06FE3500FCCB}
+		{E87A197D-7132-47F1-A4D7-75A1D264C60A} = {4F49A908-25A6-4CC0-A9AC-1FC4072834CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
