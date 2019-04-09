@@ -72,9 +72,9 @@ namespace HeartDiseasePredictionConsoleApp
             Console.WriteLine($"************************************************************");
             Console.WriteLine("");
             Console.WriteLine("");
+
             Console.WriteLine("=============== Saving the model to a file ===============");
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("=============== Model Saved ============= ");
@@ -83,16 +83,9 @@ namespace HeartDiseasePredictionConsoleApp
 
         private static void TestPrediction(MLContext mlContext)
         {
-            ITransformer trainedModel;
-            DataViewSchema inputSchema;
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream, out inputSchema);
-            }
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<HeartData, HeartPrediction>(trainedModel);
-
-           
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<HeartData, HeartPrediction>(trainedModel);                   
 
             foreach (var heartData in HeartSampleData.heartDatas)
             {
