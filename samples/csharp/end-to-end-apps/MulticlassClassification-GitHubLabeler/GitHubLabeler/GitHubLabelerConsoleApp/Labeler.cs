@@ -33,11 +33,7 @@ namespace GitHubLabeler
             _mlContext = new MLContext();
 
             //Load model from file
-            
-            using (var stream = new FileStream(_modelPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                _trainedModel = _mlContext.Model.Load(stream, out var modelInputSchema);
-            }
+            _trainedModel = _mlContext.Model.Load(_modelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
             _predEngine = _mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_trainedModel);

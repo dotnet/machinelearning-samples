@@ -136,8 +136,7 @@ namespace GitHubLabeler
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
         }
