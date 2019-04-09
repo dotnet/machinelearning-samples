@@ -91,20 +91,6 @@ namespace SpamDetectionConsoleApp
             public bool Label { get; set; }
         }
 
-        public class MyLambda
-        {
-            [Export("MyLambda")]
-            public CustomMappingEstimator<MyInput, MyOutput> MyTransformer => ML.Transforms.CustomMapping<MyInput, MyOutput>(MyAction, "MyLambda");
-
-            [Import]
-            public MLContext ML { get; set; }
-
-            public static void MyAction(MyInput input, MyOutput output)
-            {
-                output.Label = input.Label == "spam" ? true : false;
-            }
-        }
-
         public static void ClassifyMessage(PredictionEngine<SpamInput, SpamPrediction> predictor, string message)
         {
             var input = new SpamInput { Message = message };

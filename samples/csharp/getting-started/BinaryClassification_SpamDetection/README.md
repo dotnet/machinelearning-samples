@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview           | Dynamic API | Might need to update project structure to match template | Console app | .tsv files | Spam detection | Two-class classification | SDCA (linear learner), also showing the CustomMapping estimator, which enables adding custom code to an ML.NET pipeline |
+| v1.0.0-preview           | Dynamic API | Might need to update project structure to match template | Console app | .tsv files | Spam detection | Two-class classification | Averaged Perceptron (linear learner) |
 
 In this sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict whether a text message is spam. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -54,8 +54,6 @@ var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label",
 var trainer = mlContext.MulticlassClassification.Trainers.OneVersusAll(mlContext.BinaryClassification.Trainers.AveragedPerceptron(labelColumnName: "Label", numberOfIterations: 10, featureColumnName: "Features"), labelColumnName: "Label")
                                       .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel", "PredictedLabel"));
 var trainingPipeLine = dataProcessPipeline.Append(trainer);
-
-
 ```
 
 ### 2. Evaluate model
