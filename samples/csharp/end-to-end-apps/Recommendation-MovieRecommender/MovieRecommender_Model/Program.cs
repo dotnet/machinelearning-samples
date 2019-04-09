@@ -86,12 +86,7 @@ namespace MovieRecommenderModel
 
             //STEP 8:  Save model to disk
             Console.WriteLine("=============== Writing model to the disk ===============", color);
-            Console.WriteLine();
-
-            using (FileStream fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-            {
-                mlContext.Model.Save(model, trainingDataView.Schema, fs);
-            }
+            Console.WriteLine();mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("=============== Re-Loading model from the disk ===============", color);
             Console.WriteLine();
