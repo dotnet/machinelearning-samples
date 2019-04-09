@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.ML;
 using System.IO;
-using Microsoft.Data.DataView;
 
 namespace ShampooSalesAnomalyDetection
 {
@@ -37,10 +36,9 @@ namespace ShampooSalesAnomalyDetection
 
             // Detect persistent change in the pattern
             ITransformer trainedChangePointModel =  DetectChangepoint(mlcontext, size, dataView);
-
-
-            SaveModel(mlcontext, trainedSpikeModel, SpikeModelPath);
-            SaveModel(mlcontext, trainedChangePointModel, ChangePointModelPath);
+            
+            SaveModel(mlcontext, trainedSpikeModel, SpikeModelPath, dataView);
+            SaveModel(mlcontext, trainedChangePointModel, ChangePointModelPath, dataView);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
 
@@ -54,7 +52,7 @@ namespace ShampooSalesAnomalyDetection
             // STEP 2: Set the training algorithm 
             // Note -- This confidence level and p-value work well for the shampoo-sales dataset;
             // you may need to adjust for different datasets
-            var trainingPipeLine = mlcontext.Transforms.IidSpikeEstimator(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales),confidence: 95, pvalueHistoryLength: size / 4);
+            var trainingPipeLine = mlcontext.Transforms.DetectIidSpike(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales),confidence: 95, pvalueHistoryLength: size / 4);
 
             // STEP 3: Train the model by fitting the dataview
             Console.WriteLine("=============== Training the model using Spike Detection algorithm ===============");
@@ -87,7 +85,7 @@ namespace ShampooSalesAnomalyDetection
             Console.WriteLine("Detect Persistent changes in pattern");
 
             //STEP 2: Set the training algorithm    
-            var trainingPipeLine = mlcontext.Transforms.IidChangePointEstimator(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
+            var trainingPipeLine = mlcontext.Transforms.DetectIidChangePoint(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
 
             //STEP 3:Train the model by fitting the dataview
             Console.WriteLine("=============== Training the model Using Change Point Detection Algorithm===============");
@@ -117,11 +115,10 @@ namespace ShampooSalesAnomalyDetection
             return trainedModel;
         }
 
-        private static void SaveModel(MLContext mlcontext, ITransformer trainedModel, string modelPath)
+        private static void SaveModel(MLContext mlcontext, ITransformer trainedModel, string modelPath, IDataView dataView)
         {
             Console.WriteLine("=============== Saving model ===============");
-            using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlcontext.Model.Save(trainedModel, fs);
+            mlcontext.Model.Save(trainedModel,dataView.Schema, modelPath);
 
             Console.WriteLine("The model is saved to {0}", modelPath);
         }

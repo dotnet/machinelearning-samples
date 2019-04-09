@@ -1,17 +1,10 @@
-using Microsoft.Data.DataView;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Transforms.TimeSeries;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -147,8 +140,8 @@ namespace ShampooSalesAnomalyDetection
 
             // Step 2: Load & use model
             // Note -- The model is trained with the shampoo-sales dataset in a separate console app (see AnomalyDetectionConsoleApp)
-            string spikeModelPath = @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesSpikeModel.zip";
-            string changePointModelPath = @"../../../AnomalyDetectionConsoleApp/MLModels/ShampooSalesChangePointModel.zip";
+            string spikeModelPath = @"../../../ShampooSalesConsoleApp/MLModels/ShampooSalesSpikeModel.zip";
+            string changePointModelPath = @"../../../ShampooSalesConsoleApp/MLModels/ShampooSalesChangePointModel.zip";
 
             if (spikeDet.Checked)
             {
@@ -177,12 +170,8 @@ namespace ShampooSalesAnomalyDetection
 
         private void loadAndUseModel(MLContext mlcontext, IDataView dataView, String modelPath, String type, Color color)
         {
-            ITransformer trainedModel;
-            using (FileStream stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlcontext.Model.Load(stream);
-            }
-
+            ITransformer trainedModel = mlcontext.Model.Load(modelPath, out var modelInputSchema);
+            
             // Step 3: Apply data transformation to create predictions
             IDataView transformedData = trainedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ShampooSalesPrediction>(transformedData, reuseRowObject: false);
