@@ -57,13 +57,12 @@ namespace MulticlassClassification_Iris
                                                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-            var trainer = mlContext.MulticlassClassification.Trainers.SdcaNonCalibrated(labelColumnName: "KeyColumn", featureColumnName: "Features")
-               .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel", "PredictedLabel"));
-            //Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: nameof(IrisData.Label) , inputColumnName: "KeyColumn"));
+            var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "KeyColumn", featureColumnName: "Features")
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: nameof(IrisData.Label) , inputColumnName: "KeyColumn"));
+
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
-
             //Measure training time
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
