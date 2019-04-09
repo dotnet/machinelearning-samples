@@ -89,9 +89,7 @@ namespace Regression_TaxiFarePrediction
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-
-            using (var fs = File.Create(ModelPath))
-            mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
@@ -116,11 +114,7 @@ namespace Regression_TaxiFarePrediction
             };
 
             ///
-            ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
-            }
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
             var predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
