@@ -33,7 +33,7 @@ Building a model includes:
 The initial code is similar to the following:
 ```CSharp
 // STEP 1: Common data loading configuration
-var trainData = mLContext.Data.LoadFromTextFile(path: TrainDataPath,
+var trainData = mlContext.Data.LoadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
@@ -44,7 +44,7 @@ var trainData = mLContext.Data.LoadFromTextFile(path: TrainDataPath,
                         );
 
                 
-var testData = mLContext.Data.LoadFromTextFile(path: TestDataPath,
+var testData = mlContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
@@ -55,13 +55,13 @@ var testData = mLContext.Data.LoadFromTextFile(path: TestDataPath,
                         );
 
 // STEP 2: Common data process configuration with pipeline data transformations
-var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
-
-                
+// Use in-memory cache for small/medium datasets to lower training time. Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
+var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "Number").
+                    Append(mlContext.Transforms.Concatenate("Features", nameof(InputData.PixelValues)).AppendCacheCheckpoint(mlContext));
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder
-var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: "Number", featureColumnName: DefaultColumnNames.Features);
-var trainingPipeline = dataProcessPipeline.Append(trainer);
+var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "Label", featureColumnName: "Features");
+var trainingPipeline = dataProcessPipeline.Append(trainer).Append(mlContext.Transforms.Conversion.MapKeyToValue("Number","Label"));
 ```
 
 ### 2. Train model
@@ -79,7 +79,7 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```CSharp
 var predictions = trainedModel.Transform(testData);
-var metrics = mLContext.MulticlassClassification.Evaluate(data:predictions, label:"Number", score:DefaultColumnNames.Score);
+var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName:"Number", scoreColumnName:"Score");
 
 Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 ```
@@ -93,19 +93,15 @@ After the model is trained, we can use the `Predict()` API to predict the probab
 
 ```CSharp
 
-ITransformer trainedModel;
-using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-{
-	trainedModel = mlContext.Model.Load(stream);
-}
+ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
 // Create prediction engine related to the loaded trained model
-var predEngine = trainedModel.CreatePredictionEngine<InputData, OutPutNum>(mlContext);
+var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
 
 //InputData data1 = SampleMNISTData.MNIST1;
 var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
-Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
+Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
 Console.WriteLine($"                                           One :  {resultprediction1.Score[1]:0.####}");
 Console.WriteLine($"                                           two:   {resultprediction1.Score[2]:0.####}");
 Console.WriteLine($"                                           three: {resultprediction1.Score[3]:0.####}");
