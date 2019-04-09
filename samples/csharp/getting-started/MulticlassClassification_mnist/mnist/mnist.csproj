@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Data\optdigits-train.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -19,6 +23,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>
