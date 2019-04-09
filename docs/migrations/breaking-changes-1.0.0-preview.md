@@ -1,5 +1,10 @@
 # Breaking changes from ML.NET v0.11 to v1.0.0-preview impacting ML.NET Samples.md 
 
+0. DefaultColumnNames is now internal, not for user's usage. You need to use the column names between "".
+See PR and discussion in this PR:
+https://github.com/dotnet/machinelearning/pull/2842 
+If you have any comment, do so in that PR.
+
 1. Error    CS0234    The type or namespace name 'Data' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)    BikeSharingDemand    C:\GitRepos\machinelearning-samples-v1.0.0-Preview\samples\csharp\common\ConsoleHelper.cs    6    Active 
 
  
