@@ -35,7 +35,7 @@ Building a model includes:
 
 * Create an Estimator and transform the data to numeric vectors so it can be used effectively by an ML algorithm (with `FeaturizeText`)
 
-* Choosing a trainer/learning algorithm (such as `FastTree`) to train the model with. 
+* Choosing a trainer/learning algorithm (such as `SdcaLogisticRegression`) to train the model with. 
 
 The initial code is similar to the following:
 
@@ -50,10 +50,8 @@ IDataView testData = trainTestSplit.TestSet;
 // STEP 2: Common data process configuration with pipeline data transformations          
 var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
 
-
-
 // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features");
+var trainer = mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features");
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
