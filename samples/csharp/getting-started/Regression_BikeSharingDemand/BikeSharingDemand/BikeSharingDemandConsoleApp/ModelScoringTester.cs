@@ -4,8 +4,8 @@ using System.Linq;
 
 using Microsoft.ML;
 
+using Common;
 using BikeSharingDemand.DataStructures;
-using System.Globalization;
 
 namespace BikeSharingDemand
 {
@@ -41,19 +41,19 @@ namespace BikeSharingDemand
                 .Select(x => x.Split(','))
                 .Select(x => new DemandObservation()
                 {
-                    Season = float.Parse(x[2], CultureInfo.InvariantCulture),
-                    Year = float.Parse(x[3], CultureInfo.InvariantCulture),
-                    Month = float.Parse(x[4], CultureInfo.InvariantCulture),
-                    Hour = float.Parse(x[5], CultureInfo.InvariantCulture),
-                    Holiday = float.Parse(x[6], CultureInfo.InvariantCulture),
-                    Weekday = float.Parse(x[7], CultureInfo.InvariantCulture),
-                    WorkingDay = float.Parse(x[8], CultureInfo.InvariantCulture),
-                    Weather = float.Parse(x[9], CultureInfo.InvariantCulture),
-                    Temperature = float.Parse(x[10], CultureInfo.InvariantCulture),
-                    NormalizedTemperature = float.Parse(x[11], CultureInfo.InvariantCulture),
-                    Humidity = float.Parse(x[12], CultureInfo.InvariantCulture),
-                    Windspeed = float.Parse(x[13], CultureInfo.InvariantCulture),
-                    Count = float.Parse(x[16], CultureInfo.InvariantCulture)
+                    Season = x[2].ToFloatWithInvariantCulture(),
+                    Year = x[3].ToFloatWithInvariantCulture(),
+                    Month = x[4].ToFloatWithInvariantCulture(),
+                    Hour = x[5].ToFloatWithInvariantCulture(),
+                    Holiday = x[6].ToFloatWithInvariantCulture(),
+                    Weekday = x[7].ToFloatWithInvariantCulture(),
+                    WorkingDay = x[8].ToFloatWithInvariantCulture(),
+                    Weather = x[9].ToFloatWithInvariantCulture(),
+                    Temperature = x[10].ToFloatWithInvariantCulture(),
+                    NormalizedTemperature = x[11].ToFloatWithInvariantCulture(),
+                    Humidity = x[12].ToFloatWithInvariantCulture(),
+                    Windspeed = x[13].ToFloatWithInvariantCulture(),
+                    Count = x[16].ToFloatWithInvariantCulture()
                 })
                 .Take(numberOfRecordsToRead)
                 .ToList();

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\ParsingExtensions.cs" Link="Common\ParsingExtensions.cs" />
   </ItemGroup>
 
   <ItemGroup>

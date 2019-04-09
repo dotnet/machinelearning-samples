@@ -314,11 +314,11 @@ namespace Regression_TaxiFarePrediction
                 {
                     VendorId = x[0],
                     RateCode = x[1],
-                    PassengerCount = float.Parse(x[2]),
-                    TripTime = float.Parse(x[3]),
-                    TripDistance = float.Parse(x[4]),
+                    PassengerCount = x[2].ToFloatWithInvariantCulture(),
+                    TripTime = x[3].ToFloatWithInvariantCulture(),
+                    TripDistance = x[4].ToFloatWithInvariantCulture(),
                     PaymentType = x[5],
-                    FareAmount = float.Parse(x[6])
+                    FareAmount = x[6].ToFloatWithInvariantCulture()
                 })
                 .Take<TaxiTrip>(numMaxRecords);
 

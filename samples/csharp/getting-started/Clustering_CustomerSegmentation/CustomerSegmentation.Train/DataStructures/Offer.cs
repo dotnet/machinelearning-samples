@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Common;
+
 namespace CustomerSegmentation.DataStructures
 {
     public class Offer
@@ -27,8 +29,8 @@ namespace CustomerSegmentation.DataStructures
                  OfferId = x[0],
                  Campaign = x[1],
                  Varietal = x[2],
-                 Minimum = float.Parse(x[3]),
-                 Discount = float.Parse(x[4]),
+                 Minimum = x[3].ToFloatWithInvariantCulture(),
+                 Discount = x[4].ToFloatWithInvariantCulture(),
                  Origin = x[5],
                  LastPeak = x[6]
              });
