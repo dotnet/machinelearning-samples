@@ -36,11 +36,11 @@ namespace GitHubLabeler
             
             using (var stream = new FileStream(_modelPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                _trainedModel = _mlContext.Model.Load(stream);
+                _trainedModel = _mlContext.Model.Load(stream, out var modelInputSchema);
             }
 
             // Create prediction engine related to the loaded trained model
-            _predEngine = _trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_mlContext);
+            _predEngine = _mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_trainedModel);
 
             //Configure Client to access a GitHub repo
             if (accessToken != string.Empty)

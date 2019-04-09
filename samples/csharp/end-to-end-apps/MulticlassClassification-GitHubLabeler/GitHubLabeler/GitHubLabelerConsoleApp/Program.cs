@@ -56,10 +56,10 @@ namespace GitHubLabeler
             var trainingDataView = mlContext.Data.LoadFromTextFile<GitHubIssue>(DataSetLocation, hasHeader: true, separatorChar:'\t', allowSparse: false);
              
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: DefaultColumnNames.Label,inputColumnName:nameof(GitHubIssue.Area))
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "Label",inputColumnName:nameof(GitHubIssue.Area))
                             .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "TitleFeaturized",inputColumnName:nameof(GitHubIssue.Title)))
                             .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "DescriptionFeaturized", inputColumnName: nameof(GitHubIssue.Description)))
-                            .Append(mlContext.Transforms.Concatenate(outputColumnName:DefaultColumnNames.Features, "TitleFeaturized", "DescriptionFeaturized"))
+                            .Append(mlContext.Transforms.Concatenate(outputColumnName:"Features", "TitleFeaturized", "DescriptionFeaturized"))
                             .AppendCacheCheckpoint(mlContext);  
                             // Use in-memory cache for small/medium datasets to lower training time. 
                             // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
@@ -72,15 +72,12 @@ namespace GitHubLabeler
             switch(selectedStrategy)
             {
                 case MyTrainerStrategy.SdcaMultiClassTrainer:                 
-                     trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, 
-                                                                                                          DefaultColumnNames.Features);
+                     trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy("Label", "Features");
                      break;
                 case MyTrainerStrategy.OVAAveragedPerceptronTrainer:
                 {
                     // Create a binary classification trainer.
-                    var averagedPerceptronBinaryTrainer = mlContext.BinaryClassification.Trainers.AveragedPerceptron(DefaultColumnNames.Label,
-                                                                                                                     DefaultColumnNames.Features,
-                                                                                                                     numIterations: 10);
+                    var averagedPerceptronBinaryTrainer = mlContext.BinaryClassification.Trainers.AveragedPerceptron("Label", "Features",numberOfIterations: 10);
                     // Compose an OVA (One-Versus-All) trainer with the BinaryTrainer.
                     // In this strategy, a binary classification algorithm is used to train one classifier for each class, "
                     // which distinguishes that class from all other classes. Prediction is then performed by running these binary classifiers, "
@@ -95,7 +92,7 @@ namespace GitHubLabeler
 
             //Set the trainer/algorithm and map label to value (original readable state)
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(DefaultColumnNames.PredictedLabel));
+                    .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
             // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
@@ -105,14 +102,14 @@ namespace GitHubLabeler
             //Measure cross-validation time
             var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
 
-            CrossValidationResult<MultiClassClassifierMetrics>[] crossValidationResults = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn:DefaultColumnNames.Label);
+            var crossValidationResultsList = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName:"Label");
 
             //Stop measuring time
             watchCrossValTime.Stop();
             long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
             Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");           
             
-            ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
+            ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResultsList);
 
             // STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
@@ -131,7 +128,7 @@ namespace GitHubLabeler
             // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
             GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "WebSockets communication is slow in my machine", Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." };
             // Create prediction engine related to the loaded trained model
-            var predEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext);
+            var predEngine = mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(trainedModel);
             //Score
             var prediction = predEngine.Predict(issue);
             Console.WriteLine($"=============== Single Prediction just-trained-model - Result: {prediction.Area} ===============");
@@ -140,7 +137,7 @@ namespace GitHubLabeler
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
             using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
+                mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
         }

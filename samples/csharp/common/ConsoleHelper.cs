@@ -90,7 +90,7 @@ namespace Common
 
         public static void PrintMulticlassClassificationFoldsAverageMetrics(
                                          string algorithmName,
-                                        CrossValidationResult<MulticlassClassificationMetrics>[] crossValResults
+                                       IReadOnlyList<CrossValidationResult<MulticlassClassificationMetrics>> crossValResults
                                                                            )
         {
             var metricsInMultipleFolds = crossValResults.Select(r => r.Metrics);
