@@ -102,14 +102,14 @@ namespace GitHubLabeler
             //Measure cross-validation time
             var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
 
-            var crossValidationResultsList = mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName:"Label");
+            var crossValidationResults= mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName:"Label");
 
             //Stop measuring time
             watchCrossValTime.Stop();
             long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
             Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");           
             
-            ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResultsList);
+            ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
