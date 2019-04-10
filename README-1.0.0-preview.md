@@ -89,7 +89,6 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <td class="tg-0pky"><img src="images/web.png" alt="web image" align="middle"><br><br>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></td>
     <td class="tg-0pky"><br>Using Database Sample<br>Coming soon</td>
     <td class="tg-0pky"><br>Using very large sets<br>Coming soon</td>
-    <td class="tg-0pky"></td>
   </tr>
 </table>
 
