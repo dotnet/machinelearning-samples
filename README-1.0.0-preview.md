@@ -17,78 +17,86 @@ There are two types of samples/apps in the repo:
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg .tg-34fe{background-color:#c0c0c0;border-color:inherit;text-align:center;vertical-align:top}
-.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
-.tg .tg-uys7{border-color:inherit;text-align:center}
-.tg .tg-mn4z{background-color:#c0c0c0;border-color:inherit;text-align:center}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg">
+<table align="middle">
   <tr>
-    <th class="tg-mn4z" colspan="3">Recommendation</th>
+    <td colspan="3">Binary classification</td>
   </tr>
   <tr>
-    <td class="tg-uys7"><img src="images/product-recommendation.png" alt="Binary classification chart" align="middle"><br><br>Product Recommendation<br><br><a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-c3ow"><img src="images/movie-recommendation.png" alt="Movie Recommender chart" align="middle"><br><br>Movie Recommender<br><br><a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-c3ow"><img src="images/movie-recommendation.png" alt="Movie Recommender chart" align="middle"><br><br>Movie Recommender<br><br>(End-to-end app)<br><br><a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></td>
+    <td><img src="images/sentiment-analysis.png" alt="Binary classification chart" align="middle"><br><br><b>Sentiment analysis <br><br><a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td><img src="images/spam-detection.png" alt="Movie Recommender chart" align="middle"><br><br><b>Spam Detection<br><br><a href="samples/csharp/getting-started/BinaryClassification_SpamDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SpamDetection">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td><img src="images/fraud-detection.png" alt="Movie Recommender chart" align="middle"><br><br><b>Fraud detection<br><br><a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
   </tr>
   <tr>
-    <td class="tg-mn4z" colspan="3">Regression</td>
+    <td><img src="images/image-style-transfer.png" alt="style transfer chart" align="middle"><br><br><b>Heart disease detection<br><br><a href="samples/csharp/getting-started/BinaryClassification_HeartDiseasePrediction">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-c3ow"><img src="images/price-prediction.png" alt="Price Prediction chart" align="middle"><br><br>Price Prediction<br><br><a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-c3ow"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart" align="middle"><br><br>Sales ForeCasting<br><br><a href="samples/csharp/end-to-end-apps/Regression-SalesForecast">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><br><br></td>
-    <td class="tg-c3ow"><img src="images/demand-prediction.png" alt="Demand Prediction chart" align="middle"><br><br>Demand Prediction<br><br><a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/Regression_BikeSharingDemand">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
+    <td colspan="3">Multi-class classification</td>
   </tr>
   <tr>
-    <td class="tg-34fe" colspan="3">Clustering</td>
+    <td><img src="images/issue-labeler.png" alt="Binary classification chart" align="middle"><br><br><b>Issues classification  <br><br> <a href="samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></b></td>
+    <td><img src="images/flower-classification.png" alt="Movie Recommender chart" align="middle"><br><br><b>Iris flowers classification <br><br><a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td><img src="images/handwriting-classification.png" alt="Movie Recommender chart" align="middle"><br><br><b>MNIST<br><br><a href="samples/csharp/getting-started/MulticlassClassification_mnist">C#</a> &nbsp; &nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
   </tr>
   <tr>
-    <td class="tg-uys7"><img src="images/price-prediction.png" alt="Customer Segmentation chart" align="middle"><br><br>Customer Segmentation<br><br><a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_CustomerSegmentation">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-uys7"><img src="images/flower-classification.png" alt="IRIS Flowers chart" align="middle"><br><br>IRIS Flowers clustering<br><br><a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-uys7">image<br><br>TBD<br><br>C#   F#</td>
+    <td colspan="3">Recommendation</td>
   </tr>
   <tr>
-    <td class="tg-34fe" colspan="3">Deep Learning</td>
+    <td><img src="images/product-recommendation.png" alt="Binary classification chart" align="middle"><br><br><b>Product Recommendation<br><br><a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></h4></td>
+    <td><img src="images/movie-recommendation.png" alt="Movie Recommender chart" align="middle"><br><br><b>Movie Recommender<b><br><br><a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td><img src="images/movie-recommendation.png" alt="Movie Recommender chart" align="middle"><br><br><b>Movie Recommender(End-to-end app)<br><br><a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></b></td>
   </tr>
   <tr>
-    <td class="tg-uys7"><img src="images/image-classification.png" alt="Image Classification chart" align="middle"><br><br>Image Classification<br>    (scoring)<br><br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-uys7"><img src="images/image-classification.png" alt="Image Classification chart" align="middle"><br><br>Image Classification<br>    (Transfer Learning)<br><br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-uys7"><img src="images/object-detection.png" alt="Object Detection chart" align="middle"><br><br>Object Detection<br><br><a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
+    <td colspan="3">Regression</td>
   </tr>
   <tr>
-    <td class="tg-c3ow"><img src="images/image-style-transfer.png" alt="style transfer chart" align="middle"><br><br><br>Style Transfer<br><br>Coming soon</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td><img src="images/price-prediction.png" alt="Price Prediction chart" align="middle"><br><br><b>Price Prediction<br><br><a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart" align="middle"><br><br><b>Sales ForeCasting<br><br><a href="samples/csharp/end-to-end-apps/Regression-SalesForecast">C#</a>  &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><br><br></b></td>
+    <td><img src="images/demand-prediction.png" alt="Demand Prediction chart" align="middle"><br><br><b>Demand Prediction<br><br><a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/Regression_BikeSharingDemand">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
   </tr>
   <tr>
-    <td class="tg-34fe" colspan="3">Anomaly Detection</td>
+    <td colspan="3">Clustering</td>
   </tr>
   <tr>
-    <td class="tg-c3ow"><img src="images/spike-detection.png" alt="spike detection chart" align="middle"><br><br>Shampoo Sales Spike Detection<br><br><a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon">
-      <a href="samples/csharp/end-to-end-apps/SpikeDetection-ShampooSales-WinForms">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></td>
-    <td class="tg-c3ow"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart" align="middle"><br><br>Power Anomaly Detection<br><br><a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
-    <td class="tg-0pky"></td>
+    <td "tg-uys7"><img src="images/customer-segmentation.png" alt="Customer Segmentation chart" align="middle"><br><br><b>Customer Segmentation<br><br><a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_CustomerSegmentation">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td "tg-uys7"><img src="images/clustering.png" alt="IRIS Flowers chart" align="middle"><br><br><b>IRIS Flowers clustering<br><br><a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
   </tr>
   <tr>
-    <td class="tg-34fe" colspan="3">Ranking</td>
+    <td colspan="3">Deep Learning</td>
   </tr>
   <tr>
-    <td class="tg-0pky">Coming soon</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td "tg-uys7"><img src="images/image-classification.png" alt="Image Classification chart" align="middle"><br><br><b>Image Classification<br>    (scoring)<br><br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td "tg-uys7"><img src="images/image-classification.png" alt="Image Classification chart" align="middle"><br><br><b>Image Classification<br>    (Transfer Learning)<br><br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td "tg-uys7"><img src="images/object-detection.png" alt="Object Detection chart" align="middle"><br><br><b>Object Detection<br><br><a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
   </tr>
   <tr>
-    <td class="tg-34fe" colspan="3">Cross Cutting</td>
+    <td><img src="images/image-style-transfer.png" alt="style transfer chart" align="middle"><br><br><b>Style Transfer</b><br><br>Coming soon</td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-  <td class="tg-0pky"><img src="images/web.png" alt="web image" align="middle"><br><br>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></td>
-    <td class="tg-0pky"><br>Using Database Sample<br>Coming soon</td>
-    <td class="tg-0pky"><br>Using very large sets<br>Coming soon</td>
+    <td colspan="3">Anomaly Detection</td>
+  </tr>
+  <tr>
+    <td><img src="images/spike-detection.png" alt="spike detection chart" align="middle"><br><br><b>Shampoo Sales Spike Detection<br><br><a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"> &nbsp;
+      <a href="samples/csharp/end-to-end-apps/SpikeDetection-ShampooSales-WinForms">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
+    <td><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart" align="middle"><br><br><b>Power Anomaly Detection<br><br><a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td ></td>
+  </tr>
+  <tr>
+    <td colspan="3">Ranking</td>
+  </tr>
+  <tr>
+  <td><img src="images/" alt="TBD chart" align="middle"><br><br><b>Coming soon <br><br></td>   
+  </tr>
+  <tr>
+    <td colspan="3">Cross Cutting</td>
+  </tr>
+  <tr>
+  <td ><img src="images/web.png" alt="web image" align="middle"><br><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
+    <td ><br><b>Using Database Sample<b><br>Coming soon</td>
+    <td ><br><b>Using very large sets<b><br>Coming soon</td>
   </tr>
 </table>
 
