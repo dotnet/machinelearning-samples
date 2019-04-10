@@ -88,7 +88,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td colspan="3">Ranking</td>
   </tr>
   <tr>
-  <td><img src="images/generic-icon.png" alt="TBD chart"><br><b>Coming soon <br><br></td>   
+  <td><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Coming soon <br><br></td>   
   </tr>
   <tr>
     <td colspan="3">Cross Cutting</td>
@@ -96,8 +96,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
   <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
   
-  <td align="middle"><img src="images/generic-icon.png" alt="TBD chart"><br><b>Using Database Sample</b><br>Coming soon</td>
-  <td align="middle"><img src="images/generic-icon.png" alt="TBD chart"><br><b>Using very large sets</b><br>Coming soon</td>
+  <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using Database Sample</b><br>Coming soon</td>
+  <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using very large sets</b><br>Coming soon</td>
   </tr>
 </table>
 
