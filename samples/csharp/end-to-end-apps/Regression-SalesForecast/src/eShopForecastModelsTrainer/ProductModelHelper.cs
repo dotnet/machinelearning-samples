@@ -56,8 +56,7 @@ namespace eShopForecastModelsTrainer
             var model = trainingPipeline.Fit(trainingDataView);
 
             // Save the model for later comsumption from end-user apps
-            using (var file = File.OpenWrite(outputModelPath))
-                mlContext.Model.Save(model, trainingDataView.Schema, file);
+            mlContext.Model.Save(model, trainingDataView.Schema, outputModelPath);
         }
 
         /// <summary>

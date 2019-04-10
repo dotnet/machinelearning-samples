@@ -57,7 +57,7 @@ namespace SentimentAnalysisConsoleApp
             //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", dataView, dataProcessPipeline, 1);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features");
+            var trainer = mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             //Measure training time
@@ -80,9 +80,7 @@ namespace SentimentAnalysisConsoleApp
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel,trainingData.Schema, fs);
+            mlContext.Model.Save(trainedModel, trainingData.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
@@ -94,11 +92,7 @@ namespace SentimentAnalysisConsoleApp
         {         
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
 
-            ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
-            }
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);                      
 
             // Create prediction engine related to the loaded trained model
             var predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);

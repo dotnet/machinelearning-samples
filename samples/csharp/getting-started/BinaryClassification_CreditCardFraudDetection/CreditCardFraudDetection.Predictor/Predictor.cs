@@ -25,12 +25,7 @@ namespace CreditCardFraudDetection.Predictor
 
             Console.WriteLine($"Predictions from saved model:");
 
-            ITransformer model;
-            DataViewSchema inputSchema;
-            using (var file = File.OpenRead(_modelfile))
-            {
-                model = mlContext.Model.Load(file,out inputSchema);
-            }
+            ITransformer model = mlContext.Model.Load(_modelfile, out var inputSchema);
 
             var predictionEngine = mlContext.Model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(model);
             Console.WriteLine($"\n \n Test {numberOfPredictions} transactions, from the test datasource, that should be predicted as fraud (true):");

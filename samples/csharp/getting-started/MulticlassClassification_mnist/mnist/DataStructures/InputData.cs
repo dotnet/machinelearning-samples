@@ -10,5 +10,8 @@ namespace mnist.DataStructures
         [ColumnName("PixelValues")]
         [VectorType(64)]
         public float[] PixelValues;
+
+        [LoadColumn(64)]
+        public float Number;
     }
 }

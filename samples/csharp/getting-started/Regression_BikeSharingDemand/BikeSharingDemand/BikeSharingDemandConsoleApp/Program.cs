@@ -74,9 +74,7 @@ namespace BikeSharingDemand
                 //Save the model file that can be used by any application
                 string modelRelativeLocation = $"{ModelsLocation}/{trainer.name}Model.zip";
                 string modelPath = GetAbsolutePath(modelRelativeLocation);
-                using (var fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                    mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
-
+                mlContext.Model.Save(trainedModel, trainingDataView.Schema, modelPath);
                 Console.WriteLine("The model is saved to {0}", modelPath);
             }
 
@@ -87,14 +85,9 @@ namespace BikeSharingDemand
             foreach (var learner in regressionLearners)
             {
                 //Load current model from .ZIP file
-                ITransformer trainedModel;
-                DataViewSchema inputSchema;
                 string modelRelativeLocation = $"{ModelsLocation}/{learner.name}Model.zip";
                 string modelPath = GetAbsolutePath(modelRelativeLocation);
-                using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    trainedModel = mlContext.Model.Load(stream, out inputSchema);
-                }
+                ITransformer trainedModel = mlContext.Model.Load(modelPath, out var modelInputSchema);
 
                 // Create prediction engine related to the loaded trained model
                 var predEngine = mlContext.Model.CreatePredictionEngine<DemandObservation, DemandPrediction>(trainedModel);
