@@ -37,27 +37,26 @@ namespace eShopForecastModelsTrainer
 
             var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
-            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
+            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: "Label", featureColumnName: "Features");
 
             var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
                 nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(ProductData.productId)))
-                .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, "NumFeatures", "CatFeatures"))
-                .Append(mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(ProductData.next)))
+                .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
+                .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(ProductData.next)))
                 .Append(trainer);
             
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn: DefaultColumnNames.Label);
+            var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // Train the model
             var model = trainingPipeline.Fit(trainingDataView);
 
             // Save the model for later comsumption from end-user apps
-            using (var file = File.OpenWrite(outputModelPath))
-                model.SaveTo(mlContext, file);
+            mlContext.Model.Save(model, trainingDataView.Schema, outputModelPath);
         }
 
         /// <summary>
@@ -74,10 +73,10 @@ namespace eShopForecastModelsTrainer
             ITransformer trainedModel;
             using (var stream = File.OpenRead(outputModelPath))
             {
-                trainedModel = mlContext.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
             }
 
-            var predictionEngine = trainedModel.CreatePredictionEngine<ProductData, ProductUnitPrediction>(mlContext);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitPrediction>(trainedModel);
 
             Console.WriteLine("** Testing Product 1 **");
 

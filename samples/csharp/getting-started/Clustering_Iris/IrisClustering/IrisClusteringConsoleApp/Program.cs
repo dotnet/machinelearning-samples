@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-
 using Microsoft.ML;
 using Common;
 using Clustering_Iris.DataStructures;
 using Microsoft.ML.Data;
-using Microsoft.Data.DataView;
 
 namespace Clustering_Iris
 {
@@ -34,7 +32,7 @@ namespace Clustering_Iris
             IDataView fullData = mlContext.Data.LoadFromTextFile(path: DataPath,
                                                 columns:new[]
                                                             {
-                                                                new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                new TextLoader.Column("Label", DataKind.Single, 0),
                                                                 new TextLoader.Column(nameof(IrisData.SepalLength), DataKind.Single, 1),
                                                                 new TextLoader.Column(nameof(IrisData.SepalWidth), DataKind.Single, 2),
                                                                 new TextLoader.Column(nameof(IrisData.PetalLength), DataKind.Single, 3),
@@ -44,31 +42,30 @@ namespace Clustering_Iris
                                                 separatorChar:'\t');
 
             //Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
-            TrainCatalogBase.TrainTestData trainTestData = mlContext.Clustering.TrainTestSplit(fullData, testFraction: 0.2);
+            DataOperationsCatalog.TrainTestData trainTestData = mlContext.Data.TrainTestSplit(fullData, testFraction: 0.2);
             trainingDataView = trainTestData.TrainSet;
             testingDataView = trainTestData.TestSet;
 
             //STEP 2: Process data transformations in pipeline
-            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth), nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth));
+            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth), nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth));
 
             // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
             Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 10);
-            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 10);
+            Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 10);
 
             // STEP 3: Create and train the model     
-            var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: DefaultColumnNames.Features, clustersCount: 3);
+            var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
             var trainingPipeline = dataProcessPipeline.Append(trainer);
             var trainedModel = trainingPipeline.Fit(trainingDataView);
 
             // STEP4: Evaluate accuracy of the model
             IDataView predictions = trainedModel.Transform(testingDataView);
-            var metrics = mlContext.Clustering.Evaluate(predictions, score: DefaultColumnNames.Score, features: DefaultColumnNames.Features);
+            var metrics = mlContext.Clustering.Evaluate(predictions, scoreColumnName: "Score", featureColumnName: "Features");
 
             ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
             // STEP5: Save/persist the model as a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("=============== End of training process ===============");
 
@@ -83,18 +80,15 @@ namespace Clustering_Iris
                 PetalWidth = 5.1f,
             };
             
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                ITransformer model = mlContext.Model.Load(stream);
-                // Create prediction engine related to the loaded trained model
-                var predEngine = model.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
+            ITransformer model = mlContext.Model.Load(ModelPath, out var modelInputSchema);
+            // Create prediction engine related to the loaded trained model
+            var predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(model);
 
-                //Score
-                var resultprediction = predEngine.Predict(sampleIrisData);
+            //Score
+            var resultprediction = predEngine.Predict(sampleIrisData);
 
-                Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
-            }
-
+            Console.WriteLine($"Cluster assigned for setosa flowers:" + resultprediction.SelectedClusterId);
+          
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();           
         }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.ML;
 using Microsoft.Extensions.ObjectPool;
 using System.IO;
-using Microsoft.Data.DataView;
 
 namespace Scalable.Model.Engine
-{   
+{
     public class MLModelEngine<TData, TPrediction> 
                     where TData : class
                     where TPrediction : class, new()
@@ -33,7 +32,7 @@ namespace Scalable.Model.Engine
             //Load the ProductSalesForecast model from the .ZIP file
             using (var fileStream = File.OpenRead(modelFilePathName))
             {
-                _mlModel = _mlContext.Model.Load(fileStream);
+                _mlModel = _mlContext.Model.Load(fileStream, out var modelInputSchema);
             }
 
             _maxObjectsRetained = maxObjectsRetained;

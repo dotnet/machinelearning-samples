@@ -44,14 +44,10 @@ namespace movierecommender.Controllers
             // 1. Create the ML.NET environment and load the already trained model
             MLContext mlContext = new MLContext();
             
-            ITransformer trainedModel;
-            using (FileStream stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream);
-            }
-
+            ITransformer trainedModel = mlContext.Model.Load(_movieService.GetModelPath(), out var modelInputSchema);
+            
             //2. Create a prediction function
-            var predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(trainedModel);
 
             List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
             var MovieRatings = _profileService.GetProfileWatchedMovies(id);

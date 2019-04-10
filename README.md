@@ -119,7 +119,10 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
       <h4>Spike Detection-Shampoo Sales &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon">
+      <a href="samples/csharp/end-to-end-apps/SpikeDetection-ShampooSales-WinForms">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>      
+     <h4>Spike Detection-PowerMeter Readings &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
@@ -145,11 +148,39 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <td>
       <h4>TensorFlow(ML.NET Scoring) &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
       <h4>TensorFlow(ML.NET Estimator) &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Object detection Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
-      <h4>Style Transfer  Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>
-      <h4>ONNX with ML.NET - Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>Object detection with ONNX model &nbsp;&nbsp;&nbsp;<a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+      <h4>Style Transfer  Coming soon &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>      
   </td>
  </tr> 
+ </table>
+ 
+**Real Time ML.Net Samples:** The below samples are created for real time scenarios like Scalable WebAPI services, Datasets stored in Database etc.
+
+ <table>
+ <tr>
+   <td width="25%">
+      <h3><b>Sample Name</b></h3>
+  </td>
+  <td>
+      <h3 width="35%"><b>Description</b></h3>
+  </td>
+  <td>
+      <h3><b>ML Scenarios</b></h3>
+  </td>
+ </tr>
+ <tr>
+   <td width="25%">
+      <h3>Scalable WebAPI</h3>
+      <img src="images/web.png" alt="Binary classification chart" align="middle">
+  </td>
+  <td width="35%">
+   This sample explains how to optimize your code when running an ML.NET model on an ASP.NET Core WebAPI service
+  </td>
+    <td>
+      <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
+  </td>
+ </tr>
  </table>
 
 **Real Time ML.Net Samples:** The below samples are created for real time scenarios like Scalable WebAPI services, Datasets stored in Database etc.
