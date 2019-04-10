@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|v0.11| Dynamic API | Needs update to v0.8 | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
+|v1.0.0-preview| Dynamic API | up-to-date | End-End app | .csv | Movie Recommendation | Recommendation | Field Aware Factorization Machines |
 
 ![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender/movierecommender/wwwroot/images/movierecommender.gif)
 
@@ -60,7 +60,7 @@ The trained model is consumed in the [Controller](https://github.com/dotnet/mach
 
 ```CSharp
    //2. Create a prediction function
-   var predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
+   var predictionEngine = mlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(trainedModel);
             
    List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
    var MovieRatings = _profileService.GetProfileWatchedMovies(id);

@@ -2,11 +2,8 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.ImageAnalytics;
 using ImageClassification.ImageData;
 using static ImageClassification.Model.ConsoleHelpers;
-using Microsoft.ML.Core.Data;
 
 namespace ImageClassification.Model
 {
@@ -51,16 +48,19 @@ namespace ImageClassification.Model
 
 
 
-            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: false);
+            var data = mlContext.Data.LoadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: false);
 
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
-                            .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
-                            .Append(mlContext.Transforms.Resize(outputColumnName:ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
-                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransformer.ColumnInfo(name: "input",inputColumnName: ImageReal,  interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
-                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:featurizerModelLocation, outputColumnNames: new[] { "softmax2_pre_activation" },inputColumnNames: new[] { "input" }))
-                            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression(labelColumn:LabelTokey, featureColumn:"softmax2_pre_activation"))
-                            .Append(mlContext.Transforms.Conversion.MapKeyToValue((PredictedLabelValue,DefaultColumnNames.PredictedLabel)));
+            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:"Label")
+                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "input", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath)))
+                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "input", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "input"))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", interleavePixelColors: ImageNetSettings.channelsLast, offsetImage: ImageNetSettings.mean))
+                            .Append(mlContext.Model.LoadTensorFlowModel(featurizerModelLocation).
+                                 ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2_pre_activation" }, inputColumnNames: new[] { "input" }, addBatchDimensionInput: true))
+                            .Append(mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName:LabelTokey, featureColumnName:"softmax2_pre_activation"))
+                            .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue,"PredictedLabel"))
+                            .AppendCacheCheckpoint(mlContext);
 
+           
             // Train the model
             ConsoleWriteHeader("Training classification model");
             ITransformer model = pipeline.Fit(data);
@@ -70,21 +70,21 @@ namespace ImageClassification.Model
             var trainData = model.Transform(data);
             var loadedModelOutputColumnNames = trainData.Schema
                 .Where(col => !col.IsHidden).Select(col => col.Name);
-            var trainData2 = mlContext.CreateEnumerable<ImageNetPipeline>(trainData, false, true).ToList();
+            var trainData2 = mlContext.Data.CreateEnumerable<ImageNetPipeline>(trainData, false, true).ToList();
             trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
             // Get some performance metric on the model using training data            
-            var classificationContext = new MulticlassClassificationCatalog(mlContext);
+            var classificationContext = mlContext.MulticlassClassification;
             ConsoleWriteHeader("Classification metrics");
-            var metrics = classificationContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
+            var metrics = classificationContext.Evaluate(trainData, labelColumnName: LabelTokey, predictedLabelColumnName: "PredictedLabel");
             Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
             Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
 
             // Save the model to assets/outputs
             ConsoleWriteHeader("Save model to local file");
             ModelHelpers.DeleteAssets(outputModelLocation);
-            using (var f = new FileStream(outputModelLocation, FileMode.Create))
-                mlContext.Model.Save(model, f);
+
+            mlContext.Model.Save(model, trainData.Schema, outputModelLocation);
 
             Console.WriteLine($"Model saved: {outputModelLocation}");
         }

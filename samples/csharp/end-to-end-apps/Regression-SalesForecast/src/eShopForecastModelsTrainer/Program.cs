@@ -27,7 +27,8 @@ namespace eShopForecastModelsTrainer
 
                 CountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
                 CountryModelHelper.TestPrediction(mlContext);
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 ConsoleWriteException(ex.Message);
             }

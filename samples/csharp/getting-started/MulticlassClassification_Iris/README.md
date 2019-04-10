@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+| v1.0.0-preview           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -56,14 +56,21 @@ var trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(TrainDataPath, 
 var testDataView = mlContext.Data.LoadFromTextFile<IrisData>(TestDataPath, hasHeader: true);
 
 // STEP 2: Common data process configuration with pipeline data transformations
-var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", "SepalLength",
-                                                                       "SepalWidth",
-                                                                       "PetalLength",
-                                                                       "PetalWidth" );
+var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "KeyColumn", inputColumnName: nameof(IrisData.Label))
+        .Append(mlContext.Transforms.Concatenate("Features", nameof(IrisData.SepalLength),
+                                                            nameof(IrisData.SepalWidth),
+                                                            nameof(IrisData.PetalLength),
+                                                            nameof(IrisData.PetalWidth))
+                                                            .AppendCacheCheckpoint(mlContext)); 
+                                                            // Use in-memory cache for small/medium datasets to lower training time. 
+                                                            // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
+
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder                         
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
-            var trainingPipeline = dataProcessPipeline.Append(trainer);
+var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "KeyColumn", featureColumnName: "Features")
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: nameof(IrisData.Label) , inputColumnName: "KeyColumn"));
+
+var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
 ### 2. Train model

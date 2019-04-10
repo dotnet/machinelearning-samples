@@ -1,13 +1,14 @@
-# SpikeDetection of Shampoo sales
+# Spike Detection and Change Point Detection of Shampoo sales
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.12         | Dynamic API | Up-to-date | Console app | .csv files | SpikeDetection of Shampoo sales | Anomaly Detection | IID Spike Detection |
+| v1.0.0-preview         | Dynamic API | Up-to-date | Console app | .csv files | Shampoo  sales Spike detection| Time Series - Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
-In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect spikes in shampoo sales. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
+In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect **spikes** and **Change points** in shampoo sales. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
 
 ## Problem
 We are having data on shampoo sales over 3 years period in which the sales are high and normal. we identify sudden spikes in shampoo sales so that we can use this spiked data to analyze trends in sales of shampoo. 
+We find the change point from 
 
 To solve this problem, we will build an ML model that takes as inputs: 
 * Year-Month
@@ -18,16 +19,33 @@ and predicts the spikes in shampoo sales.
 ## Dataset
 The dataset is available at this [DataMart](https://datamarket.com/data/set/22r0/sales-of-shampoo-over-a-three-year-period#!ds=22r0&display=line)
 
+The algorithms **IID Spike Detection** or **IID Change point Detection** are suited for dataset that is **independent and identically distributed**. In probability theory and statistics, a collection of random variables is independent and identically distributed(IID) if each random variable has the same probability distribution as the others and all are mutually independent. More information is available on wikipedia [here](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables)
+
 ## ML task - Time Series Anomaly Detection
-Anomaly detection is the process of detecting outliers in the data. Time Series Anomaly Detection is a new module that's a bit different from the other anomaly detection models. The Time Series Anomaly Detection module is designed for time series data. It's intended to use to analyze trends over time. The algorithm identifies potentially identifies anomalous trends in the time series data. It flags deviations from the trend's direction or magnitude.
+Anomaly detection is the process of detecting outliers in the data.Anomaly detection in time-series refers to detecting time stamps, or points on a given input time-series, at which the time-series behaves differently from what was expected. These deviations are typically indicative of some events of interest in the problem domain: a cyber-attack on user accounts, power outage, bursting RPS on a server, memory leak, etc.
+
+On the other hand, an anomalous behavior can be either persistent over time or just a temporary burst.There are 2 types of anomalies in this context: **spikes** which are attributed to temporary bursts and **change points** which indicate the beginning of persistent changes in the system. 
+
+## Spike Detection
+Spikes are attributed to sudden yet temporary bursts in the values of the input time-series.  In practice, they can happen due to a variety of reasons depending on the application: outages, cyber-attacks, viral web content, etc. Therefore, in many applications, it is important to detect spikes.
+
+![spikeDetection](./docs/images/SpikeDetection.png)
+
+## Change point Detection
+​Change points mark the beginning of more persistent deviations in the behavior of time-series from what was expected.In practice, these type of changes in the behavior of time-series are usually triggered by some fundamental changes in the dynamics of the system. For example, in system telemetry monitoring, an introduction of a memory leak can cause a (slow) trend in the time-series of memory usage after certain point in time. 
+
+![ChangepointDetection](./docs/images/ChangePointDetection.png)
 
 ## Solution
-The data consists of both 'normal' and 'abnormal' categories of prices. To solve this problem, first we will build an ML model by training on 'normal' category of data and generate alert on abnormal data based on prediction score. the alert data is called as anmolie.
+To solve this problem, you build and train an ML model on existing training data, evaluate how good it is (analyzing the obtained metrics), and lastly you can consume/test the model to predict the demand given input data variables.
 
-The most notable difference compared to supervised classification is that the training data consists of only a single category or class corresponding to normal data. Any labels present in the data are ignored during training. This is in contrast with supervised training where data from both positive and negative classes will be used. The scores generated by the anomaly detectors indicate a measure of distance from the 'normal' category of data. 
+![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
+However, in this example we will build and train the model to demonstrate the Time Series anomaly detection library since it detects on actual data and does not have an evaluate method.  We will then review the detected anomalies in the Prediction output column.
 
-### 1. Build model's pipeline
+The process of building and training models is the same for spike detection and change point detection; the main difference is the algorithm that you use (DetectIidSpike vs. DetectIidChangePoint).
+
+### 1. Build model
 
 Building a model includes: Building a model includes: 
 
@@ -98,4 +116,20 @@ foreach (var p in predictions)
     //0       264.50  0.47
 ```
 
+### Change Point Detection console output
 
+```
+Alert   Score   P-Value Martingale value
+0       266.00  0.50    0.00
+0       145.90  0.00    2.33
+0       183.10  0.41    2.80
+0       119.30  0.13    9.16
+0       180.30  0.47    9.77
+0       168.50  0.47    10.41
+0       231.80  0.19    24.46
+0       224.50  0.27    42.38
+1       192.80  0.48    44.23  <-- alert is on, predicted changepoint
+0       122.90  0.13    145.25
+0       336.50  0.00    0.01
+0       185.90  0.48    0.01
+```

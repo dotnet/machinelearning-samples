@@ -47,20 +47,22 @@ namespace MulticlassClassification_Iris
             
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength),
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "KeyColumn", inputColumnName: nameof(IrisData.Label))
+                .Append(mlContext.Transforms.Concatenate("Features", nameof(IrisData.SepalLength),
                                                                                    nameof(IrisData.SepalWidth),
                                                                                    nameof(IrisData.PetalLength),
                                                                                    nameof(IrisData.PetalWidth))
-                                                                       .AppendCacheCheckpoint(mlContext); 
+                                                                       .AppendCacheCheckpoint(mlContext)); 
                                                                        // Use in-memory cache for small/medium datasets to lower training time. 
                                                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
+            var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "KeyColumn", featureColumnName: "Features")
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: nameof(IrisData.Label) , inputColumnName: "KeyColumn"));
+
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
-
             //Measure training time
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -76,30 +78,24 @@ namespace MulticlassClassification_Iris
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, DefaultColumnNames.Label, DefaultColumnNames.Score);
+            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score");
 
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
-
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
         }
 
         private static void TestSomePredictions(MLContext mlContext)
         {
             //Test Classification Predictions with some hard-coded samples 
-
-            ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream);
-            }
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
-            var predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
+            var predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(trainedModel);
 
+            Console.WriteLine("=====Predicting using model====");
             //Score sample 1
             var resultprediction1 = predEngine.Predict(SampleIrisData.Iris1);
 
