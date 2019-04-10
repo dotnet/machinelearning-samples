@@ -81,16 +81,6 @@ namespace SpamDetectionConsoleApp
             Console.ReadLine();
         }
 
-        public class MyInput
-        {
-            public string Label { get; set; }
-        }
-
-        public class MyOutput
-        {
-            public bool Label { get; set; }
-        }
-
         public static void ClassifyMessage(PredictionEngine<SpamInput, SpamPrediction> predictor, string message)
         {
             var input = new SpamInput { Message = message };
