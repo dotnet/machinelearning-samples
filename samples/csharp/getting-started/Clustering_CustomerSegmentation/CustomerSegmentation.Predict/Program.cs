@@ -15,7 +15,7 @@ namespace CustomerSegmentation
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
-            var modelZipFilePath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
+            var modelPath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
             var plotSvg = Path.Combine(assetsPath, "outputs", "customerSegmentation.svg");
             var plotCsv = Path.Combine(assetsPath, "outputs", "customerSegmentation.csv");
 
@@ -25,7 +25,7 @@ namespace CustomerSegmentation
 
                 //Create the clusters: Create data files and plot a chart
                 var clusteringModelScorer = new ClusteringModelScorer(mlContext, pivotCsv, plotSvg, plotCsv);
-                clusteringModelScorer.LoadModelFromZipFile(modelZipFilePath);
+                clusteringModelScorer.LoadModel(modelPath);
 
                 clusteringModelScorer.CreateCustomerClusters();
             } catch (Exception ex)

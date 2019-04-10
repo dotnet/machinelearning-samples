@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.12         | Dynamic API | Up-to-date | Console app | .csv files | SpikeDetection of Shampoo sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
+| v1.0.0-preview         | Dynamic API | Up-to-date | Console app | .csv files | Shampoo  sales Spike detection| Time Series - Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect **spikes** and **Change points** in shampoo sales. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
 
@@ -31,6 +31,11 @@ Spikes are attributed to sudden yet temporary bursts in the values of the input 
 
 ![spikeDetection](./docs/images/SpikeDetection.png)
 
+## Change point Detection
+​Change points mark the beginning of more persistent deviations in the behavior of time-series from what was expected.In practice, these type of changes in the behavior of time-series are usually triggered by some fundamental changes in the dynamics of the system. For example, in system telemetry monitoring, an introduction of a memory leak can cause a (slow) trend in the time-series of memory usage after certain point in time. 
+
+![ChangepointDetection](./docs/images/ChangePointDetection.png)
+
 ## Solution
 To solve this problem, you build and train an ML model on existing training data, evaluate how good it is (analyzing the obtained metrics), and lastly you can consume/test the model to predict the demand given input data variables.
 
@@ -38,8 +43,9 @@ To solve this problem, you build and train an ML model on existing training data
 
 However, in this example we will build and train the model to demonstrate the Time Series anomaly detection library since it detects on actual data and does not have an evaluate method.  We will then review the detected anomalies in the Prediction output column.
 
+The process of building and training models is the same for spike detection and change point detection; the main difference is the algorithm that you use (DetectIidSpike vs. DetectIidChangePoint).
 
-### 1. Build model's pipeline
+### 1. Build model
 
 Building a model includes: Building a model includes: 
 
@@ -109,22 +115,8 @@ foreach (var p in predictions)
     //1       421.60  0.00 <-- alert is on, predicted spike
     //0       264.50  0.47
 ```
-## Change point Detection
-​Change points mark the beginning of more persistent deviations in the behavior of time-series from what was expected.In practice, these type of changes in the behavior of time-series are usually triggered by some fundamental changes in the dynamics of the system. For example, in system telemetry monitoring, an introduction of a memory leak can cause a (slow) trend in the time-series of memory usage after certain point in time. 
 
-![ChangepointDetection](./docs/images/ChangePointDetection.png)
-
-## Build Model pipeLine 
-Create an Estimator by choosing a trainer/learning algorithm (such as DetectIidChangePoint) to train the model with.
-
-```
-//STEP 2: Set the training algorithm    
-            var trainingPipeLine = mlcontext.Transforms.DetectIidChangePoint(outputColumnName: nameof(ShampooSalesPrediction.Prediction), inputColumnName: nameof(ShampooSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
-                21  `
-```
-Training the model and consuming model is same as Spike Detection
-
-The output of sample looks like below.
+### Change Point Detection console output
 
 ```
 Alert   Score   P-Value Martingale value

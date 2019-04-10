@@ -20,7 +20,7 @@ namespace Scalable.Model.Engine
             // Measuring CreatePredictionengine() time
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            var predictionEngine = _model.CreatePredictionEngine<TData, TPrediction>(_mlContext);
+            var predictionEngine = _mlContext.Model.CreatePredictionEngine<TData, TPrediction>(_model);
 
             watch.Stop();
             long elapsedMs = watch.ElapsedMilliseconds;
