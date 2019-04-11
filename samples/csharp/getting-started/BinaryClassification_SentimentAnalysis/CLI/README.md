@@ -14,7 +14,7 @@ The ML.NET CLI is part of ML.NET and its main purpose is to "democratize" ML.NET
 From command-prompt (either PowerShell, Bash or CMD) move to the 'Sentiment Analysis CLI" folder:
 
 ```console
-cd <YOUR_PATH>/samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/CLI
+> cd <YOUR_PATH>/samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/CLI
 ```
 
 Now run the following ML.NET CLI command:
