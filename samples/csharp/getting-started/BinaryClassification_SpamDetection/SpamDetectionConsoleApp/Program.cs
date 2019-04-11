@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Composition;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using Common;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
 using SpamDetectionConsoleApp.MLDataStructures;
 
 namespace SpamDetectionConsoleApp
@@ -79,16 +76,6 @@ namespace SpamDetectionConsoleApp
 
             Console.WriteLine("=============== End of process, hit any key to finish =============== ");
             Console.ReadLine();
-        }
-
-        public class MyInput
-        {
-            public string Label { get; set; }
-        }
-
-        public class MyOutput
-        {
-            public bool Label { get; set; }
         }
 
         public static void ClassifyMessage(PredictionEngine<SpamInput, SpamPrediction> predictor, string message)
