@@ -21,7 +21,7 @@ That command generates the following assets:
 - C# code to run/score that generated model (To make predictions in your end-user apps with that model).
 - C# code with the training code used to generate that model (Learning purposes).
 
-The first two assets can directly be used in your end-user apps (ASP.NET Core web app, services, desktop app, etc.) to make predictions with that generated ML model.
+The first two assets (.ZIP file model and C# code to run that model) can directly be used in your end-user apps (ASP.NET Core web app, services, desktop app, etc.) to make predictions with that generated ML model.
 
 The third asset, the training code, shows you what ML.NET API code was used by the CLI to train the generated model, so you can investigate what specific trainer/algorithm and hyper-paramenters were selected by the CLI
 
