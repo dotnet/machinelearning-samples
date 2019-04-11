@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="1.0.0-preview" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />

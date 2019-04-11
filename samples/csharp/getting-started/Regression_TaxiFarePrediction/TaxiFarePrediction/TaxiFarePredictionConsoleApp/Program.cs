@@ -7,7 +7,6 @@ using System.Linq;
 
 using Common;
 
-using Microsoft.Data.DataView;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 
@@ -60,27 +59,27 @@ namespace Regression_TaxiFarePrediction
             IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
             //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
-            var cnt = baseTrainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
+            var cnt = baseTrainingDataView.GetColumn<float>(nameof(TaxiTrip.FareAmount)).Count();
             IDataView trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
-            var cnt2 = trainingDataView.GetColumn<float>(mlContext, nameof(TaxiTrip.FareAmount)).Count();
+            var cnt2 = trainingDataView.GetColumn<float>(nameof(TaxiTrip.FareAmount)).Count();
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(TaxiTrip.FareAmount))
+            var dataProcessPipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(TaxiTrip.FareAmount))
                             .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "VendorIdEncoded", inputColumnName: nameof(TaxiTrip.VendorId)))
                             .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "RateCodeEncoded", inputColumnName: nameof(TaxiTrip.RateCode)))
                             .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PaymentTypeEncoded",inputColumnName: nameof(TaxiTrip.PaymentType)))
-                            .Append(mlContext.Transforms.Normalize(outputColumnName: nameof(TaxiTrip.PassengerCount), mode: NormalizerMode.MeanVariance))
-                            .Append(mlContext.Transforms.Normalize(outputColumnName: nameof(TaxiTrip.TripTime), mode: NormalizerMode.MeanVariance))
-                            .Append(mlContext.Transforms.Normalize(outputColumnName: nameof(TaxiTrip.TripDistance), mode: NormalizerMode.MeanVariance))
-                            .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", nameof(TaxiTrip.PassengerCount)
+                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.PassengerCount)))
+                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.TripTime)))
+                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.TripDistance)))
+                            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", nameof(TaxiTrip.PassengerCount)
                             , nameof(TaxiTrip.TripTime), nameof(TaxiTrip.TripDistance)));
 
             // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 5);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, DefaultColumnNames.Features, trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-            var trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
+            var trainer = mlContext.Regression.Trainers.Sdca(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
@@ -92,14 +91,12 @@ namespace Regression_TaxiFarePrediction
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
 
             IDataView predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.Regression.Evaluate(predictions, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+            var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-
-            using (var fs = File.Create(ModelPath))
-                trainedModel.SaveTo(mlContext, fs);
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
@@ -124,14 +121,10 @@ namespace Regression_TaxiFarePrediction
             };
 
             ///
-            ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream);
-            }
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
-            var predEngine = trainedModel.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+            var predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
 
             //Score
             var resultprediction = predEngine.Predict(taxiTripSample);
@@ -150,11 +143,11 @@ namespace Regression_TaxiFarePrediction
             ITransformer trainedModel;
             using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                trainedModel = mlContext.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
             }
 
             // Create prediction engine related to the loaded trained model
-            var predFunction = trainedModel.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(mlContext);
+            var predFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
 
             string chartFileName = "";
             using (var pl = new PLStream())

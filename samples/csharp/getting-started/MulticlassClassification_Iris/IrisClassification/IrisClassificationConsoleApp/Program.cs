@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-
+using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using MulticlassClassification_Iris.DataStructures;
@@ -47,20 +48,22 @@ namespace MulticlassClassification_Iris
             
 
             // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength),
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "KeyColumn", inputColumnName: nameof(IrisData.Label))
+                .Append(mlContext.Transforms.Concatenate("Features", nameof(IrisData.SepalLength),
                                                                                    nameof(IrisData.SepalWidth),
                                                                                    nameof(IrisData.PetalLength),
                                                                                    nameof(IrisData.PetalWidth))
-                                                                       .AppendCacheCheckpoint(mlContext); 
+                                                                       .AppendCacheCheckpoint(mlContext)); 
                                                                        // Use in-memory cache for small/medium datasets to lower training time. 
                                                                        // Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets. 
 
             // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-            var trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName: DefaultColumnNames.Label, featureColumnName: DefaultColumnNames.Features);
+            var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "KeyColumn", featureColumnName: "Features")
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: nameof(IrisData.Label) , inputColumnName: "KeyColumn"));
+
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             // STEP 4: Train the model fitting to the DataSet
-
             //Measure training time
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -76,54 +79,69 @@ namespace MulticlassClassification_Iris
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, DefaultColumnNames.Label, DefaultColumnNames.Score);
+            var metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score");
 
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            using (var fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                mlContext.Model.Save(trainedModel, fs);
-
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
         }
 
         private static void TestSomePredictions(MLContext mlContext)
         {
             //Test Classification Predictions with some hard-coded samples 
-
-            ITransformer trainedModel;
-            using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream);
-            }
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
-            var predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
+            var predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(trainedModel);
 
+            // During prediction we will get Score column with 3 float values.
+            // We need to find way to map each score to original label.
+            // In order to do what we need to get TrainingLabelValues from Score column.
+            // TrainingLabelValues on top of Score column represent original labels for i-th value in Score array.
+            // Let's look how we can convert key value for PredictedLabel to original labels.
+            // We need to read KeyValues for "PredictedLabel" column.
+            VBuffer<float> keys = default;
+            predEngine.OutputSchema["PredictedLabel"].GetKeyValues(ref keys);
+            var labelsArray = keys.DenseValues().ToArray();
+
+            // Since we apply MapValueToKey estimator with default parameters, key values
+            // depends on order of occurence in data file. Which is "Iris-setosa", "Iris-versicolor", "Iris-virginica"
+            // So if we have Score column equal to [0.2, 0.3, 0.5] that's mean what score for
+            // Iris-setosa is 0.2
+            // Iris-versicolor is 0.3
+            // Iris-virginica is 0.5.
+            //Add a dictionary to map the above float values to strings. 
+            Dictionary<float, string> IrisFlowers = new Dictionary<float, string>();
+            IrisFlowers.Add(0, "Setosa");
+            IrisFlowers.Add(1, "versicolor");
+            IrisFlowers.Add(2, "virginica");
+
+            Console.WriteLine("=====Predicting using model====");
             //Score sample 1
             var resultprediction1 = predEngine.Predict(SampleIrisData.Iris1);
 
-            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {resultprediction1.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {resultprediction1.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {resultprediction1.Score[2]:0.####}");
+            Console.WriteLine($"Actual: setosa.     Predicted label and score: {IrisFlowers[labelsArray[0]]}:      {resultprediction1.Score[0]:0.####}");
+            Console.WriteLine($"                                           {IrisFlowers[labelsArray[1]]}:  {resultprediction1.Score[1]:0.####}");
+            Console.WriteLine($"                                           {IrisFlowers[labelsArray[2]]}:   {resultprediction1.Score[2]:0.####}");
             Console.WriteLine();
 
             //Score sample 2
             var resultprediction2 = predEngine.Predict(SampleIrisData.Iris2);
 
-            Console.WriteLine($"Actual: Virginica.     Predicted probability: setosa:      {resultprediction2.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {resultprediction2.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {resultprediction2.Score[2]:0.####}");
+            Console.WriteLine($"Actual: Virginica.     Predicted label and score: {IrisFlowers[labelsArray[0]]}:      {resultprediction2.Score[0]:0.####}");
+            Console.WriteLine($"                                           {IrisFlowers[labelsArray[1]]}:  {resultprediction2.Score[1]:0.####}");
+            Console.WriteLine($"                                           {IrisFlowers[labelsArray[2]]}:   {resultprediction2.Score[2]:0.####}");
             Console.WriteLine();
 
             //Score sample 3
             var resultprediction3 = predEngine.Predict(SampleIrisData.Iris3);
 
-            Console.WriteLine($"Actual: setosa.     Predicted probability: setosa:      {resultprediction3.Score[0]:0.####}");
-            Console.WriteLine($"                                           versicolor:  {resultprediction3.Score[1]:0.####}");
-            Console.WriteLine($"                                           virginica:   {resultprediction3.Score[2]:0.####}");
+            Console.WriteLine($"Actual: Virginica.     Predicted label and score: {IrisFlowers[labelsArray[0]]}:      {resultprediction3.Score[0]:0.####}");
+            Console.WriteLine($"                                           {IrisFlowers[labelsArray[1]]}:  {resultprediction3.Score[1]:0.####}");
+            Console.WriteLine($"                                           {IrisFlowers[labelsArray[2]]}:   {resultprediction3.Score[2]:0.####}");
             Console.WriteLine();
-
         }
 
         public static string GetAbsolutePath(string relativePath)
