@@ -19,6 +19,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
 
 <table align="middle">
   <tr>
+    <td align="middle" colspan="3"><H2>Scenarios</H2></td>
+  </tr>
+  <tr>
     <td align="middle" colspan="3">Binary classification</td>
   </tr>
   <tr>
