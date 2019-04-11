@@ -94,7 +94,7 @@ With ML.NET CLI and AutoML by simply providing your dataset these tools will aut
   <tr>
     <td><b>Binary Classification</b></td>
     <td>
-    <a href="samples/csharp/getting-started/TBD-Sample/CLI">CLI Sample</a><br>
+    <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/CLI" >CLI Sample</a><br>
     <a href="samples/csharp/getting-started/TBD-Sample/AutoML">AutoML C# sample</a>
     </td>
   </tr>
