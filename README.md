@@ -154,7 +154,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr> 
  </table>
  
-**Real Time ML.Net Samples:** The below samples are created for real time scenarios like Scalable WebAPI services, Datasets stored in Database etc.
+**Cross Cutting ML.Net Samples:** The below samples are created for cross cutting scenarios like Scalable WebAPI services, Datasets stored in Database etc.
 
  <table>
  <tr>

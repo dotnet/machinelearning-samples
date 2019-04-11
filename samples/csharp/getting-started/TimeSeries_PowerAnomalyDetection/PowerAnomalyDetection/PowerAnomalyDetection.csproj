@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="MLModels\" />
   </ItemGroup>
 
 </Project>
