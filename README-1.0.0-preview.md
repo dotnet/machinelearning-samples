@@ -19,9 +19,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
 
 <table height=100% width=100%>
 <td align=center valign=center>
-(add your table here)
-</td>
-</table>
+
 
 <table align="middle" width=100%>
   <tr>
@@ -93,6 +91,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using Database Sample</b><br>Coming soon</td>
   <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using very large sets</b><br>Coming soon</td>
   </tr>
+</table>
+
+</td>
 </table>
 
 ## Automated CLI and AutoML Samples (Preview state)
