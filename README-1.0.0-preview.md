@@ -45,7 +45,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
     <td align="middle"><img src="images/product-recommendation.png" alt="Binary classification chart"><br><br><b>Product Recommendation<br><a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></h4></td>
     <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart" ><br><br><b>Movie Recommender<b><br><a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
-    <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart"><br><br><b>Movie Recommender(End-to-end app)<br><a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></b></td>
+    <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart"><br><br><b>Movie Recommender (E2E app)<br><a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></b></td>
   </tr>
   <tr>
     <td align="middle" colspan="3">Regression</td>
