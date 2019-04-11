@@ -101,50 +101,35 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </tr>
 </table>
 
-(need to add def) **CLI and AutoML samples:** Below are the list of CLI and AutoML API samples.
+## Automated CLI and AutoML Samples (Preview state)
 
-**Table design 1:**
+With ML.NET CLI and AutoML by simply providing your dataset these tools will automatically create a "best" quality model for you. No need to know upfront what algorithm will be the best for your scenario or what hyper-parameters you need to provide.
+
+
 <table>
   <tr>
-    <td>Binary Classification</b></td>
-    <td><img src="images/generic-icon.PNG" alt="TBD chart"><br>Comming soon</td>
+    <td><b>Binary Classification</b></td>
+    <td>
+    <a href="samples/csharp/getting-started/TBD-Sample/CLI">CLI Sample</a><br>
+    <a href="samples/csharp/getting-started/TBD-Sample/AutoML">AutoML C# sample</a>
+    </td>
   </tr>
   <tr>
-    <td>Multi Class Classification</td>
-    <td><img src="images/generic-icon.PNG" alt="TBD chart"><br>Comming soon</td>
+    <td><b>Multi Class Classification</b></td>
+    <td>
+    <a href="samples/csharp/getting-started/TBD-Sample/CLI">CLI Sample</a><br>
+    <a href="samples/csharp/getting-started/TBD-Sample/AutoML">AutoML C# sample</a>
+    </td>
   </tr>
   <tr>
-    <td>Regression</td>
-    <td><img src="images/generic-icon.PNG" alt="TBD chart"><br>Comming soon</td>
+    <td><b>Regression</b></td>
+    <td>
+    <a href="samples/csharp/getting-started/TBD-Sample/CLI">CLI Sample</a><br>
+    <a href="samples/csharp/getting-started/TBD-Sample/AutoML">AutoML C# sample</a>
+    </td>
   </tr>
 </table>
 
-**Table design 2:**
-<table>
-  <tr>
-    <td>Binary Classification</b></td>
-    <td>CLI Sample<br>AutoML C# sample</td>
-    <td><img src="images/generic-icon.PNG" alt="TBD chart"><br>Comming soon</td>
-  </tr>
-  <tr>
-    <td>Multi Class Classification</td>
-    <td>CLI Sample<br>AutoML C# sample</td>
-    <td><img src="images/generic-icon.PNG" alt="TBD chart"><br>Comming soon</td>
-  </tr>
-  <tr>
-    <td>Regression</td>
-    <td>CLI Sample<br>AutoML C# sample</td>
-    <td><img src="images/generic-icon.PNG" alt="TBD chart"><br>Comming soon</td>
-  </tr>
-</table>
-
-
-
-**NuGet feed configuration:** Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such as 0.9, 0.10, 0.11, etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.11.0-preview-27128-1), not available in the regular NuGet feed.
-
-If that is the case, please use this MyGet feed in Visual Studio or your NuGet feed configuration:
-
-https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
 
 -------------------------------------------------------
 
