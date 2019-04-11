@@ -183,35 +183,6 @@ The official ML.NET samples are divided in multiple categories depending on the 
  </tr>
  </table>
 
-**Real Time ML.Net Samples:** The below samples are created for real time scenarios like Scalable WebAPI services, Datasets stored in Database etc.
-
- <table>
- <tr>
-   <td width="25%">
-      <h3><b>Sample Name</b></h3>
-  </td>
-  <td>
-      <h3 width="35%"><b>Description</b></h3>
-  </td>
-  <td>
-      <h3><b>ML Scenarios</b></h3>
-  </td>
- </tr>
- <tr>
-   <td width="25%">
-      <h3>Scalable WebAPI</h3>
-      <img src="images/web.png" alt="Binary classification chart" align="middle">
-  </td>
-  <td width="35%">
-   This sample explains how to optimize your code when running an ML.NET model on an ASP.NET Core WebAPI service
-  </td>
-    <td>
-      <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
-  </td>
- </tr>
- </table>
-
 **NuGet feed configuration:** Usually you just need to use the regular NuGet feed (https://api.nuget.org/v3/index.json), however, during a few days before releasing a minor release (such as 0.9, 0.10, 0.11, etc.) we'll be using Preview NuGet packages available in MyGet (such as 0.11.0-preview-27128-1), not available in the regular NuGet feed.
 
 If that is the case, please use this MyGet feed in Visual Studio or your NuGet feed configuration:
