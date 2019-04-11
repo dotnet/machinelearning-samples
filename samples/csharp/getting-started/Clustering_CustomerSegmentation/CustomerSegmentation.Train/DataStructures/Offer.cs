@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,8 +30,8 @@ namespace CustomerSegmentation.DataStructures
                  OfferId = x[0],
                  Campaign = x[1],
                  Varietal = x[2],
-                 Minimum = x[3].ToFloatWithInvariantCulture(),
-                 Discount = x[4].ToFloatWithInvariantCulture(),
+                 Minimum = float.Parse(x[3], CultureInfo.InvariantCulture),
+                 Discount = float.Parse(x[4], CultureInfo.InvariantCulture),
                  Origin = x[5],
                  LastPeak = x[6]
              });
