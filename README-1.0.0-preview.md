@@ -11,9 +11,9 @@ At the end of the survey, you can leave your name and e-mail address (optional) 
 
 There are two types of samples/apps in the repo:
 
-* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png)  Getting Started - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
+* Getting Started  ![](https://github.com/dotnet/machinelearning-samples/blob/master/images/app-type-getting-started.png) - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png)  End-End apps - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
+* End-End apps  ![](https://github.com/dotnet/machinelearning-samples/blob/master/images/app-type-e2e.png) - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
@@ -25,12 +25,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle"><img src="images/sentiment-analysis.png" alt="Binary classification chart"><br><br><b>Sentiment analysis <br><a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
     <td align="middle"><img src="images/spam-detection.png" alt="Movie Recommender chart"><br><br><b>Spam Detection<br><a href="samples/csharp/getting-started/BinaryClassification_SpamDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/BinaryClassification_SpamDetection">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
     <td align="middle"><img src="images/fraud-detection.png" alt="Movie Recommender chart"><br><br><b>Fraud detection<br><a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
-  </tr>
-  <tr>
-    <td align="middle"><img src="images/image-style-transfer.png" alt="style transfer chart"><br><br><b>Heart disease detection<br><a href="samples/csharp/getting-started/BinaryClassification_HeartDiseasePrediction">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
-    <td></td>
-    <td></td>
-  </tr>
+  </tr> 
   <tr>
     <td align="middle" colspan="3">Multi-class classification</td>
   </tr>
@@ -69,12 +64,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
     <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (Transfer Learning)<br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
     <td align="middle"><img src="images/object-detection.png" alt="Object Detection chart"><br><br><b>Object Detection<br><a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
-  </tr>
-  <tr>
-    <td align="middle"><img src="images/image-style-transfer.png" alt="style transfer chart"><br><br><b>Style Transfer</b><br>Coming soon</td>
-    <td></td>
-    <td></td>
-  </tr>
+  </tr> 
   <tr>
     <td align="middle" colspan="3">Anomaly Detection</td>
   </tr>
@@ -83,13 +73,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
       <a href="samples/csharp/end-to-end-apps/SpikeDetection-ShampooSales-WinForms">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
     <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><br><b>Power Anomaly Detection<br><a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
     <td ></td>
-  </tr>
-  <tr>
-    <td align="middle" colspan="3">Ranking</td>
-  </tr>
-  <tr>
-  <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Coming soon <br><br></td>   
-  </tr>
+  </tr> 
   <tr>
     <td align="middle" colspan="3">Cross Cutting</td>
   </tr>
