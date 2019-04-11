@@ -98,7 +98,7 @@ namespace MulticlassClassification_Iris
 
             // During prediction we will get Score column with 3 float values.
             // We need to find way to map each score to original label.
-            // In order to do what we need to get TrainingLabelValues from Score column.
+            // In order to do that we need to get TrainingLabelValues from Score column.
             // TrainingLabelValues on top of Score column represent original labels for i-th value in Score array.
             // Let's look how we can convert key value for PredictedLabel to original labels.
             // We need to read KeyValues for "PredictedLabel" column.
