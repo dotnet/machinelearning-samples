@@ -67,7 +67,7 @@ var trainingPipeline = dataProcessPipeline.Append(trainer).Append(mlContext.Tran
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data to tune the parameters of the model. Our training data consists of pixel values and the digit they represent. It is implemented in the `Fit()` method from the Estimator object. 
 
-To perform training we just call the method providing the training dataset (iris-train.txt file) in a DataView object.
+To perform training we just call the method providing the training dataset (optdigits-train.csv file) in a DataView object.
 
 ```CSharp
 // STEP 4: Train the model fitting to the DataSet            
@@ -75,7 +75,7 @@ ITransformer trainedModel = trainingPipeline.Fit(trainData);
 
 ```
 ### 3. Evaluate model
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `MulticlassClassification.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`optdigits-val.csv`). `MulticlassClassification.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
 
 ```CSharp
 var predictions = trainedModel.Transform(testData);
@@ -89,7 +89,7 @@ Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), me
 If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
 
 ### 4. Consume model
-After the model is trained, we can use the `Predict()` API to predict the probability that this flower belongs to each iris type. 
+After the model is trained, we can use the `Predict()` API to predict the probability of being correct digit.
 
 ```CSharp
 
@@ -98,7 +98,6 @@ ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSc
 // Create prediction engine related to the loaded trained model
 var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
 
-//InputData data1 = SampleMNISTData.MNIST1;
 var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
 Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
