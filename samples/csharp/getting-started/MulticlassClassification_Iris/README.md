@@ -122,24 +122,23 @@ predEngine.OutputSchema["PredictedLabel"].GetKeyValues(ref keys);
 var labelsArray = keys.DenseValues().ToArray();
 // Since we apply MapValueToKey estimator with default parameters, key values
 // depends on order of occurence in data file. Which is "Iris-setosa", "Iris-versicolor", "Iris-virginica"
-            // So if we have Score column equal to [0.2, 0.3, 0.5] that's mean what score for
-            // Iris-setosa is 0.2
-            // Iris-versicolor is 0.3
-            // Iris-virginica is 0.5.
-            //Add a dictionary to map the above float values to strings. 
-            Dictionary<float, string> IrisFlowers = new Dictionary<float, string>();
-            IrisFlowers.Add(0, "Setosa");
-            IrisFlowers.Add(1, "versicolor");
-            IrisFlowers.Add(2, "virginica");
+// So if we have Score column equal to [0.2, 0.3, 0.5] that's mean what score for
+// Iris-setosa is 0.2
+// Iris-versicolor is 0.3
+// Iris-virginica is 0.5.
+//Add a dictionary to map the above float values to strings. 
+Dictionary<float, string> IrisFlowers = new Dictionary<float, string>();
+IrisFlowers.Add(0, "Setosa");
+IrisFlowers.Add(1, "versicolor");
+IrisFlowers.Add(2, "virginica");
 
-            Console.WriteLine("=====Predicting using model====");
-            //Score sample 1
-            var resultprediction1 = predEngine.Predict(SampleIrisData.Iris1);
+Console.WriteLine("=====Predicting using model====");
+//Score sample 1
+var resultprediction1 = predEngine.Predict(SampleIrisData.Iris1);
 
-            Console.WriteLine($"Actual: setosa.     Predicted label and score: {IrisFlowers[labelsArray[0]]}:      {resultprediction1.Score[0]:0.####}");
-            Console.WriteLine($"                                           {IrisFlowers[labelsArray[1]]}:  {resultprediction1.Score[1]:0.####}");
-            Console.WriteLine($"                                           {IrisFlowers[labelsArray[2]]}:   {resultprediction1.Score[2]:0.####}");
-            Console.WriteLine();
+Console.WriteLine($"Actual: setosa.     Predicted label and score: {IrisFlowers[labelsArray[0]]}:      {resultprediction1.Score[0]:0.####}");
+Console.WriteLine($"                                           {IrisFlowers[labelsArray[1]]}:  {resultprediction1.Score[1]:0.####}"); Console.WriteLine($"                                           {IrisFlowers[labelsArray[2]]}:   {resultprediction1.Score[2]:0.####}");
+Console.WriteLine();
 ```
 
 Where `TestIrisData.Iris1` stores the information about the flower we'd like to predict the type for.
