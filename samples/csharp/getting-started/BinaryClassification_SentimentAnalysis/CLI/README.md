@@ -4,7 +4,7 @@ In this example you are going to automatically train/create a model and related 
 
 ## What is the ML.NET CLI (Command-line Interface)
 
-*The ML.NET CLI (command-line interface) is a tool you run on any command-prompt (Windows, Mac or Linux) for generating good quality ML.NET models and source code based on training datasets you provide.*
+*The ML.NET CLI (command-line interface) is a tool you run on any command-prompt (Windows, Mac or Linux) for generating good quality ML.NET models and C# source code based on training datasets you provide.*
 
 The ML.NET CLI is part of ML.NET and its main purpose is to "democratize" ML.NET for .NET developers when learning ML.NET so it is very simple to generate a good quality ML.NET model (serialized model .zip file) plus the sample C# code to run/score that model. In addition, the C# code to create/train that model is also generated for you so you can research what algorithm and settings it is using for that generated "best model". 
 
