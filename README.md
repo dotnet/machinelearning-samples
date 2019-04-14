@@ -11,9 +11,9 @@ At the end of the survey, you can leave your name and e-mail address (optional) 
 
 There are two types of samples/apps in the repo:
 
-* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-getting-started.png)  Getting Started - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
+* <img src="images/app-type-getting-started.png" alt="Getting started icon">  Getting Started - ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* ![](https://github.com/dotnet/machinelearning-samples/blob/features/samples-new-api/images/app-type-e2e.png)  End-End apps - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
+* <img src="images/app-type-e2e.png" alt="End-to-end app icon">  End-End apps - Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
