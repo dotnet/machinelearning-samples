@@ -24,6 +24,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </tr> 
   <tr>
     <td align="middle"><img src="images/disease-detection.png" alt="disease detection chart"><br><br><b>Heart Disease Prediction <br><a href="samples/csharp/getting-started/BinaryClassification_HeartDiseasePrediction">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
+    <td></td>
+    <td></td>
   </tr> 
   <tr>
     <td align="middle" colspan="3">Multi-class classification</td>
