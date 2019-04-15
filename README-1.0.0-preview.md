@@ -105,8 +105,6 @@ Autmoated CLI def TBD
 
 AutoML  API def TBD
 
-C:\GitRepos\ML-samples-BuildRel\samples\csharp\getting-started\BinarryClassification-AutoML
-
 | AutoMl API                    |
 |----------------------------------|
 | [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
