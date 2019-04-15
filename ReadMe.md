@@ -112,6 +112,7 @@ ML.NET AutoML API is basically a set of libraries packaged as a NuGet package yo
 | [Binary Classification sample](/samples/csharp/getting-started/BinaryClassification_AutoML)   |
 | [MultiClass Classification sample](/samples/csharp/getting-started/MulticlassClassification_AutoML) |
 | [Regression sample](/samples/csharp/getting-started/Regression_AutoML)                |
+| [Cross-cutting topics sample](/samples/csharp/getting-started/Crosscutting_AutoML)                |
 
 
 -------------------------------------------------------
