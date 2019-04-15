@@ -1,13 +1,9 @@
 # ML.NET Samples
-ML.NET is still new, and as we are developing it, we would love to get your feedback! Please fill out the brief survey below and help shape the future of ML.NET by telling us about your usage and interest in Machine Learning and ML.NET.
 
-<a href="https://www.research.net/r/mlnet-survey">Take the survey now!</a>
-
-At the end of the survey, you can leave your name and e-mail address (optional) so that an engineer on the .NET team can reach out to you to talk a little bit more about your experiences and thoughts. We appreciate your contribution!
-
--------------------------------------------------------
 [![](https://dotnet.visualstudio.com/_apis/public/build/definitions/9ee6d478-d288-47f7-aacc-f6e6d082ae6d/22/badge)](https://dotnet.visualstudio.com/public/_build/index?definitionId=22 )
-[ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
+[ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. 
+
+In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
 
 There are two types of samples/apps in the repo:
 
@@ -62,14 +58,6 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td></td>
   </tr>
   <tr>
-    <td align="middle" colspan="3">Deep Learning</td>
-  </tr>
-  <tr>
-    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
-    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (Transfer Learning)<br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
-    <td align="middle"><img src="images/object-detection.png" alt="Object Detection chart"><br><br><b>Object Detection<br><a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
-  </tr> 
-  <tr>
     <td align="middle" colspan="3">Anomaly Detection</td>
   </tr>
   <tr>
@@ -79,7 +67,15 @@ The official ML.NET samples are divided in multiple categories depending on the 
      <td></td>
   </tr> 
   <tr>
-    <td align="middle" colspan="3">Cross Cutting</td>
+    <td align="middle" colspan="3">Deep Learning</td>
+  </tr>
+  <tr>
+    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow model scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow Estimator)<br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td align="middle"><img src="images/object-detection.png" alt="Object Detection chart"><br><br><b>Object Detection<br>    (ONNX model scoring)<br><a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+  </tr> 
+  <tr>
+    <td align="middle" colspan="3">Cross Cutting concerns</td>
   </tr>
   <tr>
   <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
@@ -89,32 +85,38 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </tr>
 </table>
 
+# Automate ML.NET models generation (Preview state)
 
-## Automated CLI samples: (Preview state)
+The previous samples show you how to use the ML.NET API 1.0 (GA since May 2019). 
+However, we're also working on simplifying ML.NET usage with additional technologies that automate the creation of the model for you so you don't need to write the code by yourself to train a model, you simply need to provide your datasets, the model and code for running the model will be generated for you.
 
-CLI def TBD
+These additional technologies for automating model generation are currently in PREVIEW state and currently only support *Binary-Classification, Multiclass Classification and Regression*. In upcoming versions we'll be supporting additional ML Tasks such as *Recommendations, Anomaly Detection, Clustering, etc.*.
+
+## CLI samples: (Preview state)
+
+The ML.NET CLI (command-line interface) is a tool you run on any command-prompt (Windows, Mac or Linux) for generating good quality ML.NET models based on training datasets you provide. In addition, it also generates sample C# code to run/score that model plus the C# code that was used to create/train it so you can research what algorithm and settings it is using.
 
 | CLI (Command Line Interface)                   |
 |----------------------------------|
-| [Binary Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
-| [MultiClass Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
-| [Regression sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
+| [Binary Classification sample](/samples/CLI/BinaryClassification_CLI)   |
+| [MultiClass Classification sample](/samples/CLI/MulticlassClassification_CLI) |
+| [Regression sample](/samples/CLI/Regression_CLI)                |
 
 
 ## AutoML API samples: (Preview state)
 
-API def TBD
+ML.NET AutoML API is basically a set of libraries packaged as a NuGet package you can use from your .NET code. AutoML eliminates the task of selecting different algorithms, hyperparameters. AutoML will intelligently generate many combinations of algorithms and hyperparameters and will find the "best models" for you.
 
 | AutoML API                    |
 |----------------------------------|
-| [Binary Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
-| [MultiClass Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
-| [Regression sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
+| [Binary Classification sample](/samples/csharp/getting-started/BinaryClassification_AutoML)   |
+| [MultiClass Classification sample](/samples/csharp/getting-started/MulticlassClassification_AutoML) |
+| [Regression sample](/samples/csharp/getting-started/Regression_AutoML)                |
 
 
 -------------------------------------------------------
 
-## Additional Community Samples
+# Additional ML.NET Community Samples
 
 In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community shocased in this separated page:
 [ML.NET Community Samples](https://github.com/dotnet/machinelearning-samples/blob/master/docs/COMMUNITY-SAMPLES.md)
@@ -125,25 +127,25 @@ If you have created any cool ML.NET sample, please, add its info into this [REQU
 ## Translations of Samples:
 - [Chinese Simplified](https://github.com/feiyun0112/machinelearning-samples.zh-cn)
 
-## Learn more
+# Learn more
 
 See [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) for detailed information on tutorials, ML basics, etc.
 
-## API reference
+# API reference
 
 Check out the [ML.NET API Reference](https://docs.microsoft.com/dotnet/api/?view=ml-dotnet) to see the breadth of APIs available.
 
-## Contributing
+# Contributing
 
 We welcome contributions! Please review our [contribution guide](CONTRIBUTING.md).
 
-## Community
+# Community
 
 Please join our community on Gitter [![Join the chat at https://gitter.im/dotnet/mlnet](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotnet/mlnet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) to clarify expected behavior in our community.
 For more information, see the [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct).
 
-## License
+# License
 
 [ML.NET Samples](https://github.com/dotnet/machinelearning-samples) are licensed under the [MIT license](LICENSE).
