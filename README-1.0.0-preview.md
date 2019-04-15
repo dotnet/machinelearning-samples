@@ -90,22 +90,22 @@ The official ML.NET samples are divided in multiple categories depending on the 
 </table>
 
 
-## Automated CLI Smaple: (Preview state)
+## Automated CLI samples: (Preview state)
 
-Autmoated CLI def TBD
+CLI def TBD
 
-| Automated CLI                    |
+| CLI samples                   |
 |----------------------------------|
 | [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
 | [MultiClass Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
 | [Regression Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
 
 
-## AutoML API Samples: (Preview state)
+## AutoML API samples: (Preview state)
 
-AutoML  API def TBD
+API def TBD
 
-| AutoMl API                    |
+| AutoML API samples                   |
 |----------------------------------|
 | [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
 | [MultiClass Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
