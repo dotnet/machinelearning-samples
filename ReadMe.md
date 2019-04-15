@@ -13,10 +13,7 @@ There are two types of samples/apps in the repo:
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
 
-<table align="middle" width=100%>
-  <tr>
-    <td align="middle" colspan="3"><H3>Scenarios</H3></td>
-  </tr>
+<table align="middle" width=100%>  
   <tr>
     <td align="middle" colspan="3">Binary classification</td>
   </tr>
