@@ -94,22 +94,22 @@ The official ML.NET samples are divided in multiple categories depending on the 
 
 CLI def TBD
 
-| CLI samples                   |
+| CLI (Command Line Interface)                   |
 |----------------------------------|
-| [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
-| [MultiClass Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
-| [Regression Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
+| [Binary Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
+| [MultiClass Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
+| [Regression sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
 
 
 ## AutoML API samples: (Preview state)
 
 API def TBD
 
-| AutoML API samples                   |
+| AutoML API                    |
 |----------------------------------|
-| [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
-| [MultiClass Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
-| [Regression Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
+| [Binary Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
+| [MultiClass Classification sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
+| [Regression sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
 
 
 -------------------------------------------------------
