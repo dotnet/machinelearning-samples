@@ -90,34 +90,28 @@ The official ML.NET samples are divided in multiple categories depending on the 
 </table>
 
 
-## Automated CLI and AutoML Samples (Preview state)
+## Automated CLI Smaple: (Preview state)
 
-With ML.NET CLI and AutoML by simply providing your dataset these tools will automatically create a "best" quality model for you. No need to know upfront what algorithm will be the best for your scenario or what hyper-parameters you need to provide.
+Autmoated CLI def TBD
+
+| Automated CLI                    |
+|----------------------------------|
+| [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
+| [MultiClass Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
+| [Regression Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
 
 
-<table>
-  <tr>
-    <td><b>Binary Classification</b></td>
-    <td>
-    <a href="samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/CLI" >• CLI Sample</a><br>
-    <a href="samples/csharp/getting-started/TBD-Sample/AutoML">• AutoML C# sample</a>
-    </td>
-  </tr>
-  <tr>
-    <td><b>Multi Class Classification</b></td>
-    <td>
-    <a href="samples/csharp/getting-started/TBD-Sample/CLI">• CLI Sample</a><br>
-    <a href="samples/csharp/getting-started/TBD-Sample/AutoML">• AutoML C# sample</a>
-    </td>
-  </tr>
-  <tr>
-    <td><b>Regression</b></td>
-    <td>
-    <a href="samples/csharp/getting-started/TBD-Sample/CLI">• CLI Sample</a><br>
-    <a href="samples/csharp/getting-started/TBD-Sample/AutoML">• AutoML C# sample</a>
-    </td>
-  </tr>
-</table>
+## AutoML API Samples: (Preview state)
+
+AutoML  API def TBD
+
+C:\GitRepos\ML-samples-BuildRel\samples\csharp\getting-started\BinarryClassification-AutoML
+
+| AutoMl API                    |
+|----------------------------------|
+| [Binary Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)   |
+| [MultiClass Classification Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI) |
+| [Regression Sample](https://github.com/dotnet/machinelearning-samples/tree/features/buildrel/samples/CLI/BinaryClassification_CLI)                |
 
 
 -------------------------------------------------------
