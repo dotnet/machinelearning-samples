@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
+| v1.0.0-preview | Dynamic API | Up-to-date | Console app | .txt files | Iris flowers classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict the type of iris flower. In the world of machine learning, this type of prediction is known as **multiclass classification**.
 
@@ -50,14 +50,19 @@ The initial code is similar to the following:
     // STEP 1: Common data loading configuration
     let trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
     let testDataView = mlContext.Data.LoadFromTextFile<IrisData>(testDataPath, hasHeader = true)
-    
-    // STEP 2: Common data process configuration with pipeline data transformations
-    let dataProcessPipeline =
-        mlContext.Transforms.Concatenate("Features", [| "SepalLength"; "SepalWidth"; "PetalLength"; "PetalWidth"|])
-        |> Common.ModelBuilder.appendCacheCheckpoint mlContext
 
-    // STEP 3: Set the training algorithm, then create and config the modelBuilder
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    // STEP 2: Common data process configuration with pipeline data transformations
+    let dataProcessPipeline = 
+        EstimatorChain()
+            .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelKey","Label"))
+            .Append(mlContext.Transforms.Concatenate("Features", "SepalLength",
+                                                     "SepalWidth",
+                                                     "PetalLength",
+                                                     "PetalWidth"))
+            .AppendCacheCheckpoint(mlContext)
+
+    // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
+    let trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName = "LabelKey", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 ```
 ### 2. Train model

@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v1.0.0-preview | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -69,28 +69,30 @@ The initial code is similar to the following:
 [...]
 
     let trainData, testData = 
-        let y = mlContext.BinaryClassification.TrainTestSplit(data, 0.2, seed = Nullable 1u) 
-        y.TrainSet, y.TestSet
+        printfn "Reading train and test data"
+        let trainData = mlContext.Data.LoadFromTextFile<TransactionObservation>(trainFile, separatorChar = ',', hasHeader = true)
+        let testData = mlContext.Data.LoadFromTextFile<TransactionObservation>(testFile, separatorChar = ',', hasHeader = true)
+        trainData, testData
 
 [...]
 
     let featureColumnNames = 
         trainData.Schema
         |> Seq.map (fun column -> column.Name)
+        |> Seq.filter (fun name -> name <> "Time")
         |> Seq.filter (fun name -> name <> "Label")
-        |> Seq.filter (fun name -> name <> "StratificationColumn")
+        |> Seq.filter (fun name -> name <> "IdPreservationColumn")
         |> Seq.toArray
 
     let pipeline = 
         EstimatorChain()
-        |> fun x -> x.Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames))
+        |> fun x -> x.Append(mlContext.Transforms.Concatenate("Features", featureColumnNames))
         |> fun x -> x.Append(mlContext.Transforms.DropColumns [|"Time"|])
         |> fun x -> 
             x.Append (
-                mlContext.Transforms.Normalize (
+                mlContext.Transforms.NormalizeMeanVariance (
                     "FeaturesNormalizedByMeanVar", 
-                    "Features", 
-                    NormalizingEstimator.NormalizerMode.MeanVariance
+                    "Features"
                     )
                 )
         |> fun x -> 
@@ -98,9 +100,9 @@ The initial code is similar to the following:
                 mlContext.BinaryClassification.Trainers.FastTree(
                     "Label", 
                     "FeaturesNormalizedByMeanVar", 
-                    numLeaves = 20, 
-                    numTrees = 100, 
-                    minDatapointsInLeaves = 10, 
+                    numberOfLeaves = 20, 
+                    numberOfTrees = 100, 
+                    minimumExampleCountPerLeaf = 10, 
                     learningRate = 0.2
                     )
                 )
@@ -130,7 +132,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
 
 `````fsharp
     printfn "Making predictions"
-    mlContext.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
+    mlContext.Data.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
     |> Seq.filter (fun x -> x.Label = true)
     // use 5 observations from the test data
     |> Seq.take 5
@@ -138,4 +140,5 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
         let prediction = predictionEngine.Predict testData
         printfn "%A" prediction
         printfn "------"
+        )
 `````

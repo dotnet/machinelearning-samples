@@ -48,7 +48,7 @@ Building a model includes:
 
 - Preapre the data and split data for training and tests
 
-- Load the data with TextLoader by speccifying the type name that holds data's schema to be mapped with datasets.
+- Load the data with TextLoader by specifying the type name that holds data's schema to be mapped with datasets.
 
 - Create an Estimator and transform the data with a Concatenate() and Normalize by Mean Variance. 
 
