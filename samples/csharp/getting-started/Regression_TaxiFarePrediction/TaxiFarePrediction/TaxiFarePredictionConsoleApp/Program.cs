@@ -1,13 +1,20 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using PLplot;
 using System.Diagnostics;
-using Microsoft.ML;
-using Regression_TaxiFarePrediction.DataStructures;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+
 using Common;
+
+using Microsoft.ML;
 using Microsoft.ML.Data;
+
+using PLplot;
+
+using Regression_TaxiFarePrediction.DataStructures;
+
+using static Microsoft.ML.Transforms.NormalizingEstimator;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -306,11 +313,11 @@ namespace Regression_TaxiFarePrediction
                 {
                     VendorId = x[0],
                     RateCode = x[1],
-                    PassengerCount = float.Parse(x[2]),
-                    TripTime = float.Parse(x[3]),
-                    TripDistance = float.Parse(x[4]),
+                    PassengerCount = float.Parse(x[2], CultureInfo.InvariantCulture),
+                    TripTime = float.Parse(x[3], CultureInfo.InvariantCulture),
+                    TripDistance = float.Parse(x[4], CultureInfo.InvariantCulture),
                     PaymentType = x[5],
-                    FareAmount = float.Parse(x[6])
+                    FareAmount = float.Parse(x[6], CultureInfo.InvariantCulture)
                 })
                 .Take<TaxiTrip>(numMaxRecords);
 
