@@ -2,6 +2,7 @@
 open Microsoft.ML.Data
 open System
 open System.IO
+open Microsoft.ML.Transforms
 
 [<CLIMutable>]
 type Input =
@@ -16,11 +17,11 @@ type Output = {Score : float32 []}
     
 let sampleData = 
     [|
-        7, {
+        1, {
             Number = 0.f
             PixelValues = [|0.f;0.f;0.f;0.f;14.f;13.f;1.f;0.f;0.f;0.f;0.f;5.f;16.f;16.f;2.f;0.f;0.f;0.f;0.f;14.f;16.f;12.f;0.f;0.f;0.f;1.f;10.f;16.f;16.f;12.f;0.f;0.f;0.f;3.f;12.f;14.f;16.f;9.f;0.f;0.f;0.f;0.f;0.f;5.f;16.f;15.f;0.f;0.f;0.f;0.f;0.f;4.f;16.f;14.f;0.f;0.f;0.f;0.f;0.f;1.f;13.f;16.f;1.f;0.f|]
         }
-        1, {
+        7, {
             Number = 0.f
             PixelValues = [|0.f;0.f;1.f;8.f;15.f;10.f;0.f;0.f;0.f;3.f;13.f;15.f;14.f;14.f;0.f;0.f;0.f;5.f;10.f;0.f;10.f;12.f;0.f;0.f;0.f;0.f;3.f;5.f;15.f;10.f;2.f;0.f;0.f;0.f;16.f;16.f;16.f;16.f;12.f;0.f;0.f;1.f;8.f;12.f;14.f;8.f;3.f;0.f;0.f;0.f;0.f;10.f;13.f;0.f;0.f;0.f;0.f;0.f;0.f;11.f;9.f;0.f;0.f;0.f|]
         }
@@ -53,7 +54,7 @@ let testData = mlContext.Data.LoadFromTextFile<Input>(testDataPath, separatorCha
 // Use in-memory cache for small/medium datasets to lower training time. Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
 let dataProcessPipeline = 
     EstimatorChain() 
-        .Append(mlContext.Transforms.Conversion.MapValueToKey("Label", "Number"))
+        .Append(mlContext.Transforms.Conversion.MapValueToKey("Label", "Number", keyOrdinality=ValueToKeyMappingEstimator.KeyOrdinality.ByValue))
         .Append(mlContext.Transforms.Concatenate("Features", "PixelValues"))
         .AppendCacheCheckpoint(mlContext)
 
