@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.Image;
 
-namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
+namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
 {
     public interface IOnnxModelScorer
     {

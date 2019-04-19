@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
+namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
 {
     public static class ModelHelpers
     {

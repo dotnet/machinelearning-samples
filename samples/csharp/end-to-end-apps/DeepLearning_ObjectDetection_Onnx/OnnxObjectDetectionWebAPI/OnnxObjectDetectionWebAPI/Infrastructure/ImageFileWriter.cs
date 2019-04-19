@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 
-namespace TensorFlowImageClassificationWebAPI.Infrastructure
+namespace OnnxObjectDetectionWebAPI.Infrastructure
 {
     /// <summary>
     /// Interface to use in DI/IoC

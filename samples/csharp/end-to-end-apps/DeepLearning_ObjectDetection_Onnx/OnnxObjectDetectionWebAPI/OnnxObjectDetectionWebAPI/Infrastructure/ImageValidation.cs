@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace TensorFlowImageClassificationWebAPI.Infrastructure
+namespace OnnxObjectDetectionWebAPI.Infrastructure
 {
     public static class ImageValidationExtensions
     {

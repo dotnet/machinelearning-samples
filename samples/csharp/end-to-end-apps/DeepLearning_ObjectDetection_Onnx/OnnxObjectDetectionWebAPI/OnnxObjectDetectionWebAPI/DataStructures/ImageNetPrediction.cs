@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace TensorFlowImageClassificationWebAPI
+namespace OnnxObjectDetectionWebAPI
 {
     public class ImageNetPrediction
     {

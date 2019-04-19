@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using OnnxObjectDetectionWebAPI.Infrastructure;
+using OnnxObjectDetectionWebAPI.OnnxModelScorers;
 using Swashbuckle.AspNetCore.Swagger;
-using TensorFlowImageClassificationWebAPI.Infrastructure;
-using TensorFlowImageClassificationWebAPI.OnnxModelScorers;
 
-namespace TensorFlowImageClassificationWebAPI
+namespace OnnxObjectDetectionWebAPI
 {
     public class Startup
     {

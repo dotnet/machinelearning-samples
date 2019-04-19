@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using TensorFlowImageClassificationWebAPI.Infrastructure;
-using TensorFlowImageClassificationWebAPI.OnnxModelScorers;
+using OnnxObjectDetectionWebAPI.Infrastructure;
+using OnnxObjectDetectionWebAPI.OnnxModelScorers;
 
-namespace TensorFlowImageClassificationWebAPI.Controllers
+namespace OnnxObjectDetectionWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,8 +16,7 @@ namespace TensorFlowImageClassificationWebAPI.Controllers
     {
         //Dependencies
         private readonly IImageFileWriter _imageWriter; 
-        private readonly string _imagesTmpFolder;
-        
+        private readonly string _imagesTmpFolder;        
 
         private readonly ILogger<ObjectDetectionController> _logger;
         private readonly IOnnxModelScorer _modelScorer;
@@ -29,7 +27,6 @@ namespace TensorFlowImageClassificationWebAPI.Controllers
             _modelScorer = modelScorer;
             _logger = logger;
             _imageWriter = imageWriter;
-
             _imagesTmpFolder = ModelHelpers.GetFolderFullPath(@"ImagesTemp");
         }
 
