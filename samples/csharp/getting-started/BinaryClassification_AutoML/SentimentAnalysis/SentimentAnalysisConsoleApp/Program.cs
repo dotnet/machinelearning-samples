@@ -47,19 +47,10 @@ namespace SentimentAnalysisConsoleApp
 
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
-            // // STEP 1: Common data loading configuration
-            // IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
-
-            // TrainTestData trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
-            // IDataView trainingData = trainTestSplit.TrainSet;
-            // IDataView testData = trainTestSplit.TestSet;
-
-            // STEP 2: Load data
+            // // STEP 1: Load data
             IDataView trainDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
             IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
-            // TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
-            // IDataView trainDataView = textLoader.Load(TrainDataPath);
-            // IDataView testDataView = textLoader.Load(TestDataPath);
+
 
             // STEP 2: Common data process configuration with pipeline data transformations          
             var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
@@ -69,7 +60,7 @@ namespace SentimentAnalysisConsoleApp
             //Peak the transformed features column
             //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", dataView, dataProcessPipeline, 1);
 
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
+            // STEP 3: Auto featurize, auto train and auto hyperparameter tune                        
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
             IEnumerable<RunDetails<BinaryClassificationMetrics>> runDetails = mlContext.Auto()
                                                                              .CreateBinaryClassificationExperiment(ExperimentTime)
@@ -94,11 +85,7 @@ namespace SentimentAnalysisConsoleApp
         // (OPTIONAL) Try/test a single prediction by loading the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
         {         
-
-            
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
-
-            // ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema); 
             
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);       
             Console.WriteLine($"=============== Loaded Model OK  ===============");               

@@ -7,7 +7,7 @@ namespace SentimentAnalysisConsoleApp.DataStructures
     {
         [LoadColumn(0)]
         public bool Label { get; set; }
-        [LoadColumn(2)]
+        [LoadColumn(1)]
         public string Text { get; set; }
     }
 }
