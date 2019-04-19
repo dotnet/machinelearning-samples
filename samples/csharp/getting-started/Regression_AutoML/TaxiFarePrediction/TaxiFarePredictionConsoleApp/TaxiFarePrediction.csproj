@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <RestoreSources>
+      https://api.nuget.org/v3/index.json;
+      .;
+    </RestoreSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.Auto" Version="0.2.0-preview-27604-0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Microsoft.ML.Auto.0.2.0-preview-27604-0.nupkg" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="datasets\**" />
+    <EmbeddedResource Remove="datasets\**" />
+    <None Remove="datasets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="PLplot" Version="5.13.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Data\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv" />
+    <None Include="..\Data\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv" />
+  </ItemGroup>
+
+</Project>

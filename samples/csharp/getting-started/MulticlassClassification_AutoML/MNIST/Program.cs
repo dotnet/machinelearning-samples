@@ -66,7 +66,7 @@ namespace mnist
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
                 IEnumerable<RunDetails<MulticlassClassificationMetrics>> runDetails = mlContext.Auto()
                                                                                 .CreateMulticlassClassificationExperiment(ExperimentTime)
-                                                                                .Execute(trainData);
+                                                                                .Execute(trainData, "Number");
 
                 // STEP 4: Evaluate test data
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
