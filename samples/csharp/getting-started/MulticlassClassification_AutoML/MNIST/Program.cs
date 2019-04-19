@@ -68,13 +68,12 @@ namespace mnist
                                                                                 .CreateMulticlassClassificationExperiment(ExperimentTime)
                                                                                 .Execute(trainData);
 
+                // STEP 4: Evaluate test data
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 RunDetails<MulticlassClassificationMetrics> best = runDetails.Best();
                 ITransformer trainedModel = best.Model;
                 var predictions = trainedModel.Transform(testData);
                 var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName:"Number", scoreColumnName:"Score");
-
-                //Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
