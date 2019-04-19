@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Data;
+using Microsoft.ML.Transforms.Image;
 
 namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
 {
@@ -27,7 +27,6 @@ namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
         private IList<YoloBoundingBox> _boxes = new List<YoloBoundingBox>();
         private readonly YoloWinMlParser _parser = new YoloWinMlParser();
 
-
 #pragma warning disable IDE0032
         private readonly PredictionEngine<ImageNetData, ImageNetPrediction> _predictionEngine;
         public PredictionEngine<ImageNetData, ImageNetPrediction> PredictionEngine
@@ -35,12 +34,9 @@ namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
             get => _predictionEngine;
         }
 
-
         public OnnxModelScorer()
         {
             var assetsPath = ModelHelpers.GetFolderFullPath(@"Model");
-
-            //_imagesLocation = Path.Combine(assetsPath, "TinyYolo2_model");
             _imagesTmpFolder = ModelHelpers.GetFolderFullPath(@"ImagesTemp");
             _modelLocation = Path.Combine(assetsPath, "TinyYolo2_model.onnx");
             
@@ -85,7 +81,7 @@ namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
             var dataView = CreateDataView();
 
             var pipeline = _mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
-                            .Append(_mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
+                            .Append(_mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
                             .Append(_mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
                             .Append(_mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
 
@@ -102,17 +98,11 @@ namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
             var probs = _predictionEngine.Predict(imageInputData).PredictedLabels;
             IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
             filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);
-
             List<string> objectsNames = new List<string>();
             foreach (var box in filteredBoxes)
             {
                 objectsNames.Add(box.Label);
-
-
-                // Console.WriteLine(box.Label + " and its Confidence score: " + box.Confidence);
             }
-            // Console.WriteLine("");
-
             return objectsNames;
         }
 
@@ -123,7 +113,7 @@ namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
           var originalWidth = image.Width;      
           foreach (var box in filteredBoxes)
           {
-              // process output boxes
+              //// process output boxes
               var x = (uint)Math.Max(box.X, 0);
               var y = (uint)Math.Max(box.Y, 0);
               var w = (uint)Math.Min(originalWidth - x, box.Width);
@@ -136,9 +126,6 @@ namespace TensorFlowImageClassificationWebAPI.OnnxModelScorers
               h = (uint)originalHeight * h / 416;
 
               string text = string.Format("{0} ({1})", box.Label, box.Confidence);
-
-              //if(boundingBox.Confidence < 0.4)
-              //{ break; }
 
               using (Graphics thumbnailGraph = Graphics.FromImage(image))
               {

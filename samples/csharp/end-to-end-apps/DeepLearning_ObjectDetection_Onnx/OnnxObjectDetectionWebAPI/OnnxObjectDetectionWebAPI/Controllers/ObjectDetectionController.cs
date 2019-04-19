@@ -33,73 +33,6 @@ namespace TensorFlowImageClassificationWebAPI.Controllers
             _imagesTmpFolder = ModelHelpers.GetFolderFullPath(@"ImagesTemp");
         }
 
-        //[HttpPost]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //[Route("IdentifyObjects")]
-        //public async Task<IActionResult> IdentifyObjects(IFormFile imageFile)
-        //{
-        //    if (imageFile.Length == 0)
-        //        return BadRequest();
-
-        //    string imageFilePath = "", fileName = "";
-        //    try
-        //    {
-        //        //Save the temp image  into the temp-folder 
-        //        fileName = await _imageWriter.UploadImageAsync(imageFile, _imagesTmpFolder);
-        //        imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
-
-        //        //Convert image stream to byte[] 
-        //        byte[] imageData = null;
-        //        //
-        //        //Image stream still not used in ML.NET 0.7 but only possible through a file
-        //        //
-        //        //MemoryStream image = new MemoryStream();           
-        //        //await imageFile.CopyToAsync(image);
-        //        //imageData = image.ToArray();
-        //        //if (!imageData.IsValidImage())
-        //        //    return StatusCode(StatusCodes.Status415UnsupportedMediaType);
-
-        //       // ImagePredictedLabelWithProbability imageLabelPrediction = null;
-        //        _logger.LogInformation($"Start processing image file { imageFilePath }");
-
-        //        //Measure execution time
-        //        var watch = System.Diagnostics.Stopwatch.StartNew();
-
-        //        //Predict the image's label (The one with highest probability)
-        //        List<string> objectsNames = _modelScorer.DetectObjectsUsingModel(imageFilePath);
-
-        //        //Stop measuring time
-        //        watch.Stop();
-        //        var elapsedMs = watch.ElapsedMilliseconds;
-
-        //        _logger.LogInformation($"Image processed in {elapsedMs} miliseconds");
-
-        //        //TODO: Commented as the file is still locked by TensorFlow or ML.NET?
-        //        //_imageWriter.DeleteImageTempFile(imageFilePath);
-
-        //        //return new ObjectResult(result);
-        //        return Ok(objectsNames);
-        //    }
-        //    finally
-        //    {
-        //        try
-        //        {
-        //            if(imageFilePath != string.Empty)
-        //            {
-        //                _logger.LogInformation($"Deleting Image {imageFilePath}");
-        //                //TODO: Commented as the file is still locked by TensorFlow or ML.NET?
-        //                //_imageWriter.DeleteImageTempFile(imageFilePath);
-        //            }
-        //        }
-        //        catch (Exception)
-        //        {
-        //            _logger.LogInformation("Error deleting image: " + imageFilePath);
-        //        }
-        //    }
-        //}
-
-
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -112,30 +45,17 @@ namespace TensorFlowImageClassificationWebAPI.Controllers
             string imageFilePath = "", fileName = "";
             try
             {
-                //Save the temp image  into the temp-folder 
+                //Save the temp image into the temp-folder 
                 fileName = await _imageWriter.UploadImageAsync(imageFile, _imagesTmpFolder);
                 imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
 
-
-                //Convert image stream to byte[] 
-                byte[] imageData = null;
-                //
-                //Image stream still not used in ML.NET 0.7 but only possible through a file
-                //
-                //MemoryStream image = new MemoryStream();           
-                //await imageFile.CopyToAsync(image);
-                //imageData = image.ToArray();
-                //if (!imageData.IsValidImage())
-                //    return StatusCode(StatusCodes.Status415UnsupportedMediaType);
-
-                // ImagePredictedLabelWithProbability imageLabelPrediction = null;
                 _logger.LogInformation($"Start processing image file { imageFilePath }");
 
                 //Measure execution time
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                //Predict the image's label (The one with highest probability)
-               var objectsNames = _modelScorer.DetectObjectsUsingModel(imageFilePath);
+                //Predict the objects in the image
+                var objectsNames = _modelScorer.DetectObjectsUsingModel(imageFilePath);
                 _modelScorer.PaintImages(imageFilePath);
 
                 //Stop measuring time
@@ -143,11 +63,7 @@ namespace TensorFlowImageClassificationWebAPI.Controllers
                 var elapsedMs = watch.ElapsedMilliseconds;
 
                 _logger.LogInformation($"Image processed in {elapsedMs} miliseconds");
-
-                //TODO: Commented as the file is still locked by TensorFlow or ML.NET?
-                //_imageWriter.DeleteImageTempFile(imageFilePath);
-
-                //return new ObjectResult(result);
+                
                 return Ok(objectsNames);
             }
             catch(Exception e)
@@ -162,11 +78,11 @@ namespace TensorFlowImageClassificationWebAPI.Controllers
             //        if (imageFilePath != string.Empty)
             //        {
             //            _logger.LogInformation($"Deleting Image {imageFilePath}");
-            //            //TODO: Commented as the file is still locked by TensorFlow or ML.NET?
-            //            //_imageWriter.DeleteImageTempFile(imageFilePath);
+                           //ToDo: The file is being used by dotnet.exe process and not able to delete from bin/debug folder.
+            //            _imageWriter.DeleteImageTempFile(imageFilePath);
             //        }
             //    }
-            //    catch (Exception)
+            //    catch (Exception ex)
             //    {
             //        _logger.LogInformation("Error deleting image: " + imageFilePath);
             //    }

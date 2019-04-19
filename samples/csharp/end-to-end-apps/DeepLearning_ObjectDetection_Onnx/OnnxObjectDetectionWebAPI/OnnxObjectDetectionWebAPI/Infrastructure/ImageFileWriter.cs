@@ -67,8 +67,6 @@ namespace TensorFlowImageClassificationWebAPI.Infrastructure
                 using (var fileStream = new FileStream(filePathName, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
-                    fileStream.Dispose();
-                    fileStream.Close();
                 }
             }
             catch (Exception e)
