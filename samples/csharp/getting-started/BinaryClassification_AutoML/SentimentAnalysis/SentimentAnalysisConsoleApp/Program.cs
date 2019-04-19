@@ -16,9 +16,10 @@ namespace SentimentAnalysisConsoleApp
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
         private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
-        private static readonly string DataRelativePath = $"{BaseDatasetsRelativePath}/wikiDetoxAnnotated40kRows.tsv";
-
-        private static string DataPath = GetAbsolutePath(DataRelativePath);
+        private static readonly string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-data.tsv";
+        private static readonly string TestDataRelativePath = $"{BaseDatasetsRelativePath}/wikipedia-detox-250-line-test.tsv";
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static readonly string BaseModelsRelativePath = @"../../../../MLModels";
         private static readonly string ModelRelativePath = $"{BaseModelsRelativePath}/SentimentModel.zip";
@@ -36,7 +37,7 @@ namespace SentimentAnalysisConsoleApp
             BuildTrainEvaluateAndSaveModel(mlContext);
             Common.ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
-            // Make a single test prediction loding the model from .ZIP file
+            // Make a single test prediction loading the model from .ZIP file
             TestSinglePrediction(mlContext);
 
             Common.ConsoleHelper.ConsoleWriteHeader("=============== End of process, hit any key to finish ===============");
@@ -46,64 +47,51 @@ namespace SentimentAnalysisConsoleApp
 
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
-            // STEP 1: Common data loading configuration
-            IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
+            // // STEP 1: Common data loading configuration
+            // IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
 
-            TrainTestData trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
-            IDataView trainingData = trainTestSplit.TrainSet;
-            IDataView testData = trainTestSplit.TestSet;
+            // TrainTestData trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
+            // IDataView trainingData = trainTestSplit.TrainSet;
+            // IDataView testData = trainTestSplit.TestSet;
+
+            // STEP 2: Load data
+            IDataView trainDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
+            IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
+            // TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
+            // IDataView trainDataView = textLoader.Load(TrainDataPath);
+            // IDataView testDataView = textLoader.Load(TestDataPath);
 
             // STEP 2: Common data process configuration with pipeline data transformations          
             var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole(mlContext, dataView, dataProcessPipeline, 2);
+            ConsoleHelper.PeekDataViewInConsole(mlContext, testDataView, dataProcessPipeline, 2);
             //Peak the transformed features column
             //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", dataView, dataProcessPipeline, 1);
 
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
-            // var trainer = mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features");
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
             IEnumerable<RunDetails<BinaryClassificationMetrics>> runDetails = mlContext.Auto()
                                                                              .CreateBinaryClassificationExperiment(ExperimentTime)
-                                                                             .Execute(trainingData);
-           
-            RunDetails<BinaryClassificationMetrics> best = runDetails.Best();
-            ITransformer trainedModel = best.Model;
-
-            //var trainingPipeline = dataProcessPipeline.Append(trainer);
-
-            // //Measure training time
-            // var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            // // STEP 4: Train the model fitting to the DataSet
-            // Console.WriteLine("=============== Training the model ===============");
-            // ITransformer trainedModel = trainingPipeline.Fit(trainingData);
-            
-
-            // //Stop measuring time
-            // watch.Stop();
-            // long elapsedMs = watch.ElapsedMilliseconds;
-            // Console.WriteLine($"***** Training time: {elapsedMs / 1000} seconds *****");
+                                                                             .Execute(trainDataView);
 
             // STEP 5: Evaluate the model and show accuracy stats
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            // var predictions = trainedModel.Transform(testData);
-            var predictions = trainedModel.Transform(testData);
-            // var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
-            var metrics = mlContext.BinaryClassification.Evaluate(predictions);
+            RunDetails<BinaryClassificationMetrics> best = runDetails.Best();
+            ITransformer trainedModel = best.Model;
+            var predictions = trainedModel.Transform(testDataView);
+            var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
-            // ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            mlContext.Model.Save(trainedModel, trainingData.Schema, ModelPath);
+            mlContext.Model.Save(trainedModel,  trainDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
             return trainedModel;
         }
 
-        // (OPTIONAL) Try/test a single prediction by loding the model from the file, first.
+        // (OPTIONAL) Try/test a single prediction by loading the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
         {         
 
@@ -116,7 +104,6 @@ namespace SentimentAnalysisConsoleApp
             Console.WriteLine($"=============== Loaded Model OK  ===============");               
 
             // Create prediction engine related to the loaded trained model
-            //var predictionEngine = mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
             var predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
             Console.WriteLine($"=============== Created Prediction Engine OK  ==============="); 
             //Score
