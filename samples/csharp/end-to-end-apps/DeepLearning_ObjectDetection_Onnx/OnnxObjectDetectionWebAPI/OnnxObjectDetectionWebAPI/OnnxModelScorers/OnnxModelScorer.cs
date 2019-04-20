@@ -140,7 +140,7 @@ namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
                   SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
 
                   // Fill rectangle on which the text is displayed.
-                  RectangleF rect = new RectangleF(x, y, 130, 20);                  
+                  RectangleF rect = new RectangleF(x, y, w, 30);                  
                   thumbnailGraph.FillRectangle(yellowBrush, rect);
                   //draw text in red color
                   thumbnailGraph.DrawString(text, drawFont, redBrush, atPoint);  
@@ -148,9 +148,7 @@ namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
                   thumbnailGraph.DrawRectangle(pen, x, y, w, h);
               }
             }
-            string outputImage = "Image";            
-            var xim = string.Format("{0}_{1}", outputImage, 1);
-            image.Save(string.Format(@"output\{0}.jpg",xim));
+            image.Save(@"Output\outputImage.jpg");
         }
 
         private IDataView CreateDataView()
