@@ -68,22 +68,6 @@ namespace OnnxObjectDetectionWebAPI.Controllers
                 _logger.LogInformation("Error is: " + e.Message);
                 return BadRequest();
             }
-            //finally
-            //{
-            //    try
-            //    {
-            //        if (imageFilePath != string.Empty)
-            //        {
-            //            _logger.LogInformation($"Deleting Image {imageFilePath}");
-                           //ToDo: The file is being used by dotnet.exe process and not able to delete from bin/debug folder.
-            //            _imageWriter.DeleteImageTempFile(imageFilePath);
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        _logger.LogInformation("Error deleting image: " + imageFilePath);
-            //    }
-            //}
         }
 
         // GET api/ImageClassification
