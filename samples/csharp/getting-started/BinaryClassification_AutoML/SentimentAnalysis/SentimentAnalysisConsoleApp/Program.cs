@@ -52,12 +52,11 @@ namespace SentimentAnalysisConsoleApp
             IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 
 
-            // STEP 2: Common data process configuration with pipeline data transformations          
-            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
+            // STEP 2: Display first few rows of the test data        
+            // (OPTIONAL) Show data (such as 2 records) in training DataView 
+            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
 
-            // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole(mlContext, testDataView, dataProcessPipeline, 2);
-            //Peak the transformed features column
+            //TODO: VectorColumnData - look into this without use of dataProcessPipeline
             //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", dataView, dataProcessPipeline, 1);
 
             // STEP 3: Auto featurize, auto train and auto hyperparameter tune                        
@@ -66,15 +65,17 @@ namespace SentimentAnalysisConsoleApp
                                                                              .CreateBinaryClassificationExperiment(ExperimentTime)
                                                                              .Execute(trainDataView);
 
-            // STEP 5: Evaluate the model and show accuracy stats
+            // STEP 4: Evaluate the model and show metrics
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             RunDetails<BinaryClassificationMetrics> best = runDetails.Best();
             ITransformer trainedModel = best.Model;
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
 
+            //TODO: Create method to print noncalibrated metrics and print top 5 performing models 
+            //ConsoleHelper.PrintBinaryClassificationMetrics(best.TrainerName.ToString(), metrics);
 
-            // STEP 6: Save/persist the trained model to a .ZIP file
+            // STEP 5: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel,  trainDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);

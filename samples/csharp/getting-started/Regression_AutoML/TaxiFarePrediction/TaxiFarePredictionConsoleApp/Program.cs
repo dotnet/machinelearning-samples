@@ -59,35 +59,29 @@ namespace Regression_TaxiFarePrediction
             IDataView trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
             var cnt2 = trainingDataView.GetColumn<float>(nameof(TaxiTrip.FareAmount)).Count();
 
-            // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(TaxiTrip.FareAmount))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "VendorIdEncoded", inputColumnName: nameof(TaxiTrip.VendorId)))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "RateCodeEncoded", inputColumnName: nameof(TaxiTrip.RateCode)))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PaymentTypeEncoded",inputColumnName: nameof(TaxiTrip.PaymentType)))
-                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.PassengerCount)))
-                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.TripTime)))
-                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.TripDistance)))
-                            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", nameof(TaxiTrip.PassengerCount)
-                            , nameof(TaxiTrip.TripTime), nameof(TaxiTrip.TripDistance)));
+            // STEP 2: Display first few rows of the test data
+            // (OPTIONAL) Show data (such as 5 records) in training DataView
+            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
+            
+            //TODO:VectorColumnData look into this
+            // ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
-            // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 5);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
-
-           // STEP 3: Auto featurize, auto train and auto hyperparameter tune 
+           // STEP 3: Auto featurize, auto train and auto hyperparameter tune   
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
             IEnumerable<RunDetails<RegressionMetrics>> runDetails = mlContext.Auto()
                                                                    .CreateRegressionExperiment(ExperimentTime)
                                                                    .Execute(trainingDataView, LabelColumn);
 
-            // STEP 4: Evaluate test data
+            // STEP 4: Evaluate the model and show metrics
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             RunDetails<RegressionMetrics> best = runDetails.Best();
             ITransformer trainedModel = best.Model;
             IDataView predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "FareAmount", scoreColumnName: "Score");
 
+            //TODO: Need to have top 5 models in print metrics for automl samples
+            ConsoleHelper.PrintRegressionMetrics(best.TrainerName.ToString(), metrics);
 
             // STEP 5: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);

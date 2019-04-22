@@ -6,23 +6,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using mnist.DataStructures;
+using Common;
 
 namespace mnist
 {
     class Program
     {
         private static string BaseDatasetsRelativePath = @"../../../Data";
-        private static string TrianDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
-        private static string TestDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
 
-        private static string TrainDataPath = GetAbsolutePath(TrianDataRealtivePath);
-        private static string TestDataPath = GetAbsolutePath(TestDataRealtivePath);
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/Model.zip";
 
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
-        private static uint ExperimentTime = 60;
+        private static uint ExperimentTime = 6;
 
         static void Main(string[] args)
         {
@@ -61,20 +62,24 @@ namespace mnist
                         );
 
                 
-                // STEP 3: Auto featurize, auto train and auto hyperparameter tune
+                // STEP 2: Auto featurize, auto train and auto hyperparameter tune
                 Console.WriteLine("=============== Training the model ===============");
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
                 IEnumerable<RunDetails<MulticlassClassificationMetrics>> runDetails = mlContext.Auto()
                                                                                 .CreateMulticlassClassificationExperiment(ExperimentTime)
                                                                                 .Execute(trainData, "Number");
 
-                // STEP 4: Evaluate test data
+                // STEP 3: Evaluate the model and show metrics
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 RunDetails<MulticlassClassificationMetrics> best = runDetails.Best();
                 ITransformer trainedModel = best.Model;
                 var predictions = trainedModel.Transform(testData);
                 var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName:"Number", scoreColumnName:"Score");
 
+                //TODO: Need to have top 5 models in print metrics for automl samples
+                ConsoleHelper.PrintMultiClassClassificationMetrics(best.TrainerName.ToString(), metrics);
+
+                // STEP 4: Save/persist the trained model to a .ZIP file
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);
