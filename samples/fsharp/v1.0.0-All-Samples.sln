@@ -51,6 +51,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubIssuesLabeler.Solutio
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GitHubLabeler", "end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler\GitHubLabelerConsoleApp\GitHubLabeler.fsproj", "{F1262B9E-1DBD-4219-BB01-A3F8226A0AF7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseaseDetection.Solution", "HeartDiseaseDetection.Solution", "{A4E15AA2-F36A-49D4-A28A-8FCDD8BE5597}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "HeartDiseaseDetectionConsoleApp", "getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection\HeartDiseaseDetectionConsoleApp.fsproj", "{45A7CA79-4B9D-4855-A703-2559DC932EE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +113,10 @@ Global
 		{F1262B9E-1DBD-4219-BB01-A3F8226A0AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1262B9E-1DBD-4219-BB01-A3F8226A0AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1262B9E-1DBD-4219-BB01-A3F8226A0AF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45A7CA79-4B9D-4855-A703-2559DC932EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A7CA79-4B9D-4855-A703-2559DC932EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A7CA79-4B9D-4855-A703-2559DC932EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A7CA79-4B9D-4855-A703-2559DC932EE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +135,7 @@ Global
 		{880A505E-177F-4E6D-A563-2C527F8CCADD} = {4BCB9F94-ACBA-4437-B592-2E08E5C58CC4}
 		{F2D39895-9C19-4468-A7BB-62207CC5BCD6} = {40328BCB-2F8E-4189-879C-697A6002C1E6}
 		{F1262B9E-1DBD-4219-BB01-A3F8226A0AF7} = {959E87F1-8A76-4B9F-9DE4-E4D115BC58AC}
+		{45A7CA79-4B9D-4855-A703-2559DC932EE6} = {A4E15AA2-F36A-49D4-A28A-8FCDD8BE5597}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47D66D3A-D6C7-45A5-8C11-8723039BC142}
