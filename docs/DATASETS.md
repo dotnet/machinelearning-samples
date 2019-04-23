@@ -128,38 +128,38 @@ The datasets are provided under the original terms that Microsoft received such 
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
 > Citation Policy:
-
+>
 >If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
-
+>
 >Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
-
+>
 >Here is a BiBTeX citation as well:
-
+>
 >@misc{Dua:2019 ,
 >author = "Dua, Dheeru and Graff, Casey",
 >year = "2017",
 >title = "{UCI} Machine Learning Repository",
 >url = "http://archive.ics.uci.edu/ml",
 >institution = "University of California, Irvine, School of Information and Computer Sciences" }
-
+>
 >A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
-
+>
 >https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection, in turn, contains the following notice:
-
+>
 >Relevant Papers:
-
+>
 >We offer a comprehensive study of this corpus in the following paper. This work presents a number of statistics, studies and baseline results for several machine learning methods. 
-
+>
 >Almeida, T.A., GÃ³mez Hidalgo, J.M., Yamakami, A. Contributions to the Study of SMS Spam Filtering: New Collection and Results. Proceedings of the 2011 ACM Symposium on Document Engineering (DOCENG'11), Mountain View, CA, USA, 2011.
-
+>
 >Citation Request:
-
+>
 >If you find this dataset useful, you make a reference to our paper and the web page.[http://www.dt.fee.unicamp.br/~tiago/smsspamcollection] in your papers, research, etc; 
 Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make use of the corpus. 
-
->We would like to thank Min-Yen Kan and his team for making the NUS SMS Corpus available.
-
 >
+>We would like to thank Min-Yen Kan and his team for making the NUS SMS Corpus available.
+>
+
 
 ### Heart Disease Dataset
 >
@@ -187,9 +187,9 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
 >
 >https://archive.ics.uci.edu/ml/datasets/heart+Disease, in turn, contains the following notice:
-
+>
 >Citation Request:
-
+>
 >The authors of the databases have requested that any publications resulting from the use of the data include the names of the principal investigator responsible for the data collection at each institution. They would be: 
 >
 >1. Hungarian Institute of Cardiology. Budapest: Andras Janosi, M.D. 
