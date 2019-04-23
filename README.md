@@ -224,5 +224,5 @@ For more information, see the [.NET Foundation Code of Conduct](https://dotnetfo
 
 [ML.NET Samples](https://github.com/dotnet/machinelearning-samples) are licensed under the [MIT license](LICENSE).
 
-Datasets are licensed under the original terms that the .NET Foundation received such datasets, as specified [here](https://raw.githubusercontent.com/dotnet/machinelearning-samples/master/datasets/README.md).
+Datasets are licensed under the original terms that the .NET Foundation received such datasets, as specified [here](./datasets/README.md).
 
