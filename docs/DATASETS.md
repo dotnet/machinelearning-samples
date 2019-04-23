@@ -2,8 +2,8 @@
 
 This page serves as a way to track down the approval of the datasets being used by the ML.NET samples.
 
-MICROSOFT PROVIDES THE DATASETS ON AN "AS IS" BASIS. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, GUARANTEES OR CONDITIONS WITH RESPECT TO YOUR USE OF THE DATASETS. TO THE EXTENT PERMITTED UNDER YOUR LOCAL LAW, MICROSOFT DISCLAIMS ALL LIABILITY FOR ANY DAMAGES OR LOSSES, INLCUDING DIRECT, CONSEQUENTIAL, SPECIAL, INDIRECT, INCIDENTAL OR PUNITIVE, RESULTING FROM YOUR USE OF THE DATASETS.
-The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
+.NET FOUNDATION PROVIDES THE DATASETS ON AN "AS IS" BASIS. .NET FOUNDATION MAKES NO WARRANTIES, EXPRESS OR IMPLIED, GUARANTEES OR CONDITIONS WITH RESPECT TO YOUR USE OF THE DATASETS. TO THE EXTENT PERMITTED UNDER YOUR LOCAL LAW, MICROSOFT DISCLAIMS ALL LIABILITY FOR ANY DAMAGES OR LOSSES, INLCUDING DIRECT, CONSEQUENTIAL, SPECIAL, INDIRECT, INCIDENTAL OR PUNITIVE, RESULTING FROM YOUR USE OF THE DATASETS.
+The datasets are provided under the original terms that .NET FOUNDATION received such datasets. See below for more information about each dataset.
 
 |  Dataset name   | Original Dataset | Processed Dataset |       Sample using the Dataset        | Approval Status |
 |-----------------|------------------|--------------------|----------------------------------------|--------|
