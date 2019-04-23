@@ -15,7 +15,7 @@ dog2.jpg	dog2
 Intersection-Counts.jpg	intersection
 ManyPets.jpg	ManyPets
 ```
-The images are located in the [assets](./ObjectDetectionConsoleApp/assets/images) folder. These images have been downloaded some images from internet 
+The images are located in the [assets](./ObjectDetectionConsoleApp/assets/images) folder. These images have been downloaded internet 
 
 ## Pre-trained model
 There are multiple models which are pre-trained for identifying multiple objects in the images. here we are using the pretrained model, **Tiny Yolo2** in  **ONNX** format. This model is a real-time neural network for object detection that detects 20 different classes. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
