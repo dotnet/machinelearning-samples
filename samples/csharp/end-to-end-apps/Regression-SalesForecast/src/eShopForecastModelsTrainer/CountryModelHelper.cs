@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
 using static eShopForecastModelsTrainer.ConsoleHelpers;
 using Common;
 using Microsoft.ML.Data;
@@ -11,10 +10,6 @@ namespace eShopForecastModelsTrainer
 {
     public class CountryModelHelper
     {
-        private static string NumFeatures = nameof(NumFeatures);
-        
-        private static string CatFeatures = nameof(CatFeatures);
-
         /// <summary>
         /// Train and save model for predicting next month country unit sales
         /// </summary>
@@ -39,30 +34,29 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training country forecasting model");
 
-            var trainingDataView = mlContext.Data.ReadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
             
-            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(DefaultColumnNames.Label, DefaultColumnNames.Features);
+            var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
 
-            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFeatures, nameof(CountryData.year),
+            var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(CountryData.year),
                                 nameof(CountryData.month), nameof(CountryData.max), nameof(CountryData.min),
                                 nameof(CountryData.std), nameof(CountryData.count), nameof(CountryData.sales),
                                 nameof(CountryData.med), nameof(CountryData.prev))
-                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: CatFeatures, inputColumnName: nameof(CountryData.country)))
-                        .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, NumFeatures, CatFeatures))
-                        .Append(mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(CountryData.next)))
+                        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(CountryData.country)))
+                        .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
+                        .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(CountryData.next)))
                         .Append(trainer);
 
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn: DefaultColumnNames.Label);
+            var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // Create and Train the model
             var model = trainingPipeline.Fit(trainingDataView);
-
-            using (var file = File.OpenWrite(outputModelPath))
-                model.SaveTo(mlContext, file);
+            //Save model
+            mlContext.Model.Save(model, trainingDataView.Schema, outputModelPath);
         }
 
         /// <summary>
@@ -77,7 +71,7 @@ namespace eShopForecastModelsTrainer
             ITransformer trainedModel;
             using (var stream = File.OpenRead(outputModelPath))
             {
-                trainedModel = mlContext.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream,out var modelInputSchema);
             }
 
             //ITransformer trainedModel;
@@ -87,7 +81,7 @@ namespace eShopForecastModelsTrainer
             //        .LoadFrom(mlContext, file);
             //}
 
-            var predictionEngine = trainedModel.CreatePredictionEngine<CountryData, CountrySalesPrediction>(mlContext);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<CountryData, CountrySalesPrediction>(trainedModel);
 
             Console.WriteLine("** Testing Country 1 **");
 

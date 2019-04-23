@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
+| v1.0.0-preview  | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
 
 
 ## Problem
@@ -110,7 +110,7 @@ Finally, we extract the prediction engine after *fitting* the estimator pipeline
 
 ```fsharp
 let model = pipeline.Fit(data)
-let predictionEngine = model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext)
+let predictionEngine = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model)
 ```
 When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. Each position in the array is assigned to a label, so for example, if the model has 5 different labels, the array will be length = 5. Each position in the array represents the label's probability in that position; the sum of all array values (probabilities) is equal to one. Then, you need to select the biggest value (probability), and check which is the assigned label to that position.
 

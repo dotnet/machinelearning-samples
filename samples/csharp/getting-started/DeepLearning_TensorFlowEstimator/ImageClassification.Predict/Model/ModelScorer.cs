@@ -3,8 +3,6 @@ using System.Linq;
 using ImageClassification.ImageData;
 using System.IO;
 using Microsoft.ML;
-using Microsoft.ML.Core.Data;
-using Microsoft.ML.Data;
 using static ImageClassification.Model.ConsoleHelpers;
 
 namespace ImageClassification.Model
@@ -30,21 +28,19 @@ namespace ImageClassification.Model
             Console.WriteLine($"Model loaded: {modelLocation}");
 
             // Load the model
-            ITransformer loadedModel;
-            using (var f = new FileStream(modelLocation, FileMode.Open))
-                loadedModel = mlContext.Model.Load(f);
+            ITransformer loadedModel = mlContext.Model.Load(modelLocation,out var modelInputSchema);
 
             // Make prediction function (input = ImageNetData, output = ImageNetPrediction)
-            var predictor = loadedModel.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext);
+            var predictor = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(loadedModel);
             // Read csv file into List<ImageNetData>
-            var testData = ImageNetData.ReadFromCsv(dataLocation, imagesFolder).ToList();
+            var imageListToPredict = ImageNetData.ReadFromCsv(dataLocation, imagesFolder).ToList();
 
             ConsoleWriteHeader("Making classifications");
             // There is a bug (https://github.com/dotnet/machinelearning/issues/1138), 
             // that always buffers the response from the predictor
             // so we have to make a copy-by-value op everytime we get a response
             // from the predictor
-            testData
+            imageListToPredict
                 .Select(td => new { td, pred = predictor.Predict(td) })
                 .Select(pr => (pr.td.ImagePath, pr.pred.PredictedLabelValue, pr.pred.Score))
                 .ToList()

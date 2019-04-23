@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
-using Microsoft.ML.Core.Data;
 
 namespace MovieRecommenderModel
 {
@@ -24,10 +23,7 @@ namespace MovieRecommenderModel
         private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
         private static string TestDataLocation = GetAbsolutePath(TestDataRelativePath);
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
-
-        private static string userIdFeaturized = nameof(userIdFeaturized);
-        private static string movieIdFeaturized = nameof(movieIdFeaturized);
-
+        
         static void Main(string[] args)
         {
             Color color = Color.FromArgb(130,150,115);
@@ -39,7 +35,7 @@ namespace MovieRecommenderModel
             MLContext mlContext = new MLContext();
 
             //STEP 2: Read data from text file using TextLoader by defining the schema for reading the movie recommendation datasets and return dataview.
-            var trainingDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
+            var trainingDataView = mlContext.Data.LoadFromTextFile<MovieRating>(path:TrainingDataLocation,hasHeader:true,separatorChar: ',');
 
             Console.WriteLine("=============== Reading Input Files ===============", color);
             Console.WriteLine();
@@ -55,10 +51,10 @@ namespace MovieRecommenderModel
 
             //STEP 4: Transform your data by encoding the two features userId and movieID.
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
-            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: userIdFeaturized, inputColumnName: nameof(MovieRating.userId))
-                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: movieIdFeaturized, inputColumnName: nameof(MovieRating.movieId))
-                                          .Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, userIdFeaturized, movieIdFeaturized))
-                                          .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {DefaultColumnNames.Features})));
+            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "userIdFeaturized", inputColumnName: nameof(MovieRating.userId))
+                                          .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "movieIdFeaturized", inputColumnName: nameof(MovieRating.movieId))
+                                          .Append(mlContext.Transforms.Concatenate("Features", "userIdFeaturized", "movieIdFeaturized"))
+                                          .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {"Features"})));
 
             var preview = pipeline.Preview(trainingDataView, maxRows: 10);
 
@@ -71,17 +67,17 @@ namespace MovieRecommenderModel
             //STEP 6: Evaluate the model performance
             Console.WriteLine("=============== Evaluating the model ===============", color);
             Console.WriteLine();
-            var testDataView = mlContext.Data.ReadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
+            var testDataView = mlContext.Data.LoadFromTextFile<MovieRating>(path:TestDataLocation, hasHeader: true, separatorChar: ',');
 
             var prediction = model.Transform(testDataView);
 
-            var metrics = mlContext.BinaryClassification.Evaluate(data: prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score, predictedLabel: DefaultColumnNames.PredictedLabel);
-            Console.WriteLine("Evaluation Metrics: acc:" + Math.Round(metrics.Accuracy, 2) + " auc:" + Math.Round(metrics.Auc, 2),color);
+            var metrics = mlContext.BinaryClassification.Evaluate(data: prediction, labelColumnName: "Label", scoreColumnName: "Score", predictedLabelColumnName: "PredictedLabel");
+            Console.WriteLine("Evaluation Metrics: acc:" + Math.Round(metrics.Accuracy, 2) + " AreaUnderRocCurve(AUC):" + Math.Round(metrics.AreaUnderRocCurve, 2),color);
 
             //STEP 7:  Try/test a single prediction by predicting a single movie rating for a specific user
             Console.WriteLine("=============== Test a single prediction ===============", color);
             Console.WriteLine();
-            var predictionEngine = model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(model);
             MovieRating testData = new MovieRating() { userId = "6", movieId = "10" };
 
             var movieRatingPrediction = predictionEngine.Predict(testData);
@@ -90,19 +86,14 @@ namespace MovieRecommenderModel
 
             //STEP 8:  Save model to disk
             Console.WriteLine("=============== Writing model to the disk ===============", color);
-            Console.WriteLine();
-
-            using (FileStream fs = new FileStream(ModelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-            {
-                mlContext.Model.Save(model, fs);
-            }
+            Console.WriteLine();mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("=============== Re-Loading model from the disk ===============", color);
             Console.WriteLine();
             ITransformer trainedModel;
             using (FileStream stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                trainedModel = mlContext.Model.Load(stream);
+                trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
             }
 
             Console.WriteLine("Press any key ...");

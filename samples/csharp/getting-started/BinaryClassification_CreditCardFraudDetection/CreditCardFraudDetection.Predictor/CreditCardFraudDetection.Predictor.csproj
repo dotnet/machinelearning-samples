@@ -8,16 +8,15 @@
 
   <ItemGroup>
     <None Remove="assets\input\.gitignore" />
-    <None Remove="assets\output\.gitignore" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="assets\input\" />
-    <Folder Include="assets\output\" />
   </ItemGroup>
 
   <ItemGroup>

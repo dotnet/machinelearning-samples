@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using Microsoft.ML;
-using Microsoft.ML.Core.Data;
-
 using BikeSharingDemand.DataStructures;
-using Common;
-using System.Globalization;
+
+using Microsoft.ML;
 
 namespace BikeSharingDemand
 {

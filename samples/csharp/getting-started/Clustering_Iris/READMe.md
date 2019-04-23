@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
+| v1.0.0-preview         | Dynamic API | Up-to-date | Console app | .txt file | Clustering Iris flowers | Clustering | K-means++ |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to divide iris flowers into different groups that correspond to different types of iris. In the world of machine learning, this task is known as **clustering**.
 
@@ -36,23 +36,28 @@ Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), t
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-IDataView fullData = mlContext.Data.ReadFromTextFile(path: DataPath,
+IDataView fullData = mlContext.Data.LoadFromTextFile(path: DataPath,
                                                 columns:new[]
                                                             {
-                                                                new TextLoader.Column(DefaultColumnNames.Label, DataKind.R4, 0),
-                                                                new TextLoader.Column(nameof(IrisData.SepalLength), DataKind.R4, 1),
-                                                                new TextLoader.Column(nameof(IrisData.SepalWidth), DataKind.R4, 2),
-                                                                new TextLoader.Column(nameof(IrisData.PetalLength), DataKind.R4, 3),
-                                                                new TextLoader.Column(nameof(IrisData.PetalWidth), DataKind.R4, 4),
+                                                                new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                new TextLoader.Column(nameof(IrisData.SepalLength), DataKind.Single, 1),
+                                                                new TextLoader.Column(nameof(IrisData.SepalWidth), DataKind.Single, 2),
+                                                                new TextLoader.Column(nameof(IrisData.PetalLength), DataKind.Single, 3),
+                                                                new TextLoader.Column(nameof(IrisData.PetalWidth), DataKind.Single, 4),
                                                             },
                                                 hasHeader:true,
                                                 separatorChar:'\t');
+                                                
+//Split dataset in two parts: TrainingDataset (80%) and TestDataset (20%)
+DataOperationsCatalog.TrainTestData trainTestData = mlContext.Data.TrainTestSplit(fullData, testFraction: 0.2);
+trainingDataView = trainTestData.TrainSet;
+testingDataView = trainTestData.TestSet;
 
 //STEP 2: Process data transformations in pipeline
-var dataProcessPipeline = mlContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth), nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth));
+var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", nameof(IrisData.SepalLength), nameof(IrisData.SepalWidth), nameof(IrisData.PetalLength), nameof(IrisData.PetalWidth));
 
 // STEP 3: Create and train the model     
- var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
+var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 ### 2. Train model
@@ -74,7 +79,7 @@ After the model is build and trained, we can use the `Predict()` API to predict 
                 };
 
                 // Create prediction engine related to the loaded trained model
-                var predEngine = model.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext);
+                var predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(model);
 
                 //Score
                 var resultprediction = predEngine.Predict(sampleIrisData);

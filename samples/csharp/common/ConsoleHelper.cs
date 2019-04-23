@@ -1,15 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-
-using Microsoft.ML.Core.Data;
 using System.Collections.Generic;
 using Microsoft.ML.Data;
 using Microsoft.ML;
-
-using System.Reflection;
-using Microsoft.Data.DataView;
+using static Microsoft.ML.TrainCatalogBase;
 
 namespace Common
 {
@@ -30,18 +24,16 @@ namespace Common
             Console.WriteLine($"-------------------------------------------------");
         }
 
-        //(CDLTLL-Pending to Fix - Results --> ?)
-        //
         public static void PrintRegressionMetrics(string name, RegressionMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} regression model      ");
             Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       LossFn:        {metrics.LossFn:0.##}");
+            Console.WriteLine($"*       LossFn:        {metrics.LossFunction:0.##}");
             Console.WriteLine($"*       R2 Score:      {metrics.RSquared:0.##}");
-            Console.WriteLine($"*       Absolute loss: {metrics.L1:#.##}");
-            Console.WriteLine($"*       Squared loss:  {metrics.L2:#.##}");
-            Console.WriteLine($"*       RMS loss:      {metrics.Rms:#.##}");
+            Console.WriteLine($"*       Absolute loss: {metrics.MeanAbsoluteError:#.##}");
+            Console.WriteLine($"*       Squared loss:  {metrics.MeanSquaredError:#.##}");
+            Console.WriteLine($"*       RMS loss:      {metrics.RootMeanSquaredError:#.##}");
             Console.WriteLine($"*************************************************");
         }
 
@@ -51,8 +43,8 @@ namespace Common
             Console.WriteLine($"*       Metrics for {name} binary classification model      ");
             Console.WriteLine($"*-----------------------------------------------------------");
             Console.WriteLine($"*       Accuracy: {metrics.Accuracy:P2}");
-            Console.WriteLine($"*       Auc:      {metrics.Auc:P2}");
-            Console.WriteLine($"*       Auprc:  {metrics.Auprc:P2}");
+            Console.WriteLine($"*       Area Under Curve:      {metrics.AreaUnderRocCurve:P2}");
+            Console.WriteLine($"*       Area under Precision recall Curve:  {metrics.AreaUnderPrecisionRecallCurve:P2}");
             Console.WriteLine($"*       F1Score:  {metrics.F1Score:P2}");
             Console.WriteLine($"*       LogLoss:  {metrics.LogLoss:#.##}");
             Console.WriteLine($"*       LogLossReduction:  {metrics.LogLossReduction:#.##}");
@@ -63,33 +55,27 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintMultiClassClassificationMetrics(string name, MultiClassClassifierMetrics metrics)
+        public static void PrintMultiClassClassificationMetrics(string name, MulticlassClassificationMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*    Metrics for {name} multi-class classification model   ");
             Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"    AccuracyMacro = {metrics.AccuracyMacro:0.####}, a value between 0 and 1, the closer to 1, the better");
-            Console.WriteLine($"    AccuracyMicro = {metrics.AccuracyMicro:0.####}, a value between 0 and 1, the closer to 1, the better");
+            Console.WriteLine($"    AccuracyMacro = {metrics.MacroAccuracy:0.####}, a value between 0 and 1, the closer to 1, the better");
+            Console.WriteLine($"    AccuracyMicro = {metrics.MicroAccuracy:0.####}, a value between 0 and 1, the closer to 1, the better");
             Console.WriteLine($"    LogLoss = {metrics.LogLoss:0.####}, the closer to 0, the better");
             Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
             Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
             Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
             Console.WriteLine($"************************************************************");
         }
-
-        //(CDLTLL-Pending to Fix - Results --> ?)
-
-        public static void PrintRegressionFoldsAverageMetrics(string algorithmName,
-                                                              (RegressionMetrics metrics,
-                                                               ITransformer model,
-                                                               IDataView scoredTestData)[] crossValidationResults
-                                                             )
+       
+        public static void PrintRegressionFoldsAverageMetrics(string algorithmName, IReadOnlyList<CrossValidationResult<RegressionMetrics>> crossValidationResults)
         {
-            var L1 = crossValidationResults.Select(r => r.metrics.L1);
-            var L2 = crossValidationResults.Select(r => r.metrics.L2);
-            var RMS = crossValidationResults.Select(r => r.metrics.L1);
-            var lossFunction = crossValidationResults.Select(r => r.metrics.LossFn);
-            var R2 = crossValidationResults.Select(r => r.metrics.RSquared);
+            var L1 = crossValidationResults.Select(r => r.Metrics.MeanAbsoluteError);
+            var L2 = crossValidationResults.Select(r => r.Metrics.MeanSquaredError);
+            var RMS = crossValidationResults.Select(r => r.Metrics.RootMeanSquaredError);
+            var lossFunction = crossValidationResults.Select(r => r.Metrics.LossFunction);
+            var R2 = crossValidationResults.Select(r => r.Metrics.RSquared);
 
             Console.WriteLine($"*************************************************************************************************************");
             Console.WriteLine($"*       Metrics for {algorithmName} Regression model      ");
@@ -104,19 +90,17 @@ namespace Common
 
         public static void PrintMulticlassClassificationFoldsAverageMetrics(
                                          string algorithmName,
-                                         (MultiClassClassifierMetrics metrics,
-                                          ITransformer model,
-                                          IDataView scoredTestData)[] crossValResults
+                                       IReadOnlyList<CrossValidationResult<MulticlassClassificationMetrics>> crossValResults
                                                                            )
         {
-            var metricsInMultipleFolds = crossValResults.Select(r => r.metrics);
+            var metricsInMultipleFolds = crossValResults.Select(r => r.Metrics);
 
-            var microAccuracyValues = metricsInMultipleFolds.Select(m => m.AccuracyMicro);
+            var microAccuracyValues = metricsInMultipleFolds.Select(m => m.MicroAccuracy);
             var microAccuracyAverage = microAccuracyValues.Average();
             var microAccuraciesStdDeviation = CalculateStandardDeviation(microAccuracyValues);
             var microAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(microAccuracyValues);
 
-            var macroAccuracyValues = metricsInMultipleFolds.Select(m => m.AccuracyMacro);
+            var macroAccuracyValues = metricsInMultipleFolds.Select(m => m.MacroAccuracy);
             var macroAccuracyAverage = macroAccuracyValues.Average();
             var macroAccuraciesStdDeviation = CalculateStandardDeviation(macroAccuracyValues);
             var macroAccuraciesConfidenceInterval95 = CalculateConfidenceInterval95(macroAccuracyValues);
@@ -161,9 +145,28 @@ namespace Common
             Console.WriteLine($"*************************************************");
             Console.WriteLine($"*       Metrics for {name} clustering model      ");
             Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"*       AvgMinScore: {metrics.AvgMinScore}");
-            Console.WriteLine($"*       DBI is: {metrics.Dbi}");
+            Console.WriteLine($"*       Average Distance: {metrics.AverageDistance}");
+            Console.WriteLine($"*       Davies Bouldin Index is: {metrics.DaviesBouldinIndex}");
             Console.WriteLine($"*************************************************");
+        }
+
+        public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
+        {
+            string msg = string.Format("Show data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
+            ConsoleWriteHeader(msg);
+
+            var preViewTransformedData = dataView.Preview(maxRows: numberOfRows);
+
+            foreach (var row in preViewTransformedData.RowView)
+            {
+                var ColumnCollection = row.Values;
+                string lineToPrint = "Row--> ";
+                foreach (KeyValuePair<string, object> column in ColumnCollection)
+                {
+                    lineToPrint += $"| {column.Key}:{column.Value}";
+                }
+                Console.WriteLine(lineToPrint + "\n");
+            }
         }
 
         public static void PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
@@ -201,7 +204,7 @@ namespace Common
             var transformedData = transformer.Transform(dataView);
 
             // Extract the 'Features' column.
-            var someColumnData = transformedData.GetColumn<float[]>(mlContext, columnName)
+            var someColumnData = transformedData.GetColumn<float[]>(columnName)
                                                         .Take(numberOfRows).ToList();
 
             // print to console the peeked rows

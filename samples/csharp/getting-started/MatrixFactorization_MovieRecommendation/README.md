@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10   | Dynamic API | Updated to v0.9 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
+| v1.0.0-preview   | Dynamic API | Up-to-date | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
 
 In this sample, you can see how to use ML.NET to build a movie recommendation engine. 
 
@@ -52,8 +52,8 @@ Here's the code which will be used to build the model:
   MLContext mlcontext = new MLContext();
 
  //STEP 2: Read the training data which will be used to train the movie recommendation model    
- //The schema for training data is defined by type 'TInput' in ReadFromTextFile<TInput>() method.
- IDataView trainingDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, ar:',');
+ //The schema for training data is defined by type 'TInput' in LoadFromTextFile<TInput>() method.
+ IDataView trainingDataView = mlcontext.Data.LoadFromTextFile<MovieRating>(TrainingDataLocation, hasHeader: true, ar:',');
 
 //STEP 3: Transform your data by encoding the two features userId and movieID. These encoded features will be provided as 
 //        to our MatrixFactorizationTrainer.
@@ -64,9 +64,9 @@ Here's the code which will be used to build the model:
  MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
  options.MatrixColumnIndexColumnName = userIdEncoded;
  options.MatrixRowIndexColumnName = movieIdEncoded;
- options.LabelColumnName = DefaultColumnNames.Label;
- options.NumIterations = 20;
- options.K = 100;
+ options.LabelColumnName = "Label";
+ options.NumberOfIterations = 20;
+ options.ApproximationRank = 100;
 
 //STEP 4: Create the training pipeline 
  var trainingPipeLine = dataProcessingPipeline.Append(mlcontext.Recommendation().Trainers.MatrixFactorization(options));
@@ -91,15 +91,15 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 ```CSharp 
 Console.WriteLine("=============== Evaluating the model ===============");
-IDataView testDataView = mlcontext.Data.ReadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
+IDataView testDataView = mlcontext.Data.LoadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
 var prediction = model.Transform(testDataView);
-var metrics = mlcontext.Regression.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+var metrics = mlcontext.Regression.Evaluate(prediction, labelColumnName: "Label", scoreColumnName: "Score");
 ```
 
 ### 4. Consume model
 After the model is trained, you can use the `Predict()` API to predict the rating for a particular movie/user combination. 
 ```CSharp    
-var predictionengine = model.MakePredictionFunction<MovieRating, MovieRatingPrediction>(mlcontext);
+var predictionengine = mlcontext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(model);
 var movieratingprediction = predictionengine.Predict(
                 new MovieRating()
                 {

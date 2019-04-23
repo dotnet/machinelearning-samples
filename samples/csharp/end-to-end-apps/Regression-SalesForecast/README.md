@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v1.0.0-preview           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
@@ -48,6 +48,8 @@ To solve this problem, you build two independent ML models that take the followi
 |----------|--------|
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev      |
 | **country stats**  | next, country, year, month, max, min, std, count, sales, med, prev   |
+
+[Explanation of Dataset](docs/Details-of-Dataset.md) - Goto this link for detailed information on dataset.
 
 ### ML task - [Regression](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#regression)
 
@@ -114,7 +116,7 @@ Load the dataset into the DataView.
 
 ```chsarp
 
-var trainingDataView = mlContext.Data.ReadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
+var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
 ```
 
@@ -130,14 +132,16 @@ You can load the dataset either before or after designing the pipeline. Although
 
 ```csharp
 
-var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumn: DefaultColumnNames.Label, featureColumn: DefaultColumnNames.Features);
+var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
 
-var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFeatures, nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
-                nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: CatFeatures, inputColumnName: nameof(ProductData.productId)))
-                .Append(mlContext.Transforms.Concatenate(outputColumnName: DefaultColumnNames.Features, NumFeatures, CatFeatures))
-                .Append(mlContext.Transforms.CopyColumns(outputColumnName: DefaultColumnNames.Label, inputColumnName: nameof(ProductData.next)))
-                .Append(trainer);
+var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(CountryData.year),
+                                nameof(CountryData.month), nameof(CountryData.max), nameof(CountryData.min),
+                                nameof(CountryData.std), nameof(CountryData.count), nameof(CountryData.sales),
+                                nameof(CountryData.med), nameof(CountryData.prev))
+                    .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(CountryData.country)))
+                    .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
+                    .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(CountryData.next)))
+                    .Append(trainer);
 
 ```
 
@@ -146,7 +150,7 @@ var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: NumFea
 In this case, the evaluation of the model is performed before training the model with a cross-validation approach, so you obtain metrics telling you how good is the accuracy of the model. 
 
 ```csharp
-var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numFolds: 6, labelColumn: DefaultColumnNames.Label);
+var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             
 ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 ```
@@ -164,7 +168,7 @@ Once the model is created and evaluated, you can save it into a .ZIP file which 
 
 ```csharp            
 using (var file = File.OpenWrite(outputModelPath))
-    model.SaveTo(mlContext, file);
+                mlContext.Model.Save(model, trainingDataView.Schema, file);
 ```
 
 #### 5. Try the model with a simple test prediction
@@ -176,10 +180,10 @@ Basically, you can load the model from the .ZIP file create some sample data, cr
 ITransformer trainedModel;
 using (var stream = File.OpenRead(outputModelPath))
 {
-    trainedModel = mlContext.Model.Load(stream);
+    trainedModel = mlContext.Model.Load(stream,out var modelInputSchema);
 }
 
-var predictionEngine = trainedModel.CreatePredictionEngine<ProductData, ProductUnitPrediction>(mlContext);
+var predictionEngine = mlContext.Model.CreatePredictionEngine<CountryData, CountrySalesPrediction>(trainedModel);
 
 Console.WriteLine("** Testing Product 1 **");
 

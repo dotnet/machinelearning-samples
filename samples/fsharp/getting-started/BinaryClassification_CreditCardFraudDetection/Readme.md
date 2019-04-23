@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v1.0.0-preview | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
@@ -63,58 +63,46 @@ The initial code is similar to the following:
     // Seed set to any number so you have a deterministic environment for repeateable results
     let seed = Nullable 1
     let mlContext = MLContext seed
-
-    let columns = 
-        [|
-            // A boolean column depicting the 'label'.
-            yield TextLoader.Column("Label", Nullable DataKind.BL, 30)
-            // 29 Features V1..V28 + Amount
-            for i in 1 .. 28 -> 
-                TextLoader.Column(sprintf "V%d" i, Nullable DataKind.R4, i)
-            yield TextLoader.Column("Amount", Nullable DataKind.R4, 29)
-
-    let loaderArgs = TextLoader.Arguments()
-    loaderArgs.Column <- columns
-    loaderArgs.HasHeader <- true
-    loaderArgs.Separators <- [| ',' |]
-    
-
 [...]
     let classification = BinaryClassificationCatalog mlContext
  
 [...]
 
     let trainData, testData = 
-        classification.TrainTestSplit (data, 0.2) 
-        |> fun x -> x.ToTuple ()
+        printfn "Reading train and test data"
+        let trainData = mlContext.Data.LoadFromTextFile<TransactionObservation>(trainFile, separatorChar = ',', hasHeader = true)
+        let testData = mlContext.Data.LoadFromTextFile<TransactionObservation>(testFile, separatorChar = ',', hasHeader = true)
+        trainData, testData
 
 [...]
 
     let featureColumnNames = 
         trainData.Schema
         |> Seq.map (fun column -> column.Name)
+        |> Seq.filter (fun name -> name <> "Time")
         |> Seq.filter (fun name -> name <> "Label")
-        |> Seq.filter (fun name -> name <> "StratificationColumn")
+        |> Seq.filter (fun name -> name <> "IdPreservationColumn")
         |> Seq.toArray
 
     let pipeline = 
-        mlContext.Transforms.Concatenate ("Features", featureColumnNames)
+        EstimatorChain()
+        |> fun x -> x.Append(mlContext.Transforms.Concatenate("Features", featureColumnNames))
+        |> fun x -> x.Append(mlContext.Transforms.DropColumns [|"Time"|])
         |> fun x -> 
             x.Append (
-                mlContext.Transforms.Normalize (
+                mlContext.Transforms.NormalizeMeanVariance (
                     "FeaturesNormalizedByMeanVar", 
-                    "Features", 
-                    NormalizingEstimator.NormalizerMode.MeanVariance
+                    "Features"
                     )
                 )
         |> fun x -> 
             x.Append (
                 mlContext.BinaryClassification.Trainers.FastTree(
                     "Label", 
-                    "Features", 
-                    numLeaves = 20, 
-                    numTrees = 100, 
-                    minDatapointsInLeaves = 10, 
+                    "FeaturesNormalizedByMeanVar", 
+                    numberOfLeaves = 20, 
+                    numberOfTrees = 100, 
+                    minimumExampleCountPerLeaf = 10, 
                     learningRate = 0.2
                     )
                 )
@@ -136,7 +124,7 @@ We need this step to conclude how accurate our model is. To do so, the model fro
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
 `````fsharp
-    let metrics = classification.Evaluate (model.Transform (testData), "Label")  
+    let metrics = mlContext.BinaryClassification.Evaluate(model.Transform (testData), "Label")   
 `````
 
 ### 4. Consume model
@@ -144,7 +132,7 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
 
 `````fsharp
     printfn "Making predictions"
-    mlContext.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
+    mlContext.Data.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
     |> Seq.filter (fun x -> x.Label = true)
     // use 5 observations from the test data
     |> Seq.take 5
@@ -152,4 +140,5 @@ After the model is trained, you can use the `Predict()` API to predict if a tran
         let prediction = predictionEngine.Predict testData
         printfn "%A" prediction
         printfn "------"
+        )
 `````

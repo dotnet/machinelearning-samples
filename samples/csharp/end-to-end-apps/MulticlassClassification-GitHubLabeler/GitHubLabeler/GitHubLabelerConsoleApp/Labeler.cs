@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.ML.Core.Data;
 using Microsoft.ML;
 using Octokit;
 using System.IO;
 using GitHubLabeler.DataStructures;
-using Common;
 using Microsoft.ML.Data;
 
 namespace GitHubLabeler
@@ -32,17 +30,13 @@ namespace GitHubLabeler
             _repoOwner = repoOwner;
             _repoName = repoName;
            
-            _mlContext = new MLContext(seed:1);
+            _mlContext = new MLContext();
 
             //Load model from file
-            
-            using (var stream = new FileStream(_modelPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                _trainedModel = _mlContext.Model.Load(stream);
-            }
+            _trainedModel = _mlContext.Model.Load(_modelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
-            _predEngine = _trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_mlContext);
+            _predEngine = _mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_trainedModel);
 
             //Configure Client to access a GitHub repo
             if (accessToken != string.Empty)
@@ -67,6 +61,8 @@ namespace GitHubLabeler
             var prediction = _predEngine.Predict(singleIssue);
 
             _fullPredictions = GetBestThreePredictions(prediction);
+
+            Console.WriteLine("==== Displaying prediction of Issue with Title = {0} and Description = {1} ====", singleIssue.Title, singleIssue.Description);
 
             Console.WriteLine("1st Label: " + _fullPredictions[0].PredictedLabel + " with score: " + _fullPredictions[0].Score);
             Console.WriteLine("2nd Label: " + _fullPredictions[1].PredictedLabel + " with score: " + _fullPredictions[1].Score);

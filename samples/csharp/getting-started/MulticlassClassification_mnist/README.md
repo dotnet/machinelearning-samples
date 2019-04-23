@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | MNIST classification | Multi-class classification | Sdca Multi-class |
+| v1.0.0-preview           | Dynamic API | Up-to-date | Console app | .csv files | MNIST classification | Multi-class classification | Sdca Multi-class |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to classify handwritten digits from 0 to 9 using the MNIST dataset. This is a **multiclass classification** problem that we will solve using SDCA (Stochastic Dual Coordinate Ascent) algorithm.
 
@@ -33,40 +33,41 @@ Building a model includes:
 The initial code is similar to the following:
 ```CSharp
 // STEP 1: Common data loading configuration
-var trainData = mLContext.Data.ReadFromTextFile(path: TrainDataPath,
+var trainData = mlContext.Data.LoadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
-                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
-                            new TextLoader.Column("Number", DataKind.R4, 64)
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
+                            new TextLoader.Column("Number", DataKind.Single, 64)
                         },
                         hasHeader : false,
                         separatorChar : ','
                         );
 
-var testData = mLContext.Data.ReadFromTextFile(path: TestDataPath,
+                
+var testData = mlContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
-                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.R4, 0, 63),
-                            new TextLoader.Column("Number", DataKind.R4, 64)
+                            new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
+                            new TextLoader.Column("Number", DataKind.Single, 64)
                         },
                         hasHeader: false,
                         separatorChar: ','
-                        );						
+                        );
 
 // STEP 2: Common data process configuration with pipeline data transformations
-var dataProcessPipeline = mLContext.Transforms.Concatenate(DefaultColumnNames.Features, nameof(InputData.PixelValues)).AppendCacheCheckpoint(mLContext);
-
-                
+// Use in-memory cache for small/medium datasets to lower training time. Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
+var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "Number").
+                    Append(mlContext.Transforms.Concatenate("Features", nameof(InputData.PixelValues)).AppendCacheCheckpoint(mlContext));
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder
-var trainer = mLContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn: "Number", featureColumn: DefaultColumnNames.Features);
-var trainingPipeline = dataProcessPipeline.Append(trainer);
+var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "Label", featureColumnName: "Features");
+var trainingPipeline = dataProcessPipeline.Append(trainer).Append(mlContext.Transforms.Conversion.MapKeyToValue("Number","Label"));
 ```
 
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data to tune the parameters of the model. Our training data consists of pixel values and the digit they represent. It is implemented in the `Fit()` method from the Estimator object. 
 
-To perform training we just call the method providing the training dataset (iris-train.txt file) in a DataView object.
+To perform training we just call the method providing the training dataset (optdigits-train.csv file) in a DataView object.
 
 ```CSharp
 // STEP 4: Train the model fitting to the DataSet            
@@ -74,11 +75,11 @@ ITransformer trainedModel = trainingPipeline.Fit(trainData);
 
 ```
 ### 3. Evaluate model
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`iris-test.txt`). This dataset also contains known iris types. `MulticlassClassification.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`optdigits-val.csv`). `MulticlassClassification.Evaluate` calculates the difference between known types and values predicted by the model in various metrics.
 
 ```CSharp
 var predictions = trainedModel.Transform(testData);
-var metrics = mLContext.MulticlassClassification.Evaluate(data:predictions, label:"Number", score:DefaultColumnNames.Score);
+var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName:"Number", scoreColumnName:"Score");
 
 Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 ```
@@ -88,23 +89,18 @@ Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), me
 If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
 
 ### 4. Consume model
-After the model is trained, we can use the `Predict()` API to predict the probability that this flower belongs to each iris type. 
+After the model is trained, we can use the `Predict()` API to predict the probability of being correct digit.
 
 ```CSharp
 
-ITransformer trainedModel;
-using (var stream = new FileStream(ModelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-{
-	trainedModel = mlContext.Model.Load(stream);
-}
+ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
 // Create prediction engine related to the loaded trained model
-var predEngine = trainedModel.CreatePredictionEngine<InputData, OutPutNum>(mlContext);
+var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
 
-//InputData data1 = SampleMNISTData.MNIST1;
 var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
-Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
+Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
 Console.WriteLine($"                                           One :  {resultprediction1.Score[1]:0.####}");
 Console.WriteLine($"                                           two:   {resultprediction1.Score[2]:0.####}");
 Console.WriteLine($"                                           three: {resultprediction1.Score[3]:0.####}");

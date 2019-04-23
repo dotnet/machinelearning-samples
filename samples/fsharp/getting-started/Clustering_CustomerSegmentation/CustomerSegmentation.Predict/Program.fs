@@ -106,23 +106,23 @@ let main _argv =
         let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic result
         
         //Create the clusters: Create data files and plot a char
-        let model = 
-            use f = File.OpenRead modelZipFilePath
+        let model, inputSchema = 
+            use f = new FileStream(modelZipFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)
             mlContext.Model.Load(f)
         
         let data = 
-            mlContext.Data.ReadFromTextFile(
+            mlContext.Data.LoadFromTextFile(
                 pivotCsv,
                 columns = 
                     [| 
-                        TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
-                        TextLoader.Column("LastName", Nullable DataKind.Text, 32)
+                        TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                        TextLoader.Column("LastName", DataKind.String, 32)
                     |],
                 hasHeader = true,
                 separatorChar = ',')
         
         //Apply data transformation to create predictions/clustering
-        let predictions = mlContext.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
+        let predictions = mlContext.Data.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
 
         //Generate data files with customer data grouped by clusters
         printHeader ["CSV Customer Segmentation"]

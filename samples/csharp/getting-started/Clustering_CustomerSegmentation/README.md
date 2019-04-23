@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.10           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v1.0.0-Preview           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 
@@ -65,7 +65,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 #### Data Pre-Process
 
-The first thing to do is to join the data into a single view. Because we need to compare transactions made the users, we will build a pivot table, where the rows are the customers and the columns are the campaigns, and the cell value shows if the customer made related transaction during that campaign.
+The first thing to do is to join the data into a single view. Because we need to compare transactions made by the users, we will build a pivot table, where the rows are the customers and the columns are the campaigns, and the cell value shows if the customer made related transaction during that campaign.
 
 The pivot table is built executing the PreProcess function which is this case is implemented by loading the files data in memory and using Linq to join the data. But you could use any other approach depending on the size of your data, such as a relational database or any other approach:
 
@@ -116,32 +116,29 @@ Here's the code which will be used to build the model:
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
 // STEP 1: Common data loading configuration
-var pivotDataView = mlContext.Data.ReadFromTextFile(path: pivotCsv,
+var pivotDataView = mlContext.Data.LoadFromTextFile(path: pivotCsv,
                                             columns: new[]
                                                         {
-                                                        new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                                                        new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
+                                                        new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
+                                                        new TextLoader.Column(nameof(PivotData.LastName), DataKind.String, 32)
                                                         },
                                             hasHeader: true,
                                             separatorChar: ',');
 
-//STEP 2: Configure data transformations in pipeline
-var dataProcessPipeline = new PrincipalComponentAnalysisEstimator(env:mlContext, outputColumnName:"PCAFeatures",    inputColumnName: "Features", rank: 2)
-                                                .Append(new OneHotEncodingEstimator(mlContext,
-                                                new[]
-                                                {
-                                                    new OneHotEncodingEstimator.ColumnInfo(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
-                                                     OneHotEncodingTransformer.OutputKind.Ind) }
-                                                ));
+/STEP 2: Configure data transformations in pipeline
+var dataProcessPipeline = mlContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2)
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "LastNameKey", inputColumnName: nameof(PivotData.LastName), OneHotEncodingEstimator.OutputKind.Indicator));
+                
+
 //STEP 3: Create the training pipeline                
-var trainer = mlContext.Clustering.Trainers.KMeans(featureColumn: DefaultColumnNames.Features, clustersCount: 3);
+var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
 In this case, `TextLoader` doesn't define explicitly each column, but declares a `Features` property made by the first 32 columns of the file; also declares the property `LastName` to the value of the last column.
 
 Then, you need to apply some transformations to the data:
-1) Add a PCA column, using the `PrincipalComponentAnalysisEstimator(mlContext, "Features", "PCAFeatures", rank: 2)` Estimator, passing as parameter `rank: 2`, which means that we are reducing the features from 32 to 2 dimensions (*x* and *y*)
+1) Add a PCA column, using the `mlContext.Transforms.Projection.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: DefaultColumnNames.Features, rank: 2)` Estimator, passing as parameter `rank: 2`, which means that we are reducing the features from 32 to 2 dimensions (*x* and *y*)
 
 2) Transform LastName using `OneHotEncodingEstimator`
 
@@ -157,13 +154,14 @@ We evaluate the accuracy of the model. This accuracy is measured using the [Clus
 
 ```csharp
 var predictions = trainedModel.Transform(pivotDataView);
-var metrics = mlContext.Clustering.Evaluate(predictions, score: "Score", features: "Features");
+var metrics = mlContext.Clustering.Evaluate(predictions, scoreColumnName: "Score", featureColumnName: "Features");
+
 ```
 Finally, we save the model to local disk using the dynamic API:
 ```csharp
  //STEP 6: Save/persist the trained model to a .ZIP file
 using (var fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write))
-    mlContext.Model.Save(trainedModel, fs);
+    mlContext.Model.Save(trainedModel, pivotDataView.Schema, fs);
 ```
 #### Model training execution
 
@@ -180,18 +178,18 @@ In this case, the model is not predicting any value (like a regression task) or 
 The code below is how you use the model to create those clusters:
 
 ```csharp
- var data = _mlContext.Data.ReadFromTextFile(path:_pivotDataLocation,
+var data = _mlContext.Data.LoadFromTextFile(path:_pivotDataLocation,
                             columns: new[]
                                         {
-                                          new TextLoader.Column("Features", DataKind.R4, new[] {new TextLoader.Range(0, 31) }),
-                                          new TextLoader.Column(nameof(PivotData.LastName), DataKind.Text, 32)
+                                          new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
+                                          new TextLoader.Column(nameof(PivotData.LastName), DataKind.String, 32)
                                         },
                             hasHeader: true,
                             separatorChar: ',');
 
 //Apply data transformation to create predictions/clustering
 var tranfomedDataView = _trainedModel.Transform(data);
-var predictions = _mlContext.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
+var predictions = _mlContext.Data.CreateEnumerable <ClusteringPrediction>(tranfomedDataView, false)
                             .ToArray();
 ```
 

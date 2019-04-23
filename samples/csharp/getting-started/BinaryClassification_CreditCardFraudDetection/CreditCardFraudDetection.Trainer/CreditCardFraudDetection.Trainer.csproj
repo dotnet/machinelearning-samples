@@ -11,11 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="assets\output\" />
+    <Folder Include="Common\" />
   </ItemGroup>
   
   <ItemGroup>

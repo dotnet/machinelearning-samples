@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="Common\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 
   <ItemGroup>

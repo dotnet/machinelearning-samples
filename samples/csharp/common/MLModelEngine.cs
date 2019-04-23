@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Core.Data;
-using System.IO;
+﻿using System.IO;
 using Microsoft.ML;
 //using Microsoft.Extensions.Configuration;
 
@@ -36,7 +35,7 @@ namespace Common
             //Load the ProductSalesForecast model from the .ZIP file
             using (var fileStream = File.OpenRead(modelFilePathName))
             {
-                _model = mlContext.Model.Load(fileStream);
+                _model = mlContext.Model.Load(fileStream,out var modelInputSchema);
             }
 
             _minPredictionEngineObjectsInPool = minPredictionEngineObjectsInPool;
@@ -75,7 +74,7 @@ namespace Common
                                                                                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
                                                                                 //Make PredictionEngine
-                                                                                var predEngine = _model.CreatePredictionEngine<TData, TPrediction>(_mlContext);
+                                                                                var predEngine = _mlContext.Model.CreatePredictionEngine<TData, TPrediction>(_model);
 
                                                                                 //Stop measuring time
                                                                                 watch.Stop();
