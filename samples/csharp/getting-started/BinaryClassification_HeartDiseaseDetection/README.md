@@ -6,14 +6,11 @@
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict type of heart disease. In the world of machine learning, this type of prediction is known as **binary classification**.
 
-##Dataset
+## Dataset
+
 The dataset used is this: [UCI Heart disease] (https://archive.ics.uci.edu/ml/datasets/heart+Disease)
-This database contains 76 attributes, but all published experiments refer to using a subset of 14 of them. 
-For this dataset thanks to :
-* Hungarian Institute of Cardiology. Budapest: Andras Janosi, M.D. 
-* University Hospital, Zurich, Switzerland: William Steinbrunn, M.D. 
-* University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D. 
-* V.A. Medical Center, Long Beach and Cleveland Clinic Foundation:Robert Detrano, M.D., Ph.D.
+
+The license information for dataset is available [here](../../../../docs/DATASETS.md)
 
 ## Problem
 This problem is centered around predicting the presence of hearth disease based on 14 attributes. To solve this problem, we will build an ML model that takes as inputs 4 parameters: 
