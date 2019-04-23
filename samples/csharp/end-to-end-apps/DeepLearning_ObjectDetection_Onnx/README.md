@@ -1,21 +1,25 @@
-# Object Detection
+# Object Detection End-to-End
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview           | Dynamic API | Up-to-date | Console app | .tsv + image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
+| v1.0.0-preview           | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
 
 ## Problem 
-Object detection is one of the classical problems in computer vision: Recognize what the objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
+Object detection is one of the classical problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
 
  
 ## DataSet
-There are two data sources: the `tsv` file and the image files.  The [tsv file](./ObjectDetectionConsoleApp/assets/images/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
-```tsv
-dog2.jpg	dog2
-Intersection-Counts.jpg	intersection
-ManyPets.jpg	ManyPets
-```
-The images are located in the [assets](./ObjectDetectionConsoleApp/assets/images) folder. These images have been downloaded some images from internet 
+There are two data sources: the `tsv` file and the image files.  The [tsv file](./OnnxObjectDetectionE2EAPP/TestImages/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
+
+
+The images are located in the [TestImages](./OnnxObjectDetectionE2EAPP/TestImages) folder. These images have been downloaded from internet.
+
+For example, below are urls from which the iamges downloaded from:  
+
+https://github.com/simo23/tinyYOLOv2/blob/master/dog.jpg
+
+https://github.com/simo23/tinyYOLOv2/blob/master/person.jpg
+
 
 ## Pre-trained model
 There are multiple models which are pre-trained for identifying multiple objects in the images. here we are using the pretrained model, **Tiny Yolo2** in  **ONNX** format. This model is a real-time neural network for object detection that detects 20 different classes. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
@@ -46,19 +50,26 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 
 
 ##  Solution
-The console application project `ObjectDetection` can be used to to identify objects in the sample images based on the **Tiny Yolo2 ONNX** model. 
+There are 2 projects in this sample.
 
-Again, note that this sample only uses/consumes a pre-trained ONNX model with ML.NET API. Therefore, it does **not** train any ML.NET model. Currently, ML.NET supports only for scoring/detecting with existing ONNX trained models. 
+**1. ClientRazorWebApp** -This is web application to upload images and getting the scores on UI.
 
-You need to follow next steps in order to execute the classification test:
+**2. OnnxObjectDetectionWebAPI** - this is a WebApi service which will load model, scores the images and draws bounding boxes aroung the objects in the image.
 
-1) **Set VS default startup project:** Set `ObjectDetection` as starting project in Visual Studio.
-2)  **Run the training model console app:** Hit F5 in Visual Studio. At the end of the execution, the output will be similar to this screenshot:
-![image](./docs/Output/Console_output.png)
+set both projects as startup projects and run.
 
+when ClientRazorWebApp UI shows up, Click on 'select' to select an image and then click upload.
+
+![](./docs/Screenshots/select.png)
+
+Then the request goes to WebApi service.The service processes the images and returns labels to UI.Also output image with bounding boxes is stored in [Output](./OnnxObjectDetectionE2EAPP/OnnxObjectDetectionWebAPI/Output) folder of WebApi project. 
+
+
+![](./docs/Screenshots/OutputImage.png)
+
+The service saves the uploaded image in a folder named `ImagesTemp`.
 
 ##  Code Walkthrough
-There is a single project in the solution named `ObjectDetection`, which is responsible for loading the model in Tiny Yolo2 ONNX format and then detects objects in the images.
 
 ### ML.NET: Model Scoring
 
@@ -73,32 +84,17 @@ public class ImageNetData
         [LoadColumn(1)]
         public string Label;
 
-        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
-        {
-            return File.ReadAllLines(file)
-             .Select(x => x.Split('\t'))
-             .Select(x => new ImageNetData { ImagePath = Path.Combine(folder, x[0]), Label = x[1] } );
-        }
     }
 ```
 
 
-The first step is to load the data using TextLoader
+The first step is to create an empty dataview as WebApi service reads images from `ImagesTemp` folder.
 
 ```csharp
-var data = mlContext.Data.LoadFromTextFile<ImageNetData>(imagesLocation, hasHeader: true);
+var dataView = CreateDataView();
 ```
 
 The image file used to load images has two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. 
-
-It is important to highlight that the label in the `ImageNetData` class is not really used when scoring with the Tiny Yolo2 Onnx model. It is used when to print the labels on the console. 
-
-```csv
-dog2.jpg	dog2
-Intersection-Counts.jpg	intersection
-ManyPets.jpg	ManyPets
-```
-As you can observe, the file does not have a header row.
 
 The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
