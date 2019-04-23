@@ -110,11 +110,11 @@ let classifyImages dataLocation imagesFolder modelLocation =
     printHeader ["Loading model"]
 
     let mlContext = MLContext(seed = Nullable 1)
-    let loadedModel = 
+    let loadedModel, inputSchema = 
         use f = File.OpenRead(modelLocation)
         mlContext.Model.Load(f)
     printfn "Model loaded: %s" modelLocation
-    let predictor = loadedModel.CreatePredictionEngine<ImageNetData,ImageNetPrediction>(mlContext)
+    let predictor = mlContext.Model.CreatePredictionEngine<ImageNetData,ImageNetPrediction>(loadedModel)
 
     printHeader ["Making classifications"]
     File.ReadAllLines(dataLocation)
