@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SentimentAnalysis.Solution", "SentimentAnalysis.Solution", "{1797162E-8E0C-4A8D-AD56-3303473C98FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysis", "BinaryClassification_SentimentAnalysis\SentimentAnalysis\SentimentAnalysis.csproj", "{B1544CD2-B9AA-41E6-91F3-7820EA3405A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1544CD2-B9AA-41E6-91F3-7820EA3405A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1544CD2-B9AA-41E6-91F3-7820EA3405A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1544CD2-B9AA-41E6-91F3-7820EA3405A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1544CD2-B9AA-41E6-91F3-7820EA3405A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B1544CD2-B9AA-41E6-91F3-7820EA3405A1} = {1797162E-8E0C-4A8D-AD56-3303473C98FE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C17CCFA-EBF2-4569-A313-56979ACAB772}
+	EndGlobalSection
+EndGlobal

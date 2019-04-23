@@ -1,5 +1,4 @@
-﻿
-using Microsoft.ML.Data;
+﻿using Microsoft.ML.Data;
 
 namespace SentimentAnalysisConsoleApp.DataStructures
 {
@@ -7,6 +6,7 @@ namespace SentimentAnalysisConsoleApp.DataStructures
     {
         [LoadColumn(0)]
         public bool Label { get; set; }
+
         [LoadColumn(1)]
         public string Text { get; set; }
     }
