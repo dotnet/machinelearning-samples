@@ -40,29 +40,29 @@ namespace SentimentAnalysis
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Load data
-            IDataView trainDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
+            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
             IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 
             // STEP 2: Display first few rows of training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
+            ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
             
             // STEP 3: Run AutoML binary classification experiment
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
             ExperimentResult<BinaryClassificationMetrics> experiment = mlContext.Auto()
                 .CreateBinaryClassificationExperiment(ExperimentTime)
-                .Execute(trainDataView);
+                .Execute(trainingDataView);
 
             // STEP 4: Evaluate the model and show metrics
             Console.WriteLine("===== Evaluating model's accuracy with test data =====");
-            RunDetail<BinaryClassificationMetrics> best = experiment.BestRun;
-            ITransformer trainedModel = best.Model;
+            RunDetail<BinaryClassificationMetrics> bestRun = experiment.BestRun;
+            ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
             // Print metrics from best model
-            ConsoleHelper.PrintBinaryClassificationMetrics(best.TrainerName.ToString(), metrics);
+            ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
-            mlContext.Model.Save(trainedModel, trainDataView.Schema, ModelPath);
+            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 

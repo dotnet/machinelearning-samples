@@ -16,14 +16,14 @@ namespace Regression_TaxiFarePrediction
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string BaseDatasetsRelativePath = @"Data";
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
         private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
 
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
         private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
-        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
 
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
@@ -51,36 +51,26 @@ namespace Regression_TaxiFarePrediction
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Common data loading configuration
-            IDataView baseTrainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
+            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
             IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
-            //Sample code of removing extreme data like "outliers" for FareAmounts higher than $150 and lower than $1 which can be error-data 
-            var cnt = baseTrainingDataView.GetColumn<float>(nameof(TaxiTrip.FareAmount)).Count();
-            IDataView trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
-            var cnt2 = trainingDataView.GetColumn<float>(nameof(TaxiTrip.FareAmount)).Count();
-
             // STEP 2: Display first few rows of the test data
-            // (OPTIONAL) Show data (such as 5 records) in training DataView
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
-            
-            //TODO:VectorColumnData look into this
-            // ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
+            ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
 
-           // STEP 3: Auto featurize, auto train and auto hyperparameter tune   
+           // STEP 3: Run AutoML regression experiment
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
-            IEnumerable<RunDetails<RegressionMetrics>> runDetails = mlContext.Auto()
-                                                                   .CreateRegressionExperiment(ExperimentTime)
-                                                                   .Execute(trainingDataView, LabelColumn);
+            ExperimentResult<RegressionMetrics> experimentResult = mlContext.Auto()
+                .CreateRegressionExperiment(ExperimentTime)
+                .Execute(trainingDataView, LabelColumn);
 
             // STEP 4: Evaluate the model and show metrics
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            RunDetails<RegressionMetrics> best = runDetails.Best();
+            RunDetail<RegressionMetrics> best = experimentResult.BestRun;
             ITransformer trainedModel = best.Model;
             IDataView predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "FareAmount", scoreColumnName: "Score");
-
-            //TODO: Need to have top 5 models in print metrics for automl samples
+            // Print metrics from top model
             ConsoleHelper.PrintRegressionMetrics(best.TrainerName.ToString(), metrics);
 
             // STEP 5: Save/persist the trained model to a .ZIP file
@@ -108,7 +98,6 @@ namespace Regression_TaxiFarePrediction
                 FareAmount = 0 // To predict. Actual/Observed = 15.5
             };
 
-            ///
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
@@ -116,7 +105,6 @@ namespace Regression_TaxiFarePrediction
 
             //Score
             var resultprediction = predEngine.Predict(taxiTripSample);
-            ///
 
             Console.WriteLine($"**********************************************************************");
             Console.WriteLine($"Predicted fare: {resultprediction.FareAmount:0.####}, actual fare: 15.5");
