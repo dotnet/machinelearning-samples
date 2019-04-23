@@ -131,7 +131,9 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 
 ### Heart Disease Dataset
-
+>
+>Redistributing the "Processed Dataset" datasets with attribution:
+>
 >This is available at https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 >
 >If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
@@ -153,6 +155,10 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 >A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
 >
+>https://archive.ics.uci.edu/ml/datasets/heart+Disease, in turn, contains the following notice:
+
+>Citation Request:
+
 >The authors of the databases have requested that any publications resulting from the use of the data include the names of the principal investigator responsible for the data collection at each institution. They would be: 
 >
 >1. Hungarian Institute of Cardiology. Budapest: Andras Janosi, M.D. 
