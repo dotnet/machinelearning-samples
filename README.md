@@ -90,7 +90,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
         <a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon">
         <a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"> </h4>
        <h4>Product recommender &nbsp;&nbsp;&nbsp;
-        <a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
+        <a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/MatrixFactorization_ProductRecommendation">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
  </tr>
   <tr>
