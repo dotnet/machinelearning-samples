@@ -192,10 +192,10 @@ https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
 
 ## Additional Community Samples
 
-In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community shocased in this separated page:
+In addition to the ML.NET samples provided by .NET Foundation, we're also highlighting samples created by the community shocased in this separated page:
 [ML.NET Community Samples](https://github.com/dotnet/machinelearning-samples/blob/master/docs/COMMUNITY-SAMPLES.md)
 
-Those Community Samples are not maintained by Microsoft but by their owners.
+Those Community Samples are not maintained by .NET Foundation but by their owners.
 If you have created any cool ML.NET sample, please, add its info into this [REQUEST issue](https://github.com/dotnet/machinelearning-samples/issues/86) and we'll publish its information in the mentioned page, eventually.
 
 ## Translations of Samples:
@@ -223,3 +223,6 @@ For more information, see the [.NET Foundation Code of Conduct](https://dotnetfo
 ## License
 
 [ML.NET Samples](https://github.com/dotnet/machinelearning-samples) are licensed under the [MIT license](LICENSE).
+
+Datasets are licensed under the original terms that the .NET Foundation received such datasets, as specified [here](https://raw.githubusercontent.com/dotnet/machinelearning-samples/master/datasets/README.md).
+
