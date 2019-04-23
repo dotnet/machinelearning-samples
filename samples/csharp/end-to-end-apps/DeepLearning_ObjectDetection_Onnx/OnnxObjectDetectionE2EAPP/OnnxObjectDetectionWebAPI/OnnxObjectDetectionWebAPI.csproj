@@ -27,9 +27,6 @@
     <None Update="ImagesTemp\Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Model\20180709_TinyYoloV3.onnx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Model\TinyYolo2_model.onnx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
