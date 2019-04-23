@@ -4,17 +4,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-
 using Common;
-
 using Microsoft.ML;
 using Microsoft.ML.Data;
-
 using PLplot;
-
 using Regression_TaxiFarePrediction.DataStructures;
-
-using static Microsoft.ML.Transforms.NormalizingEstimator;
 
 namespace Regression_TaxiFarePrediction
 {

@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductRecommendation.Solut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeSharingDemand", "getting-started\Regression_BikeSharingDemand\BikeSharingDemand\BikeSharingDemandConsoleApp\BikeSharingDemand.csproj", "{6E091170-BA63-4DF3-9C71-62DA2157ABB2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction.Solution", "HeartDiseasePrediction.Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseaseDetection.Solution", "HeartDiseaseDetection.Solution", "{70958053-9A93-47D5-A944-2BA34E475618}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ObjectDetection.Solution", "ObjectDetection.Solution", "{59A36AB2-2801-4AF3-A5AA-38B069375F4D}"
 EndProject
@@ -42,8 +42,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerSegmentation.Train", "getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.Train\CustomerSegmentation.Train.csproj", "{03D6F4A5-AFE7-4C9C-AAF8-5EBE68E4F9D8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerSegmentation.Predict", "getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.Predict\CustomerSegmentation.Predict.csproj", "{877A1BC6-6FCF-411C-AEC9-64E8CF92E636}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeartDiseasePredictionConsoleApp", "getting-started\BinaryClassification_HeartDiseasePrediction\HeartDiseasePrediction-Solution\HeartDiseasePredictionConsoleApp.csproj", "{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clustering_Iris", "getting-started\Clustering_Iris\IrisClustering\IrisClusteringConsoleApp\Clustering_Iris.csproj", "{31FC394A-67CE-47A0-A57F-351F0549B82D}"
 EndProject
@@ -165,14 +163,6 @@ Global
 		{877A1BC6-6FCF-411C-AEC9-64E8CF92E636}.Release|Any CPU.Build.0 = Release|Any CPU
 		{877A1BC6-6FCF-411C-AEC9-64E8CF92E636}.Release|x64.ActiveCfg = Release|Any CPU
 		{877A1BC6-6FCF-411C-AEC9-64E8CF92E636}.Release|x64.Build.0 = Release|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Debug|x64.Build.0 = Debug|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|x64.ActiveCfg = Release|Any CPU
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B}.Release|x64.Build.0 = Release|Any CPU
 		{31FC394A-67CE-47A0-A57F-351F0549B82D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31FC394A-67CE-47A0-A57F-351F0549B82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31FC394A-67CE-47A0-A57F-351F0549B82D}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -376,7 +366,6 @@ Global
 		{27B9333A-51F9-4A55-A4AB-733E6C04FBEC} = {D447649D-768F-44E8-8ECA-C711CD882DBB}
 		{03D6F4A5-AFE7-4C9C-AAF8-5EBE68E4F9D8} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
 		{877A1BC6-6FCF-411C-AEC9-64E8CF92E636} = {9E916E68-E9C5-4A06-96FA-EE9E57DAF368}
-		{D5D82A30-B56D-4E74-9A42-F00FCEBA6D1B} = {70958053-9A93-47D5-A944-2BA34E475618}
 		{31FC394A-67CE-47A0-A57F-351F0549B82D} = {8999FDCC-9EEF-43E3-AE55-4E3F85B245C4}
 		{C0997627-325E-444F-8891-E57AC1F38368} = {74A614C0-E1E2-4FB0-A246-96F04A654528}
 		{B1AAE990-1B2D-49F2-804C-5D626FB59E1B} = {ABF10EAC-7676-46CE-9187-1BD8550515FE}
