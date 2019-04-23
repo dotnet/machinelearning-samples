@@ -3,6 +3,7 @@ using Microsoft.ML.Data;
 using System;
 using System.IO;
 using mnist.DataStructures;
+using Microsoft.ML.Transforms;
 
 namespace mnist
 {
@@ -58,7 +59,7 @@ namespace mnist
 
                 // STEP 2: Common data process configuration with pipeline data transformations
                 // Use in-memory cache for small/medium datasets to lower training time. Do NOT use it (remove .AppendCacheCheckpoint()) when handling very large datasets.
-                var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "Number").
+                var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", "Number", keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue).
                     Append(mlContext.Transforms.Concatenate("Features", nameof(InputData.PixelValues)).AppendCacheCheckpoint(mlContext));
 
                 // STEP 3: Set the training algorithm, then create and config the modelBuilder
@@ -109,7 +110,7 @@ namespace mnist
             
             var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
-            Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
+            Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
             Console.WriteLine($"                                           One :  {resultprediction1.Score[1]:0.####}");
             Console.WriteLine($"                                           two:   {resultprediction1.Score[2]:0.####}");
             Console.WriteLine($"                                           three: {resultprediction1.Score[3]:0.####}");
@@ -123,7 +124,7 @@ namespace mnist
                        
             var resultprediction2 = predEngine.Predict(SampleMNISTData.MNIST2);
 
-            Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {resultprediction2.Score[0]:0.####}");
+            Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction2.Score[0]:0.####}");
             Console.WriteLine($"                                           One :  {resultprediction2.Score[1]:0.####}");
             Console.WriteLine($"                                           two:   {resultprediction2.Score[2]:0.####}");
             Console.WriteLine($"                                           three: {resultprediction2.Score[3]:0.####}");
