@@ -175,16 +175,17 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >
 >  Here is a BiBTeX citation as well:
 >
->* @misc{Dua:2019 ,
+> @misc{Dua:2019 ,
 >
->* author = "Dua, Dheeru and Graff, Casey",
+> author = "Dua, Dheeru and Graff, Casey",
 >
->* year = "2017",
->* title = "{UCI} Machine Learning Repository",
+> year = "2017",
 >
->* url = "http://archive.ics.uci.edu/ml",
+> title = "{UCI} Machine Learning Repository",
 >
->* institution = "University of California, Irvine, School of Information and Computer Sciences" } 
+> url = "http://archive.ics.uci.edu/ml",
+>
+> institution = "University of California, Irvine, School of Information and Computer Sciences" } 
 >
 >A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
 >
