@@ -21,10 +21,4 @@ namespace OnnxObjectDetectionWebAPI
              .Select(x => new ImageNetData { ImagePath = Path.Combine(folder, x[0]), Label = x[1] } );
         }
     }
-
-    public class ImageNetDataProbability : ImageNetData
-    {
-        public string PredictedLabel;
-        public float Probability { get; set; }
-    }
 }
