@@ -20,7 +20,7 @@ namespace SentimentAnalysis
         private static readonly string ModelRelativePath = $"{BaseModelsRelativePath}/SentimentModel.zip";
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
-        private static uint ExperimentTime = 20;
+        private static uint ExperimentTime = 60;
 
         static void Main(string[] args)
         {
