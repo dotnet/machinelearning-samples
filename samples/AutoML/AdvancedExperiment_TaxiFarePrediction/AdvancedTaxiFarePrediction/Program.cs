@@ -30,7 +30,7 @@ namespace Regression_TaxiFarePrediction
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         private static string LabelColumnName = "fare_amount";
-        private static uint ExperimentTime = 5;
+        private static uint ExperimentTime = 60;
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
