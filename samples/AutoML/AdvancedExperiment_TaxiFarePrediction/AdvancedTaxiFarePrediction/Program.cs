@@ -9,6 +9,7 @@ using Microsoft.ML.Auto;
 using Microsoft.ML.Data;
 using Regression_AutoML.DataStructures;
 using Common;
+using System.Threading;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -18,16 +19,18 @@ namespace Regression_TaxiFarePrediction
 
         private static string BaseDatasetsRelativePath = @"Data";
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
-        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TrainDataSmallRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train-small.csv";
+        private static string TrainDataSmallPath = GetAbsolutePath(TrainDataSmallRelativePath);
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
         private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
-        private static string LabelColumnName = "FareAmount";
-        private static uint ExperimentTime = 60;
+        private static string LabelColumnName = "fare_amount";
+        private static uint ExperimentTime = 5;
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
@@ -48,35 +51,79 @@ namespace Regression_TaxiFarePrediction
 
         private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
-            // STEP 1: Common data loading configuration
-            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true, separatorChar: ',');
-            IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
+            // STEP 1: Infer columns in the dataset
+            ColumnInferenceResults columnInference = mlContext.Auto().InferColumns(TrainDataPath, LabelColumnName, groupColumns: false);
+            ConsoleHelper.Print(columnInference);
+            
+            // STEP 2: Load data
+            TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
+            // Send a subsample of the full training data to AutoML for faster experimentation time
+            IDataView smallTrainingDataView = textLoader.Load(TrainDataSmallPath);
+            IDataView testDataView = textLoader.Load(TestDataPath);
 
-            // STEP 2: Display first few rows of the training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
+            // STEP 3: Display first few rows of the training data
+            ConsoleHelper.ShowDataViewInConsole(mlContext, smallTrainingDataView);
 
-            // STEP 3: Run AutoML regression experiment
+            // STEP 4: Build a pre-featurizer for use in the AutoML experiment.
+            // (Internally, AutoML uses one or more train/validation data splits to 
+            // evaluate the models it produces. The pre-featurizer is fit only on the 
+            // training data split to produce a trained transform. Then, the trained transform 
+            // is applied to both the train and validation data splits.)
+            IEstimator<ITransformer> preFeaturizer = mlContext.Transforms.Conversion.MapValue("is_cash",
+                new[] { new KeyValuePair<string, bool>("CSH", true) }, "payment_type");
+
+            // STEP 5: Initialize custom column information for use in AutoML experiment
+            ColumnInformation columnInformation = new ColumnInformation() { LabelColumnName = LabelColumnName };
+            // Indicate that the VendorId column should be treated as categorical data.
+            // (Categorical data columns should generally be columns that contain a small number of unique values.)
+            columnInformation.CategoricalColumnNames.Add("vendor_id");
+            columnInformation.IgnoredColumnNames.Add("payment_type");
+
+            // STEP 6: Initialize AutoML experiment settings.
+            var experimentSettings = new RegressionExperimentSettings();
+            experimentSettings.MaxExperimentTimeInSeconds = ExperimentTime;
+            // Set the metric that AutoML will try to optimize over the course of the experiment.
+            experimentSettings.OptimizingMetric = RegressionMetric.MeanSquaredError;
+            // Only use the LightGBM regression trainer during the experiment
+            experimentSettings.Trainers.Clear();
+            experimentSettings.Trainers.Add(RegressionTrainer.LightGbm);
+
+            // STEP 7: Set up a cancellation token to stop the experiment.
+            CancellationTokenSource cts = new CancellationTokenSource();
+            experimentSettings.CancellationToken = cts.Token;
+            // Cancel the experiment after the specified # of seconds
+            cts.CancelAfter(TimeSpan.FromSeconds(ExperimentTime));
+
+            // STEP 8: Initialize our user-defined progress handler that will AutoML will 
+            // invoke after each model it produces and evaluates.
+            var progressHandler = new RegressionExperimentProgressHandler();
+
+            // STEP 9: Run AutoML regression experiment
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
             ExperimentResult<RegressionMetrics> experimentResult = mlContext.Auto()
-                .CreateRegressionExperiment(ExperimentTime)
-                .Execute(trainingDataView, LabelColumnName);
+                .CreateRegressionExperiment(experimentSettings)
+                .Execute(smallTrainingDataView, columnInformation, preFeaturizer, progressHandler);
+            Console.WriteLine($"AutoML experiment completed.{Environment.NewLine}");
 
-            // STEP 4: Evaluate the model and show metrics
-            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            // STEP 10: Refit best model on entire training data.
             RunDetail<RegressionMetrics> best = experimentResult.BestRun;
-            ITransformer trainedModel = best.Model;
-            IDataView predictions = trainedModel.Transform(testDataView);
+            IDataView trainingDataView = textLoader.Load(TrainDataPath);
+            var refitBestModel = best.Estimator.Fit(trainingDataView);
+
+            // STEP 11: Evaluate the model and show metrics.
+            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            IDataView predictions = refitBestModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             // Print metrics from top model
             ConsoleHelper.PrintRegressionMetrics(best.TrainerName.ToString(), metrics);
 
-            // STEP 5: Save/persist the trained model to a .ZIP file
-            mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
+            // STEP 12: Save/persist the refit best model to a .ZIP file
+            mlContext.Model.Save(refitBestModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
-            return trainedModel;
+            return refitBestModel;
         }
 
         private static void TestSinglePrediction(MLContext mlContext)
@@ -88,7 +135,7 @@ namespace Regression_TaxiFarePrediction
             var taxiTripSample = new TaxiTrip()
             {
                 VendorId = "VTS",
-                RateCode = "1",
+                RateCode = 1,
                 PassengerCount = 1,
                 TripTime = 1140,
                 TripDistance = 3.75f,
@@ -286,7 +333,7 @@ namespace Regression_TaxiFarePrediction
                 .Select(x => new TaxiTrip()
                 {
                     VendorId = x[0],
-                    RateCode = x[1],
+                    RateCode = float.Parse(x[1]),
                     PassengerCount = float.Parse(x[2]),
                     TripTime = float.Parse(x[3]),
                     TripDistance = float.Parse(x[4]),

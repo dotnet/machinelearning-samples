@@ -26,7 +26,7 @@ namespace SentimentAnalysis
         {
             var mlContext = new MLContext();
 
-            // Create, Train, Evaluate and Save a model
+            // Create, train, evaluate and save a model
             BuildTrainEvaluateAndSaveModel(mlContext);
             ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
@@ -57,7 +57,7 @@ namespace SentimentAnalysis
             RunDetail<BinaryClassificationMetrics> bestRun = experiment.BestRun;
             ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
+            var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, scoreColumnName: "Score");
             // Print metrics from best model
             ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName.ToString(), metrics);
 
