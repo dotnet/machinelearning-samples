@@ -2,7 +2,6 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-open Microsoft.ML.ImageAnalytics
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -74,25 +73,27 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
     printfn "Training file: %s" dataLocation
     printfn "Default parameters: image size =(%d,%d), image mean: %d" imageHeight imageWidth mean
     let mlContext = MLContext(seed = Nullable 1)
-    let data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
+    let data = mlContext.Data.LoadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
         EstimatorChain()
             .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelTokey", "Label"))
-            .Append(mlContext.Transforms.LoadImages(imagesFolder, struct ("ImageReal", "ImagePath")))
-            .Append(mlContext.Transforms.Resize("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
-            .Append(mlContext.Transforms.ExtractPixels(ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean)))
-            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2_pre_activation" |], [| "input" |]))
-            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression("LabelTokey", "softmax2_pre_activation"))
-            .Append(mlContext.Transforms.Conversion.MapKeyToValue(struct("PredictedLabelValue","PredictedLabel")))
-    
+            .Append(mlContext.Transforms.LoadImages("ImageReal", imagesFolder, "ImagePath"))
+            .Append(mlContext.Transforms.ResizeImages("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
+            .Append(mlContext.Transforms.ExtractPixels("input", "ImageReal", interleavePixelColors = channelsLast, offsetImage = float32 mean))
+            .Append(mlContext.Model.LoadTensorFlowModel(inputModelLocation).
+                                 ScoreTensorFlowModel(outputColumnNames = [|"softmax2_pre_activation"|], inputColumnNames = [|"input"|], addBatchDimensionInput = true))
+            .Append(mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy("LabelTokey", "softmax2_pre_activation"))
+            .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabelValue","PredictedLabel"))
+            .AppendCacheCheckpoint(mlContext)
+
     printHeader ["Training classification model"]
     let model = pipeline.Fit(data)
     let trainData = model.Transform(data)
-    mlContext.CreateEnumerable<_>(trainData, false, true)
+    mlContext.Data.CreateEnumerable<_>(trainData, false, true)
     |> Seq.iter printImagePrediction
     
     printHeader ["Classification metrics"]
-    let metrics = mlContext.MulticlassClassification.Evaluate(trainData, label = "LabelTokey", predictedLabel = "PredictedLabel")
+    let metrics = mlContext.MulticlassClassification.Evaluate(trainData, labelColumnName = "LabelTokey", predictedLabelColumnName = "PredictedLabel")
     printfn "LogLoss is: %.15f" metrics.LogLoss
     metrics.PerClassLogLoss
     |> Seq.map string
@@ -105,7 +106,7 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
         File.Delete(outFile)
     do 
         use f = File.OpenWrite(outFile)
-        mlContext.Model.Save(model, f)
+        mlContext.Model.Save(model, trainData.Schema, f)
     printfn "Model saved: %s" outFile
 
 [<EntryPoint>]
