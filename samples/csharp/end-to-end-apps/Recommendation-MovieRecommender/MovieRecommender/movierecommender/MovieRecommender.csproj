@@ -7,10 +7,14 @@
 
   <ItemGroup>
     <None Remove="Content\LICENSE_HTML5" />
+    <None Remove="Content\LICENSE_Nicolas" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Content\LICENSE_HTML5">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\LICENSE_Nicolas">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
