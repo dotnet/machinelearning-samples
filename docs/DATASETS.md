@@ -165,6 +165,8 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
+>Citation Policy:
+>
 >This is available at https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 >
 >If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
