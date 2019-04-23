@@ -25,14 +25,16 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
-        mlContext.Transforms.Concatenate("Features", "SepalLength",
+        EstimatorChain()
+            .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelKey","Label"))
+            .Append(mlContext.Transforms.Concatenate("Features", "SepalLength",
                                                      "SepalWidth",
                                                      "PetalLength",
-                                                     "PetalWidth")
-                            .AppendCacheCheckpoint(mlContext)
+                                                     "PetalWidth"))
+            .AppendCacheCheckpoint(mlContext)
 
     // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
+    let trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName = "LabelKey", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 
 
@@ -61,7 +63,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 6: Save/persist the trained model to a .ZIP file
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
-    mlContext.Model.Save(trainedModel, fs);
+    mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
 
     printfn "The model is saved to %s" modelPath
 
@@ -69,10 +71,10 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 let testSomePredictions (mlContext : MLContext) =
     //Test Classification Predictions with some hard-coded samples 
     use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
-    let trainedModel = mlContext.Model.Load(stream);
+    let trainedModel, inputSchema = mlContext.Model.Load(stream);
 
     // Create prediction engine related to the loaded trained model
-    let predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext)
+    let predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(trainedModel)
 
     //Score sample 1
     let resultprediction1 = predEngine.Predict(DataStructures.SampleIrisData.Iris1)

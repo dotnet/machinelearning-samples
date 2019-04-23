@@ -106,8 +106,7 @@ namespace mnist
 
             // Create prediction engine related to the loaded trained model
             var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
-
-            //InputData data1 = SampleMNISTData.MNIST1;
+            
             var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
             Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Composition;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using Common;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
 using SpamDetectionConsoleApp.MLDataStructures;
 
 namespace SpamDetectionConsoleApp
