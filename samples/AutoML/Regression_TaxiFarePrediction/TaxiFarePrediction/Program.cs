@@ -62,14 +62,14 @@ namespace Regression_TaxiFarePrediction
                 .CreateRegressionExperiment(ExperimentTime)
                 .Execute(trainingDataView, LabelColumnName);
 
-            // STEP 4: Evaluate the model and show metrics
+            // STEP 4: Evaluate the model and print metrics
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             RunDetail<RegressionMetrics> best = experimentResult.BestRun;
             ITransformer trainedModel = best.Model;
             IDataView predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             // Print metrics from top model
-            ConsoleHelper.PrintRegressionMetrics(best.TrainerName.ToString(), metrics);
+            ConsoleHelper.PrintRegressionMetrics(best.TrainerName, metrics);
 
             // STEP 5: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);

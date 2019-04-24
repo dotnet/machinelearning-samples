@@ -40,7 +40,7 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintMultiClassClassificationMetrics(string name, MulticlassClassificationMetrics metrics)
+        public static void PrintMulticlassClassificationMetrics(string name, MulticlassClassificationMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*    Metrics for {name} multi-class classification model   ");

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\common\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Data\" />
+    <Folder Include="Common\" />
   </ItemGroup>
 
   <ItemGroup>

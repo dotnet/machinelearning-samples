@@ -1,11 +1,8 @@
 ﻿using Microsoft.ML.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace mnist.DataStructures
+namespace MNIST.DataStructures
 {
-    class OutPutData
+    class OutputData
     {
         [ColumnName("Score")]
         public float[] Score;

@@ -52,16 +52,15 @@ namespace SentimentAnalysis
                 .CreateBinaryClassificationExperiment(ExperimentTime)
                 .Execute(trainingDataView);
 
-            // STEP 4: Evaluate the model and show metrics
+            // STEP 4: Evaluate the model and print metrics
             Console.WriteLine("===== Evaluating model's accuracy with test data =====");
             RunDetail<BinaryClassificationMetrics> bestRun = experiment.BestRun;
             ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, scoreColumnName: "Score");
-            // Print metrics from best model
-            ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName.ToString(), metrics);
+            ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName, metrics);
 
-            // STEP 6: Save/persist the trained model to a .ZIP file
+            // STEP 5: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
