@@ -4,20 +4,48 @@ using Microsoft.ML.Data;
 
 namespace Common
 {
+    public class BinaryExperimentProgressHandler : IProgress<RunDetail<BinaryClassificationMetrics>>
+    {
+        private int _iterationIndex;
+
+        public void Report(RunDetail<BinaryClassificationMetrics> iterationResult)
+        {
+            if (_iterationIndex++ == 0)
+            {
+                ConsoleHelper.PrintBinaryClassificationMetricsHeader();
+            }
+            ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+        }
+    }
+
+    public class MulticlassExperimentProgressHandler : IProgress<RunDetail<MulticlassClassificationMetrics>>
+    {
+        private int _iterationIndex;
+
+        public void Report(RunDetail<MulticlassClassificationMetrics> iterationResult)
+        {
+            if (_iterationIndex++ == 0)
+            {
+                ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
+            }
+            ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+        }
+    }
+
     public class RegressionExperimentProgressHandler : IProgress<RunDetail<RegressionMetrics>>
     {
         private int _iterationIndex;
-        private bool _initialized = false;
 
         public void Report(RunDetail<RegressionMetrics> iterationResult)
         {
-            if (!_initialized)
+            if (_iterationIndex++ == 0)
             {
-                ConsoleHelper.PrintObserveProgressRegressionHeader();
-                _initialized = true;
+                ConsoleHelper.PrintRegressionMetricsHeader();
             }
-            _iterationIndex++;
-            ConsoleHelper.PrintRegressionIterationMetrics(_iterationIndex, iterationResult.TrainerName, iterationResult.ValidationMetrics);
+            ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName, 
+                iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
         }
     }
 }

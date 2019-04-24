@@ -11,6 +11,8 @@ namespace Common
 {
     public static class ConsoleHelper
     {
+        private const int Width = 114;
+
         public static void PrintRegressionMetrics(string name, RegressionMetrics metrics)
         {
             Console.WriteLine($"*************************************************");
@@ -54,20 +56,6 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintRegressionIterationMetrics(int iteration, string trainerName, RegressionMetrics metrics)
-        {
-            Console.WriteLine($"{iteration,-3}{trainerName,-35}{metrics.RSquared,-10:0.###}{metrics.LossFunction,-8:0.##}{metrics.MeanAbsoluteError,-15:#.##}{metrics.MeanSquaredError,-15:#.##}{metrics.RootMeanSquaredError,-10:#.##}");
-        }
-
-        public static void PrintObserveProgressRegressionHeader()
-        {
-            Console.WriteLine($"*************************************************");
-            Console.WriteLine($"*       Metrics for regression models     ");
-            Console.WriteLine($"*------------------------------------------------");
-            Console.WriteLine($"{" ",-3}{"Trainer",-35}{"R2-Score",-10}{"LossFn",-8}{"Absolute-loss",-15}{"Squared-loss",-15}{"RMS-loss",-10}");
-            Console.WriteLine();
-        }
-
         public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
         {
             string msg = string.Format("Show data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
@@ -85,6 +73,41 @@ namespace Common
                 }
                 Console.WriteLine(lineToPrint + "\n");
             }
+        }
+
+        internal static void PrintIterationMetrics(int iteration, string trainerName, BinaryClassificationMetrics metrics, double? runtimeInSeconds)
+        {
+            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.Accuracy ?? double.NaN,9:F4} {metrics?.AreaUnderRocCurve ?? double.NaN,8:F4} {metrics?.AreaUnderPrecisionRecallCurve ?? double.NaN,8:F4} {metrics?.F1Score ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
+        }
+
+        internal static void PrintIterationMetrics(int iteration, string trainerName, MulticlassClassificationMetrics metrics, double? runtimeInSeconds)
+        {
+            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.MicroAccuracy ?? double.NaN,14:F4} {metrics?.MacroAccuracy ?? double.NaN,14:F4} {runtimeInSeconds.Value,9:F1}", Width);
+        }
+
+        internal static void PrintIterationMetrics(int iteration, string trainerName, RegressionMetrics metrics, double? runtimeInSeconds)
+        {
+            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.RSquared ?? double.NaN,8:F4} {metrics?.MeanAbsoluteError ?? double.NaN,13:F2} {metrics?.MeanSquaredError ?? double.NaN,12:F2} {metrics?.RootMeanSquaredError ?? double.NaN,8:F2} {runtimeInSeconds.Value,9:F1}", Width);
+        }
+
+        internal static void PrintBinaryClassificationMetricsHeader()
+        {
+            CreateRow($"{"",-4} {"Trainer",-35} {"Accuracy",9} {"AUC",8} {"AUPRC",8} {"F1-score",9} {"Duration",9}", Width);
+        }
+
+        internal static void PrintMulticlassClassificationMetricsHeader()
+        {
+            CreateRow($"{"",-4} {"Trainer",-35} {"MicroAccuracy",14} {"MacroAccuracy",14} {"Duration",9}", Width);
+        }
+
+        internal static void PrintRegressionMetricsHeader()
+        {
+            CreateRow($"{"",-4} {"Trainer",-35} {"RSquared",8} {"Absolute-loss",13} {"Squared-loss",12} {"RMS-loss",8} {"Duration",9}", Width);
+        }
+
+        private static void CreateRow(string message, int width)
+        {
+            Console.WriteLine("|" + message.PadRight(width - 2) + "|");
         }
 
         public static void ConsoleWriteHeader(params string[] lines)

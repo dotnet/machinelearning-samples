@@ -55,14 +55,18 @@ namespace Regression_TaxiFarePrediction
             // STEP 2: Display first few rows of the training data
             ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
 
-            // STEP 3: Run AutoML regression experiment
+            // STEP 3: Initialize our user-defined progress handler that AutoML will 
+            // invoke after each model it produces and evaluates.
+            var progressHandler = new RegressionExperimentProgressHandler();
+
+            // STEP 4: Run AutoML regression experiment
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
             ExperimentResult<RegressionMetrics> experimentResult = mlContext.Auto()
                 .CreateRegressionExperiment(ExperimentTime)
-                .Execute(trainingDataView, LabelColumnName);
+                .Execute(trainingDataView, LabelColumnName, progressHandler: progressHandler);
 
-            // STEP 4: Evaluate the model and print metrics
+            // STEP 5: Evaluate the model and print metrics
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             RunDetail<RegressionMetrics> best = experimentResult.BestRun;
             ITransformer trainedModel = best.Model;
@@ -71,7 +75,7 @@ namespace Regression_TaxiFarePrediction
             // Print metrics from top model
             ConsoleHelper.PrintRegressionMetrics(best.TrainerName, metrics);
 
-            // STEP 5: Save/persist the trained model to a .ZIP file
+            // STEP 6: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);

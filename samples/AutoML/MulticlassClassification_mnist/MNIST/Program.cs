@@ -56,15 +56,19 @@ namespace MNIST
                         hasHeader: false,
                         separatorChar: ','
                         );
-                
-                // STEP 2: Run an AutoML multiclass classification experiment
+
+                // STEP 2: Initialize our user-defined progress handler that AutoML will 
+                // invoke after each model it produces and evaluates.
+                var progressHandler = new MulticlassExperimentProgressHandler();
+
+                // STEP 3: Run an AutoML multiclass classification experiment
                 Console.WriteLine("=============== Training the model ===============");
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
                 ExperimentResult<MulticlassClassificationMetrics> experimentResult = mlContext.Auto()
                     .CreateMulticlassClassificationExperiment(ExperimentTime)
-                    .Execute(trainData, "Number");
+                    .Execute(trainData, "Number", progressHandler: progressHandler);
 
-                // STEP 3: Evaluate the model and print metrics
+                // STEP 4: Evaluate the model and print metrics
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 RunDetail<MulticlassClassificationMetrics> bestRun = experimentResult.BestRun;
                 ITransformer trainedModel = bestRun.Model;
@@ -72,7 +76,7 @@ namespace MNIST
                 var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName: "Number", scoreColumnName: "Score");
                 ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
 
-                // STEP 4: Save/persist the trained model to a .ZIP file
+                // STEP 5: Save/persist the trained model to a .ZIP file
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);

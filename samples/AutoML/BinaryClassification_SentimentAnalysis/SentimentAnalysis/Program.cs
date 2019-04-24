@@ -45,14 +45,18 @@ namespace SentimentAnalysis
 
             // STEP 2: Display first few rows of training data
             ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
-            
-            // STEP 3: Run AutoML binary classification experiment
+
+            // STEP 3: Initialize our user-defined progress handler that AutoML will 
+            // invoke after each model it produces and evaluates.
+            var progressHandler = new BinaryExperimentProgressHandler();
+
+            // STEP 4: Run AutoML binary classification experiment
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
             ExperimentResult<BinaryClassificationMetrics> experiment = mlContext.Auto()
                 .CreateBinaryClassificationExperiment(ExperimentTime)
-                .Execute(trainingDataView);
+                .Execute(trainingDataView, progressHandler: progressHandler);
 
-            // STEP 4: Evaluate the model and print metrics
+            // STEP 5: Evaluate the model and print metrics
             Console.WriteLine("===== Evaluating model's accuracy with test data =====");
             RunDetail<BinaryClassificationMetrics> bestRun = experiment.BestRun;
             ITransformer trainedModel = bestRun.Model;
@@ -60,7 +64,7 @@ namespace SentimentAnalysis
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, scoreColumnName: "Score");
             ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName, metrics);
 
-            // STEP 5: Save/persist the trained model to a .ZIP file
+            // STEP 6: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
