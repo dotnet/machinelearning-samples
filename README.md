@@ -117,9 +117,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
   Task's goal is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data.Usually problems such as bank fraud, structural defects or medical problems
   </td>
   <td>
-      <h4>Spike Detection-Shampoo Sales &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/SpikeDetection_ShampooSales">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/SpikeDetection_ShampooSales">F#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon">
-      <a href="samples/csharp/end-to-end-apps/SpikeDetection-ShampooSales-WinForms">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>      
+      <h4>Spike Detection-Product Sales &nbsp;&nbsp;&nbsp;
+      <a href="samples/csharp/getting-started/TimeSeries_ProductSalesSpikeDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/SpikeDetection_ShampooSales">F#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon">
+      <a href="samples/csharp/end-to-end-apps/TimeSeries-ProductSalesSpikeDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>      
      <h4>Spike Detection-PowerMeter Readings &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/TimeSeries_PowerAnomalyDetection">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
