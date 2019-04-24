@@ -1,4 +1,4 @@
-namespace ProductSalesSpikeDetection
+namespace SpikeDetection.WinForms
 {
     partial class Form1
     {
@@ -68,17 +68,19 @@ namespace ProductSalesSpikeDetection
             // debugInstructionsLabel
             // 
             this.debugInstructionsLabel.AutoSize = true;
-            this.debugInstructionsLabel.Location = new System.Drawing.Point(13, 84);
+            this.debugInstructionsLabel.Location = new System.Drawing.Point(17, 105);
+            this.debugInstructionsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.debugInstructionsLabel.Name = "debugInstructionsLabel";
-            this.debugInstructionsLabel.Size = new System.Drawing.Size(114, 20);
+            this.debugInstructionsLabel.Size = new System.Drawing.Size(154, 25);
             this.debugInstructionsLabel.TabIndex = 1;
             this.debugInstructionsLabel.Text = "Data File Path:";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(317, 104);
+            this.button1.Location = new System.Drawing.Point(423, 130);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(91, 37);
+            this.button1.Size = new System.Drawing.Size(121, 46);
             this.button1.TabIndex = 2;
             this.button1.Text = "Find";
             this.button1.UseVisualStyleBackColor = true;
@@ -88,35 +90,35 @@ namespace ProductSalesSpikeDetection
             // 
             this.helloWorldLabel.AutoSize = true;
             this.helloWorldLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.helloWorldLabel.Location = new System.Drawing.Point(10, 20);
+            this.helloWorldLabel.Location = new System.Drawing.Point(13, 25);
+            this.helloWorldLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.helloWorldLabel.Name = "helloWorldLabel";
-            this.helloWorldLabel.Size = new System.Drawing.Size(502, 37);
+            this.helloWorldLabel.Size = new System.Drawing.Size(385, 51);
             this.helloWorldLabel.TabIndex = 3;
-            this.helloWorldLabel.Text = "Spike and Change point Detection";
+            this.helloWorldLabel.Text = "Anomaly Detection";
             // 
             // filePathTextbox
             // 
-            this.filePathTextbox.Location = new System.Drawing.Point(16, 110);
-            this.filePathTextbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.filePathTextbox.Location = new System.Drawing.Point(22, 138);
             this.filePathTextbox.Name = "filePathTextbox";
-            this.filePathTextbox.Size = new System.Drawing.Size(296, 26);
+            this.filePathTextbox.Size = new System.Drawing.Size(394, 31);
             this.filePathTextbox.TabIndex = 4;
             // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(14, 310);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dataGridView1.Location = new System.Drawing.Point(18, 388);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 33;
-            this.dataGridView1.Size = new System.Drawing.Size(394, 650);
+            this.dataGridView1.Size = new System.Drawing.Size(526, 812);
             this.dataGridView1.TabIndex = 5;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(10, 248);
+            this.button2.Location = new System.Drawing.Point(14, 310);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(408, 37);
+            this.button2.Size = new System.Drawing.Size(544, 46);
             this.button2.TabIndex = 6;
             this.button2.Text = "Go";
             this.button2.UseVisualStyleBackColor = true;
@@ -126,10 +128,9 @@ namespace ProductSalesSpikeDetection
             // 
             this.commaSeparatedRadio.AutoSize = true;
             this.commaSeparatedRadio.Checked = true;
-            this.commaSeparatedRadio.Location = new System.Drawing.Point(10, 15);
-            this.commaSeparatedRadio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.commaSeparatedRadio.Location = new System.Drawing.Point(13, 19);
             this.commaSeparatedRadio.Name = "commaSeparatedRadio";
-            this.commaSeparatedRadio.Size = new System.Drawing.Size(168, 24);
+            this.commaSeparatedRadio.Size = new System.Drawing.Size(221, 29);
             this.commaSeparatedRadio.TabIndex = 9;
             this.commaSeparatedRadio.TabStop = true;
             this.commaSeparatedRadio.Text = "Comma Separated";
@@ -138,10 +139,9 @@ namespace ProductSalesSpikeDetection
             // tabSeparatedRadio
             // 
             this.tabSeparatedRadio.AutoSize = true;
-            this.tabSeparatedRadio.Location = new System.Drawing.Point(10, 53);
-            this.tabSeparatedRadio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabSeparatedRadio.Location = new System.Drawing.Point(13, 66);
             this.tabSeparatedRadio.Name = "tabSeparatedRadio";
-            this.tabSeparatedRadio.Size = new System.Drawing.Size(140, 24);
+            this.tabSeparatedRadio.Size = new System.Drawing.Size(185, 29);
             this.tabSeparatedRadio.TabIndex = 10;
             this.tabSeparatedRadio.Text = "Tab Separated";
             this.tabSeparatedRadio.UseVisualStyleBackColor = true;
@@ -149,18 +149,20 @@ namespace ProductSalesSpikeDetection
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 288);
+            this.label1.Location = new System.Drawing.Point(13, 360);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(144, 20);
+            this.label1.Size = new System.Drawing.Size(197, 25);
             this.label1.TabIndex = 11;
             this.label1.Text = "Data View Preview:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(450, 104);
+            this.label2.Location = new System.Drawing.Point(600, 130);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(157, 20);
+            this.label2.Size = new System.Drawing.Size(210, 25);
             this.label2.TabIndex = 13;
             this.label2.Text = "Anomalies Detected:";
             // 
@@ -179,19 +181,19 @@ namespace ProductSalesSpikeDetection
             // anomalyText
             // 
             this.anomalyText.ForeColor = System.Drawing.Color.Black;
-            this.anomalyText.Location = new System.Drawing.Point(454, 134);
-            this.anomalyText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.anomalyText.Location = new System.Drawing.Point(605, 168);
             this.anomalyText.Name = "anomalyText";
-            this.anomalyText.Size = new System.Drawing.Size(896, 140);
+            this.anomalyText.Size = new System.Drawing.Size(1194, 174);
             this.anomalyText.TabIndex = 17;
             this.anomalyText.Text = "";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(450, 288);
+            this.label3.Location = new System.Drawing.Point(600, 360);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 20);
+            this.label3.Size = new System.Drawing.Size(77, 25);
             this.label3.TabIndex = 18;
             this.label3.Text = "Graph:";
             // 
@@ -222,8 +224,7 @@ namespace ProductSalesSpikeDetection
             legend1.Enabled = false;
             legend1.Name = "Legend1";
             this.graph.Legends.Add(legend1);
-            this.graph.Location = new System.Drawing.Point(454, 310);
-            this.graph.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.graph.Location = new System.Drawing.Point(605, 388);
             this.graph.Name = "graph";
             this.graph.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
             series1.ChartArea = "ChartArea1";
@@ -240,7 +241,7 @@ namespace ProductSalesSpikeDetection
             series2.Name = "Series2";
             this.graph.Series.Add(series1);
             this.graph.Series.Add(series2);
-            this.graph.Size = new System.Drawing.Size(896, 650);
+            this.graph.Size = new System.Drawing.Size(1194, 812);
             this.graph.TabIndex = 19;
             this.graph.Text = "graph";
             // 
@@ -248,29 +249,26 @@ namespace ProductSalesSpikeDetection
             // 
             this.panel1.Controls.Add(this.commaSeparatedRadio);
             this.panel1.Controls.Add(this.tabSeparatedRadio);
-            this.panel1.Location = new System.Drawing.Point(10, 146);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Location = new System.Drawing.Point(14, 183);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(181, 93);
+            this.panel1.Size = new System.Drawing.Size(241, 116);
             this.panel1.TabIndex = 22;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.changePointDet);
             this.panel2.Controls.Add(this.spikeDet);
-            this.panel2.Location = new System.Drawing.Point(196, 146);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Location = new System.Drawing.Point(261, 183);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(223, 93);
+            this.panel2.Size = new System.Drawing.Size(297, 116);
             this.panel2.TabIndex = 23;
             // 
             // changePointDet
             // 
             this.changePointDet.AutoSize = true;
-            this.changePointDet.Location = new System.Drawing.Point(18, 53);
-            this.changePointDet.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.changePointDet.Location = new System.Drawing.Point(24, 66);
             this.changePointDet.Name = "changePointDet";
-            this.changePointDet.Size = new System.Drawing.Size(204, 24);
+            this.changePointDet.Size = new System.Drawing.Size(271, 29);
             this.changePointDet.TabIndex = 25;
             this.changePointDet.Text = "Change Point Detection";
             this.changePointDet.UseVisualStyleBackColor = true;
@@ -278,20 +276,19 @@ namespace ProductSalesSpikeDetection
             // spikeDet
             // 
             this.spikeDet.AutoSize = true;
-            this.spikeDet.Location = new System.Drawing.Point(18, 16);
-            this.spikeDet.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.spikeDet.Location = new System.Drawing.Point(24, 20);
             this.spikeDet.Name = "spikeDet";
-            this.spikeDet.Size = new System.Drawing.Size(148, 24);
+            this.spikeDet.Size = new System.Drawing.Size(195, 29);
             this.spikeDet.TabIndex = 24;
             this.spikeDet.Text = "Spike Detection";
             this.spikeDet.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1381, 985);
+            this.ClientSize = new System.Drawing.Size(1841, 1231);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.graph);
@@ -305,12 +302,13 @@ namespace ProductSalesSpikeDetection
             this.Controls.Add(this.helloWorldLabel);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.debugInstructionsLabel);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Anomaly Detection";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.graph)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -347,3 +345,4 @@ namespace ProductSalesSpikeDetection
         private System.Windows.Forms.CheckBox changePointDet;
     }
 }
+

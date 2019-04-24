@@ -2,16 +2,16 @@
 using Microsoft.ML;
 using System.IO;
 
-namespace ProductSalesSpikeDetectionTrainer
+namespace SpikeDetection.WinFormsTrainer
 {
     internal static class Program
    {
-        private static string BaseDatasetsRelativePath = @"../../../Data";
+        private static string BaseDatasetsRelativePath = @"../../../../Data";
         private static string DatasetRelativePath = $"{BaseDatasetsRelativePath}/Product-sales.csv";
 
         private static string DatasetPath = GetAbsolutePath(DatasetRelativePath);
 
-        private static string BaseModelsRelativePath = @"../../../MLModels";
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
         private static string ModelRelativePath1 = $"{BaseModelsRelativePath}/ProductSalesSpikeModel.zip";
         private static string ModelRelativePath2 = $"{BaseModelsRelativePath}/ProductSalesChangePointModel.zip";
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ProductSalesSpikeDetection
+namespace SpikeDetection.WinFormsTrainer
 {
     public class ProductSalesData
     {

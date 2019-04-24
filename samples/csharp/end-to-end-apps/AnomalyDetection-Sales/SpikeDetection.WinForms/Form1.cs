@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace ProductSalesSpikeDetection
+namespace SpikeDetection.WinForms
 {
     public partial class Form1 : Form
     {
@@ -16,6 +16,13 @@ namespace ProductSalesSpikeDetection
         private string filePath = "";
         Tuple<string, string> tup = null;
         Dictionary<int, Tuple<string, string>> dict = new Dictionary<int, Tuple<string, string>>();
+        private static string BaseModelsRelativePath = @"../../../MLModels";
+        private static string ModelRelativePath1 = $"{BaseModelsRelativePath}/ProductSalesSpikeModel.zip";
+        private static string ModelRelativePath2 = $"{BaseModelsRelativePath}/ProductSalesChangePointModel.zip";
+
+
+        private static string spikeModelPath = GetAbsolutePath(ModelRelativePath1);
+        private static string changePointModelPath = GetAbsolutePath(ModelRelativePath2);
 
         public Form1()
         {
@@ -40,7 +47,7 @@ namespace ProductSalesSpikeDetection
         {
             // Set filepath from text from filepath textbox
             filePath = filePathTextbox.Text;
-
+            
             // Checkk if file exists
             if (File.Exists(filePath))
             {
@@ -69,7 +76,7 @@ namespace ProductSalesSpikeDetection
                 MessageBox.Show("File does not exist. Try finding the file again.");
             }
         }
-
+    
 
 
         private void displayDataTableAndGraph()
@@ -139,10 +146,7 @@ namespace ProductSalesSpikeDetection
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ProductSalesData>(path: filePath, hasHeader: true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
             // Step 2: Load & use model
-            // Note -- The model is trained with the product-sales dataset in a separate console app (see ProductSalesSpikeDetectionTrainer)
-            string spikeModelPath = @"../../../ProductSalesSpikeDetectionTrainer/MLModels/ProductSalesSpikeModel.zip";
-            string changePointModelPath = @"../../../ProductSalesSpikeDetectionTrainer/MLModels/ProductSalesChangePointModel.zip";
-
+            // Note -- The model is trained with the product-sales dataset in a separate console app (see AnomalyDetectionConsoleApp)            
             if (spikeDet.Checked)
             {
                 if (File.Exists(spikeModelPath))
@@ -168,10 +172,20 @@ namespace ProductSalesSpikeDetection
             }
         }
 
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
+        }
+
         private void loadAndUseModel(MLContext mlcontext, IDataView dataView, String modelPath, String type, Color color)
         {
             ITransformer trainedModel = mlcontext.Model.Load(modelPath, out var modelInputSchema);
-
+            
             // Step 3: Apply data transformation to create predictions
             IDataView transformedData = trainedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
