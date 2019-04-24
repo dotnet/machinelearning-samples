@@ -47,7 +47,7 @@ The data format in Product Sales dataset is referenced from **shampoo-sales data
 This problem is focused on finding spikes and change points in product sales over a 3 month period, which can then be helpful in analyzing trends or abnormal behavior in sales.
 
 To solve this problem, we will build an ML model that takes as inputs:
-* Date- Month)
+* Date-Month
 * Number of product sales
 
 and will generate an alert if/where a spike or change point in product sales is detected.
