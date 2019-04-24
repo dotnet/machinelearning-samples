@@ -1,87 +1,86 @@
-using Microsoft.ML;
-using Microsoft.EntityFrameworkCore;
 using Common;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
+using Microsoft.ML.Transforms;
 using System;
 using System.IO;
-using System.Net;
 using System.Linq;
-using Microsoft.ML.Transforms;
+using System.Net;
+using System.Collections.Generic;
 
 namespace DatabaseIntegration
 {
     public class Program
     {
+        // The url for the dataset that will be downloaded
+        public static string datasetUrl = "https://raw.githubusercontent.com/dotnet/machinelearning/244a8c2ac832657af282aa312d568211698790aa/test/data/adult.train";
 
-        /// <summary>
-        /// Helper function to download a file given a base uri
-        /// </summary>
-        /// <param name="uriPath">The uri of where to download the file.</param>
-        /// <param name="dataFile">The location of where to save the downloaded file.</param>
-        /// <returns></returns>
-        private static string Download(string uriPath, string dataFile)
+        public static IEnumerable<string> ReadRemoteDataset(string url)
         {
-            using (WebClient client = new WebClient())
+            using(var client = new WebClient())
+            using(var stream = client.OpenRead(url))
+            using(var reader = new StreamReader(stream))
             {
-                client.DownloadFile(new Uri($"{uriPath}"), dataFile);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
             }
-
-            return dataFile;
         }
 
-        public static string DownloadAdultDataset()
-            => Download("https://raw.githubusercontent.com/dotnet/machinelearning/244a8c2ac832657af282aa312d568211698790aa/test/data/adult.train", "adult.txt");
-
         /// <summary>
-        /// Populates the database with the AdultCensus dataset.
+        /// Populates the database with the specified dataset url.
         /// </summary>
-        public static void Seeding()
+        public static void CreateDatabase(string url)
         {
-            string adultDataset = DownloadAdultDataset();
+            var dataset = ReadRemoteDataset(url);
             using (var db = new AdultCensusContext())
             {
                 // Ensure that we have a clean database to start with.
                 db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
+                Console.WriteLine($"Database created, populating...");
 
-                // Parse the downloaded file
-                var data = File.ReadLines(adultDataset)
+                // Parse the dataset.
+                var data = dataset
                     .Skip(1) // Skip the header row
                     .Select(l => l.Split(','))
                     .Where(row => row.Length > 1)
                     .Select(row => new AdultCensus()
                     {
-                            Age = int.Parse(row[0]),
-                            Workclass = row[1],
-                            Education = row[3],
-                            MaritalStatus = row[5],
-                            Occupation = row[6],
-                            Relationship = row[7],
-                            Race = row[8],
-                            Sex = row[9],
-                            CapitalGain = row[10],
-                            CapitalLoss = row[11],
-                            HoursPerWeek = int.Parse(row[12]),
-                            NativeCountry = row[13],
-                            Label = (int.Parse(row[14]) == 1) ? true : false
+                        Age = int.Parse(row[0]),
+                        Workclass = row[1],
+                        Education = row[3],
+                        MaritalStatus = row[5],
+                        Occupation = row[6],
+                        Relationship = row[7],
+                        Race = row[8],
+                        Sex = row[9],
+                        CapitalGain = row[10],
+                        CapitalLoss = row[11],
+                        HoursPerWeek = int.Parse(row[12]),
+                        NativeCountry = row[13],
+                        Label = (int.Parse(row[14]) == 1) ? true : false
                     });
 
                 // Add the data into the database
                 db.AdultCensus.AddRange(data);
 
                 var count = db.SaveChanges();
-                Console.WriteLine($"Save results {count}");
+                Console.WriteLine($"Total count of items saved to database: {count}");
             }
         }
 
         public static void Main()
         {
             // Seed the database with the dataset.
-            Seeding();
+            CreateDatabase(datasetUrl);
 
             using(var db = new AdultCensusContext())
             {
                 // Set the query tracking behavior to be NoTracking, this is particularly useful because
-                // our scenarios our read-only with the data. Not having tracking will  
+                // our scenarios only require read-only access.
                 db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
                 var mlContext =  new MLContext();
                
