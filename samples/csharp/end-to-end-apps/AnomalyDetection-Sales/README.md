@@ -41,7 +41,7 @@ Format of **Product Sales DataSet** looks like below.
 | 1-Feb  | 199.3        |
 | ...    | ....         |
 
-The data format in Product Sales dataset is referenced from **shampoo-sales dataset** and the license for shampoo-sales dataset is available [here](./SpikeDetection/Data/SHAMPOO-SALES-LICENSE.txt).
+The data format in Product Sales dataset is referenced from **shampoo-sales dataset** and the license for shampoo-sales dataset is available [here](./Data/SHAMPOO-SALES-LICENSE.txt).
 
 ## Problem
 This problem is focused on finding spikes and change points in product sales over a 3 month period, which can then be helpful in analyzing trends or abnormal behavior in sales.
