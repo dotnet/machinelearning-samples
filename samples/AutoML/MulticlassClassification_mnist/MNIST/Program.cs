@@ -128,20 +128,6 @@ namespace MNIST
             Console.WriteLine($"                                           eight: {resultprediction2.Score[8]:0.####}");
             Console.WriteLine($"                                           nine:  {resultprediction2.Score[9]:0.####}");
             Console.WriteLine();
-
-            var resultprediction3 = predEngine.Predict(SampleMNISTData.MNIST3);
-
-            Console.WriteLine($"Actual: 9     Predicted probability:       zero:  {resultprediction3.Score[0]:0.####}");
-            Console.WriteLine($"                                           One :  {resultprediction3.Score[1]:0.####}");
-            Console.WriteLine($"                                           two:   {resultprediction3.Score[2]:0.####}");
-            Console.WriteLine($"                                           three: {resultprediction3.Score[3]:0.####}");
-            Console.WriteLine($"                                           four:  {resultprediction3.Score[4]:0.####}");
-            Console.WriteLine($"                                           five:  {resultprediction3.Score[5]:0.####}");
-            Console.WriteLine($"                                           six:   {resultprediction3.Score[6]:0.####}");
-            Console.WriteLine($"                                           seven: {resultprediction3.Score[7]:0.####}");
-            Console.WriteLine($"                                           eight: {resultprediction3.Score[8]:0.####}");
-            Console.WriteLine($"                                           nine:  {resultprediction3.Score[9]:0.####}");
-            Console.WriteLine();
         }
     }
 }
