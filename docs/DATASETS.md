@@ -2,8 +2,8 @@
 
 This page serves as a way to track down the approval of the datasets being used by the ML.NET samples.
 
-MICROSOFT PROVIDES THE DATASETS ON AN "AS IS" BASIS. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, GUARANTEES OR CONDITIONS WITH RESPECT TO YOUR USE OF THE DATASETS. TO THE EXTENT PERMITTED UNDER YOUR LOCAL LAW, MICROSOFT DISCLAIMS ALL LIABILITY FOR ANY DAMAGES OR LOSSES, INLCUDING DIRECT, CONSEQUENTIAL, SPECIAL, INDIRECT, INCIDENTAL OR PUNITIVE, RESULTING FROM YOUR USE OF THE DATASETS.
-The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
+.NET FOUNDATION PROVIDES THE DATASETS ON AN "AS IS" BASIS. .NET FOUNDATION MAKES NO WARRANTIES, EXPRESS OR IMPLIED, GUARANTEES OR CONDITIONS WITH RESPECT TO YOUR USE OF THE DATASETS. TO THE EXTENT PERMITTED UNDER YOUR LOCAL LAW, MICROSOFT DISCLAIMS ALL LIABILITY FOR ANY DAMAGES OR LOSSES, INLCUDING DIRECT, CONSEQUENTIAL, SPECIAL, INDIRECT, INCIDENTAL OR PUNITIVE, RESULTING FROM YOUR USE OF THE DATASETS.
+The datasets are provided under the original terms that .NET FOUNDATION received such datasets. See below for more information about each dataset.
 
 |  Dataset name   | Original Dataset | Processed Dataset |       Sample using the Dataset        | Approval Status |
 |-----------------|------------------|--------------------|----------------------------------------|--------|
@@ -80,6 +80,11 @@ The datasets are provided under the original terms that Microsoft received such 
 > 
 > The dataset is provided under terms provided by City of New York: https://opendata.cityofnewyork.us/overview/#termsofuse.
 >
+>By accessing datasets and feeds available through NYC Open Data, the user agrees to all of the Terms of Use of NYC.gov as well as the Privacy Policy for NYC.gov. The user also agrees to any additional terms of use defined by the agencies, bureaus, and offices providing data. Public data sets made available on NYC Open Data are provided for informational purposes. The City does not warranty the completeness, accuracy, content, or fitness for any particular purpose or use of any public data set made available on NYC Open Data, nor are any such warranties to be implied or inferred with respect to the public data sets furnished therein.
+>
+>The City is not liable for any deficiencies in the completeness, accuracy, content, or fitness for any particular purpose or use of any public data set, or application utilizing such data set, provided by any third party.
+>
+>Submitting City Agencies are the authoritative source of data available on NYC Open Data. These entities are responsible for data quality and retain version control of data sets and feeds accessed on the Site. Data may be updated, corrected, or refreshed at any time.
 
 ### Online Retail Data Set (eShopDashboardML sample)
 
@@ -88,15 +93,63 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 > Original source: Online Retail Dataset from UCI: http://archive.ics.uci.edu/ml/datasets/online+retail
 >
+>Citation Policy:
+>
+>If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
+>
+>Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+>
+>Here is a BiBTeX citation as well:
+>
+>@misc{Dua:2019 ,
+>author = "Dua, Dheeru and Graff, Casey",
+>year = "2017",
+>title = "{UCI} Machine Learning Repository",
+>url = "http://archive.ics.uci.edu/ml",
+>institution = "University of California, Irvine, School of Information and Computer Sciences" }
+>
+>A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
+>
+>http://archive.ics.uci.edu/ml/datasets/online+retail, in turn, contains the following notice:
+>
+>Citation Request:
+>
 >Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197â€“208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
+>
 
 ### Bike Sharing Dataset
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
-> Original source:  from UCI dataset: https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset
+> Citation Policy:
 >
+> If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
+>
+> Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+>
+> Here is a BiBTeX citation as well:
+>
+>@misc{Dua:2019 ,
+>
+>author = "Dua, Dheeru and Graff, Casey",
+>
+>year = "2017",
+>
+>title = "{UCI} Machine Learning Repository",
+>
+>url = "http://archive.ics.uci.edu/ml",
+>
+>institution = "University of California, Irvine, School of Information and Computer Sciences" }
+>
+>A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page. 
+>
+>https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset, in turn, contains the following notice:
+>
+>Citation Request:
+>
+>Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg, 
+
 
 ### WineKMC dataset
 
@@ -127,11 +180,46 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
-> Original source: https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection
+> Citation Policy:
+>
+>If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
+>
+>Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+>
+>Here is a BiBTeX citation as well:
+>
+>@misc{Dua:2019 ,
+>author = "Dua, Dheeru and Graff, Casey",
+>year = "2017",
+>title = "{UCI} Machine Learning Repository",
+>url = "http://archive.ics.uci.edu/ml",
+>institution = "University of California, Irvine, School of Information and Computer Sciences" }
+>
+>A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
+>
+>https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection, in turn, contains the following notice:
+>
+>Relevant Papers:
+>
+>We offer a comprehensive study of this corpus in the following paper. This work presents a number of statistics, studies and baseline results for several machine learning methods. 
+>
+>Almeida, T.A., GÃ³mez Hidalgo, J.M., Yamakami, A. Contributions to the Study of SMS Spam Filtering: New Collection and Results. Proceedings of the 2011 ACM Symposium on Document Engineering (DOCENG'11), Mountain View, CA, USA, 2011.
+>
+>Citation Request:
+>
+>If you find this dataset useful, you make a reference to our paper and the web page.[http://www.dt.fee.unicamp.br/~tiago/smsspamcollection] in your papers, research, etc; 
+Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make use of the corpus. 
+>
+>We would like to thank Min-Yen Kan and his team for making the NUS SMS Corpus available.
 >
 
-### Heart Disease Dataset
 
+### Heart Disease Dataset
+>
+>Redistributing the "Processed Dataset" datasets with attribution:
+>
+>Citation Policy:
+>
 >This is available at https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 >
 >If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
@@ -140,18 +228,23 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 >  Here is a BiBTeX citation as well:
 >
->* @misc{Dua:2019 ,
+> @misc{Dua:2019 ,
 >
->* author = "Dua, Dheeru and Graff, Casey",
+> author = "Dua, Dheeru and Graff, Casey",
 >
->* year = "2017",
->* title = "{UCI} Machine Learning Repository",
+> year = "2017",
 >
->* url = "http://archive.ics.uci.edu/ml",
+> title = "{UCI} Machine Learning Repository",
 >
->* institution = "University of California, Irvine, School of Information and Computer Sciences" } 
+> url = "http://archive.ics.uci.edu/ml",
+>
+> institution = "University of California, Irvine, School of Information and Computer Sciences" } 
 >
 >A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
+>
+>https://archive.ics.uci.edu/ml/datasets/heart+Disease, in turn, contains the following notice:
+>
+>Citation Request:
 >
 >The authors of the databases have requested that any publications resulting from the use of the data include the names of the principal investigator responsible for the data collection at each institution. They would be: 
 >
