@@ -124,8 +124,8 @@ namespace Regression_TaxiFarePrediction
             var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment...");
-            // Cancel experiment after the user presses any key
             var stopwatch = Stopwatch.StartNew();
+            // Cancel experiment after the user presses any key
             CancelExperimentAfterAnyKeyPress(cts);
             ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
             Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds");
