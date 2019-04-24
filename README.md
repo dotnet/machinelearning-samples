@@ -118,8 +118,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
   <td>
       <h4>Spike Detection-Product Sales &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/getting-started/TimeSeries_ProductSalesSpikeDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/SpikeDetection_ShampooSales">F#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon">
-      <a href="samples/csharp/end-to-end-apps/TimeSeries-ProductSalesSpikeDetection">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>      
+      <a href="samples/csharp/getting-started/AnomalyDetection_Sales">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/SpikeDetection_ShampooSales">F#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon">
+      <a href="samples/csharp/end-to-end-apps/AnomalyDetection_Sales">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></h4>      
      <h4>Spike Detection-PowerMeter Readings &nbsp;&nbsp;&nbsp;
       <a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/TimeSeries_PowerAnomalyDetection">F#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></h4>
   </td>
