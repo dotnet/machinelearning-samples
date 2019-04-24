@@ -16,15 +16,19 @@ namespace Regression_TaxiFarePrediction
 {
     internal static class Program
     {
-        private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-
         private static string BaseDatasetsRelativePath = @"Data";
+
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static IDataView TrainDataView = null;
+
         private static string TrainDataSmallRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train-small.csv";
         private static string TrainDataSmallPath = GetAbsolutePath(TrainDataSmallRelativePath);
+        private static IDataView TrainSmallDataView = null;
+
         private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
         private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
+        private static IDataView TestDataView = null;
 
         private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
@@ -36,8 +40,24 @@ namespace Regression_TaxiFarePrediction
         {
             MLContext mlContext = new MLContext();
 
-            // Create, train, evaluate and save a model
-            BuildTrainEvaluateAndSaveModel(mlContext);
+            // Infer columns in the dataset with AutoML
+            var columnInference = InferColumns(mlContext);
+
+            // Load data from files using inferred columns
+            LoadData(mlContext, columnInference);
+
+            // Run an AutoML experiment on the dataset
+            var experimentResult = RunAutoMLExperiment(mlContext, columnInference);
+
+            // Re-fit best pipeline (trained from subsample of AutoML data) on entirety of training data.
+            // (This step is optional. By no means is it required in your workflow.)
+            var model = RefitBestPipeline(mlContext, experimentResult);
+
+            // Evaluate the model and print metrics
+            EvaluateModel(mlContext, model, experimentResult.BestRun.TrainerName);
+
+            // Save / persist the best model to a.ZIP file
+            SaveModel(mlContext, model);
 
             // Make a single test prediction loading the model from .ZIP file
             TestSinglePrediction(mlContext);
@@ -49,21 +69,33 @@ namespace Regression_TaxiFarePrediction
             Console.ReadLine();
         }
 
-        private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
+        /// <summary>
+        /// Infer columns in the dataset with AutoML.
+        /// </summary>
+        private static ColumnInferenceResults InferColumns(MLContext mlContext)
         {
-            // STEP 1: Infer columns in the dataset
             ColumnInferenceResults columnInference = mlContext.Auto().InferColumns(TrainDataPath, LabelColumnName, groupColumns: false);
             ConsoleHelper.Print(columnInference);
-            
-            // STEP 2: Load data
-            TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
-            // Send a subsample of the full training data to AutoML for faster experimentation time
-            IDataView smallTrainingDataView = textLoader.Load(TrainDataSmallPath);
-            IDataView trainingDataView = textLoader.Load(TrainDataPath);
-            IDataView testDataView = textLoader.Load(TestDataPath);
+            return columnInference;
+        }
 
-            // STEP 3: Display first few rows of the training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, smallTrainingDataView);
+        /// <summary>
+        /// Load data from files using inferred columns.
+        /// </summary>
+        private static void LoadData(MLContext mlContext, ColumnInferenceResults columnInference)
+        {
+            TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
+            TrainDataView = textLoader.Load(TrainDataPath);
+            TestDataView = textLoader.Load(TestDataPath);
+            // Load a subsample of the full training data to send to AutoML for faster experimentation time
+            TrainSmallDataView = textLoader.Load(TrainDataSmallPath);
+        }
+
+        private static ExperimentResult<RegressionMetrics> RunAutoMLExperiment(MLContext mlContext, 
+            ColumnInferenceResults columnInference)
+        {
+            // STEP 1: Display first few rows of the training data
+            ConsoleHelper.ShowDataViewInConsole(mlContext, TrainSmallDataView);
 
             // STEP 4: Build a pre-featurizer for use in the AutoML experiment.
             // (Internally, AutoML uses one or more train/validation data splits to 
@@ -92,35 +124,13 @@ namespace Regression_TaxiFarePrediction
             var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment...");
-            ExperimentResult<RegressionMetrics> experimentResult = null;
+            // Cancel experiment after the user presses any key
             var stopwatch = Stopwatch.StartNew();
-            Task experimentTask = Task.Run(() =>
-            {
-                experimentResult = experiment.Execute(smallTrainingDataView, columnInformation, preFeaturizer, progressHandler);
-            });
-            // Stop the experiment run after any key is pressed
-            Console.WriteLine($"Press any key to stop the experiment run...");
-            Console.ReadKey();
-            cts.Cancel();
-            experimentTask.Wait();
+            CancelExperimentAfterAnyKeyPress(cts);
+            ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
             Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds");
 
-            // STEP 10: Refit best pipeline (trained from subsample of AutoML data) on entirety of training data.
-            var refitBestModel = RefitBestPipeline(experimentResult, trainingDataView);
-
-            // STEP 11: Evaluate the model and show metrics.
-            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-            IDataView predictions = refitBestModel.Transform(testDataView);
-            var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
-            // Print metrics from top model
-            ConsoleHelper.PrintRegressionMetrics(experimentResult.BestRun.TrainerName, metrics);
-
-            // STEP 12: Save/persist the refit best model to a .ZIP file
-            mlContext.Model.Save(refitBestModel, trainingDataView.Schema, ModelPath);
-
-            Console.WriteLine("The model is saved to {0}", ModelPath);
-
-            return refitBestModel;
+            return experimentResult;
         }
 
         /// <summary>
@@ -143,12 +153,42 @@ namespace Regression_TaxiFarePrediction
         }
 
         /// <summary>
-        /// Refit best pipeline from <paramref name="experimentResult"/> on <paramref name="dataView"/>.
+        /// Re-fit best pipeline (trained from subsample of AutoML data) on entirety of training data.
         /// </summary>
-        private static ITransformer RefitBestPipeline(ExperimentResult<RegressionMetrics> experimentResult, IDataView dataView)
+        private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult)
         {
             RunDetail<RegressionMetrics> best = experimentResult.BestRun;
-            return best.Estimator.Fit(dataView);
+            return best.Estimator.Fit(TrainDataView);
+        }
+
+        /// <summary>
+        /// Evaluate the model and print metrics.
+        /// </summary>
+        private static void EvaluateModel(MLContext mlContext, ITransformer model, string trainerName)
+        {
+            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            IDataView predictions = model.Transform(TestDataView);
+            var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
+            ConsoleHelper.PrintRegressionMetrics(trainerName, metrics);
+        }
+
+        /// <summary>
+        /// Save/persist the best model to a .ZIP file
+        /// </summary>
+        private static void SaveModel(MLContext mlContext, ITransformer model)
+        {
+            mlContext.Model.Save(model, TrainSmallDataView.Schema, ModelPath);
+            Console.WriteLine("The model is saved to {0}", ModelPath);
+        }
+
+        private static void CancelExperimentAfterAnyKeyPress(CancellationTokenSource cts)
+        {
+            Task.Run(() =>
+            {
+                Console.WriteLine($"Press any key to stop the experiment run...");
+                Console.ReadKey();
+                cts.Cancel();
+            });
         }
 
         private static void TestSinglePrediction(MLContext mlContext)
