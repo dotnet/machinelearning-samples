@@ -1,10 +1,10 @@
-# Spike and Chnage Point Detection of Product Sales
+# Spike Detection and Change Point Detection of Product Sales E2E 
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.0.0-preview         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Product Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
-![Alt Text](./ProductSalesSpikeDetection/images/productsales.gif)
+![Alt Text](./SpikeDetection.WinForms/images/productsales.gif)
 
 ## Overview
 Product Sales Spike Detection is a simple application which builds and consumes time series anomaly detection models to detect [spikes](#spike-detection) and [change points](#change-point-detection) in product sales.
@@ -41,7 +41,7 @@ we have created sample dataset for Product sales that looks like below.
 | 1-Feb  | 199.3        |
 | ...    | ....         |
 
-The Product-sales dataset is referenced from product-sales dataset and the license for shampoo-sales dataset is available [here](./ProductSalesSpikeDetectionTrainer/Data/SHAMPOO-SALES-LICENSE.txt).
+The Product-sales dataset is referenced from product-sales dataset and the license for shampoo-sales dataset is available [here](./Data/SHAMPOO-SALES-LICENSE.txt).
 
 ## Problem
 This problem is focused on finding spikes and change points in product sales over a 3 month period, which can then be helpful in analyzing trends or abnormal behavior in sales.
