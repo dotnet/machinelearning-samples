@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.ML;
 using System.IO;
-using ProductSalesSpikeDetection.DataStructures;
+using SpikeDetection.DataStructures;
 
-namespace ProductSalesSpikeDetection
+namespace SpikeDetection
 {
     internal static class Program
    {

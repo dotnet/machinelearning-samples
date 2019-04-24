@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ProductSalesSpikeDetection.DataStructures
+namespace SpikeDetection.DataStructures
 {
     public class ProductSalesData
     {
