@@ -165,7 +165,7 @@ namespace Regression_TaxiFarePrediction
         /// </summary>
         private static void EvaluateModel(MLContext mlContext, ITransformer model, string trainerName)
         {
-            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            Console.WriteLine("===== Evaluating model's accuracy with test data =====");
             IDataView predictions = model.Transform(TestDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             ConsoleHelper.PrintRegressionMetrics(trainerName, metrics);
