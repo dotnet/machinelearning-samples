@@ -12,7 +12,7 @@ namespace MNIST
     {
         private static string BaseDatasetsRelativePath = @"Data";
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
-        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-test.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
         private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
