@@ -1,10 +1,10 @@
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Transforms.Categorical;
+using Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Linq;
+using Microsoft.ML.Transforms;
 
 namespace DatabaseIntegration
 {
@@ -23,54 +23,35 @@ namespace DatabaseIntegration
         public static string DownloadAdultDataset()
             => Download("https://raw.githubusercontent.com/dotnet/machinelearning/244a8c2ac832657af282aa312d568211698790aa/test/data/adult.train", "adult.txt");
 
-        public static List<AdultCensus> GetAdultData()
+        public static void Seeding()
         {
             string adultDataset = DownloadAdultDataset();
-            string dataLine;
-            var dataset = new List<AdultCensus>();
-            using (StreamReader reader = new StreamReader(adultDataset))
-            {
-                // read the header
-                dataLine = reader.ReadLine();
-                while ((dataLine = reader.ReadLine()) != null)
-                {
-                    if (string.IsNullOrEmpty(dataLine))
-                        continue;
-
-                    var data = dataLine.Split(',');
-                    dataset.Add(new AdultCensus()
-                    {
-                        Age = int.Parse(data[0]),
-                        Workclass = data[1],
-                        Education = data[3],
-                        //EducationNum = int.Parse(data[4]),
-                        MaritalStatus = data[5],
-                        Occupation = data[6],
-                        Relationship = data[7],
-                        Race = data[8],
-                        Sex = data[9],
-                        CapitalGain = data[10],
-                        CapitalLoss = data[11],
-                        HoursPerWeek = int.Parse(data[12]),
-                        NativeCountry = data[13],
-                        Label = int.Parse(data[14])
-                    });
-                }
-            }
-
-            return dataset;
-        }
-
-        public static void PopulateDatabase()
-        {
-            var adultData = GetAdultData();
             using (var db = new AdultCensusContext())
             {
-                foreach(var row in adultData)
-                {
-                    db.AdultCensus.Add(row);
-                }
-
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+                var data = File.ReadLines(adultDataset)
+                    .Skip(1) // Skip the header row
+                    .Select(l => l.Split(','))
+                    .Where(row => row.Length > 1)
+                    .Select(row => new AdultCensus()
+                    {
+                            Age = int.Parse(row[0]),
+                            Workclass = row[1],
+                            Education = row[3],
+                            //EducationNum = int.Parse(data[4]),
+                            MaritalStatus = row[5],
+                            Occupation = row[6],
+                            Relationship = row[7],
+                            Race = row[8],
+                            Sex = row[9],
+                            CapitalGain = row[10],
+                            CapitalLoss = row[11],
+                            HoursPerWeek = int.Parse(row[12]),
+                            NativeCountry = row[13],
+                            Label = (int.Parse(row[14]) == 1) ? true : false
+                    });
+                db.AdultCensus.AddRange(data);
                 var count = db.SaveChanges();
                 Console.WriteLine($"Save results {count}");
             }
@@ -78,24 +59,33 @@ namespace DatabaseIntegration
 
         public static void Main()
         {
-            PopulateDatabase();
+            Seeding();
             using(var db = new AdultCensusContext())
             {
                 var mlContext =  new MLContext();
-                var dataView = mlContext.Data.ReadFromEnumerable(db.AdultCensus);
-                var pipeline = mlContext.Transforms.Categorical.OneHotEncoding(
-                    new OneHotEncodingEstimator.ColumnInfo("MsOHE", "MaritalStatus", OneHotEncodingTransformer.OutputKind.Bin),
-                    new OneHotEncodingEstimator.ColumnInfo("OccOHE", "Occupation", OneHotEncodingTransformer.OutputKind.Bin),
-                    new OneHotEncodingEstimator.ColumnInfo("RelOHE", "Relationship", OneHotEncodingTransformer.OutputKind.Bin),
-                    new OneHotEncodingEstimator.ColumnInfo("SOHE", "Sex", OneHotEncodingTransformer.OutputKind.Bin),
-                    new OneHotEncodingEstimator.ColumnInfo("NatOHE", "NativeCountry", OneHotEncodingTransformer.OutputKind.Bin));
-                pipeline.Append(mlContext.Transforms.Concatenate("Feature", 
-                    "Age", "MsOHE", "OccOHE", "RelOHE", "SOHE", "HoursPerWeek", "NatOHE"));
-                pipeline.Append(mlContext.BinaryClassification.Trainers.LightGbm(
-                    new Microsoft.ML.LightGBM.Options() { }));
+                
+                // NOTE: For training, we are sorting the data by the AdultCensusId, which is an auto-generated id. ML.Net requires
+                // that the training data is processed in the same order to produce consistent results with the model.
+                var dataView = mlContext.Data.LoadFromEnumerable(db.AdultCensus.OrderBy(x=>x.AdultCensusId).ToList<AdultCensus>());
+                var pipeline = mlContext.Transforms.Categorical.OneHotEncoding(new [] {
+                        new InputOutputColumnPair("MsOHE", "MaritalStatus"), 
+                        new InputOutputColumnPair("OccOHE", "Occupation"),
+                        new InputOutputColumnPair("RelOHE", "Relationship"),
+                        new InputOutputColumnPair("SOHE", "Sex"), 
+                        new InputOutputColumnPair("NatOHE", "NativeCountry")
+                    }, OneHotEncodingEstimator.OutputKind.Binary)
+                    .Append(mlContext.Transforms.Concatenate("Features", "MsOHE", "OccOHE", "RelOHE", "SOHE", "NatOHE"))
+                    .Append(mlContext.BinaryClassification.Trainers.LightGbm());
 
                 Console.WriteLine("Training model...");
                 var model = pipeline.Fit(dataView);
+                var test = db.AdultCensus.Take(2000).ToList<AdultCensus>();
+
+                var testDataView = mlContext.Data.LoadFromEnumerable(db.AdultCensus.Take(2000).ToList<AdultCensus>());
+                var predictions = model.Transform(testDataView);
+                var metrics = mlContext.BinaryClassification.Evaluate(predictions);
+                ConsoleHelper.PrintBinaryClassificationMetrics("Database Example", metrics);
+                ConsoleHelper.ConsolePressAnyKey();
             }
         }
     }
