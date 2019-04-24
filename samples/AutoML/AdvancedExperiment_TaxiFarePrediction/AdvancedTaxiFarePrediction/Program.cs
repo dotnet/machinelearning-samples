@@ -10,6 +10,7 @@ using Microsoft.ML.Data;
 using Regression_AutoML.DataStructures;
 using Common;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -30,7 +31,6 @@ namespace Regression_TaxiFarePrediction
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
 
         private static string LabelColumnName = "fare_amount";
-        private static uint ExperimentTime = 60;
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
@@ -59,6 +59,7 @@ namespace Regression_TaxiFarePrediction
             TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
             // Send a subsample of the full training data to AutoML for faster experimentation time
             IDataView smallTrainingDataView = textLoader.Load(TrainDataSmallPath);
+            IDataView trainingDataView = textLoader.Load(TrainDataPath);
             IDataView testDataView = textLoader.Load(TestDataPath);
 
             // STEP 3: Display first few rows of the training data
@@ -72,51 +73,47 @@ namespace Regression_TaxiFarePrediction
             IEstimator<ITransformer> preFeaturizer = mlContext.Transforms.Conversion.MapValue("is_cash",
                 new[] { new KeyValuePair<string, bool>("CSH", true) }, "payment_type");
 
-            // STEP 5: Initialize custom column information for use in AutoML experiment
-            ColumnInformation columnInformation = new ColumnInformation() { LabelColumnName = LabelColumnName };
-            // Indicate that the VendorId column should be treated as categorical data.
-            // (Categorical data columns should generally be columns that contain a small number of unique values.)
-            columnInformation.CategoricalColumnNames.Add("vendor_id");
+            // STEP 5: Customize column information returned by InferColumns API
+            ColumnInformation columnInformation = columnInference.ColumnInformation;
+            columnInformation.CategoricalColumnNames.Remove("payment_type");
             columnInformation.IgnoredColumnNames.Add("payment_type");
 
-            // STEP 6: Initialize AutoML experiment settings.
-            var experimentSettings = new RegressionExperimentSettings();
-            experimentSettings.MaxExperimentTimeInSeconds = ExperimentTime;
-            // Set the metric that AutoML will try to optimize over the course of the experiment.
-            experimentSettings.OptimizingMetric = RegressionMetric.MeanSquaredError;
-            // Only use the LightGBM regression trainer during the experiment
-            experimentSettings.Trainers.Clear();
-            experimentSettings.Trainers.Add(RegressionTrainer.LightGbm);
+            // STEP 6: Initialize a cancellation token source to stop the experiment.
+            var cts = new CancellationTokenSource();
 
-            // STEP 7: Set up a cancellation token to stop the experiment.
-            CancellationTokenSource cts = new CancellationTokenSource();
-            experimentSettings.CancellationToken = cts.Token;
-            // Cancel the experiment after the specified # of seconds
-            cts.CancelAfter(TimeSpan.FromSeconds(ExperimentTime));
-
-            // STEP 8: Initialize our user-defined progress handler that will AutoML will 
+            // STEP 7: Initialize our user-defined progress handler that will AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new RegressionExperimentProgressHandler();
 
-            // STEP 9: Run AutoML regression experiment
-            Console.WriteLine("=============== Training the model ===============");
-            Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
-            ExperimentResult<RegressionMetrics> experimentResult = mlContext.Auto()
-                .CreateRegressionExperiment(experimentSettings)
-                .Execute(smallTrainingDataView, columnInformation, preFeaturizer, progressHandler);
-            Console.WriteLine($"AutoML experiment completed.{Environment.NewLine}");
+            // STEP 8: Create experiment settings
+            var experimentSettings = CreateExperimentSettings(mlContext, cts);
 
-            // STEP 10: Refit best model on entire training data.
-            RunDetail<RegressionMetrics> best = experimentResult.BestRun;
-            IDataView trainingDataView = textLoader.Load(TrainDataPath);
-            var refitBestModel = best.Estimator.Fit(trainingDataView);
+            // STEP 9: Run AutoML regression experiment
+            var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
+            Console.WriteLine("=============== Training the model ===============");
+            Console.WriteLine($"Running AutoML regression experiment...");
+            ExperimentResult<RegressionMetrics> experimentResult = null;
+            var stopwatch = Stopwatch.StartNew();
+            Task experimentTask = Task.Run(() =>
+            {
+                experimentResult = experiment.Execute(smallTrainingDataView, columnInformation, preFeaturizer, progressHandler);
+            });
+            // Stop the experiment run after any key is pressed
+            Console.WriteLine($"Press any key to stop the experiment run...");
+            Console.ReadKey();
+            cts.Cancel();
+            experimentTask.Wait();
+            Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds");
+
+            // STEP 10: Refit best pipeline (trained from subsample of AutoML data) on entirety of training data.
+            var refitBestModel = RefitBestPipeline(experimentResult, trainingDataView);
 
             // STEP 11: Evaluate the model and show metrics.
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             IDataView predictions = refitBestModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             // Print metrics from top model
-            ConsoleHelper.PrintRegressionMetrics(best.TrainerName.ToString(), metrics);
+            ConsoleHelper.PrintRegressionMetrics(experimentResult.BestRun.TrainerName, metrics);
 
             // STEP 12: Save/persist the refit best model to a .ZIP file
             mlContext.Model.Save(refitBestModel, trainingDataView.Schema, ModelPath);
@@ -124,6 +121,34 @@ namespace Regression_TaxiFarePrediction
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
             return refitBestModel;
+        }
+
+        /// <summary>
+        /// Create AutoML regression experiment settings.
+        /// </summary>
+        private static RegressionExperimentSettings CreateExperimentSettings(MLContext mlContext, 
+            CancellationTokenSource cts)
+        {
+            // Initialize AutoML experiment settings.
+            var experimentSettings = new RegressionExperimentSettings();
+            experimentSettings.MaxExperimentTimeInSeconds = 3600;
+            experimentSettings.CancellationToken = cts.Token;
+            // Set the metric that AutoML will try to optimize over the course of the experiment.
+            experimentSettings.OptimizingMetric = RegressionMetric.MeanSquaredError;
+            // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
+            // (These trainers sometimes underperform on this dataset.)
+            experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression);
+            experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent);
+            return experimentSettings;
+        }
+
+        /// <summary>
+        /// Refit best pipeline from <paramref name="experimentResult"/> on <paramref name="dataView"/>.
+        /// </summary>
+        private static ITransformer RefitBestPipeline(ExperimentResult<RegressionMetrics> experimentResult, IDataView dataView)
+        {
+            RunDetail<RegressionMetrics> best = experimentResult.BestRun;
+            return best.Estimator.Fit(dataView);
         }
 
         private static void TestSinglePrediction(MLContext mlContext)
