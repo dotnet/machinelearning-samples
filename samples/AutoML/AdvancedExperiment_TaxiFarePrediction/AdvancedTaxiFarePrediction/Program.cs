@@ -97,7 +97,7 @@ namespace Regression_TaxiFarePrediction
             // STEP 1: Display first few rows of the training data
             ConsoleHelper.ShowDataViewInConsole(mlContext, TrainSmallDataView);
 
-            // STEP 4: Build a pre-featurizer for use in the AutoML experiment.
+            // STEP 2: Build a pre-featurizer for use in the AutoML experiment.
             // (Internally, AutoML uses one or more train/validation data splits to 
             // evaluate the models it produces. The pre-featurizer is fit only on the 
             // training data split to produce a trained transform. Then, the trained transform 
@@ -105,22 +105,22 @@ namespace Regression_TaxiFarePrediction
             IEstimator<ITransformer> preFeaturizer = mlContext.Transforms.Conversion.MapValue("is_cash",
                 new[] { new KeyValuePair<string, bool>("CSH", true) }, "payment_type");
 
-            // STEP 5: Customize column information returned by InferColumns API
+            // STEP 3: Customize column information returned by InferColumns API
             ColumnInformation columnInformation = columnInference.ColumnInformation;
             columnInformation.CategoricalColumnNames.Remove("payment_type");
             columnInformation.IgnoredColumnNames.Add("payment_type");
 
-            // STEP 6: Initialize a cancellation token source to stop the experiment.
+            // STEP 4: Initialize a cancellation token source to stop the experiment.
             var cts = new CancellationTokenSource();
 
-            // STEP 7: Initialize our user-defined progress handler that will AutoML will 
+            // STEP 5: Initialize our user-defined progress handler that will AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new RegressionExperimentProgressHandler();
 
-            // STEP 8: Create experiment settings
+            // STEP 6: Create experiment settings
             var experimentSettings = CreateExperimentSettings(mlContext, cts);
 
-            // STEP 9: Run AutoML regression experiment
+            // STEP 7: Run AutoML regression experiment
             var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
             Console.WriteLine("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment...");
