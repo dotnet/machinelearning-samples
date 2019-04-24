@@ -113,7 +113,7 @@ namespace Regression_TaxiFarePrediction
             // STEP 4: Initialize a cancellation token source to stop the experiment.
             var cts = new CancellationTokenSource();
 
-            // STEP 5: Initialize our user-defined progress handler that will AutoML will 
+            // STEP 5: Initialize our user-defined progress handler that AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new RegressionExperimentProgressHandler();
 
