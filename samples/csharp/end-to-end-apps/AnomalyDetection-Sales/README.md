@@ -29,9 +29,9 @@ Note: This app is written in .NET Framework, so you must manually restore the nu
     * Uses [IidSpikeDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidspikedetector?view=ml-dotnet) and [IidChangePointDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidchangepointdetector?view=ml-dotnet).
 
 ## Dataset
-we have created sample dataset for Product sales that looks like below.
+We have created sample dataset for Product sales. The dataset `product-sales.csv` can be found [here](./SpikeDetection/Data/product-sales.csv)
 
-**Product Sales DataSet:**
+Format of **Product Sales DataSet** looks like below.
 
 | Month  | ProductSales |
 |--------|--------------|
@@ -41,7 +41,7 @@ we have created sample dataset for Product sales that looks like below.
 | 1-Feb  | 199.3        |
 | ...    | ....         |
 
-The Product-sales dataset is referenced from product-sales dataset and the license for shampoo-sales dataset is available [here](./Data/SHAMPOO-SALES-LICENSE.txt).
+The data format in Product Sales dataset is referenced from **shampoo-sales dataset** and the license for shampoo-sales dataset is available [here](./SpikeDetection/Data/SHAMPOO-SALES-LICENSE.txt).
 
 ## Problem
 This problem is focused on finding spikes and change points in product sales over a 3 month period, which can then be helpful in analyzing trends or abnormal behavior in sales.
