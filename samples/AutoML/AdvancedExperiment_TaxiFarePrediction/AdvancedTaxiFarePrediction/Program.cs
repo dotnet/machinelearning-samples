@@ -139,7 +139,6 @@ namespace Regression_TaxiFarePrediction
         private static RegressionExperimentSettings CreateExperimentSettings(MLContext mlContext, 
             CancellationTokenSource cts)
         {
-            // Initialize AutoML experiment settings.
             var experimentSettings = new RegressionExperimentSettings();
             experimentSettings.MaxExperimentTimeInSeconds = 3600;
             experimentSettings.CancellationToken = cts.Token;
