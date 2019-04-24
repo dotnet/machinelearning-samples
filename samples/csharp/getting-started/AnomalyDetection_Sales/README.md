@@ -17,7 +17,7 @@ To solve this problem, we will build an ML model that takes as inputs:
 and predicts the spikes and changepoints in Product sales.
 
 ## Dataset
-we have created sample dataset for Product sales. The dataset `product-sales.csv` can be found [here](./SpikeDetection/Data/product-sales.csv)
+We have created sample dataset for Product sales. The dataset `product-sales.csv` can be found [here](./SpikeDetection/Data/product-sales.csv)
 
 Format of **Product Sales DataSet** looks like below.
 
