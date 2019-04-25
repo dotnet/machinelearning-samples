@@ -4,7 +4,7 @@ namespace HeartDiseasePredictionConsoleApp.DataStructures
 {
     public class HeartSampleData
     {
-        internal static readonly List<HeartData> heartDatas = new List<HeartData>()
+        internal static readonly List<HeartData> heartDataList = new List<HeartData>()
         {
             new HeartData()
             { 
