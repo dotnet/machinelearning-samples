@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Common;
 using Microsoft.ML;
 using Microsoft.ML.Auto;
@@ -76,6 +77,9 @@ namespace MNIST
                 var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName: "Number", scoreColumnName: "Score");
                 ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
 
+                // Print top models found by AutoML
+                PrintTopModels(experimentResult);
+
                 // STEP 5: Save/persist the trained model to a .ZIP file
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
@@ -95,6 +99,23 @@ namespace MNIST
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
+        }
+
+        /// <summary>
+        /// Prints top models from AutoML experiment.
+        /// </summary>
+        private static void PrintTopModels(ExperimentResult<MulticlassClassificationMetrics> experimentResult)
+        {
+            // Get top few runs ranked by accuracy
+            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.MicroAccuracy).Take(3);
+
+            Console.WriteLine($"Top models ranked by accuracy --");
+            ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
+            for (var i = 0; i < topRuns.Count(); i++)
+            {
+                var run = topRuns.ElementAt(i);
+                ConsoleHelper.PrintIterationMetrics(i, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+            }
         }
 
         private static void TestSomePredictions(MLContext mlContext)

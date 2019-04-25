@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Common;
 using Microsoft.ML;
 using Microsoft.ML.Auto;
@@ -52,17 +53,20 @@ namespace SentimentAnalysis
 
             // STEP 4: Run AutoML binary classification experiment
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
-            ExperimentResult<BinaryClassificationMetrics> experiment = mlContext.Auto()
+            ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto()
                 .CreateBinaryClassificationExperiment(ExperimentTime)
                 .Execute(trainingDataView, progressHandler: progressHandler);
 
             // STEP 5: Evaluate the model and print metrics
             Console.WriteLine("===== Evaluating model's accuracy with test data =====");
-            RunDetail<BinaryClassificationMetrics> bestRun = experiment.BestRun;
+            RunDetail<BinaryClassificationMetrics> bestRun = experimentResult.BestRun;
             ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, scoreColumnName: "Score");
             ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName, metrics);
+
+            // Print top models found by AutoML
+            PrintTopModels(experimentResult);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
@@ -99,6 +103,23 @@ namespace SentimentAnalysis
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
+        }
+
+        /// <summary>
+        /// Prints top models from AutoML experiment.
+        /// </summary>
+        private static void PrintTopModels(ExperimentResult<BinaryClassificationMetrics> experimentResult)
+        {
+            // Get top few runs ranked by accuracy
+            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.Accuracy).Take(3);
+
+            Console.WriteLine($"Top models ranked by accuracy --");
+            ConsoleHelper.PrintBinaryClassificationMetricsHeader();
+            for (var i = 0; i < topRuns.Count(); i++)
+            {
+                var run = topRuns.ElementAt(i);
+                ConsoleHelper.PrintIterationMetrics(i, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+            }
         }
     }
 }

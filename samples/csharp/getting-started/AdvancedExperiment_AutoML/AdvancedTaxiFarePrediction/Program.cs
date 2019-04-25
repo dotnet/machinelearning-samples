@@ -130,6 +130,9 @@ namespace AdvancedTaxiFarePrediction
             ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
             Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds");
 
+            // Print top models found by AutoML
+            PrintTopModels(experimentResult);
+
             return experimentResult;
         }
 
@@ -143,12 +146,29 @@ namespace AdvancedTaxiFarePrediction
             experimentSettings.MaxExperimentTimeInSeconds = 3600;
             experimentSettings.CancellationToken = cts.Token;
             // Set the metric that AutoML will try to optimize over the course of the experiment.
-            experimentSettings.OptimizingMetric = RegressionMetric.MeanSquaredError;
+            experimentSettings.OptimizingMetric = RegressionMetric.RootMeanSquaredError;
             // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
             // (These trainers sometimes underperform on this dataset.)
             experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression);
             experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent);
             return experimentSettings;
+        }
+        
+        /// <summary>
+        /// Prints top models from AutoML experiment.
+        /// </summary>
+        private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
+        {
+            // Get top few runs ranked by root mean squared error
+            var topRuns = experimentResult.RunDetails.OrderBy(r => r.ValidationMetrics.RootMeanSquaredError).Take(3);
+
+            Console.WriteLine($"Top models ranked by root mean squared error --");
+            ConsoleHelper.PrintRegressionMetricsHeader();
+            for (var i = 0; i < topRuns.Count(); i++)
+            {
+                var run = topRuns.ElementAt(i);
+                ConsoleHelper.PrintIterationMetrics(i, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+            }
         }
 
         /// <summary>

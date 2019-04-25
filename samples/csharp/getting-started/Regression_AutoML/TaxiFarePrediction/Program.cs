@@ -75,6 +75,9 @@ namespace TaxiFarePrediction
             // Print metrics from top model
             ConsoleHelper.PrintRegressionMetrics(best.TrainerName, metrics);
 
+            // Print top models found by AutoML
+            PrintTopModels(experimentResult);
+
             // STEP 6: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
@@ -276,6 +279,23 @@ namespace TaxiFarePrediction
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
+        }
+
+        /// <summary>
+        /// Prints top models from AutoML experiment.
+        /// </summary>
+        private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
+        {
+            // Get top few runs ranked by R-Squared
+            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.RSquared).Take(3);
+
+            Console.WriteLine($"Top models ranked by R-Squared --");
+            ConsoleHelper.PrintRegressionMetricsHeader();
+            for (var i = 0; i < topRuns.Count(); i++)
+            {
+                var run = topRuns.ElementAt(i);
+                ConsoleHelper.PrintIterationMetrics(i, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+            }
         }
     }
 
