@@ -11,7 +11,6 @@
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Update="wwwroot\images\smileybob.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
