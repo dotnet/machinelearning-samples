@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Common
+namespace CommonHelpers
 {
     public class ObjectPool<T>
-    {
-        
+    {        
         private ConcurrentBag<Tuple<T, DateTime>> _objects;
         private Func<T> _objectGenerator;
         private int _maxPoolSize;
