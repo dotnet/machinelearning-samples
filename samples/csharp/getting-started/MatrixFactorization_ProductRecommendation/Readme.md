@@ -31,6 +31,7 @@ Matrix Factorization relies on ‘Collaborative filtering’ which operates unde
 The original data comes from SNAP:
 https://snap.stanford.edu/data/amazon0302.html
 
+DataSet's Citation information can be found [here](/ProductRecommender/Data/DATASETS-CITATION.txt)
 
 ## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
