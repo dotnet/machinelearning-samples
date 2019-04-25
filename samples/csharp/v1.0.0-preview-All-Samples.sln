@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartDiseasePrediction.Solu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ObjectDetection.Solution", "ObjectDetection.Solution", "{59A36AB2-2801-4AF3-A5AA-38B069375F4D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpikeDetect.Solution", "SpikeDetect.Solution", "{48D14A80-C613-42C4-9A6F-7737B7751893}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpikeDetection.Solution", "SpikeDetection.Solution", "{48D14A80-C613-42C4-9A6F-7737B7751893}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerAnomalyDetection.Solution", "PowerAnomalyDetection.Solution", "{417CA47F-36DE-4F6E-B53D-330D2B373ECF}"
 EndProject
@@ -91,7 +91,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scalable.Model", "end-to-en
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scalable.WebAPI", "end-to-end-apps\ScalableMLModelOnWebAPI\src\Scalable.WebAPI\Scalable.WebAPI.csproj", "{2B5409B5-3CEE-432E-963A-3AD71C12B896}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpikeDetectE2E.Solution", "SpikeDetectE2E.Solution", "{6D589303-EC5C-405C-B9F6-06FE3500FCCB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpikeDetectionE2E.Solution", "SpikeDetectionE2E.Solution", "{6D589303-EC5C-405C-B9F6-06FE3500FCCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TensorFlowScorer.Solution", "TensorFlowScorer.Solution", "{4F49A908-25A6-4CC0-A9AC-1FC4072834CC}"
 EndProject
