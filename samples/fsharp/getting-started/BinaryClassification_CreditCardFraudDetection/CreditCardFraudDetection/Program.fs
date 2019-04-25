@@ -96,7 +96,7 @@ let main _ =
         let data = mlContext.Data.LoadFromTextFile<TransactionObservation>(inputFile, separatorChar = ',', hasHeader = true, allowQuoting = true)
 
         let trainData, testData = 
-            let y = mlContext.Data.TrainTestSplit(data, 0.2, seed = Nullable 1) 
+            let y = mlContext.BinaryClassification.TrainTestSplit(data, 0.2, seed = Nullable 1u) 
             y.TrainSet, y.TestSet
 
         // save test split
@@ -132,13 +132,14 @@ let main _ =
 
     let pipeline = 
         EstimatorChain()
-        |> fun x -> x.Append(mlContext.Transforms.Concatenate("Features", featureColumnNames))
+        |> fun x -> x.Append(mlContext.Transforms.Concatenate(DefaultColumnNames.Features, featureColumnNames))
         |> fun x -> x.Append(mlContext.Transforms.DropColumns [|"Time"|])
         |> fun x -> 
             x.Append (
-                mlContext.Transforms.NormalizeMeanVariance (
+                mlContext.Transforms.Normalize (
                     "FeaturesNormalizedByMeanVar", 
-                    "Features"
+                    "Features", 
+                    NormalizingEstimator.NormalizerMode.MeanVariance
                     )
                 )
         |> fun x -> 
@@ -146,9 +147,9 @@ let main _ =
                 mlContext.BinaryClassification.Trainers.FastTree(
                     "Label", 
                     "FeaturesNormalizedByMeanVar", 
-                    numberOfLeaves = 20, 
-                    numberOfTrees = 100, 
-                    minimumExampleCountPerLeaf = 10, 
+                    numLeaves = 20, 
+                    numTrees = 100, 
+                    minDatapointsInLeaves = 10, 
                     learningRate = 0.2
                     )
                 )
@@ -162,7 +163,7 @@ let main _ =
     printfn "Saving model to file"
     let _ = 
         use fs = new FileStream (modelFile, FileMode.Create, FileAccess.Write, FileShare.Write)
-        mlContext.Model.Save(model, trainData.Schema, fs)
+        mlContext.Model.Save(model, fs)
 
     (*
     Read the model and test data from file,
@@ -170,10 +171,10 @@ let main _ =
     *)
 
     printfn "Reading model and test data"
-    let modelEvaluator, inputSchema = 
+    let modelEvaluator = 
         use file = File.OpenRead modelFile           
         mlContext.Model.Load(file)
-    let predictionEngine = mlContext.Model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(modelEvaluator)
+    let predictionEngine = modelEvaluator.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(mlContext)
 
     let testData = mlContext.Data.LoadFromTextFile<TransactionObservation>(testFile, hasHeader = true, separatorChar = ',')
 

@@ -89,15 +89,15 @@ let main _argv =
         //STEP 2: Configure data transformations in pipeline
         let dataProcessPipeline =  
             EstimatorChain()
-                .Append(mlContext.Transforms.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
-                .Append(mlContext.Transforms.Categorical.OneHotEncoding("LastNameKey", "LastName", OneHotEncodingEstimator.OutputKind.Indicator))
+                .Append(mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnOptions("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
         
         // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
         Common.ConsoleHelper.peekDataViewInConsole<PivotObservation> mlContext pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore
         Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore
 
         //STEP 3: Create the training pipeline                
-        let trainer = mlContext.Clustering.Trainers.KMeans("Features", numberOfClusters = 3)
+        let trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount = 3)
         let trainingPipeline = dataProcessPipeline.Append(trainer)
 
         //STEP 4: Train the model fitting to the pivotDataView
@@ -107,14 +107,14 @@ let main _argv =
         //STEP 5: Evaluate the model and show accuracy stats
         printfn "===== Evaluating Model's accuracy with Test data ====="
         let predictions = trainedModel.Transform(pivotDataView)
-        let metrics = mlContext.Clustering.Evaluate(predictions, scoreColumnName = "Score", featureColumnName = "Features")
+        let metrics = mlContext.Clustering.Evaluate(predictions, score = "Score", features = "Features")
 
         Common.ConsoleHelper.printClusteringMetrics (string trainer) metrics
 
         //STEP 6: Save/persist the trained model to a .ZIP file
         do 
-            use fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write)
-            mlContext.Model.Save(trainedModel, pivotDataView.Schema, fs)
+            use fs = File.OpenWrite(modelZip)
+            mlContext.Model.Save(trainedModel, fs)
         
         printfn "The model is saved to %s" modelZip
     with 

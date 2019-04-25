@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="Program.fs" />
   </ItemGroup>
 

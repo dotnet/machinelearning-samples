@@ -37,14 +37,14 @@ type GitHubClientFacade =
 let initialise modelPath repoOwner repoName accessToken =
     let mlContext = MLContext(seed = Nullable 1)
 
-    let trainedModel, inputSchema = 
+    let trainedModel = 
         use f = IO.File.OpenRead(modelPath)
         mlContext.Model.Load(f)
 
     let productInformation = ProductHeaderValue "MLGitHubLabeler"
     let client = GitHubClient(productInformation, Credentials = Credentials(accessToken))
     let gitHubClient = GitHubClientFacade.init client repoOwner repoName
-    let predictionEngine = mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(trainedModel)
+    let predictionEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext)
     predictionEngine, gitHubClient
 
 type FullPrediction = 

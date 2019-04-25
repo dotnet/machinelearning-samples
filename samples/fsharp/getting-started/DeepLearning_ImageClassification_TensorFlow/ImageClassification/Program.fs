@@ -2,6 +2,8 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
+open Microsoft.ML.ImageAnalytics
+open Microsoft.ML.Core.Data
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -115,21 +117,21 @@ let printImageNetProb (x : ImageNetDataProbability) =
     printfn ""
 
 let score dataLocation imagesFolder inputModelLocation labelsTxt = 
-    printHeader ["Read model"]
+    printfn "Read model"
     printfn "Model location: %s" inputModelLocation
     printfn "Images folder: %s" imagesFolder
     printfn "Training file: %s" dataLocation
-    printfn "Default parameters: image size=(%d,%d), image mean: %d" imageHeight imageWidth mean
+    printfn "Default parameters: image size =(%d,%d), image mean: %d" imageHeight imageWidth mean
     let mlContext = MLContext(seed = Nullable 1)
-    let data = mlContext.Data.LoadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
+    let data = mlContext.Data.ReadFromTextFile<ImageNetData>(dataLocation, hasHeader = false)
     let pipeline =
         EstimatorChain()
-            .Append(mlContext.Transforms.LoadImages(outputColumnName = "input", imageFolder = imagesFolder, inputColumnName = "ImagePath"))
-            .Append(mlContext.Transforms.ResizeImages("input", imageWidth, imageHeight, inputColumnName = "input"))
-            .Append(mlContext.Transforms.ExtractPixels(outputColumnName = "input", interleavePixelColors = channelsLast, offsetImage = float32 mean))
-            .Append(mlContext.Model.LoadTensorFlowModel(inputModelLocation).ScoreTensorFlowModel([| "softmax2" |], [| "input" |], addBatchDimensionInput = true))
+            .Append(mlContext.Transforms.LoadImages(imageFolder = imagesFolder, columns = [|struct("ImageReal", "ImagePath")|]))
+            .Append(mlContext.Transforms.Resize("ImageReal", imageWidth, imageHeight, inputColumnName = "ImageReal"))
+            .Append(mlContext.Transforms.ExtractPixels([| ImagePixelExtractorTransformer.ColumnInfo("input", "ImageReal", interleave = channelsLast, offset = float32 mean) |]))
+            .Append(mlContext.Transforms.ScoreTensorFlowModel(inputModelLocation, [| "softmax2" |], [| "input" |]))
     let model = pipeline.Fit(data)
-    let predictionEngine = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model)
+    let predictionEngine = model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(mlContext)
 
     printHeader ["Classificate images"]
     printfn "Images folder: %s" imagesFolder

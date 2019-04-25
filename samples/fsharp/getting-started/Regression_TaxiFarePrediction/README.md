@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+| v0.11           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
@@ -53,9 +53,9 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
             .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorIdEncoded", "VendorId"))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCodeEncoded", "RateCode"))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding("PaymentTypeEncoded", "PaymentType"))
-            .Append(mlContext.Transforms.NormalizeMeanVariance("PassengerCount", "PassengerCount"))
-            .Append(mlContext.Transforms.NormalizeMeanVariance("TripTime", "TripTime"))
-            .Append(mlContext.Transforms.NormalizeMeanVariance("TripDistance", "TripDistance"))
+            .Append(mlContext.Transforms.Normalize("PassengerCount", "PassengerCount", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripTime", "TripTime", NormalizingEstimator.NormalizerMode.MeanVariance))
+            .Append(mlContext.Transforms.Normalize("TripDistance", "TripDistance", NormalizingEstimator.NormalizerMode.MeanVariance))
             .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", "PassengerCount", "TripTime", "TripDistance"))
             .AppendCacheCheckpoint(mlContext)
             |> downcastPipeline
@@ -65,9 +65,10 @@ Building a model includes: uploading data (`taxi-fare-train.csv` with `TextLoade
     Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" trainingDataView dataProcessPipeline 5 |> ignore
 
     // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-    let trainer = mlContext.Regression.Trainers.Sdca(labelColumnName = "Label", featureColumnName = "Features")
+    let trainer = mlContext.Regression.Trainers.StochasticDualCoordinateAscent(labelColumnName = DefaultColumnNames.Label, featureColumnName = DefaultColumnNames.Features)
 
     let modelBuilder = dataProcessPipeline.Append trainer
+
 ```
 
 ### 2. Train model
@@ -85,7 +86,7 @@ We need this step to conclude how accurate our model operates on new data. To do
         let predictions = trainedModel.Transform testDataView
         mlContext.Regression.Evaluate(predictions, "Label", "Score")
 
-    Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metrics
+    Common.ConsoleHelper.printRegressionMetrics (trainer.ToString()) metric
 ```
 
 >*To learn more on how to understand the metrics, check out the Machine Learning glossary from the [ML.NET Guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/) or use any available materials on data science and machine learning*.
@@ -113,10 +114,10 @@ After the model is trained, we can use the `Predict()` API to predict the fare a
         };
 
     let resultprediction = 
-        let model, inputSchema = 
+        let model = 
             use s = File.OpenRead(modelPath)
             mlContext.Model.Load(s)
-        let predictionFunction = mlContext.Model.CreatePredictionEngine(model)
+        let predictionFunction = model.CreatePredictionEngine(mlContext);
         predictionFunction.Predict taxiTripSample
 
     printfn "=============== Single Prediction  ==============="

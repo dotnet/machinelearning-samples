@@ -106,8 +106,8 @@ let main _argv =
         let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic result
         
         //Create the clusters: Create data files and plot a char
-        let model, inputSchema = 
-            use f = new FileStream(modelZipFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)
+        let model = 
+            use f = File.OpenRead modelZipFilePath
             mlContext.Model.Load(f)
         
         let data = 

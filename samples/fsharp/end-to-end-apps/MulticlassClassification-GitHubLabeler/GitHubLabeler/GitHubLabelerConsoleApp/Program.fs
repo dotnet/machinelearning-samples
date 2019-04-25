@@ -76,11 +76,17 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     let trainer =
         match selectedStrategy with
         | MyTrainerStrategy.SdcaMultiClassTrainer ->
-            mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy( "Label", "Features") |> downcastPipeline
+            mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(
+                DefaultColumnNames.Label, 
+                DefaultColumnNames.Features)
+            |> downcastPipeline
 
         | MyTrainerStrategy.OVAAveragedPerceptronTrainer ->
             let averagedPerceptronBinaryTrainer = 
-                mlContext.BinaryClassification.Trainers.AveragedPerceptron( "Label", "Features", numberOfIterations = 10)
+                mlContext.BinaryClassification.Trainers.AveragedPerceptron(
+                    DefaultColumnNames.Label,
+                    DefaultColumnNames.Features,
+                    numIterations = 10)
                 
             let downcastTrainer (x : ITrainerEstimator<_,_>) = 
                 match x with 
@@ -111,7 +117,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     let watchCrossValTime = System.Diagnostics.Stopwatch.StartNew()
 
     let crossValidationResults = 
-        mlContext.MulticlassClassification.CrossValidate(data = trainingDataView, estimator = downcastPipeline modelBuilder, numberOfFolds = 6, labelColumnName = "Label")
+        mlContext.MulticlassClassification.CrossValidate(data = trainingDataView, estimator = downcastPipeline modelBuilder, numFolds = 6, labelColumn = DefaultColumnNames.Label)
         
 
     //Stop measuring time
@@ -119,8 +125,8 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     printfn "Time Cross-Validating: %d miliSecs"  watchCrossValTime.ElapsedMilliseconds
            
     crossValidationResults
-    |> Seq.toArray
-    |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString()) 
+    |> Array.map (fun x -> x.Metrics, x.Model, x.ScoredHoldOutSet) //convert struct tuple for print function
+    |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString())
 
     // STEP 5: Train the model fitting to the DataSet
     printfn "=============== Training the model ==============="
@@ -134,7 +140,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
         Title = "WebSockets communication is slow in my machine"
         Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." 
     }
-    let predEngine = mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(trainedModel)
+    let predEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext)
     let prediction =  predEngine.Predict(issue)
 
     printfn "=============== Single Prediction just-trained-model - Result: %s ===============" prediction.Area
@@ -143,7 +149,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     printfn "=============== Saving the model to a file ==============="
     do 
         use f = File.Open(modelPath,FileMode.Create)
-        mlContext.Model.Save(trainedModel, trainingDataView.Schema, f)
+        mlContext.Model.Save(trainedModel, f)
 
     Common.ConsoleHelper.consoleWriteHeader "Training process finalized"
 

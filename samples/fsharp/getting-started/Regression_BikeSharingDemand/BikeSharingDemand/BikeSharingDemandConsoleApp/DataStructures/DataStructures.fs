@@ -30,7 +30,7 @@ type DemandObservation =
         Humidity : float32
         [<LoadColumn(13)>]
         Windspeed : float32
-        [<LoadColumn(16); ColumnName("Label")>]
+        [<LoadColumn(16)>]
         Count : float32   // This is the observed count, to be used a "label" to predict
     }
 

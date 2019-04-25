@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v0.11           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 
@@ -71,23 +71,23 @@ The pivot table is built executing the PreProcess function which is this case is
 
 ```fsharp
 let pivotData = 
-	File.ReadAllLines(transactionsCsv)
-	|> Seq.skip 1 //skip header
-	|> Seq.map 
-		(fun x ->
-			let fields = x.Split ','
-			fields.[0] , int fields.[1] // Name, Offer #
-		)
-	|> Seq.groupBy fst
-	|> Seq.map 
-		(fun (k, xs) -> 
-			let offers = xs |> Seq.map snd |> Set.ofSeq
-			[
-				yield! Seq.init 32 (fun i -> if Seq.contains (i + 1) offers then "1" else "0")
-				yield k
-			] 
-			|> String.concat ","
-		))
+    File.ReadAllLines(transactionsCsv)
+    |> Seq.skip 1 //skip header
+    |> Seq.map 
+        (fun x ->
+            let fields = x.Split ','
+            fields.[0] , int fields.[1] // Name, Offer #
+        )
+    |> Seq.groupBy fst
+    |> Seq.map 
+        (fun (k, xs) -> 
+            let offers = xs |> Seq.map snd |> Set.ofSeq
+            [
+                yield! Seq.init 32 (fun i -> if Seq.contains (i + 1) offers then "1" else "0")
+                yield k
+            ] 
+            |> String.concat ","
+        )
 ```
 
 The data is saved into the file `pivot.csv`, and it looks like the following table:
@@ -106,27 +106,27 @@ Here's the code which will be used to build the model:
 let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic environment
 // STEP 1: Common data loading configuration
 let pivotDataView = 
-	mlContext.Data.LoadFromTextFile(pivotCsv,
-		columns = 
-			[| 
-				TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
-				TextLoader.Column("LastName", DataKind.String, 32)
-			|],
-		hasHeader = true,
-		separatorChar = ',')
+    mlContext.Data.LoadFromTextFile(pivotCsv,
+        columns = 
+            [| 
+                TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                TextLoader.Column("LastName", DataKind.String, 32)
+            |],
+        hasHeader = true,
+        separatorChar = ',')
 
 //STEP 2: Configure data transformations in pipeline
 let dataProcessPipeline =  
-	EstimatorChain()
-		.Append(mlContext.Transforms.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
-		.Append(mlContext.Transforms.Categorical.OneHotEncoding("LastNameKey", "LastName", OneHotEncodingEstimator.OutputKind.Indicator))
+    EstimatorChain()
+        .Append(mlContext.Transforms.Projection.ProjectToPrincipalComponents("PCAFeatures", "Features", rank = 2))
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding([| OneHotEncodingEstimator.ColumnOptions("LastNameKey", "LastName", OneHotEncodingTransformer.OutputKind.Ind) |]))
 
 // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
 Common.ConsoleHelper.peekDataViewInConsole<PivotObservation> mlContext pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore
 Common.ConsoleHelper.peekVectorColumnDataInConsole mlContext "Features" pivotDataView (ConsoleHelper.downcastPipeline dataProcessPipeline) 10 |> ignore
 
 //STEP 3: Create the training pipeline                
-let trainer = mlContext.Clustering.Trainers.KMeans("Features", numberOfClusters = 3)
+let trainer = mlContext.Clustering.Trainers.KMeans("Features", clustersCount = 3)
 let trainingPipeline = dataProcessPipeline.Append(trainer)
 ```
 
@@ -149,14 +149,14 @@ We evaluate the accuracy of the model. This accuracy is measured using the [Clus
 
 ```fsharp
 let predictions = trainedModel.Transform(pivotDataView)
-let metrics = mlContext.Clustering.Evaluate(predictions, scoreColumnName = "Score", featureColumnName = "Features")
+let metrics = mlContext.Clustering.Evaluate(predictions, score = "Score", features = "Features")
 ```
 Finally, we save the model to local disk using the dynamic API:
 ```fsharp
 //STEP 6: Save/persist the trained model to a .ZIP file
-	do 
-		use fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write)
-		mlContext.Model.Save(trainedModel, pivotDataView.Schema, fs)
+do 
+    use fs = File.OpenWrite(modelZip)
+    mlContext.Model.Save(trainedModel, fs
 ```
 #### Model training execution
 
@@ -174,18 +174,19 @@ The code below is how you use the model to create those clusters:
 
 ```fsharp
 let data = 
-	mlContext.Data.LoadFromTextFile(
-		pivotCsv,
-		columns = 
-			[| 
-				TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
-				TextLoader.Column("LastName", DataKind.String, 32)
-			|],
-		hasHeader = true,
-		separatorChar = ',')
+    mlContext.Data.LoadFromTextFile(
+        pivotCsv,
+        columns = 
+            [| 
+                TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                TextLoader.Column("LastName", DataKind.String, 32)
+            |],
+        hasHeader = true,
+        separatorChar = ',')
 
 //Apply data transformation to create predictions/clustering
 let predictions = mlContext.Data.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
+
 ```
 
 Additionally, the method `SaveCustomerSegmentationPlotChart()` saves an scatter plot drawing the samples in each assigned cluster, using the [OxyPlot](http://www.oxyplot.org/) library.
