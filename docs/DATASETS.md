@@ -21,6 +21,7 @@ The datasets are provided under the original terms that .NET FOUNDATION received
 |  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  APPROVED |
 |  SMS Spam Collection Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection)  |   [Processed](http://TBD)   |   [Spam Filter TBD](http://TBD)    |  PENDING until de-identify, cleaned-up |
 |  Heart Disease Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection/HeartDiseaseDetection/Data)   |   [Heart Disease Detection](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection)    |  Approved |
+|  Product Sales Data Set  |  sample data created  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/AnomalyDetection_Sales/SpikeDetection/Data)   |   [Sales Spike Detection](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/AnomalyDetection_Sales)    |  Approved |
 
 The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
 
@@ -80,6 +81,11 @@ The datasets are provided under the original terms that Microsoft received such 
 > 
 > The dataset is provided under terms provided by City of New York: https://opendata.cityofnewyork.us/overview/#termsofuse.
 >
+>By accessing datasets and feeds available through NYC Open Data, the user agrees to all of the Terms of Use of NYC.gov as well as the Privacy Policy for NYC.gov. The user also agrees to any additional terms of use defined by the agencies, bureaus, and offices providing data. Public data sets made available on NYC Open Data are provided for informational purposes. The City does not warranty the completeness, accuracy, content, or fitness for any particular purpose or use of any public data set made available on NYC Open Data, nor are any such warranties to be implied or inferred with respect to the public data sets furnished therein.
+>
+>The City is not liable for any deficiencies in the completeness, accuracy, content, or fitness for any particular purpose or use of any public data set, or application utilizing such data set, provided by any third party.
+>
+>Submitting City Agencies are the authoritative source of data available on NYC Open Data. These entities are responsible for data quality and retain version control of data sets and feeds accessed on the Site. Data may be updated, corrected, or refreshed at any time.
 
 ### Online Retail Data Set (eShopDashboardML sample)
 
@@ -88,15 +94,63 @@ The datasets are provided under the original terms that Microsoft received such 
 >
 > Original source: Online Retail Dataset from UCI: http://archive.ics.uci.edu/ml/datasets/online+retail
 >
+>Citation Policy:
+>
+>If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
+>
+>Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+>
+>Here is a BiBTeX citation as well:
+>
+>@misc{Dua:2019 ,
+>author = "Dua, Dheeru and Graff, Casey",
+>year = "2017",
+>title = "{UCI} Machine Learning Repository",
+>url = "http://archive.ics.uci.edu/ml",
+>institution = "University of California, Irvine, School of Information and Computer Sciences" }
+>
+>A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
+>
+>http://archive.ics.uci.edu/ml/datasets/online+retail, in turn, contains the following notice:
+>
+>Citation Request:
+>
 >Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197â€“208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
+>
 
 ### Bike Sharing Dataset
 
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
-> Original source:  from UCI dataset: https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset
+> Citation Policy:
 >
+> If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
+>
+> Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+>
+> Here is a BiBTeX citation as well:
+>
+>@misc{Dua:2019 ,
+>
+>author = "Dua, Dheeru and Graff, Casey",
+>
+>year = "2017",
+>
+>title = "{UCI} Machine Learning Repository",
+>
+>url = "http://archive.ics.uci.edu/ml",
+>
+>institution = "University of California, Irvine, School of Information and Computer Sciences" }
+>
+>A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page. 
+>
+>https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset, in turn, contains the following notice:
+>
+>Citation Request:
+>
+>Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg, 
+
 
 ### WineKMC dataset
 
@@ -165,6 +219,8 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
+>Citation Policy:
+>
 >This is available at https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 >
 >If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
@@ -173,16 +229,17 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >
 >  Here is a BiBTeX citation as well:
 >
->* @misc{Dua:2019 ,
+> @misc{Dua:2019 ,
 >
->* author = "Dua, Dheeru and Graff, Casey",
+> author = "Dua, Dheeru and Graff, Casey",
 >
->* year = "2017",
->* title = "{UCI} Machine Learning Repository",
+> year = "2017",
 >
->* url = "http://archive.ics.uci.edu/ml",
+> title = "{UCI} Machine Learning Repository",
 >
->* institution = "University of California, Irvine, School of Information and Computer Sciences" } 
+> url = "http://archive.ics.uci.edu/ml",
+>
+> institution = "University of California, Irvine, School of Information and Computer Sciences" } 
 >
 >A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
 >
@@ -197,4 +254,29 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >3. University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D. 
 >4. V.A. Medical Center, Long Beach and Cleveland Clinic Foundation: Robert Detrano, M.D., Ph.D.
 >
+
+
+### Product Sales Dataset
+>we have created sample dataset for Product sales that looks like below.
+>
+>**Product Sales DataSet:**
+>
+>| Month  | ProductSales |
+>|--------|--------------|
+>| 1-Jan  | 271          |
+>| 2-Jan  | 150.9        |
+>| .....  | .....        |
+>| 1-Feb  | 199.3        |
+>| ...    | ....         |
+>
+>
+>The Product Sales dataset is based on the dataset “Shampoo Sales Over a Three Year Period” originally sourced from DataMarket and >provided by Time Series Data Library (TSDL), created by Rob Hyndman. 
+>
+>“Shampoo Sales Over a Three Year Period” Dataset Licensed Under the DataMarket Default Open License:
+>
+>License
+>You are allowed to copy and redistribute the data as long as you clearly indicate the data provider and DataMarket as the original >source.
+>
+>License summary
+>You may copy and redistribute the data. You may make derivative works from the data. You may use the data for commercial purposes. You >may not sublicence the data when redistributing it. You may not redistribute the data under a different license. Source attribution on >any use of this data: Must refer source.
 

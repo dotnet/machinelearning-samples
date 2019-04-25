@@ -2,8 +2,6 @@
 using System.IO;
 using HeartDiseasePredictionConsoleApp.DataStructures;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-
 
 namespace HeartDiseasePredictionConsoleApp
 {
@@ -35,15 +33,16 @@ namespace HeartDiseasePredictionConsoleApp
 
         private static void BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
-
+            // STEP 1: Common data loading configuration
             var trainingDataView = mlContext.Data.LoadFromTextFile<HeartData>(TrainDataPath, hasHeader: true, separatorChar: ';');
             var testDataView = mlContext.Data.LoadFromTextFile<HeartData>(TestDataPath, hasHeader: true, separatorChar: ';');
 
+            // STEP 2: Concatenate the features and set the training algorithm
             var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
                 .Append(mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features"));
 
             Console.WriteLine("=============== Training the model ===============");
-            var trainedModel = pipeline.Fit(trainingDataView);
+            ITransformer trainedModel = pipeline.Fit(trainingDataView);
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("=============== Finish the train model. Push Enter ===============");
@@ -85,9 +84,10 @@ namespace HeartDiseasePredictionConsoleApp
         {
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
+            // Create prediction engine related to the loaded trained model
             var predictionEngine = mlContext.Model.CreatePredictionEngine<HeartData, HeartPrediction>(trainedModel);                   
 
-            foreach (var heartData in HeartSampleData.heartDatas)
+            foreach (var heartData in HeartSampleData.heartDataList)
             {
                 var prediction = predictionEngine.Predict(heartData);
 
