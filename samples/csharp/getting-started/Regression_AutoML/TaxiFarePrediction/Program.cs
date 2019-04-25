@@ -294,7 +294,7 @@ namespace TaxiFarePrediction
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
         }
     }
