@@ -14,8 +14,16 @@ namespace Common
             {
                 ConsoleHelper.PrintBinaryClassificationMetricsHeader();
             }
-            ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
-                iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+
+            if (iterationResult.Exception != null)
+            {
+                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+            }
+            else
+            {
+                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                    iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+            }
         }
     }
 
@@ -29,8 +37,16 @@ namespace Common
             {
                 ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
             }
-            ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
-                iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+
+            if (iterationResult.Exception != null)
+            {
+                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+            }
+            else
+            {
+                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                    iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+            }
         }
     }
 
@@ -44,8 +60,16 @@ namespace Common
             {
                 ConsoleHelper.PrintRegressionMetricsHeader();
             }
-            ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName, 
-                iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+
+            if (iterationResult.Exception != null)
+            {
+                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+            }
+            else
+            {
+                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                    iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+            }
         }
     }
 }

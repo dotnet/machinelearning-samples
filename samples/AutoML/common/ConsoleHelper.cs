@@ -90,6 +90,11 @@ namespace Common
             CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.RSquared ?? double.NaN,8:F4} {metrics?.MeanAbsoluteError ?? double.NaN,13:F2} {metrics?.MeanSquaredError ?? double.NaN,12:F2} {metrics?.RootMeanSquaredError ?? double.NaN,8:F2} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
+        internal static void PrintIterationException(Exception ex)
+        {
+            Console.WriteLine($"Exception during AutoML iteration: {ex}");
+        }
+
         internal static void PrintBinaryClassificationMetricsHeader()
         {
             CreateRow($"{"",-4} {"Trainer",-35} {"Accuracy",9} {"AUC",8} {"AUPRC",8} {"F1-score",9} {"Duration",9}", Width);
