@@ -39,7 +39,7 @@
     <None Remove="ProductImages\coming_soon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CommonHelper\CommonHelpers.csproj" />
+    <ProjectReference Include="..\CommonHelper\CommonHelpers.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Forecast\ModelFiles\country_month_fastTreeTweedie.zip">
