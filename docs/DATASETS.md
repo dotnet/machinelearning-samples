@@ -20,7 +20,8 @@ The datasets are provided under the original terms that Microsoft received such 
 |  WineKMC  |  [Original](https://media.wiley.com/product_ancillary/6X/11186614/DOWNLOAD/ch02.zip) [Related Download 1](http://blog.yhat.com/static/misc/data/WineKMC.xlsx ) [Related Info](http://blog.yhat.com/posts/customer-segmentation-using-python.html) |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/inputs)   |   [Clustering_CustomerSegmentation](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/Clustering_CustomerSegmentation)    |  APPROVED |
 |  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  APPROVED |
 |  SMS Spam Collection Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection)  |   [Processed](http://TBD)   |   [Spam Filter TBD](http://TBD)    |  PENDING until de-identify, cleaned-up |
-|  Heart Disease Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection/HeartDiseaseDetection/Data)   |   [Heart Disease Detection](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection)    |  Approved |
+
+
 
 The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
 
@@ -128,36 +129,5 @@ The datasets are provided under the original terms that Microsoft received such 
 >Redistributing the "Processed Dataset" datasets with attribution:
 >
 > Original source: https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection
->
-
-### Heart Disease Dataset
-
->This is available at https://archive.ics.uci.edu/ml/datasets/Heart+Disease
->
->If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
->
-> Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. 
->
->  Here is a BiBTeX citation as well:
->
->* @misc{Dua:2019 ,
->
->* author = "Dua, Dheeru and Graff, Casey",
->
->* year = "2017",
->* title = "{UCI} Machine Learning Repository",
->
->* url = "http://archive.ics.uci.edu/ml",
->
->* institution = "University of California, Irvine, School of Information and Computer Sciences" } 
->
->A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
->
->The authors of the databases have requested that any publications resulting from the use of the data include the names of the principal investigator responsible for the data collection at each institution. They would be: 
->
->1. Hungarian Institute of Cardiology. Budapest: Andras Janosi, M.D. 
->2. University Hospital, Zurich, Switzerland: William Steinbrunn, M.D. 
->3. University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D. 
->4. V.A. Medical Center, Long Beach and Cleveland Clinic Foundation: Robert Detrano, M.D., Ph.D.
 >
 
