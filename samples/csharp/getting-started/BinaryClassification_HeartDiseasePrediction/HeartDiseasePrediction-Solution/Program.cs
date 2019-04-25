@@ -9,7 +9,7 @@ namespace HeartDiseasePredictionConsoleApp
 {
     public class Program
     {
-        private static string BaseDatasetsRelativePath = @"../../../../Data";
+        private static string BaseDatasetsRelativePath = @"../../../Data";
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/HeartTraining.csv";
         private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/HeartTest.csv";
 

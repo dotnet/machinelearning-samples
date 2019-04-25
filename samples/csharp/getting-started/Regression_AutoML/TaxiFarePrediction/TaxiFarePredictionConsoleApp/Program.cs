@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
+using System.Collections.Generic;
 using System.Linq;
-
-using Common;
-
-using Microsoft.ML;
-using Microsoft.ML.Data;
-
 using PLplot;
-
-using Regression_TaxiFarePrediction.DataStructures;
-
-using static Microsoft.ML.Transforms.NormalizingEstimator;
+using System.Diagnostics;
+using Microsoft.ML;
+using Microsoft.ML.Auto;
+using Microsoft.ML.Data;
+using Regression_AutoML.DataStructures;
+using Common;
 
 namespace Regression_TaxiFarePrediction
 {
@@ -33,16 +27,18 @@ namespace Regression_TaxiFarePrediction
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/TaxiFareModel.zip";
 
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
+        private static string LabelColumn = "FareAmount";
+        private static uint ExperimentTime = 6;
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
-            //Create ML Context with seed for repeteable/deterministic results
+            //Create ML Context with seed for repeatable/deterministic results
             MLContext mlContext = new MLContext(seed: 0);
 
             // Create, Train, Evaluate and Save a model
             BuildTrainEvaluateAndSaveModel(mlContext);
 
-            // Make a single test prediction loding the model from .ZIP file
+            // Make a single test prediction loading the model from .ZIP file
             TestSinglePrediction(mlContext);
 
             // Paint regression distribution chart for a number of elements read from a Test DataSet file
@@ -63,39 +59,31 @@ namespace Regression_TaxiFarePrediction
             IDataView trainingDataView = mlContext.Data.FilterRowsByColumn(baseTrainingDataView, nameof(TaxiTrip.FareAmount), lowerBound: 1, upperBound: 150);
             var cnt2 = trainingDataView.GetColumn<float>(nameof(TaxiTrip.FareAmount)).Count();
 
-            // STEP 2: Common data process configuration with pipeline data transformations
-            var dataProcessPipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(TaxiTrip.FareAmount))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "VendorIdEncoded", inputColumnName: nameof(TaxiTrip.VendorId)))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "RateCodeEncoded", inputColumnName: nameof(TaxiTrip.RateCode)))
-                            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PaymentTypeEncoded",inputColumnName: nameof(TaxiTrip.PaymentType)))
-                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.PassengerCount)))
-                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.TripTime)))
-                            .Append(mlContext.Transforms.NormalizeMeanVariance(outputColumnName: nameof(TaxiTrip.TripDistance)))
-                            .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PaymentTypeEncoded", nameof(TaxiTrip.PassengerCount)
-                            , nameof(TaxiTrip.TripTime), nameof(TaxiTrip.TripDistance)));
+            // STEP 2: Display first few rows of the test data
+            // (OPTIONAL) Show data (such as 5 records) in training DataView
+            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
+            
+            //TODO:VectorColumnData look into this
+            // ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
 
-            // (OPTIONAL) Peek data (such as 5 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 5);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainingDataView, dataProcessPipeline, 5);
-
-            // STEP 3: Set the training algorithm, then create and config the modelBuilder - Selected Trainer (SDCA Regression algorithm)                            
-            var trainer = mlContext.Regression.Trainers.Sdca(labelColumnName: "Label", featureColumnName: "Features");
-            var trainingPipeline = dataProcessPipeline.Append(trainer);
-
-            // STEP 4: Train the model fitting to the DataSet
-            //The pipeline is trained on the dataset that has been loaded and transformed.
+           // STEP 3: Auto featurize, auto train and auto hyperparameter tune   
             Console.WriteLine("=============== Training the model ===============");
-            var trainedModel = trainingPipeline.Fit(trainingDataView);
+            Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
+            IEnumerable<RunDetails<RegressionMetrics>> runDetails = mlContext.Auto()
+                                                                   .CreateRegressionExperiment(ExperimentTime)
+                                                                   .Execute(trainingDataView, LabelColumn);
 
-            // STEP 5: Evaluate the model and show accuracy stats
+            // STEP 4: Evaluate the model and show metrics
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-
+            RunDetails<RegressionMetrics> best = runDetails.Best();
+            ITransformer trainedModel = best.Model;
             IDataView predictions = trainedModel.Transform(testDataView);
-            var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "Label", scoreColumnName: "Score");
+            var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "FareAmount", scoreColumnName: "Score");
 
-            Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
+            //TODO: Need to have top 5 models in print metrics for automl samples
+            ConsoleHelper.PrintRegressionMetrics(best.TrainerName.ToString(), metrics);
 
-            // STEP 6: Save/persist the trained model to a .ZIP file
+            // STEP 5: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -313,11 +301,11 @@ namespace Regression_TaxiFarePrediction
                 {
                     VendorId = x[0],
                     RateCode = x[1],
-                    PassengerCount = float.Parse(x[2], CultureInfo.InvariantCulture),
-                    TripTime = float.Parse(x[3], CultureInfo.InvariantCulture),
-                    TripDistance = float.Parse(x[4], CultureInfo.InvariantCulture),
+                    PassengerCount = float.Parse(x[2]),
+                    TripTime = float.Parse(x[3]),
+                    TripDistance = float.Parse(x[4]),
                     PaymentType = x[5],
-                    FareAmount = float.Parse(x[6], CultureInfo.InvariantCulture)
+                    FareAmount = float.Parse(x[6])
                 })
                 .Take<TaxiTrip>(numMaxRecords);
 

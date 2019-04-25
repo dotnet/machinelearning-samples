@@ -4,18 +4,33 @@ using System.IO;
 using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using PowerAnomalyDetection.DataStructures;
 
 namespace myApp
 {
     class Program
     {
+        class MeterData
+        {
+            [LoadColumn(0)]
+            public string name { get; set; }
+            [LoadColumn(1)]
+            public DateTime time { get; set; }
+            [LoadColumn(2)]
+            public float ConsumptionDiffNormalized { get; set; }
+        }
+        
+        class SpikePrediction
+        {
+            [VectorType(3)]
+            public double[] Prediction { get; set; }
+        }
+
         private static string DatasetsRelativePath = @"../../../Data";
         private static string TrainingDatarelativePath = $"{DatasetsRelativePath}/power-export_min.csv";
 
         private static string TrainingDataPath = GetAbsolutePath(TrainingDatarelativePath);
 
-        private static string BaseModelsRelativePath = @"../../../MLModels";
+        private static string BaseModelsRelativePath = @"../../../../Models";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/PowerAnomalyDetectionModel.zip";
 
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);

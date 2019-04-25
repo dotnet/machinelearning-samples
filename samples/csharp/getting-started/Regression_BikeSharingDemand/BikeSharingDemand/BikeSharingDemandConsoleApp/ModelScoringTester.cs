@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using BikeSharingDemand.DataStructures;
-
 using Microsoft.ML;
+
+using BikeSharingDemand.DataStructures;
+using System.Globalization;
 
 namespace BikeSharingDemand
 {

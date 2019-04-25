@@ -2,10 +2,24 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <RestoreSources>
+      https://api.nuget.org/v3/index.json;
+      .;
+    </RestoreSources>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.Auto" Version="0.2.0-preview-27604-0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Microsoft.ML.Auto.0.2.0-preview-27604-0.nupkg" />
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="datasets\**" />
     <EmbeddedResource Remove="datasets\**" />
@@ -23,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Common\" />
   </ItemGroup>
 
   <ItemGroup>
