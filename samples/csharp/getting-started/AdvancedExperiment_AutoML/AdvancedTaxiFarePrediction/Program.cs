@@ -145,12 +145,23 @@ namespace AdvancedTaxiFarePrediction
             var experimentSettings = new RegressionExperimentSettings();
             experimentSettings.MaxExperimentTimeInSeconds = 3600;
             experimentSettings.CancellationToken = cts.Token;
+
             // Set the metric that AutoML will try to optimize over the course of the experiment.
             experimentSettings.OptimizingMetric = RegressionMetric.RootMeanSquaredError;
+
+            // Set the cache directory to null.
+            // This will cause all models produced by AutoML to be kept in memory 
+            // instead of written to disk after each run, as AutoML is training.
+            // (Please note: for an experiment on a large dataset, opting to keep all 
+            // models trained by AutoML in memory could cause your system to run out 
+            // of memory.)
+            experimentSettings.CacheDirectory = null;
+
             // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
             // (These trainers sometimes underperform on this dataset.)
             experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression);
             experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent);
+
             return experimentSettings;
         }
         
