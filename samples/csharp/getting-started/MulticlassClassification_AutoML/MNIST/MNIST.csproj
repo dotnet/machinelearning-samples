@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="..\..\common\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
+    <Compile Include="..\..\..\common\AutoML\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\AutoML\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,10 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\datasets\optdigits-test.csv" Link="Data\optdigits-test.csv">
+    <None Include="..\..\..\..\..\datasets\optdigits-test.csv" Link="Data\optdigits-test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\datasets\optdigits-train.csv" Link="Data\optdigits-train.csv">
+    <None Include="..\..\..\..\..\datasets\optdigits-train.csv" Link="Data\optdigits-train.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

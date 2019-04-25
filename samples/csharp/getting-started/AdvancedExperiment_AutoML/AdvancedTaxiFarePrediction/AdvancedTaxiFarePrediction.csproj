@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="..\..\common\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
+    <Compile Include="..\..\..\common\AutoML\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\AutoML\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,13 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\datasets\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv">
+    <None Include="..\..\..\..\..\datasets\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\datasets\taxi-fare-train-small.csv" Link="Data\taxi-fare-train-small.csv">
+    <None Include="..\..\..\..\..\datasets\taxi-fare-train-small.csv" Link="Data\taxi-fare-train-small.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\datasets\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv">
+    <None Include="..\..\..\..\..\datasets\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

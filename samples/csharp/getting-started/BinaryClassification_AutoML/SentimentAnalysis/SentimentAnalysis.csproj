@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="..\..\common\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
+    <Compile Include="..\..\..\common\AutoML\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\AutoML\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,10 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\datasets\wikipedia-detox-250-line-data.tsv" Link="Data\wikipedia-detox-250-line-data.tsv">
+    <None Include="..\..\..\..\..\datasets\wikipedia-detox-250-line-data.tsv" Link="Data\wikipedia-detox-250-line-data.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\datasets\wikipedia-detox-250-line-test.tsv" Link="Data\wikipedia-detox-250-line-test.tsv">
+    <None Include="..\..\..\..\..\datasets\wikipedia-detox-250-line-test.tsv" Link="Data\wikipedia-detox-250-line-test.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
