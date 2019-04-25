@@ -1,18 +1,18 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using PLplot;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AdvancedTaxiFarePrediction.DataStructures;
+using Common;
 using Microsoft.ML;
 using Microsoft.ML.Auto;
 using Microsoft.ML.Data;
-using Regression_AutoML.DataStructures;
-using Common;
-using System.Threading;
-using System.Threading.Tasks;
+using PLplot;
 
-namespace Regression_TaxiFarePrediction
+namespace AdvancedTaxiFarePrediction
 {
     internal static class Program
     {

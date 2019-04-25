@@ -1,16 +1,16 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using PLplot;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Common;
 using Microsoft.ML;
 using Microsoft.ML.Auto;
 using Microsoft.ML.Data;
-using Regression_AutoML.DataStructures;
-using Common;
+using PLplot;
+using TaxiFarePrediction.DataStructures;
 
-namespace Regression_TaxiFarePrediction
+namespace TaxiFarePrediction
 {
     internal static class Program
     {

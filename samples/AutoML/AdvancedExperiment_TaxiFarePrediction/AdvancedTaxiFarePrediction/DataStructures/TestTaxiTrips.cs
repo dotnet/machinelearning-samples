@@ -1,4 +1,4 @@
-﻿namespace Regression_AutoML.DataStructures
+﻿namespace AdvancedTaxiFarePrediction.DataStructures
 {
     internal class SingleTaxiTripSample
     {

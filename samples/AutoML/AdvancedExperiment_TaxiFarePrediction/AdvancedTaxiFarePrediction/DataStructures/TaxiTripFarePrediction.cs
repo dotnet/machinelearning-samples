@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace Regression_AutoML.DataStructures
+namespace AdvancedTaxiFarePrediction.DataStructures
 {
     public class TaxiTripFarePrediction
     {

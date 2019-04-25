@@ -4,7 +4,7 @@ using Common;
 using Microsoft.ML;
 using Microsoft.ML.Auto;
 using Microsoft.ML.Data;
-using SentimentAnalysisConsoleApp.DataStructures;
+using SentimentAnalysis.DataStructures;
 
 namespace SentimentAnalysis
 {

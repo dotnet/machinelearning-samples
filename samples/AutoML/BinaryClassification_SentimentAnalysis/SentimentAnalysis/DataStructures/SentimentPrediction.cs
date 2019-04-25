@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace SentimentAnalysisConsoleApp.DataStructures
+namespace SentimentAnalysis.DataStructures
 {
     public class SentimentPrediction
     {
