@@ -130,5 +130,4 @@ foreach (var heartData in HeartSampleData.heartDataList)
 
 ```
 
-Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a Toxic or Non toxic predicted sentiment.
 
