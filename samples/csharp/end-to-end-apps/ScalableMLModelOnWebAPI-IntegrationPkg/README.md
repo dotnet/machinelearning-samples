@@ -35,11 +35,10 @@ The problem running/scoring an ML.NET model in multi-threaded applications comes
 
 **'.NET Core Integration Package' NuGet feed**
 
-Current experimental name: **Extensions.ML**
+NuGet package name: **Microsoft.Extensions.ML**
 
-Preview NuGet feed at **MyGet: https://www.myget.org/F/mlnet-experimental/api/v3/index.json**
+Preview NuGet feed at **MyGet: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json**
 
- 
 Basically, with this component, you inject/use the PredictionEngine object pooling in a single line in your Startup.cs, like the following:
 
 ```CSharp
