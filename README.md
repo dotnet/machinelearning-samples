@@ -177,7 +177,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
     <td>
       <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
+      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
   </td>
  </tr>
  </table>
