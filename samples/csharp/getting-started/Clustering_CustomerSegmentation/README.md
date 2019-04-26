@@ -125,12 +125,12 @@ var pivotDataView = mlContext.Data.LoadFromTextFile(path: pivotCsv,
                                             hasHeader: true,
                                             separatorChar: ',');
 
-/STEP 2: Configure data transformations in pipeline
+// STEP 2: Configure data transformations in pipeline
 var dataProcessPipeline = mlContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2)
         .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "LastNameKey", inputColumnName: nameof(PivotData.LastName), OneHotEncodingEstimator.OutputKind.Indicator));
                 
 
-//STEP 3: Create the training pipeline                
+// STEP 3: Create the training pipeline                
 var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
