@@ -1,5 +1,5 @@
 ﻿using System;
-using Extensions.ML;
+using Microsoft.Extensions.ML;
 using Microsoft.AspNetCore.Mvc;
 using Scalable.WebAPI.ML.DataModels;
 
