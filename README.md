@@ -80,7 +80,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle" colspan="3">Cross Cutting concerns</td>
   </tr>
   <tr>
-  <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
+  <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
   
   <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using Database Sample</b><br>Coming soon</td>
   <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using very large sets</b><br>Coming soon</td>
