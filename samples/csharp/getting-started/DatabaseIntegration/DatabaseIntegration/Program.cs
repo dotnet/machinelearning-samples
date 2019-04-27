@@ -2,11 +2,13 @@ using Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.ML;
 using Microsoft.ML.Transforms;
+using Microsoft.ML.Trainers;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DatabaseIntegration
 {
@@ -25,6 +27,34 @@ namespace DatabaseIntegration
                 while ((line = reader.ReadLine()) != null)
                 {
                     yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Wrapper function that performs the database query and returns an IEnumerable, creating
+        /// a database context each time.
+        /// </summary>
+        /// <remarks>
+        /// ML.Net can traverse an IEnumerable with multiple threads. This will result in Entity Core Framwork throwing an exception
+        /// as multiple threads cannot access the same database context. To work around this, create a database context
+        /// each time a IEnumerable is requested.
+        /// </remarks>
+        /// <returns>An IEnumerable of the resulting data.</returns>
+        private static IEnumerable<AdultCensus> QueryData()
+        {
+            using (var db = new AdultCensusContext())
+            {
+                // Query our training data from the database. This query is selecting everything from the AdultCensus table. The
+                // result is then loaded by ML.Net through the LoadFromEnumerable. LoadFromEnumerable returns an IDataView which
+                // can be consumed by an ML.Net pipeline.
+                // NOTE: For training, ML.Net requires that the training data is processed in the same order to produce consistent results.
+                // Therefore we are sorting the data by the AdultCensusId, which is an auto-generated id.
+                // NOTE: That the query used here sets the query tracking behavior to be NoTracking, this is particularly useful because
+                // our scenarios only require read-only access.
+                foreach (var adult in db.AdultCensus.AsNoTracking().OrderBy(x => x.AdultCensusId))
+                {
+                    yield return adult;
                 }
             }
         }
@@ -76,46 +106,35 @@ namespace DatabaseIntegration
         {
             // Seed the database with the dataset.
             CreateDatabase(datasetUrl);
+            var mlContext = new MLContext(seed: 1);
 
-            using(var db = new AdultCensusContext())
-            {
-                // Set the query tracking behavior to be NoTracking, this is particularly useful because
-                // our scenarios only require read-only access.
-                db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-                var mlContext =  new MLContext();
-               
-                // Query our training data from the database. This query is selecting everything from the AdultCensus table. The
-                // result is then loaded by ML.Net through the LoadFromEnumerable. LoadFromEnumerable returns an IDataView which
-                // can be consumed by an ML.Net pipeline.
-                // NOTE: For training, ML.Net requires that the training data is processed in the same order to produce consistent results.
-                // Therefore we are sorting the data by the AdultCensusId, which is an auto-generated id.
-                var dataView = mlContext.Data.LoadFromEnumerable(db.AdultCensus.OrderBy(x=>x.AdultCensusId).ToList<AdultCensus>());
-                var pipeline = mlContext.Transforms.Categorical.OneHotEncoding(new [] {
-                        new InputOutputColumnPair("MsOHE", "MaritalStatus"), 
-                        new InputOutputColumnPair("OccOHE", "Occupation"),
-                        new InputOutputColumnPair("RelOHE", "Relationship"),
-                        new InputOutputColumnPair("SOHE", "Sex"), 
-                        new InputOutputColumnPair("NatOHE", "NativeCountry")
-                    }, OneHotEncodingEstimator.OutputKind.Binary)
-                    .Append(mlContext.Transforms.Concatenate("Features", "MsOHE", "OccOHE", "RelOHE", "SOHE", "NatOHE"))
-                    .Append(mlContext.BinaryClassification.Trainers.LightGbm());
+            /// Query the data from the database, please see <see cref="QueryData"/> for more information.
+            var dataView = mlContext.Data.LoadFromEnumerable(QueryData());
+            /// Creates the training and testing data sets.
+            var trainTestData = mlContext.Data.TrainTestSplit(dataView);
 
-                Console.WriteLine("Training model...");
-                var model = pipeline.Fit(dataView);
+            var pipeline = mlContext.Transforms.Categorical.OneHotEncoding(new[] {
+                new InputOutputColumnPair("MsOHE", "MaritalStatus"),
+                new InputOutputColumnPair("OccOHE", "Occupation"),
+                new InputOutputColumnPair("RelOHE", "Relationship"),
+                new InputOutputColumnPair("SOHE", "Sex"),
+                new InputOutputColumnPair("NatOHE", "NativeCountry")
+            }, OneHotEncodingEstimator.OutputKind.Binary)
+                .Append(mlContext.Transforms.Concatenate("Features", "MsOHE", "OccOHE", "RelOHE", "SOHE", "NatOHE"))
+                .Append(mlContext.BinaryClassification.Trainers.LightGbm());
 
-                Console.WriteLine("Predicting...");
-                // Now that the model is trained, we want to test it's prediction results, which is done by using a test dataset
-                // and transforming it by the trained model.
-                // To retrieve our test data, this issues a second query, retrieving the first 2000 records, then converts to an IDataView
-                // in order to feed into the ML.Net pipeline.
-                var testDataView = mlContext.Data.LoadFromEnumerable(db.AdultCensus.Take(2000).ToList<AdultCensus>());
-                var predictions = model.Transform(testDataView);
+            Console.WriteLine("Training model...");
+            var model = pipeline.Fit(trainTestData.TrainSet);
 
-                // Now that we have the predictions, calculate th metrics of those predictions and output the results.
-                var metrics = mlContext.BinaryClassification.Evaluate(predictions);
-                ConsoleHelper.PrintBinaryClassificationMetrics("Database Example", metrics);
-                ConsoleHelper.ConsolePressAnyKey();
-            }
+            Console.WriteLine("Predicting...");
+
+            // Now that the model is trained, we want to test it's prediction results, which is done by using a test dataset
+            var predictions = model.Transform(trainTestData.TestSet);
+
+            // Now that we have the predictions, calculate the metrics of those predictions and output the results.
+            var metrics = mlContext.BinaryClassification.Evaluate(predictions);
+            ConsoleHelper.PrintBinaryClassificationMetrics("Database Example", metrics);
+            ConsoleHelper.ConsolePressAnyKey();
         }
     }
 }
