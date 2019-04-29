@@ -1,29 +1,27 @@
-﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Auto;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
-using mnist.DataStructures;
 using Common;
+using Microsoft.ML;
+using Microsoft.ML.Auto;
+using Microsoft.ML.Data;
+using MNIST.DataStructures;
 
-namespace mnist
+namespace MNIST
 {
     class Program
     {
-        private static string BaseDatasetsRelativePath = @"../../../Data";
+        private static string BaseDatasetsRelativePath = @"Data";
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
-        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
-
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-test.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
         private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/Model.zip";
-
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
-        private static uint ExperimentTime = 6;
+        
+        private static uint ExperimentTime = 60;
 
         static void Main(string[] args)
         {
@@ -39,7 +37,7 @@ namespace mnist
         {
             try
             {
-                // STEP 1: Common data loading configuration
+                // STEP 1: Load the data
                 var trainData = mlContext.Data.LoadFromTextFile(path: TrainDataPath,
                         columns : new[] 
                         {
@@ -49,7 +47,6 @@ namespace mnist
                         hasHeader : false,
                         separatorChar : ','
                         );
-
                 
                 var testData = mlContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
@@ -61,33 +58,36 @@ namespace mnist
                         separatorChar: ','
                         );
 
-                
-                // STEP 2: Auto featurize, auto train and auto hyperparameter tune
+                // STEP 2: Initialize our user-defined progress handler that AutoML will 
+                // invoke after each model it produces and evaluates.
+                var progressHandler = new MulticlassExperimentProgressHandler();
+
+                // STEP 3: Run an AutoML multiclass classification experiment
                 Console.WriteLine("=============== Training the model ===============");
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
-                IEnumerable<RunDetails<MulticlassClassificationMetrics>> runDetails = mlContext.Auto()
-                                                                                .CreateMulticlassClassificationExperiment(ExperimentTime)
-                                                                                .Execute(trainData, "Number");
+                ExperimentResult<MulticlassClassificationMetrics> experimentResult = mlContext.Auto()
+                    .CreateMulticlassClassificationExperiment(ExperimentTime)
+                    .Execute(trainData, "Number", progressHandler: progressHandler);
 
-                // STEP 3: Evaluate the model and show metrics
+                // STEP 4: Evaluate the model and print metrics
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-                RunDetails<MulticlassClassificationMetrics> best = runDetails.Best();
-                ITransformer trainedModel = best.Model;
+                RunDetail<MulticlassClassificationMetrics> bestRun = experimentResult.BestRun;
+                ITransformer trainedModel = bestRun.Model;
                 var predictions = trainedModel.Transform(testData);
-                var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName:"Number", scoreColumnName:"Score");
+                var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName: "Number", scoreColumnName: "Score");
+                ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
 
-                //TODO: Need to have top 5 models in print metrics for automl samples
-                ConsoleHelper.PrintMultiClassClassificationMetrics(best.TrainerName.ToString(), metrics);
+                // Print top models found by AutoML
+                PrintTopModels(experimentResult);
 
-                // STEP 4: Save/persist the trained model to a .ZIP file
+                // STEP 5: Save/persist the trained model to a .ZIP file
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                //return null;
+                Console.WriteLine(ex);
             }
         }
 
@@ -101,12 +101,29 @@ namespace mnist
             return fullPath;
         }
 
+        /// <summary>
+        /// Prints top models from AutoML experiment.
+        /// </summary>
+        private static void PrintTopModels(ExperimentResult<MulticlassClassificationMetrics> experimentResult)
+        {
+            // Get top few runs ranked by accuracy
+            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.MicroAccuracy).Take(3);
+
+            Console.WriteLine($"Top models ranked by accuracy --");
+            ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
+            for (var i = 0; i < topRuns.Count(); i++)
+            {
+                var run = topRuns.ElementAt(i);
+                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+            }
+        }
+
         private static void TestSomePredictions(MLContext mlContext)
         {
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model
-            var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
+            var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutputData>(trainedModel);
 
             //InputData data1 = SampleMNISTData.MNIST1;
             var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
@@ -135,20 +152,6 @@ namespace mnist
             Console.WriteLine($"                                           seven: {resultprediction2.Score[7]:0.####}");
             Console.WriteLine($"                                           eight: {resultprediction2.Score[8]:0.####}");
             Console.WriteLine($"                                           nine:  {resultprediction2.Score[9]:0.####}");
-            Console.WriteLine();
-
-            var resultprediction3 = predEngine.Predict(SampleMNISTData.MNIST3);
-
-            Console.WriteLine($"Actual: 9     Predicted probability:       zero:  {resultprediction3.Score[0]:0.####}");
-            Console.WriteLine($"                                           One :  {resultprediction3.Score[1]:0.####}");
-            Console.WriteLine($"                                           two:   {resultprediction3.Score[2]:0.####}");
-            Console.WriteLine($"                                           three: {resultprediction3.Score[3]:0.####}");
-            Console.WriteLine($"                                           four:  {resultprediction3.Score[4]:0.####}");
-            Console.WriteLine($"                                           five:  {resultprediction3.Score[5]:0.####}");
-            Console.WriteLine($"                                           six:   {resultprediction3.Score[6]:0.####}");
-            Console.WriteLine($"                                           seven: {resultprediction3.Score[7]:0.####}");
-            Console.WriteLine($"                                           eight: {resultprediction3.Score[8]:0.####}");
-            Console.WriteLine($"                                           nine:  {resultprediction3.Score[9]:0.####}");
             Console.WriteLine();
         }
     }

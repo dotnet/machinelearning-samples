@@ -1,7 +1,6 @@
-﻿
-using Microsoft.ML.Data;
+﻿using Microsoft.ML.Data;
 
-namespace SentimentAnalysisConsoleApp.DataStructures
+namespace SentimentAnalysis.DataStructures
 {
     public class SentimentPrediction
     {
@@ -9,10 +8,6 @@ namespace SentimentAnalysisConsoleApp.DataStructures
         // its default value, which is the name of the field.
         [ColumnName("PredictedLabel")]
         public bool Prediction { get; set; }
-
-        // No need to specify ColumnName attribute, because the field
-        // name "Probability" is the column name we want.
-        public float Probability { get; set; }
 
         public float Score { get; set; }
     }
