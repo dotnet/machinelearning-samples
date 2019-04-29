@@ -15,7 +15,7 @@ This code has been very much simplified by **using a new '.NET Core Integration 
 
 # Goal
 
-**The goal is to be able to make predictions with an ML.NET model while optimizing the executions by sharing objects across Http requests and implementing very simple code to be used by the user when predicting**, like the following line of code that you could write on any ASP.NET Core controller's method or custom service class:
+**The goal is to be able to make predictions with an ML.NET model while optimizing the executions by sharing the needed ML.NET scoring objects across Http requests and implementing very simple code to be used by the user when predicting**, like the following line of code that you could write on any ASP.NET Core controller's method or custom service class:
 
 ```cs
 SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
@@ -60,7 +60,7 @@ It is that simple.
 
 For a much more detailed explanation of a PredictionEngine Object Pool comparable to the implementaion done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
 
-**Detailed Blog Post** for further documentation:
+**Detailed Blog Post** for further background documentation:
 
 [How to optimize and run ML.NET models on scalable ASP.NET Core WebAPIs or web apps](https://devblogs.microsoft.com/cesardelatorre/how-to-optimize-and-run-ml-net-models-on-scalable-asp-net-core-webapis-or-web-apps/)
 
