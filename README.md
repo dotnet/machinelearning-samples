@@ -1,10 +1,4 @@
 # ML.NET Samples
-ML.NET is still new, and as we are developing it, we would love to get your feedback! Please fill out the brief survey below and help shape the future of ML.NET by telling us about your usage and interest in Machine Learning and ML.NET.
-
-<a href="https://www.research.net/r/mlnet-survey">Take the survey now!</a>
-
-At the end of the survey, you can leave your name and e-mail address (optional) so that an engineer on the .NET team can reach out to you to talk a little bit more about your experiences and thoughts. We appreciate your contribution!
-
 -------------------------------------------------------
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. In this GitHub repo, we provide samples which will help you get started with ML.NET and how to infuse ML into existing and new .NET apps. 
 
@@ -177,7 +171,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </td>
     <td>
       <h4>Sentiment analysis &nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
+      <a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"></h4>
   </td>
  </tr>
  </table>
