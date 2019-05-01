@@ -4,10 +4,10 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v0.3.0-preview          | Dynamic API | up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
-In this introductory sample, you'll see how to use automated ML to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
-
 ## Automated ML
-AutoML eliminates the task of selecting different algorithms and hyperparameters. With AutoML, you just bring in your dataset and specify a few parameters. AutoML will do the rest i.e. data preprocessing, learning algorithm selection and hyperparameter selection to generate a high quality machine learning model that you can use for predictions.
+Automated ML eliminates the task of selecting different algorithms and hyperparameters. With automated ML, you just bring in your dataset and specify a few parameters. Automated ML will do the rest i.e. data preprocessing, learning algorithm selection and hyperparameter selection to generate a high quality machine learning model that you can use for predictions.
+
+In this introductory sample, you'll see how to use automated ML to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
 ## Problem
 This problem is centered around predicting if a customer's review has positive or negative sentiment. We will use small wikipedia-detox-datasets (one dataset for training and a second dataset for model's accuracy evaluation) that were processed by humans and each comment has been assigned a sentiment label: 
@@ -29,7 +29,6 @@ The common feature for all those examples is that the parameter we want to predi
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
 
 ![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
-
 
 The general steps in building a model using AutoML are
 
@@ -62,7 +61,6 @@ IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDat
 ### Step 3: Building a Machine Learning Model using AutoML
 
 Create an AutoML experiment by specifying experiment settings. We have already determined this sentiment analysis problem to be a Binary Classification problem. Next, we should specify how long the experiment should run and set a progress handler that will receive notifications as and when new models are trained.
-
 
 ```C#
 // Progress handler be will invoked after each model it produces and evaluates.
