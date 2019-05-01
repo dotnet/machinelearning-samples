@@ -1,40 +1,5 @@
 # Setting up eShopDashboard in Visual Studio and running it
 
-## Solution
-
-Open the solution `eShopDashboard.sln` in the root folder of the repo.
-
-## NuGet setup 
-
-By default, use the NuGet feed `https://api.nuget.org/v3/index.json` for the Microsoft.ML package puclicly published here: https://www.nuget.org/packages/Microsoft.ML/
-
-If you want to use daily-drops or non major versions, you can also use the this feed: `https://dotnet.myget.org/F/dotnet-core/api/v3/index.json`
-
-**NuGet package version**: If the project's folder is positioned within the root folder of the ML.NET samples repo, the version of the Microsoft.ML NuGet package will be specified by the file `/samples/Directory.Build.props` which contains the version, as follows:
-
-```
-<Project>
-
-  <PropertyGroup>
-    <MicrosoftMLVersion>0.9.0</MicrosoftMLVersion>
-  </PropertyGroup>
-
-</Project>
-```
-
-Then, the project files `eShopDashboard.csproj` and `eShopForecastModelsTrainer.csproj` use that property to set the Microsoft.ML NuGet package version:
-
-```
-  <!-- Other project config -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-  </ItemGroup>
-```
-
-This is a convenient way to set the same NuGet package version number for all the samples, in a single step. But you could add a specific NuGet package to each project, if you wish.
-
-**Build:** Build the solution to confirm there's access to the Microsoft.ML NuGet package and it is ready to run the app.
-
 ## Running the Dashboard app from Visual Studio
 
 Make sure that the eShopDashboard project is the by default startup project, and hit F5.
@@ -43,10 +8,15 @@ Make sure that the eShopDashboard project is the by default startup project, and
 
 However, next application's executions should be a lot faster, though, because the databases will be ready for the app.
 
-Below you can see an screenshot of the dashboard once the data population finished:
+At this point the web page should open and be blank except for a header and sidebar. Bring up sales forecasts for any product by typing a product name in the search box:
+
+![image](./images/search-box.png)
+
+For example searching for "bag" will bring up all products with bag in the title. Below you can see an screenshot of the dashboard once the data population has finished.
 
 ![image](./images/eShopDashboard.png)
 
+**NuGet version info:** The solution is configured to use the latest release of ML.NET (1.0-preview as of May 1, 2019) by default.  See [NuGet Configuration](NuGet-configuration.md) if you would like to use a different version.
  
 ## Deleting the SQL localdb database if you want to update the database schema and/or sample populated data
 
