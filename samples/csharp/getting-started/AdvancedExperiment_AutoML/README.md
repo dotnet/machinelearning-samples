@@ -93,8 +93,8 @@ Re-fit the best pipeline (trained from subsample of AutoML data) on entirety of 
 ```C#
 private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult)
 {
-	RunDetail<RegressionMetrics> best = experimentResult.BestRun;
-	return best.Estimator.Fit(TrainDataView);
+    RunDetail<RegressionMetrics> best = experimentResult.BestRun;
+    return best.Estimator.Fit(TrainDataView);
 }
 ```
 
@@ -102,7 +102,7 @@ private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentRes
 
 Evaluate the quality of the re-fit model on a test dataset that was not used in training (`taxi-fare-test.csv`).
 
-```
+```C#
 IDataView predictions = model.Transform(TestDataView);
 var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
 ```
@@ -111,7 +111,7 @@ var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelC
 
 Using the trained model, use the `Predict()` API to predict the fare amount for specified trip:
 
-````C#
+```C#
 //Sample: 
 //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
 //VTS,1,1,1140,3.75,CRD,15.5
