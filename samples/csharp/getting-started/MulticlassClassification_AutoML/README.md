@@ -65,7 +65,6 @@ and evaluate its quality on a test dataset that was not used in training (`optdi
 ```C#
 var predictions = trainedModel.Transform(testDataView);
 var metrics = mlContext.MulticlassClassification.Evaluate(predictions, scoreColumnName: "Score");
-Console.WriteLine($"Micro-accuracy: {metrics.MicroAccuracy}");
 ```
 
 ## Step 4: Make Predictions

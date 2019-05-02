@@ -55,7 +55,6 @@ and evaluate its quality on a test dataset that was not used in training (`wikip
 ```C#
 var predictions = trainedModel.Transform(testDataView);
 var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(predictions, scoreColumnName: "Score");
-Console.WriteLine($"Accuracy: {metrics.Accuracy}");
 ```
 
 ## 4. Make Predictions

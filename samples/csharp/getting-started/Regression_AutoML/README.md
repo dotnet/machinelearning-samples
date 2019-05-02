@@ -49,7 +49,6 @@ and evaluate its quality on a test dataset that was not used in training (`taxi-
 ```C#
 var predictions = trainedModel.Transform(testDataView);
 var metrics = mlContext.Regression.Evaluate(predictions, scoreColumnName: "Score");
-Console.WriteLine($"R-Squared: {metrics.RSquared}");
 ```
 
 ## Step 4: Make Predictions
@@ -81,7 +80,6 @@ var predictedResult = predEngine.Predict(taxiTripSample);
 Console.WriteLine($"**********************************************************************");
 Console.WriteLine($"Predicted fare: {predictedResult.FareAmount:0.####}, actual fare: 15.5");
 Console.WriteLine($"**********************************************************************");
-
 ```
 
 Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the implemented method `PlotRegressionChart()` as in the following screenshot:
