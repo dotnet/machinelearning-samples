@@ -58,9 +58,9 @@ ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto(
 
 Grab the best model produced by the AutoML experiment
 
-``
+```C#
 ITransformer model = experimentResult.BestRun.Model;
-``
+```
 
 and evaluate its quality on a test dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`).
 
@@ -74,7 +74,7 @@ Console.WriteLine($"Accuracy: {metrics.Accuracy}");
 
 ### 4. Make Predictions
 
-Using the trained model, you can call the `Predict()` API to predict the sentiment for new sample text. 
+Using the trained model, call the `Predict()` API to predict the sentiment for new sample text `sampleStatement`:
 
 ```C#
 // Create prediction engine related to the loaded trained model
