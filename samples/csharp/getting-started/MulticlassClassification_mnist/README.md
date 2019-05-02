@@ -14,6 +14,12 @@ The MNIST dataset we are using contains 65 columns of numbers. The first 64 colu
 
 the ML model that we will build will return probabilities for a given image of being one of the numbers from 0 to 9 as explained above.
 
+## DataSet
+
+Dataset is avaialble at UCI Machine Learning Repository i.e http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits
+
+Citation to Dataset is added [here](MNIST/Data/Datasets-Citation.txt)
+
 ## ML task - Multiclass classification
 The generalized problem of **multiclass classification** is to classify items into one of three or more classes. (Classifying items into one of the two classes is called **binary classification**).
 
