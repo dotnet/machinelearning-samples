@@ -1,35 +1,33 @@
-# Advanced Taxi Fare Prediction
+# Taxi Fare Prediction - Advanced AutoML Experiment
 
-| AutoML version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.30.0-preview           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+## Automated Machine Learning
+Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores.
 
-## Automated ML
-Automated ML eliminates the task of selecting different algorithms and hyperparameters. With automated ML, you just bring in your dataset and specify a few parameters. Automated ML will do the rest i.e. data preprocessing, learning algorithm selection and hyperparameter selection to generate a high quality machine learning model that you can use for predictions.
+## Problem
+This problem is to predict the fare of a taxi trip in New York City. At first glance, the fare may seem to depend simply on the distance traveled. However, taxi vendors in New York charge varying amounts for other factors such as additional passengers, paying with a credit card instead of cash, and so on. This prediction could help taxi providers give passengers and drivers estimates on ride fares.
 
-## Advance Sample
-The Advanced Taxi Fare Prediction sample explores the available experiment setting configurations given by automated ML.
+## Step 1: Infer Columns
 
-### Column Inferencing
-
-With ML.NET's inferencing, you can have the ML.NET infer the column type automatically. It can recognize the type of the data in each of the columns in your dataset.
+Using the `InferColumns` API, auto-infer the name, data type, and purpose of each column in the dataset:
 
 ```C#
 ColumnInferenceResults columnInference = mlContext.Auto().InferColumns(TrainDataPath, LabelColumnName, groupColumns: false);
 ```
 
-### Data loading
+## Step 2: Load the Data
+
+Load the datasets required to train and test:
 
 ```C#
 TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
-
 TrainDataView = textLoader.Load(TrainDataPath);
 TestDataView = textLoader.Load(TestDataPath);
+TrainSmallDataView = textLoader.Load(TrainDataSmallPath);
 ```
 
-## Machine Learning Experiment
+`TrainSmallDataView` is a subsample of the full training data. In this sample, AutoML will consume `TrainSmallDataView` instead of `TrainDataView`. This will speed up the training of each model AutoML produces, enabling AutoML to search & evaluate more models.
 
-### Pre-featurize
+## Step 3: Add a pre-featurizer
 
 Build a pre-featurizer for use in the AutoML experiment. Internally, AutoML uses one or more train/validation data splits to evaluate the models it produces. The pre-featurizer is fit only on the training data split to produce a trained transform. Then, the trained transform is applied to both the train and validation data splits.
 
@@ -38,8 +36,8 @@ IEstimator<ITransformer> preFeaturizer = mlContext.Transforms.Conversion.MapValu
     new[] { new KeyValuePair<string, bool>("CSH", true) }, "payment_type");
 ```
 
-### Customize Infered Columns
- AutoML allows you to customize column information returned by InferColumns API.
+## Step 4: Edit Inferred Column Information
+Edit or correct the column information that was inferred:
 
 ```C#
 ColumnInformation columnInformation = columnInference.ColumnInformation;
@@ -47,9 +45,9 @@ columnInformation.CategoricalColumnNames.Remove("payment_type");
 columnInformation.IgnoredColumnNames.Add("payment_type");
 ```
 
-### Experimentation Settings
+## Step 5: Initialize Experiment Settings
 
-Create an AutoML experiment by specifying experiment settings. Currently you can create 3 kinds of experiments. Binary Classification, Multiclass Classification & Regression. You can specify how long the experiment should run and what metric it should optimize. You can also explore what learners are available by looking at experimentSettings.Trainers collection and change it if need be. You can also set a progress handler that will receive notifications as and when new models are trained. You can use a cancellation token that lets you cancel the experiment before it is scheduled to finish. The following code shows how to specify settings for a regression experiment.
+Initialize the AutoML experiment settings:
 
 ```C#
 var experimentSettings = new RegressionExperimentSettings();
@@ -73,43 +71,55 @@ experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent);
 CancelExperimentAfterAnyKeyPress(cts);
 ```
 
-### Create an experiment
-The simplest way to create an experiment is by specifying MaxExperimentTime.
+## Step 6: Create the AutoML Experiment
 
-```C#
-var experiment = mlContext.Auto().CreateRegressionExperiment(60);
-```
-
-However if you want to specify more settings as shown above section, then you can use the following overload.
+Create the AutoML experiment using the initialized experiment settings:
 
 ```C#
 var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
 ```
 
-### Execute the experiment
+## Step 7: Execute the AutoML Experiment
 
-Once you have the experiment set with the parameters, you execute the experiment. Executing essentially triggers data preprocessing, a learning algorithm and hyperparameters. AutoML will continue to generate combinations of learning algorithms and hyperparameters and keeps training machine learning models until the MaxExperimentTimeInSeconds is reached.
+Executing triggers data featurization, learning algorithm selection, hyperparameter tuning, etc. AutoML will iterate over different data featurizations, machine learning algorithms, hyperparamters, etc. until `MaxExperimentTimeInSeconds` is reached or the experiment is terminated.
 
 ```C#            
  ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
 ```
 
-### Evaluate model
-
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`taxi-fare-test.csv`). This dataset also contains known fares. `Regression.Evaluate()` calculates the difference between known fares and values predicted by the model in various metrics.
+## Step 8: Re-fit Best Pipeline
+Re-fit the best pipeline (trained from subsample of AutoML data) on entirety of training data. (This step is optional. By no means is it required in your workflow.)
 
 ```C#
-IDataView predictions = model.Transform(TestDataView);
-var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
-ConsoleHelper.PrintRegressionMetrics(trainerName, metrics);
+private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult)
+{
+	RunDetail<RegressionMetrics> best = experimentResult.BestRun;
+	return best.Estimator.Fit(TrainDataView);
+}
 ```
 
-### Consume model
-```C#
+## Step 9: Evaluate Model
+
+Evaluate the quality of the re-fit model on a test dataset that was not used in training (`taxi-fare-test.csv`).
+
+```
+IDataView predictions = model.Transform(TestDataView);
+var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
+```
+
+## Step 10: Make Predictions
+
+Using the trained model, use the `Predict()` API to predict the fare amount for specified trip:
+
+````C#
+//Sample: 
+//vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
+//VTS,1,1,1140,3.75,CRD,15.5
+
 var taxiTripSample = new TaxiTrip()
 {
     VendorId = "VTS",
-    RateCode = 1,
+    RateCode = "1",
     PassengerCount = 1,
     TripTime = 1140,
     TripDistance = 3.75f,
@@ -117,11 +127,17 @@ var taxiTripSample = new TaxiTrip()
     FareAmount = 0 // To predict. Actual/Observed = 15.5
 };
 
-ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
-
-// Create prediction engine related to the loaded trained model
-var predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
+// Create prediction engine
+var predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(model);
 
 // Score
-var resultprediction = predEngine.Predict(taxiTripSample);
+var predictedResult = predEngine.Predict(taxiTripSample);
+
+Console.WriteLine($"**********************************************************************");
+Console.WriteLine($"Predicted fare: {predictedResult.FareAmount:0.####}, actual fare: 15.5");
+Console.WriteLine($"**********************************************************************");
 ```
+
+Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the implemented method `PlotRegressionChart()` as in the following screenshot:
+
+![Regression plot-chart](images/Sample-Regression-Chart.png)

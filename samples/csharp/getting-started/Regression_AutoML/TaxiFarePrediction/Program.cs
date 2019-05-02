@@ -109,10 +109,10 @@ namespace TaxiFarePrediction
             var predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
 
             // Score
-            var resultprediction = predEngine.Predict(taxiTripSample);
+            var predictedResult = predEngine.Predict(taxiTripSample);
 
             Console.WriteLine($"**********************************************************************");
-            Console.WriteLine($"Predicted fare: {resultprediction.FareAmount:0.####}, actual fare: 15.5");
+            Console.WriteLine($"Predicted fare: {predictedResult.FareAmount:0.####}, actual fare: 15.5");
             Console.WriteLine($"**********************************************************************");
         }
 
@@ -282,7 +282,7 @@ namespace TaxiFarePrediction
         }
 
         /// <summary>
-        /// Prints top models from AutoML experiment.
+        /// Print top models from AutoML experiment.
         /// </summary>
         private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
         {

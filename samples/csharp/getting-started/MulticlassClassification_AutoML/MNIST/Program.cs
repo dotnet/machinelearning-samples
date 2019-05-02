@@ -102,7 +102,7 @@ namespace MNIST
         }
 
         /// <summary>
-        /// Prints top models from AutoML experiment.
+        /// Print top models from AutoML experiment.
         /// </summary>
         private static void PrintTopModels(ExperimentResult<MulticlassClassificationMetrics> experimentResult)
         {
@@ -126,32 +126,32 @@ namespace MNIST
             var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutputData>(trainedModel);
 
             //InputData data1 = SampleMNISTData.MNIST1;
-            var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
+            var predictedResult1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
-            Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
-            Console.WriteLine($"                                           One :  {resultprediction1.Score[1]:0.####}");
-            Console.WriteLine($"                                           two:   {resultprediction1.Score[2]:0.####}");
-            Console.WriteLine($"                                           three: {resultprediction1.Score[3]:0.####}");
-            Console.WriteLine($"                                           four:  {resultprediction1.Score[4]:0.####}");
-            Console.WriteLine($"                                           five:  {resultprediction1.Score[5]:0.####}");
-            Console.WriteLine($"                                           six:   {resultprediction1.Score[6]:0.####}");
-            Console.WriteLine($"                                           seven: {resultprediction1.Score[7]:0.####}");
-            Console.WriteLine($"                                           eight: {resultprediction1.Score[8]:0.####}");
-            Console.WriteLine($"                                           nine:  {resultprediction1.Score[9]:0.####}");
+            Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {predictedResult1.Score[0]:0.####}");
+            Console.WriteLine($"                                           One :  {predictedResult1.Score[1]:0.####}");
+            Console.WriteLine($"                                           two:   {predictedResult1.Score[2]:0.####}");
+            Console.WriteLine($"                                           three: {predictedResult1.Score[3]:0.####}");
+            Console.WriteLine($"                                           four:  {predictedResult1.Score[4]:0.####}");
+            Console.WriteLine($"                                           five:  {predictedResult1.Score[5]:0.####}");
+            Console.WriteLine($"                                           six:   {predictedResult1.Score[6]:0.####}");
+            Console.WriteLine($"                                           seven: {predictedResult1.Score[7]:0.####}");
+            Console.WriteLine($"                                           eight: {predictedResult1.Score[8]:0.####}");
+            Console.WriteLine($"                                           nine:  {predictedResult1.Score[9]:0.####}");
             Console.WriteLine();
                        
-            var resultprediction2 = predEngine.Predict(SampleMNISTData.MNIST2);
+            var predictedResult2 = predEngine.Predict(SampleMNISTData.MNIST2);
 
-            Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {resultprediction2.Score[0]:0.####}");
-            Console.WriteLine($"                                           One :  {resultprediction2.Score[1]:0.####}");
-            Console.WriteLine($"                                           two:   {resultprediction2.Score[2]:0.####}");
-            Console.WriteLine($"                                           three: {resultprediction2.Score[3]:0.####}");
-            Console.WriteLine($"                                           four:  {resultprediction2.Score[4]:0.####}");
-            Console.WriteLine($"                                           five:  {resultprediction2.Score[5]:0.####}");
-            Console.WriteLine($"                                           six:   {resultprediction2.Score[6]:0.####}");
-            Console.WriteLine($"                                           seven: {resultprediction2.Score[7]:0.####}");
-            Console.WriteLine($"                                           eight: {resultprediction2.Score[8]:0.####}");
-            Console.WriteLine($"                                           nine:  {resultprediction2.Score[9]:0.####}");
+            Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {predictedResult2.Score[0]:0.####}");
+            Console.WriteLine($"                                           One :  {predictedResult2.Score[1]:0.####}");
+            Console.WriteLine($"                                           two:   {predictedResult2.Score[2]:0.####}");
+            Console.WriteLine($"                                           three: {predictedResult2.Score[3]:0.####}");
+            Console.WriteLine($"                                           four:  {predictedResult2.Score[4]:0.####}");
+            Console.WriteLine($"                                           five:  {predictedResult2.Score[5]:0.####}");
+            Console.WriteLine($"                                           six:   {predictedResult2.Score[6]:0.####}");
+            Console.WriteLine($"                                           seven: {predictedResult2.Score[7]:0.####}");
+            Console.WriteLine($"                                           eight: {predictedResult2.Score[8]:0.####}");
+            Console.WriteLine($"                                           nine:  {predictedResult2.Score[9]:0.####}");
             Console.WriteLine();
         }
     }

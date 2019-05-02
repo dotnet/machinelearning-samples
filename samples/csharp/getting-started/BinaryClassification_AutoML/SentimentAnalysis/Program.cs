@@ -88,10 +88,10 @@ namespace SentimentAnalysis
             var predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
             Console.WriteLine($"=============== Created Prediction Engine OK  ==============="); 
             // Score
-            var resultprediction = predEngine.Predict(sampleStatement);
+            var predictedResult = predEngine.Predict(sampleStatement);
 
             Console.WriteLine($"=============== Single Prediction  ===============");
-            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Non Toxic")} sentiment");
+            Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(predictedResult.Prediction) ? "Toxic" : "Non Toxic")} sentiment");
             Console.WriteLine($"==================================================");
         }
         
