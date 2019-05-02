@@ -1,0 +1,41 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<h2>Live Sentiment</h2>
+<p>Write what you think about stuff in general.</p>
+
+<p><textarea oninput=@UpdateScoreAsync cols="45"></textarea></p>
+
+<HappinessScale Value=@happiness />
+
+@functions {
+    float happiness = 50; // 0=worst, 100=best
+
+    async void UpdateScoreAsync(UIChangeEventArgs evt)
+    {
+        string targetText = (string)evt.Value;
+
+        //Make a real call to Sentiment service
+        happiness = await PredictSentimentAsync(targetText);
+    }
+
+    private async Task<float> PredictSentimentAsync(string targetText)
+    {
+        string url = $"api/Sentiment/sentimentprediction?sentimentText={targetText}";
+
+        float percentage = await Http.GetJsonAsync<float>(url);
+
+        return percentage;
+    }
+
+    // Sample test without ML.NET model
+    //
+    //void UpdateScore(UIChangeEventArgs evt)
+    //{
+    //    string targetText = (string)evt.Value;
+
+    //    //Random percentage
+    //    Random random = new Random();
+    //    happiness = random.Next(0, 100);
+    //}
+}
