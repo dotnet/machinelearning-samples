@@ -26,7 +26,7 @@ namespace myApp
 
             // load data
             var dataView = mlContext.Data.LoadFromTextFile<MeterData>(
-               TrainingDatarelativePath,
+               TrainingDataPath,
                separatorChar: ',',
                hasHeader: true);
 
