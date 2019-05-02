@@ -127,11 +127,11 @@ namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
 
               string text = string.Format("{0} ({1})", box.Label, box.Confidence);
 
-              using (Graphics thumbnailGraph = Graphics.FromImage(image))
+              using (Graphics graph = Graphics.FromImage(image))
               {
-                  thumbnailGraph.CompositingQuality = CompositingQuality.HighQuality;
-                  thumbnailGraph.SmoothingMode = SmoothingMode.HighQuality;
-                  thumbnailGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                  graph.CompositingQuality = CompositingQuality.HighQuality;
+                  graph.SmoothingMode = SmoothingMode.HighQuality;
+                  graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
                   Font drawFont = new Font("Arial", 16);
                   SolidBrush redBrush = new SolidBrush(Color.Red);
@@ -140,12 +140,12 @@ namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
                   SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
 
                   // Fill rectangle on which the text is displayed.
-                  RectangleF rect = new RectangleF(x, y, w, 30);                  
-                  thumbnailGraph.FillRectangle(yellowBrush, rect);
+                  RectangleF rect = new RectangleF(x, y, w, 20);
+                  graph.FillRectangle(yellowBrush, rect);
                   //draw text in red color
-                  thumbnailGraph.DrawString(text, drawFont, redBrush, atPoint);  
+                  graph.DrawString(text, drawFont, redBrush, atPoint);
                   //draw rectangle around object
-                  thumbnailGraph.DrawRectangle(pen, x, y, w, h);
+                  graph.DrawRectangle(pen, x, y, w, h);
               }
             }
             image.Save(@"Output\outputImage.jpg");
