@@ -20,7 +20,7 @@ For all these examples, the parameter we want to predict can take only one of tw
 
 ### Step 1: Load the Data
 
-First, define a C# class whose variables correspond to columns in the provided dataset (wikipedia-detox-250-line-data.tsv). We define `SentimentIssue`:
+First, define a C# class whose variables correspond to columns in the provided dataset (`wikipedia-detox-250-line-data.tsv`). We define `SentimentIssue`:
 
 ```C#
 public class SentimentIssue
@@ -42,7 +42,7 @@ Next, load the train and test data:
 
 ### Step 2: Building a Machine Learning Model Using AutoML
 
-Instantaite and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
+Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
 
 ```C#
 // Progress handler be will invoked after each model it produces and evaluates
