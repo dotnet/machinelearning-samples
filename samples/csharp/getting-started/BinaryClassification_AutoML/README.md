@@ -18,7 +18,7 @@ Some examples:
 
 For all these examples, the parameter we want to predict can take only one of two values. In other words, this value is represented by `boolean` type.
 
-### Step 1: Load the Data
+## Step 1: Load the Data
 
 First, define a C# class whose variables correspond to columns in the provided dataset (`wikipedia-detox-250-line-data.tsv`). We define `SentimentIssue`:
 
@@ -40,7 +40,7 @@ Next, load the train and test data:
  IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 ```
 
-### Step 2: Build a Machine Learning Model Using AutoML
+## Step 2: Build a Machine Learning Model Using AutoML
 
 Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
 
@@ -54,7 +54,7 @@ ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto(
     .Execute(trainingDataView, progressHandler: progressHandler);
 ```
 
-### 3. Evaluate Model
+## 3. Evaluate Model
 
 Grab the best model produced by the AutoML experiment
 
@@ -72,7 +72,7 @@ var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(predictions, 
 Console.WriteLine($"Accuracy: {metrics.Accuracy}");
 ```
 
-### 4. Make Predictions
+## 4. Make Predictions
 
 Using the trained model, call the `Predict()` API to predict the sentiment for new sample text `sampleStatement`:
 
