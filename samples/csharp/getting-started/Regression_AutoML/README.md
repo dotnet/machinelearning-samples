@@ -19,8 +19,8 @@ For all these examples, the parameter we want to predict can take any numeric va
 Load the datasets required to train and test:
 
 ```C#
- IDataView trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
- IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
+ IDataView trainingDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TrainDataPath, hasHeader: true);
+ IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true);
 ```
 
 ## Step 2: Building a Machine Learning Model using AutoML
@@ -46,7 +46,7 @@ and evaluate its quality on a test dataset that was not used in training (`taxi-
 
 `Regression.Evaluate()` calculates the difference between known fares and values predicted by the model to produce various metrics.
 
-```CSharp
+```C#
 var predictions = trainedModel.Transform(testDataView);
 var metrics = mlContext.Regression.Evaluate(predictions, scoreColumnName: "Score");
 Console.WriteLine($"R-Squared: {metrics.RSquared}");

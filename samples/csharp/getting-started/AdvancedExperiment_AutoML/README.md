@@ -1,11 +1,7 @@
 # Advanced Taxi Fare Prediction
 
-| AutoML version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.30.0-preview           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
-
 ## Automated ML
-Automated ML eliminates the task of selecting different algorithms and hyperparameters. With automated ML, you just bring in your dataset and specify a few parameters. Automated ML will do the rest i.e. data preprocessing, learning algorithm selection and hyperparameter selection to generate a high quality machine learning model that you can use for predictions.
+Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores.
 
 ## Advance Sample
 The Advanced Taxi Fare Prediction sample explores the available experiment setting configurations given by automated ML.

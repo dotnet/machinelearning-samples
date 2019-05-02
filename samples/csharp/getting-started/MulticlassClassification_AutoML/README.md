@@ -1,56 +1,23 @@
-# Sentiment Analysis for User Reviews
-
-| AutoML version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.3.0-preview          | Dynamic API | up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
-
-In this introductory sample, you'll see how to use automated ML to classify handwritten digits from 0 to 9 using the MNIST dataset. This is a **multiclass classification** problem that we will solve using SDCA (Stochastic Dual Coordinate Ascent) algorithm.
+# MNIST Classification
 
 ## Automated ML
-AutoML eliminates the task of selecting different algorithms and hyperparameters. With AutoML, you just bring in your dataset and specify a few parameters. AutoML will do the rest i.e. data preprocessing, learning algorithm selection and hyperparameter selection to generate a high quality machine learning model that you can use for predictions.
-
+Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores.
 
 ## Problem
 The MNIST data set contains handwritten images of digits, ranging from 0 to 9.
 
 The MNIST dataset we are using contains 65 columns of numbers. The first 64 columns in each row are integer values in the range from 0 to 16. These values are calculated by dividing 32 x 32 bitmaps into non-overlapping blocks of 4 x 4. The number of ON pixels is counted in each of these blocks, which generates an input matrix of 8 x 8. The last column in each row is the number that is represented by the values in the first 64 columns. These first 64 columns are our features and our ML model will use these features to classify the testing images. The last column in our training and validation datasets is the label - the actual number that we will predict using our ML model.
 
-the ML model that we will build will return probabilities for a given image of being one of the numbers from 0 to 9 as explained above.
+The ML model that we will build will return probabilities for a given image being each of the numbers from 0 to 9 as explained above.
 
-## ML task - Multiclass classification
-The generalized problem of **multiclass classification** is to classify items into one of three or more classes. (Classifying items into one of the two classes is called **binary classification**).
+## ML Task - Multiclass Classification
+The generalized problem of **multiclass classification** is to classify items into one of three or more classes. (Classifying items into one of the two classes is called **binary classification**.)
 
-## Solution
-To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
+## Step 1: Load the Data
 
-![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
+Load the datasets required to train and test:
 
-### 1. Building a Machine Learning Model using AutoML
-
-The general steps in building a model using AutoML are
-
-1) Create necessary global variable to define the experiment
-
-2) Define the data's schema mapped to the datasets to load the test and train data
-
-3) Create a Machine Learning Experiment (currently Binary Classification, Multiclass Classification or Regression) by configuring set of parameters
-
-4) Execute the experiment (Generates several models using the configuration settings you specified in Step 2)
-
-5) Fetch the best model
-
-6) Test and Deploy
-
-### Step 1: Define Experiment Variables
-
-Before the main method, create the global variable
 ```C#
-private static uint ExperimentTime = 60;
-```
-
-### Step 2: Data loading
-```C#
-// STEP 1: Load the data
 var trainData = mlContext.Data.LoadFromTextFile(path: TrainDataPath,
         columns : new[] 
         {
@@ -72,46 +39,43 @@ var testData = mlContext.Data.LoadFromTextFile(path: TestDataPath,
         );
 ```
 
-### Step 3: Building a Machine Learning Model using AutoML
+## Step 2: Build a Machine Learning Model Using AutoML
 
-Create an AutoML experiment by specifying experiment settings. We have already determined this sentiment analysis problem to be a Binary Classification problem. Next, we should specify how long the experiment should run and set a progress handler that will receive notifications as and when new models are trained.
+Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
 
 ```C#
-// Progress handler be will invoked after each model it produces and evaluates.
-var progressHandler = new MulticlassExperimentProgressHandler();
-
 // Run an AutoML multiclass classification experiment
 ExperimentResult<MulticlassClassificationMetrics> experimentResult = mlContext.Auto()
     .CreateMulticlassClassificationExperiment(ExperimentTime)
-    .Execute(trainData, "Number", progressHandler: progressHandler);
-
+    .Execute(trainData, "Number", progressHandler: new MulticlassExperimentProgressHandler());
 ```
 
-### 4. Evaluate model
+## 3. Evaluate Model
 
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments. 
+Grab the best model produced by the AutoML experiment
 
-`Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
-
-```CSharp
-RunDetail<MulticlassClassificationMetrics> bestRun = experimentResult.BestRun;
-ITransformer trainedModel = bestRun.Model;
-
-var predictions = trainedModel.Transform(testData);
-var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName: "Number", scoreColumnName: "Score");
-
-ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
+```C#
+ITransformer model = experimentResult.BestRun.Model;
 ```
 
-### 4. Consume model
+and evaluate its quality on a test dataset that was not used in training (`optdigits-test.tsv`).
 
-After the model is trained, you can use the `Predict()` API to predict the sentiment for new sample text. 
+`Evaluate` compares the predicted values for the test dataset to the real values. It produces various metrics, such as accuracy:
 
-```CSharp
+```C#
+var predictions = trainedModel.Transform(testDataView);
+var metrics = mlContext.MulticlassClassification.Evaluate(predictions, scoreColumnName: "Score");
+Console.WriteLine($"Micro-accuracy: {metrics.MicroAccuracy}");
+```
+
+## Step 4: Make Predictions
+
+Using the trained model, call the `Predict()` API to predict the number drawn by a new set of pixels:
+
+```C#
 // Create prediction engine related to the loaded trained model
 var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutputData>(trainedModel);
 
-//InputData data1 = SampleMNISTData.MNIST1;
 var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
 Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
@@ -128,9 +92,9 @@ Console.WriteLine();
 
 ```
 
-Where `SampleMNISTData.MNIST1` stores the pixel values of the digit that want to predict using the ML model.
+where `SampleMNISTData.MNIST1` stores the pixel values of the digit that want to predict using the ML model
 
-```CSharp
+```C#
 class SampleMNISTData
 {
 	internal static readonly InputData MNIST1 = new InputData()
