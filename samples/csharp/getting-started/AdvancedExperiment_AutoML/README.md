@@ -137,7 +137,3 @@ Console.WriteLine($"************************************************************
 Console.WriteLine($"Predicted fare: {predictedResult.FareAmount:0.####}, actual fare: 15.5");
 Console.WriteLine($"**********************************************************************");
 ```
-
-Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the implemented method `PlotRegressionChart()` as in the following screenshot:
-
-![Regression plot-chart](images/Sample-Regression-Chart.png)
