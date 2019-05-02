@@ -4,6 +4,9 @@ using Microsoft.ML.Data;
 
 namespace Common
 {
+    /// <summary>
+    /// Progress handler that AutoML will invoke after each model it produces and evaluates.
+    /// </summary>
     public class BinaryExperimentProgressHandler : IProgress<RunDetail<BinaryClassificationMetrics>>
     {
         private int _iterationIndex;
@@ -27,6 +30,9 @@ namespace Common
         }
     }
 
+    /// <summary>
+    /// Progress handler that AutoML will invoke after each model it produces and evaluates.
+    /// </summary>
     public class MulticlassExperimentProgressHandler : IProgress<RunDetail<MulticlassClassificationMetrics>>
     {
         private int _iterationIndex;
@@ -50,6 +56,9 @@ namespace Common
         }
     }
 
+    /// <summary>
+    /// Progress handler that AutoML will invoke after each model it produces and evaluates.
+    /// </summary>
     public class RegressionExperimentProgressHandler : IProgress<RunDetail<RegressionMetrics>>
     {
         private int _iterationIndex;
