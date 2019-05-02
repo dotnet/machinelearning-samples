@@ -1,3 +1,5 @@
+# Sentiment Analysis for User Reviews
+
 ## Automated Machine Learning
 Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores.
 
@@ -20,20 +22,7 @@ For all these examples, the parameter we want to predict can take only one of tw
 
 ## Step 1: Load the Data
 
-First, define a C# class whose variables correspond to columns in the provided dataset (`wikipedia-detox-250-line-data.tsv`). We define `SentimentIssue`:
-
-```C#
-public class SentimentIssue
-{
-    [LoadColumn(0)]
-    public bool Label { get; set; }
-
-    [LoadColumn(1)]
-    public string Text { get; set; }
-}
-```
-
-Next, load the train and test data:
+Load the datasets required to train and test:
 
 ```C#
  IDataView trainingDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TrainDataPath, hasHeader: true);
@@ -45,13 +34,10 @@ Next, load the train and test data:
 Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
 
 ```C#
-// Progress handler be will invoked after each model it produces and evaluates
-var progressHandler = new BinaryExperimentProgressHandler();
-
 // Run AutoML binary classification experiment
 ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto()
     .CreateBinaryClassificationExperiment(ExperimentTime)
-    .Execute(trainingDataView, progressHandler: progressHandler);
+    .Execute(trainingDataView, progressHandler: new BinaryExperimentProgressHandler());
 ```
 
 ## 3. Evaluate Model
