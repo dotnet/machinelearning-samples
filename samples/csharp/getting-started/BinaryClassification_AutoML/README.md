@@ -40,7 +40,7 @@ Next, load the train and test data:
  IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 ```
 
-### Step 2: Building a Machine Learning Model Using AutoML
+### Step 2: Build a Machine Learning Model Using AutoML
 
 Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
 
