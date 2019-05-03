@@ -16,6 +16,22 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
 
+- phase: HeartDiseaseDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Heart Disease Detection (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection.sln'
+
+- phase: SpamDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Spam Detection (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp.sln'
+
 - phase: CustomerSegmentation
   queue: Hosted VS2017
   steps:
@@ -167,4 +183,12 @@ phases:
     displayName: Build ScalableSentimentAnalysisBlazorWebApp
     inputs:
       projects: '.\samples\csharp\end-to-end-apps\ScalableSentimentAnalysisBlazorWebApp\BlazorSentimentAnalysis.sln'
+
+- phase: DatabaseIntegration
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Database Integration
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\DatabaseIntegration\DatabaseIntegration.sln'
 
