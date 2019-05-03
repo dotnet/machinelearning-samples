@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Common;
 using Microsoft.ML;
-using Microsoft.ML.Auto;
+using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
 using MNIST.DataStructures;
 

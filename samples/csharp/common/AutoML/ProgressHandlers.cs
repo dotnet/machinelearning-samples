@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.ML.Auto;
+using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
 
 namespace Common

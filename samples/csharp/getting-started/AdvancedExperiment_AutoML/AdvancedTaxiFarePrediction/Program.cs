@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using AdvancedTaxiFarePrediction.DataStructures;
 using Common;
 using Microsoft.ML;
-using Microsoft.ML.Auto;
+using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
 using PLplot;
 

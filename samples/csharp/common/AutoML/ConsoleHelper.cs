@@ -3,8 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.ML.Data;
 using Microsoft.ML;
-using static Microsoft.ML.TrainCatalogBase;
-using Microsoft.ML.Auto;
+using Microsoft.ML.AutoML;
 using System.Text;
 
 namespace Common
