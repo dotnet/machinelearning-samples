@@ -1,7 +1,7 @@
 # Sentiment Analysis for User Reviews
 
 ## Automated Machine Learning
-Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores.
+Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model.
 
 ## Problem
 This problem is to predict if a customer's review has a positive or negative sentiment. We will use small wikipedia-detox-datasets: one dataset for training and a second to test the model produced by AutoML. Human judges assigned every comment in these datasets a sentiment label:

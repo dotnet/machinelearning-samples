@@ -2,7 +2,7 @@
 
 ## Automated Machine Learning
 
-Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores. 
+Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model.
 
 While running a default experiment can be achieved simply, many aspects of the experiment can be customized. The following walk through demonstrates those details.
 
