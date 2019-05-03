@@ -14,7 +14,6 @@ namespace OnnxObjectDetectionWebAPI.Controllers
     [ApiController]
     public class ObjectDetectionController : ControllerBase
     {
-        //Dependencies
         private readonly IImageFileWriter _imageWriter; 
         private readonly string _imagesTmpFolder;        
 
@@ -27,7 +26,7 @@ namespace OnnxObjectDetectionWebAPI.Controllers
             _modelScorer = modelScorer;
             _logger = logger;
             _imageWriter = imageWriter;
-            _imagesTmpFolder = ModelHelpers.GetFolderFullPath(@"ImagesTemp");
+            _imagesTmpFolder = ModelHelpers.GetAbsolutePath(@"../../../ImagesTemp");
         }
 
         [HttpPost]
