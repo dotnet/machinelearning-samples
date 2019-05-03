@@ -395,7 +395,7 @@ namespace AdvancedTaxiFarePrediction
                 pl.col0(4);
                 pl.line(xArray, yArray);
 
-                // end page (writes output to disk)
+                // End page (writes output to disk)
                 pl.eop();
 
                 // Output version of PLplot
