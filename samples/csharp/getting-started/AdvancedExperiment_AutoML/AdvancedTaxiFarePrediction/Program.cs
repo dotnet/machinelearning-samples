@@ -232,7 +232,7 @@ namespace AdvancedTaxiFarePrediction
             ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
             //Sample: 
-            //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
+            // vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
             // VTS,1,1,1140,3.75,CRD,15.5
 
             var taxiTripSample = new TaxiTrip()
