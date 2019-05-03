@@ -376,7 +376,8 @@ namespace AdvancedTaxiFarePrediction
                 // y = (m * x) + b;
 
                 double x1 = 1;
-                //Function for Y1 in the line
+
+                // Function for Y1 in the line
                 double y1 = (m * x1) + b;
 
                 double x2 = 39;
