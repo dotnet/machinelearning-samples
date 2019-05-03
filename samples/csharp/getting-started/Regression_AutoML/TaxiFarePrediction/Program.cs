@@ -29,7 +29,7 @@ namespace TaxiFarePrediction
         private static string LabelColumnName = "FareAmount";
         private static uint ExperimentTime = 60;
 
-        static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
+        static void Main(string[] args) // If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
             MLContext mlContext = new MLContext();
 
@@ -91,9 +91,9 @@ namespace TaxiFarePrediction
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
-            //Sample: 
-            //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
-            //VTS,1,1,1140,3.75,CRD,15.5
+            // Sample: 
+            // vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
+            // VTS,1,1,1140,3.75,CRD,15.5
 
             var taxiTripSample = new TaxiTrip()
             {
@@ -169,14 +169,14 @@ namespace TaxiFarePrediction
                 // The main title
                 pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction");
 
-                // plot using different colors
+                // Plot using different colors
                 // see http://plplot.sourceforge.net/examples.php?demo=02 for palette indices
                 pl.col0(1);
 
                 int totalNumber = numberOfRecordsToRead;
                 var testData = new TaxiTripCsvReader().GetDataFromCsv(testDataSetPath, totalNumber).ToList();
 
-                //This code is the symbol to paint
+                // This code is the symbol to paint
                 char code = (char)9;
 
                 // plot using other color
