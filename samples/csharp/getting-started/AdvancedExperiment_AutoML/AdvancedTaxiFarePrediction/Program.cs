@@ -334,7 +334,7 @@ namespace AdvancedTaxiFarePrediction
                     var x = new double[1];
                     var y = new double[1];
 
-                    //Make Prediction
+                    // Make Prediction
                     var FarePrediction = predFunction.Predict(testData[i]);
 
                     x[0] = testData[i].FareAmount;
