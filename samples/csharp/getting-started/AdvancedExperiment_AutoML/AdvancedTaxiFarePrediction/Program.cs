@@ -372,7 +372,7 @@ namespace AdvancedTaxiFarePrediction
 
                 double b = minY - (m * minX);
 
-                //Generic function for Y for the regression line
+                // Generic function for Y for the regression line
                 // y = (m * x) + b;
 
                 double x1 = 1;
