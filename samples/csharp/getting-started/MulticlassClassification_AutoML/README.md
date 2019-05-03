@@ -86,7 +86,7 @@ Console.WriteLine($"                                           five:  {resultpre
 Console.WriteLine($"                                           six:   {resultprediction1.Score[6]:0.####}");
 Console.WriteLine($"                                           seven: {resultprediction1.Score[7]:0.####}");
 Console.WriteLine($"                                           eight: {resultprediction1.Score[8]:0.####}");
-Console.WriteLine($"                                           nine:  {resultprediction1.Score[9]:0.####}");
+Console.WriteLine($"                                           nine:  {resultprediction1.Score[9]:F4}");
 Console.WriteLine();
 
 ```
