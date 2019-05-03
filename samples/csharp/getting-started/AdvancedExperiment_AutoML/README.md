@@ -1,7 +1,10 @@
 # Taxi Fare Prediction - Advanced AutoML Experiment
 
 ## Automated Machine Learning
-Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores.
+
+Automated machine learning (AutoML) automates the end-to-end process of applying machine learning to real-world problems. Given a dataset, AutoML iterates over different data featurizations, machine learning algorithms, hyperparamters, etc. to select the best model based on training scores. 
+
+While running a default experiment can be achieved simply, many aspects of the experiment can be customized. The following walk through demonstrates those details.
 
 ## Problem
 This problem is to predict the fare of a taxi trip in New York City. At first glance, the fare may seem to depend simply on the distance traveled. However, taxi vendors in New York charge varying amounts for other factors such as additional passengers, paying with a credit card instead of cash, and so on. This prediction could help taxi providers give passengers and drivers estimates on ride fares.
@@ -51,9 +54,7 @@ Initialize the AutoML experiment settings:
 
 ```C#
 var experimentSettings = new RegressionExperimentSettings();
-
 experimentSettings.MaxExperimentTimeInSeconds = 3600;
-experimentSettings.CancellationToken = cts.Token;
 
 // Set the metric that AutoML will try to optimize over the course of the experiment.
 experimentSettings.OptimizingMetric = RegressionMetric.RootMeanSquaredError;
@@ -68,6 +69,7 @@ experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression);
 experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent);
 
 // Cancel experiment after the user presses any key
+experimentSettings.CancellationToken = cts.Token;
 CancelExperimentAfterAnyKeyPress(cts);
 ```
 
