@@ -23,7 +23,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle"><img src="images/fraud-detection.png" alt="Movie Recommender chart"><br><br><b>Fraud detection<br><a href="samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
   </tr> 
   <tr>
-    <td align="middle"><img src="images/disease-detection.png" alt="disease detection chart"><br><br><b>Heart Disease Prediction <br><a href="samples/csharp/getting-started/BinaryClassification_HeartDiseasePrediction">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
+    <td align="middle"><img src="images/disease-detection.png" alt="disease detection chart"><br><br><b>Heart Disease Prediction <br><a href="samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection">C#</a><img src="images/app-type-getting-started.png" alt="Getting started icon"></td>
     <td></td>
     <td></td>
   </tr> 
