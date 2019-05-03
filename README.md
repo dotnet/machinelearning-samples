@@ -91,7 +91,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
   <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
   
-  <td align="middle"><img src="images/database.png" alt="Database chart"><br><b>Using Database Sample<br><a href="samples/csharp/getting-started/DatabaseIntegration">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+  <td align="middle"><img src="images/database.png" alt="Database chart"><br><b>Training model with Database<br><a href="samples/csharp/getting-started/DatabaseIntegration">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
   <td align="middle"><img src="images/smile.png" alt="Database chart"><br><b>Scalable Blazor web app<br><a href="samples/csharp/end-to-end-apps/ScalableSentimentAnalysisBlazorWebApp">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
   </tr>
 </table>
