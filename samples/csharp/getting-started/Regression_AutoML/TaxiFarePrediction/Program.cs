@@ -29,7 +29,7 @@ namespace TaxiFarePrediction
         private static string LabelColumnName = "FareAmount";
         private static uint ExperimentTime = 60;
 
-        static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
+        static void Main(string[] args) // If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
             MLContext mlContext = new MLContext();
 
