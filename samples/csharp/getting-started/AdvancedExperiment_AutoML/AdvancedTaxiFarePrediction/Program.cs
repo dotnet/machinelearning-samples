@@ -381,7 +381,8 @@ namespace AdvancedTaxiFarePrediction
                 double y1 = (m * x1) + b;
 
                 double x2 = 39;
-                //Function for Y2 in the line
+
+                // Function for Y2 in the line
                 double y2 = (m * x2) + b;
 
                 var xArray = new double[2];
