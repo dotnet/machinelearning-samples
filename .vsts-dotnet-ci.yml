@@ -110,7 +110,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Mnist (MulticlassClassification)
     inputs:
-      projects: '.\samples\csharp\getting-started\MulticlassClassification_mnist\MulticlassClassification_mnist.sln'
+      projects: '.\samples\csharp\getting-started\MulticlassClassification_MNIST\MNISTConsoleApp.sln'
 
 - phase: SalesSpikeAndChangeDetection
   queue: Hosted VS2017
@@ -128,13 +128,21 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\AnomalyDetection_PowerMeterReadings\PowerAnomalyDetection.sln'
 
-- phase: YoloOnnxScorer
+- phase: ObjectDetectionConsoleApp
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build Onnx scorer (Object Detection)
+    displayName: Build Object Detection (Onnx Scorer)
     inputs:
       projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
+
+- phase: ObjectDetectionE2EAPP
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Object Detection (Onnx Scorer)
+    inputs:
+      projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\OnnxObjectDetectionE2EApp.sln'
 
 - phase: SalesSpikeChangeDetectionE2E
   queue: Hosted VS2017
@@ -143,3 +151,20 @@ phases:
     displayName: Build Sales spike and change Detection E2E(Anomaly Detection)
     inputs:
       projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-Sales\SpikeDetectionTemporaryApp.sln'
+
+- phase: ScalableMLModelOnWebAPIIntegrationPkg
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Scalable ML Model On WebAPI Integration Pkg
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\ScalableMLModelOnWebAPI-IntegrationPkg\ScalableMLModelOnWebAPI-IntegrationPkg.sln'
+
+- phase: ScalableSentimentAnalysisBlazorWebApp
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build ScalableSentimentAnalysisBlazorWebApp
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\ScalableSentimentAnalysisBlazorWebApp\BlazorSentimentAnalysis.sln'
+
