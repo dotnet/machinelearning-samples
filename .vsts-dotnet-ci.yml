@@ -126,7 +126,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Power Anomaly Detection (Time Series)
     inputs:
-      projects: '.\samples\csharp\getting-started\TimeSeries_PowerAnomalyDetection\PowerAnomalyDetection.sln'
+      projects: '.\samples\csharp\getting-started\AnomalyDetection_PowerMeterReadings\PowerAnomalyDetection.sln'
 
 - phase: YoloOnnxScorer
   queue: Hosted VS2017
