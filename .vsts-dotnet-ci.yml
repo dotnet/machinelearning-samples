@@ -158,7 +158,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Object Detection (Onnx Scorer)
     inputs:
-      projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\OnnxObjectDetectionE2EApp.sln'
+      projects: '.\samples\csharp\end-to-end-apps\DeepLearning_ObjectDetection_Onnx\OnnxObjectDetectionE2EApp.sln'
 
 - phase: SalesSpikeChangeDetectionE2E
   queue: Hosted VS2017
