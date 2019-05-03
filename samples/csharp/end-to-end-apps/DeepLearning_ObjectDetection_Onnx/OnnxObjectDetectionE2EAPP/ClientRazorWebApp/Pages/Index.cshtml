@@ -3,33 +3,25 @@
 @{
     ViewData["Title"] = "Home page";
 }
-
-<br />
-<br />
-<br />
-
-
-
-<form method="post" enctype="multipart/form-data">
-    <div>
-        <p>Upload a file image using this form to predict its label:</p>
-    </div>
-    <div>
-        <input type="file" name="imageFile">
-    </div>
-    <div>
-        <br />
-        <input type="submit" value="Upload File" name="submit">
-    </div>
-
-</form>
-
-<br />
-<br />
-
-<div id="divPrediction" class="col-md-10"></div>
-<div id="divProbability" class="col-md-10"></div>
-
+<div>
+    <form method="post" enctype="multipart/form-data">
+        <div>
+            <h4>select an image and click upload to see detected objects:</h4>
+        </div>
+        <br/>
+        <div>
+            <input type="file" name="imageFile">
+        </div>
+        <div>
+            <br />
+            <input type="submit" value="Upload File" name="submit">
+        </div>
+    </form>
+    <br />
+    <br />
+    <div id="divPrediction" class="col-md-10" style="color:green;font-size:20px;"></div>
+    <div id="divProbability" class="col-md-10"></div>
+</div>
 <script src="~/js/upload.js"></script>
 
 <br />
@@ -38,7 +30,7 @@
 
 <script type="text/javascript">
     window.onload = function hello() {
-        document.getElementById('divPrediction').innerHTML = 'Area to show the awesome prediction!';
+       // document.getElementById('divPrediction').innerHTML = 'Area to show the awesome prediction!';
     };
 </script>
 

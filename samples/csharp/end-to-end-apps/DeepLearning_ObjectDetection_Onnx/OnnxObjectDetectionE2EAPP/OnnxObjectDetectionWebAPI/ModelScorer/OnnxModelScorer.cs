@@ -36,8 +36,8 @@ namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
 
         public OnnxModelScorer()
         {
-            var assetsPath = ModelHelpers.GetFolderFullPath(@"Model");
-            _imagesTmpFolder = ModelHelpers.GetFolderFullPath(@"ImagesTemp");
+            var assetsPath = ModelHelpers.GetAbsolutePath(@"../../../Model");
+            _imagesTmpFolder = ModelHelpers.GetAbsolutePath(@"../../../ImagesTemp");
             _modelLocation = Path.Combine(assetsPath, "TinyYolo2_model.onnx");
             
             _mlContext = new MLContext();
@@ -148,7 +148,8 @@ namespace OnnxObjectDetectionWebAPI.OnnxModelScorers
                   graph.DrawRectangle(pen, x, y, w, h);
               }
             }
-            image.Save(@"Output\outputImage.jpg");
+          string outputImagePath = ModelHelpers.GetAbsolutePath(@"../../../Output/outputImage.jpg");          
+          image.Save(outputImagePath);
         }
 
         private IDataView CreateDataView()
