@@ -33,7 +33,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
   <tr>
     <td align="middle"><img src="images/issue-labeler.png" alt="ssue Labeler chart"><br><br><b>Issues classification  <br> <a href="samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/end-to-end-apps/MulticlassClassification-GitHubLabeler">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"></b></td>
     <td align="middle"><img src="images/flower-classification.png" alt="Movie Recommender chart"><br><br><b>Iris flowers classification <br><a href="samples/csharp/getting-started/MulticlassClassification_Iris">C#</a> &nbsp; &nbsp;<a href="samples/fsharp/getting-started/MulticlassClassification_Iris">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
-    <td align="middle"><img src="images/handwriting-classification.png" alt="Movie Recommender chart"><br><br><b>MNIST<br><a href="samples/csharp/getting-started/MulticlassClassification_mnist">C#</a> &nbsp; &nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
+    <td align="middle"><img src="images/handwriting-classification.png" alt="Movie Recommender chart"><br><br><b>MNIST<br><a href="samples/csharp/getting-started/MulticlassClassification_MNIST">C#</a> &nbsp; &nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"></b></td>
   </tr>
   <tr>
     <td align="middle" colspan="3">Recommendation</td>
