@@ -169,7 +169,7 @@ namespace TaxiFarePrediction
                 // The main title
                 pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction");
 
-                // plot using different colors
+                // Plot using different colors
                 // see http://plplot.sourceforge.net/examples.php?demo=02 for palette indices
                 pl.col0(1);
 
