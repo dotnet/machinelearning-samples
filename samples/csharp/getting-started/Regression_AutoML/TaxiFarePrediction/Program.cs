@@ -289,7 +289,9 @@ namespace TaxiFarePrediction
         /// </summary>
         private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
         {
-            // Get top few runs ranked by R-Squared
+            // Get top few runs ranked by R-Squared.
+            // R-Squared is a metric to maximize, so OrderByDescending() is correct.
+            // For RMSE and other regression metrics, OrderByAscending() is correct.
             var topRuns = experimentResult.RunDetails
                 .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.RSquared))
                 .OrderByDescending(r => r.ValidationMetrics.RSquared).Take(3);
