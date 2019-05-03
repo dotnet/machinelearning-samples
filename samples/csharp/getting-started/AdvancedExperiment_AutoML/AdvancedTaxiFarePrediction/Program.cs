@@ -316,7 +316,7 @@ namespace AdvancedTaxiFarePrediction
                 int totalNumber = numberOfRecordsToRead;
                 var testData = new TaxiTripCsvReader().GetDataFromCsv(testDataSetPath, totalNumber).ToList();
 
-                //This code is the symbol to paint
+                // This code is the symbol to paint
                 char code = (char)9;
 
                 // plot using other color
