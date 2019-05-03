@@ -5,10 +5,6 @@
     <DockerTargetOS>Linux</DockerTargetOS>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\v-prkor\source\TensorFlowImageClassificationWebAPI\TensorFlowImageClassificationWebAPI\TensorFlowImageClassificationWebAPI\TensorFlowImageClassificationWebAPI.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="Output\" />
     <Folder Include="wwwroot\" />
