@@ -63,8 +63,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle" colspan="3">Anomaly Detection</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/spike-detection.png" alt="spike detection chart"><br><br><b>Sales Spike Detection<br><a href="samples/csharp/getting-started/AnomalyDetection-Sales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"> &nbsp;
-      <a href="samples/csharp/end-to-end-apps/AnomalyDetection-Sales">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
+    <td align="middle"><img src="images/spike-detection.png" alt="spike detection chart"><br><br><b>Sales Spike Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_Sales">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"> &nbsp;
+      <a href="samples/csharp/end-to-end-apps/AnomalyDetection_Sales">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
     <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><br><b>Power Anomaly Detection<br><a href="samples/csharp/getting-started/TimeSeries_PowerAnomalyDetection">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
      <td></td>
   </tr> 
