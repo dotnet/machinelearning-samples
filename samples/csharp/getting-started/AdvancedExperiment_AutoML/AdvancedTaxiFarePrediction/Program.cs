@@ -22,10 +22,6 @@ namespace AdvancedTaxiFarePrediction
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
         private static IDataView TrainDataView = null;
 
-        private static string TrainDataSmallRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train-small.csv";
-        private static string TrainDataSmallPath = GetAbsolutePath(TrainDataSmallRelativePath);
-        private static IDataView TrainSmallDataView = null;
-
         private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
         private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
         private static IDataView TestDataView = null;
@@ -49,21 +45,25 @@ namespace AdvancedTaxiFarePrediction
             // Run an AutoML experiment on the dataset
             var experimentResult = RunAutoMLExperiment(mlContext, columnInference);
 
-            // Re-fit best pipeline (trained from subsample of AutoML data) on entirety of training data.
-            // (This step is optional. By no means is it required in your workflow.)
-            var model = RefitBestPipeline(mlContext, experimentResult);
-
             // Evaluate the model and print metrics
-            EvaluateModel(mlContext, model, experimentResult.BestRun.TrainerName);
+            EvaluateModel(mlContext, experimentResult.BestRun.Model, experimentResult.BestRun.TrainerName);
 
             // Save / persist the best model to a.ZIP file
-            SaveModel(mlContext, model);
+            SaveModel(mlContext, experimentResult.BestRun.Model);
 
             // Make a single test prediction loading the model from .ZIP file
             TestSinglePrediction(mlContext);
 
             // Paint regression distribution chart for a number of elements read from a Test DataSet file
             PlotRegressionChart(mlContext, TestDataPath, 100, args);
+
+            // Re-fit best pipeline on train and test data, to produce 
+            // a model that is trained on as much data as is available.
+            // This is the final model that can be deployed to production.
+            var refitModel = RefitBestPipeline(mlContext, experimentResult, columnInference);
+
+            // Save the re-fit model to a.ZIP file
+            SaveModel(mlContext, refitModel);
 
             Console.WriteLine("Press any key to exit..");
             Console.ReadLine();
@@ -88,15 +88,13 @@ namespace AdvancedTaxiFarePrediction
             TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
             TrainDataView = textLoader.Load(TrainDataPath);
             TestDataView = textLoader.Load(TestDataPath);
-            // Load a subsample of the full training data to send to AutoML for faster experimentation time
-            TrainSmallDataView = textLoader.Load(TrainDataSmallPath);
         }
 
         private static ExperimentResult<RegressionMetrics> RunAutoMLExperiment(MLContext mlContext, 
             ColumnInferenceResults columnInference)
         {
             // STEP 1: Display first few rows of the training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, TrainSmallDataView);
+            ConsoleHelper.ShowDataViewInConsole(mlContext, TrainDataView);
 
             // STEP 2: Build a pre-featurizer for use in the AutoML experiment.
             // (Internally, AutoML uses one or more train/validation data splits to 
@@ -128,7 +126,7 @@ namespace AdvancedTaxiFarePrediction
             var stopwatch = Stopwatch.StartNew();
             // Cancel experiment after the user presses any key
             CancelExperimentAfterAnyKeyPress(cts);
-            ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
+            ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainDataView, columnInformation, preFeaturizer, progressHandler);
             Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds{Environment.NewLine}");
 
             // Print top models found by AutoML
@@ -186,12 +184,16 @@ namespace AdvancedTaxiFarePrediction
         }
 
         /// <summary>
-        /// Re-fit best pipeline (trained from subsample of AutoML data) on entirety of training data.
+        /// Re-fit best pipeline on all available data.
         /// </summary>
-        private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult)
+        private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult,
+            ColumnInferenceResults columnInference)
         {
-            RunDetail<RegressionMetrics> best = experimentResult.BestRun;
-            return best.Estimator.Fit(TrainDataView);
+            ConsoleHelper.ConsoleWriteHeader("=============== Re-fitting best pipeline ===============");
+            var textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
+            var combinedDataView = textLoader.Load(new MultiFileSource(TrainDataPath, TestDataPath));
+            RunDetail<RegressionMetrics> bestRun = experimentResult.BestRun;
+            return bestRun.Estimator.Fit(combinedDataView);
         }
 
         /// <summary>
@@ -211,7 +213,7 @@ namespace AdvancedTaxiFarePrediction
         private static void SaveModel(MLContext mlContext, ITransformer model)
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Saving the model ===============");
-            mlContext.Model.Save(model, TrainSmallDataView.Schema, ModelPath);
+            mlContext.Model.Save(model, TrainDataView.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
         }
 

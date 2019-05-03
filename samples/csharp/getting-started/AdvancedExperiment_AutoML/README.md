@@ -25,10 +25,7 @@ Load the datasets required to train and test:
 TextLoader textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
 TrainDataView = textLoader.Load(TrainDataPath);
 TestDataView = textLoader.Load(TestDataPath);
-TrainSmallDataView = textLoader.Load(TrainDataSmallPath);
 ```
-
-`TrainSmallDataView` is a subsample of the full training data. In this sample, AutoML will consume `TrainSmallDataView` instead of `TrainDataView`. This will speed up the training of each model AutoML produces, enabling AutoML to search & evaluate more models.
 
 ## Step 3: Add a pre-featurizer
 
@@ -86,30 +83,19 @@ var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings)
 Executing triggers data featurization, learning algorithm selection, hyperparameter tuning, etc. AutoML will iterate over different data featurizations, machine learning algorithms, hyperparamters, etc. until `MaxExperimentTimeInSeconds` is reached or the experiment is terminated.
 
 ```C#            
- ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
+ ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainDataView, columnInformation, preFeaturizer, progressHandler);
 ```
 
-## Step 8: Re-fit Best Pipeline
-Re-fit the best pipeline (trained from subsample of AutoML data) on entirety of training data. (This step is optional. By no means is it required in your workflow.)
+## Step 8: Evaluate Model
 
-```C#
-private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult)
-{
-    RunDetail<RegressionMetrics> best = experimentResult.BestRun;
-    return best.Estimator.Fit(TrainDataView);
-}
-```
-
-## Step 9: Evaluate Model
-
-Evaluate the quality of the re-fit model on a test dataset that was not used in training (`taxi-fare-test.csv`).
+Evaluate the quality of the model on a test dataset that was not used in training (`taxi-fare-test.csv`).
 
 ```C#
 IDataView predictions = model.Transform(TestDataView);
 var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
 ```
 
-## Step 10: Make Predictions
+## Step 9: Make Predictions
 
 Using the trained model, use the `Predict()` API to predict the fare amount for specified trip:
 
@@ -138,4 +124,20 @@ var predictedResult = predEngine.Predict(taxiTripSample);
 Console.WriteLine($"**********************************************************************");
 Console.WriteLine($"Predicted fare: {predictedResult.FareAmount:0.####}, actual fare: 15.5");
 Console.WriteLine($"**********************************************************************");
+```
+
+## Step 10: Re-fit Best Pipeline
+
+Re-fit best pipeline on train and test data, to produce a model that is trained on as much data as is available. This is the final model that can be deployed to production.
+
+```C#
+private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult,
+    ColumnInferenceResults columnInference)
+{
+    ConsoleHelper.ConsoleWriteHeader("=============== Re-fitting best pipeline ===============");
+    var textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
+    var combinedDataView = textLoader.Load(new MultiFileSource(TrainDataPath, TestDataPath));
+    RunDetail<RegressionMetrics> bestRun = experimentResult.BestRun;
+    return bestRun.Estimator.Fit(combinedDataView);
+}
 ```
