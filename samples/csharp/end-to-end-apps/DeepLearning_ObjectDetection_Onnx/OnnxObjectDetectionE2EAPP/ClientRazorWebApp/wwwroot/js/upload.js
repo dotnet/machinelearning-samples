@@ -1,4 +1,4 @@
-var serviceUrl = 'http://localhost:5000/api/ObjectDetection/IdentifyObjects';
+var serviceUrl = 'http://localhost:53926/api/ObjectDetection/IdentifyObjects';
 var form = document.querySelector('form');
 
 form.addEventListener('submit', e => {
@@ -31,6 +31,5 @@ form.addEventListener('submit', e => {
 
           return response;
         });
-
 
 });
