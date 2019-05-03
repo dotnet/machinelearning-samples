@@ -400,7 +400,7 @@ namespace AdvancedTaxiFarePrediction
                 pl.gver(out var verText);
                 Console.WriteLine("PLplot version " + verText);
 
-            } // the pl object is disposed here
+            } // The pl object is disposed here
 
             // Open Chart File In Microsoft Photos App (Or default app, like browser for .svg)
 
