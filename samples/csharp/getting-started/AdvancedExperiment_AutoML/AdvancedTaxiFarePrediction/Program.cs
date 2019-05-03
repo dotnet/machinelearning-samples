@@ -340,7 +340,7 @@ namespace AdvancedTaxiFarePrediction
                     x[0] = testData[i].FareAmount;
                     y[0] = FarePrediction.FareAmount;
 
-                    //Paint a dot
+                    // Paint a dot
                     pl.poin(x, y, code);
 
                     xTotal += x[0];
