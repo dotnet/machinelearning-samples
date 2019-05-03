@@ -40,7 +40,7 @@ ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto(
     .Execute(trainingDataView, progressHandler: new BinaryExperimentProgressHandler());
 ```
 
-## 3. Evaluate Model
+## Step 3: Evaluate Model
 
 Grab the best model produced by the AutoML experiment
 
@@ -57,7 +57,7 @@ var predictions = trainedModel.Transform(testDataView);
 var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(predictions, scoreColumnName: "Score");
 ```
 
-## 4. Make Predictions
+## Step 4: Make Predictions
 
 Using the trained model, call the `Predict()` API to predict the sentiment for new sample text `sampleStatement`:
 
