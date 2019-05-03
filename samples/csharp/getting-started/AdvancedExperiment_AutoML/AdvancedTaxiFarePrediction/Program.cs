@@ -296,7 +296,7 @@ namespace AdvancedTaxiFarePrediction
                 // Initialize plplot
                 pl.init();
 
-                // set axis limits
+                // Set axis limits
                 const int xMinLimit = 0;
                 const int xMaxLimit = 35; //Rides larger than $35 are not shown in the chart
                 const int yMinLimit = 0;
