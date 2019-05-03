@@ -112,13 +112,13 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\MulticlassClassification_mnist\MulticlassClassification_mnist.sln'
 
-- phase: ShampooSalesSpikeAndChangeDetection
+- phase: SalesSpikeAndChangeDetection
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build Shampoo Sales spike and change Detection (Time Series)
+    displayName: Build Sales spike and change Detection (Anomaly Detection)
     inputs:
-      projects: '.\samples\csharp\getting-started\SpikeDetection_ShampooSales\ShampooSales.sln'
+      projects: '.\samples\csharp\getting-started\AnomalyDetection_Sales\SpikeDetection.sln'
 
 - phase: PowerConsumptionAnomalyDetection
   queue: Hosted VS2017
@@ -136,10 +136,10 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
 
-- phase: ShampooSalesSpikeChangeDetectionE2E
+- phase: SalesSpikeChangeDetectionE2E
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build Shampoo Sales spike and change Detection E2E(Time Series)
+    displayName: Build Sales spike and change Detection E2E(Anomaly Detection)
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\SpikeDetection-ShampooSales-WinForms\ShampooSalesSpikeDetectionConsole.sln'
+      projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-Sales\SpikeDetectionTemporaryApp.sln'

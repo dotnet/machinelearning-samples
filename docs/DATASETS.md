@@ -21,6 +21,7 @@ The datasets are provided under the original terms that .NET FOUNDATION received
 |  WikiMedia photos  |  [Original](https://commons.wikimedia.org/wiki/Category:Images)  |   [Processed](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API/tree/features/dynamicApi/src/ImageClassification/assets/inputs/images)   |   [MLNETTensorFlowScoringv06API ](https://github.com/CESARDELATORRE/MLNETTensorFlowScoringv06API)    |  APPROVED |
 |  SMS Spam Collection Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection)  |   [Processed](http://TBD)   |   [Spam Filter TBD](http://TBD)    |  PENDING until de-identify, cleaned-up |
 |  Heart Disease Data Set  |  [Original](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection/HeartDiseaseDetection/Data)   |   [Heart Disease Detection](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection)    |  Approved |
+|  Product Sales Data Set  |  sample data created  |   [Processed](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/AnomalyDetection_Sales/SpikeDetection/Data)   |   [Sales Spike Detection](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/AnomalyDetection_Sales)    |  Approved |
 
 The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
 
@@ -253,4 +254,29 @@ Send us a message to talmeida ufscar.br or jmgomezh yahoo.es in case you make us
 >3. University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D. 
 >4. V.A. Medical Center, Long Beach and Cleveland Clinic Foundation: Robert Detrano, M.D., Ph.D.
 >
+
+
+### Product Sales Dataset
+>we have created sample dataset for Product sales that looks like below.
+>
+>**Product Sales DataSet:**
+>
+>| Month  | ProductSales |
+>|--------|--------------|
+>| 1-Jan  | 271          |
+>| 2-Jan  | 150.9        |
+>| .....  | .....        |
+>| 1-Feb  | 199.3        |
+>| ...    | ....         |
+>
+>
+>The Product Sales dataset is based on the dataset “Shampoo Sales Over a Three Year Period” originally sourced from DataMarket and >provided by Time Series Data Library (TSDL), created by Rob Hyndman. 
+>
+>“Shampoo Sales Over a Three Year Period” Dataset Licensed Under the DataMarket Default Open License:
+>
+>License
+>You are allowed to copy and redistribute the data as long as you clearly indicate the data provider and DataMarket as the original >source.
+>
+>License summary
+>You may copy and redistribute the data. You may make derivative works from the data. You may use the data for commercial purposes. You >may not sublicence the data when redistributing it. You may not redistribute the data under a different license. Source attribution on >any use of this data: Must refer source.
 

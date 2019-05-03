@@ -6,17 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\common\MLModelEngine.cs" Link="Common\MLModelEngine.cs" />
-    <Compile Include="..\..\..\..\common\ObjectPool.cs" Link="Common\ObjectPool.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Common\" />
+    <Compile Remove="Common\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <None Remove="Common\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonHelper\CommonHelpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
