@@ -4,7 +4,7 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.0.0         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Product Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
-![Alt Text](./SpikeDetection.WinForms/images/productsales.gif)
+![Alt Text](./SpikeDetectionE2EApp/SpikeDetection.WinForms/images/productsales.gif)
 
 ## Overview
 Product Sales Spike Detection is a simple application which builds and consumes time series anomaly detection models to detect [spikes](#spike-detection) and [change points](#change-point-detection) in product sales.
