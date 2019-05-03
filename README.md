@@ -11,7 +11,7 @@ There are two types of samples/apps in the repo:
 
 * End-End apps ![](https://github.com/dotnet/machinelearning-samples/raw/master/images/app-type-e2e.png) : Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
 
-The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following table:
+The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following tables:
 
 <table align="middle" width=100%>  
   <tr>
@@ -69,18 +69,26 @@ The official ML.NET samples are divided in multiple categories depending on the 
      <td></td>
   </tr> 
   <tr>
-    <td align="middle" colspan="3">Deep Learning</td>
+    <td align="middle" colspan="3">Computer Vision</td>
   </tr>
   <tr>
     <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow model scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
     <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow Estimator)<br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
     <td align="middle"><img src="images/object-detection.png" alt="Object Detection chart"><br><br><b>Object Detection<br>    (ONNX model scoring)<br><a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
   </tr> 
+
+</table>
+
+<br>
+<br>
+<br>
+
+<table>
   <tr>
     <td align="middle" colspan="3">Cross Cutting concerns</td>
   </tr>
   <tr>
-  <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
+  <td align="middle"><img src="images/web.png" alt="web image" ><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="Getting started icon"><b></td>
   
   <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using Database Sample</b><br>Coming soon</td>
   <td align="middle"><img src="images/generic-icon.PNG" alt="TBD chart"><br><b>Using very large sets</b><br>Coming soon</td>

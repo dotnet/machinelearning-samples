@@ -20,7 +20,7 @@ From command-prompt (either PowerShell, Bash or CMD) move to the 'Sentiment Anal
 Now run the following ML.NET CLI command:
 
 ```console
-> mlnet new --ml-task binary-classification --dataset "../SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv" --label-column-name Label --max-exploration-time 90
+> mlnet auto-train --task binary-classification --dataset "../SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv" --label-column-name Label --max-exploration-time 90
 ```
 
 You will get a similar command execution like the following:
