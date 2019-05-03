@@ -74,6 +74,7 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static ColumnInferenceResults InferColumns(MLContext mlContext)
         {
+            ConsoleHelper.ConsoleWriteHeader("=============== Inferring columns in dataset ===============");
             ColumnInferenceResults columnInference = mlContext.Auto().InferColumns(TrainDataPath, LabelColumnName, groupColumns: false);
             ConsoleHelper.Print(columnInference);
             return columnInference;
@@ -122,13 +123,13 @@ namespace AdvancedTaxiFarePrediction
 
             // STEP 7: Run AutoML regression experiment
             var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
-            Console.WriteLine("=============== Training the model ===============");
+            ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML regression experiment...");
             var stopwatch = Stopwatch.StartNew();
             // Cancel experiment after the user presses any key
             CancelExperimentAfterAnyKeyPress(cts);
             ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainSmallDataView, columnInformation, preFeaturizer, progressHandler);
-            Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds");
+            Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds{Environment.NewLine}");
 
             // Print top models found by AutoML
             PrintTopModels(experimentResult);
@@ -173,7 +174,7 @@ namespace AdvancedTaxiFarePrediction
             // Get top few runs ranked by root mean squared error
             var topRuns = experimentResult.RunDetails.OrderBy(r => r.ValidationMetrics.RootMeanSquaredError).Take(3);
 
-            Console.WriteLine($"Top models ranked by root mean squared error --");
+            Console.WriteLine("Top models ranked by root mean squared error --");
             ConsoleHelper.PrintRegressionMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
@@ -196,7 +197,7 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static void EvaluateModel(MLContext mlContext, ITransformer model, string trainerName)
         {
-            Console.WriteLine("===== Evaluating model's accuracy with test data =====");
+            ConsoleHelper.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
             IDataView predictions = model.Transform(TestDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             ConsoleHelper.PrintRegressionMetrics(trainerName, metrics);
@@ -207,6 +208,7 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static void SaveModel(MLContext mlContext, ITransformer model)
         {
+            ConsoleHelper.ConsoleWriteHeader("=============== Saving the model ===============");
             mlContext.Model.Save(model, TrainSmallDataView.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
         }
@@ -223,6 +225,8 @@ namespace AdvancedTaxiFarePrediction
 
         private static void TestSinglePrediction(MLContext mlContext)
         {
+            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+
             //Sample: 
             //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
             //VTS,1,1,1140,3.75,CRD,15.5

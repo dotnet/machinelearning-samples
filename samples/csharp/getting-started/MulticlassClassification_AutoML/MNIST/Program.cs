@@ -63,22 +63,23 @@ namespace MNIST
                 var progressHandler = new MulticlassExperimentProgressHandler();
 
                 // STEP 3: Run an AutoML multiclass classification experiment
-                Console.WriteLine("=============== Training the model ===============");
+                ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
                 ExperimentResult<MulticlassClassificationMetrics> experimentResult = mlContext.Auto()
                     .CreateMulticlassClassificationExperiment(ExperimentTime)
                     .Execute(trainData, "Number", progressHandler: progressHandler);
 
+                // Print top models found by AutoML
+                Console.WriteLine();
+                PrintTopModels(experimentResult);
+
                 // STEP 4: Evaluate the model and print metrics
-                Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+                ConsoleHelper.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
                 RunDetail<MulticlassClassificationMetrics> bestRun = experimentResult.BestRun;
                 ITransformer trainedModel = bestRun.Model;
                 var predictions = trainedModel.Transform(testData);
                 var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName: "Number", scoreColumnName: "Score");
                 ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
-
-                // Print top models found by AutoML
-                PrintTopModels(experimentResult);
 
                 // STEP 5: Save/persist the trained model to a .ZIP file
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
@@ -109,7 +110,7 @@ namespace MNIST
             // Get top few runs ranked by accuracy
             var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.MicroAccuracy).Take(3);
 
-            Console.WriteLine($"Top models ranked by accuracy --");
+            Console.WriteLine("Top models ranked by accuracy --");
             ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
@@ -120,6 +121,8 @@ namespace MNIST
 
         private static void TestSomePredictions(MLContext mlContext)
         {
+            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine related to the loaded trained model

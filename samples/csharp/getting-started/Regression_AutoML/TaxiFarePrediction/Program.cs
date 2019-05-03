@@ -60,23 +60,24 @@ namespace TaxiFarePrediction
             var progressHandler = new RegressionExperimentProgressHandler();
 
             // STEP 4: Run AutoML regression experiment
-            Console.WriteLine("=============== Training the model ===============");
+            ConsoleHelper.ConsoleWriteHeader("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
             ExperimentResult<RegressionMetrics> experimentResult = mlContext.Auto()
                 .CreateRegressionExperiment(ExperimentTime)
                 .Execute(trainingDataView, LabelColumnName, progressHandler: progressHandler);
 
+            // Print top models found by AutoML
+            Console.WriteLine();
+            PrintTopModels(experimentResult);
+
             // STEP 5: Evaluate the model and print metrics
-            Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
+            ConsoleHelper.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
             RunDetail<RegressionMetrics> best = experimentResult.BestRun;
             ITransformer trainedModel = best.Model;
             IDataView predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             // Print metrics from top model
             ConsoleHelper.PrintRegressionMetrics(best.TrainerName, metrics);
-
-            // Print top models found by AutoML
-            PrintTopModels(experimentResult);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
@@ -88,6 +89,8 @@ namespace TaxiFarePrediction
 
         private static void TestSinglePrediction(MLContext mlContext)
         {
+            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+
             //Sample: 
             //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
             //VTS,1,1,1140,3.75,CRD,15.5
@@ -289,7 +292,7 @@ namespace TaxiFarePrediction
             // Get top few runs ranked by R-Squared
             var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.RSquared).Take(3);
 
-            Console.WriteLine($"Top models ranked by R-Squared --");
+            Console.WriteLine("Top models ranked by R-Squared --");
             ConsoleHelper.PrintRegressionMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {

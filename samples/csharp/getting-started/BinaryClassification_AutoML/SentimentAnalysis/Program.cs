@@ -29,7 +29,6 @@ namespace SentimentAnalysis
 
             // Create, train, evaluate and save a model
             BuildTrainEvaluateAndSaveModel(mlContext);
-            ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
             // Make a single test prediction loading the model from .ZIP file
             TestSinglePrediction(mlContext);
@@ -52,21 +51,23 @@ namespace SentimentAnalysis
             var progressHandler = new BinaryExperimentProgressHandler();
 
             // STEP 4: Run AutoML binary classification experiment
+            ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
             ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto()
                 .CreateBinaryClassificationExperiment(ExperimentTime)
                 .Execute(trainingDataView, progressHandler: progressHandler);
 
+            // Print top models found by AutoML
+            Console.WriteLine();
+            PrintTopModels(experimentResult);
+
             // STEP 5: Evaluate the model and print metrics
-            Console.WriteLine("===== Evaluating model's accuracy with test data =====");
+            ConsoleHelper.ConsoleWriteHeader("=============== Evaluating model's accuracy with test data ===============");
             RunDetail<BinaryClassificationMetrics> bestRun = experimentResult.BestRun;
             ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, scoreColumnName: "Score");
             ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName, metrics);
-
-            // Print top models found by AutoML
-            PrintTopModels(experimentResult);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
@@ -78,7 +79,8 @@ namespace SentimentAnalysis
 
         // (OPTIONAL) Try/test a single prediction by loading the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
-        {         
+        {
+            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
             
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);       
@@ -113,7 +115,7 @@ namespace SentimentAnalysis
             // Get top few runs ranked by accuracy
             var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.Accuracy).Take(3);
 
-            Console.WriteLine($"Top models ranked by accuracy --");
+            Console.WriteLine("Top models ranked by accuracy --");
             ConsoleHelper.PrintBinaryClassificationMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
