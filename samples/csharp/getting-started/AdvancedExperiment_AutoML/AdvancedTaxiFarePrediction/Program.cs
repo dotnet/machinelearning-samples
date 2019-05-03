@@ -172,7 +172,9 @@ namespace AdvancedTaxiFarePrediction
         private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
         {
             // Get top few runs ranked by root mean squared error
-            var topRuns = experimentResult.RunDetails.OrderBy(r => r.ValidationMetrics.RootMeanSquaredError).Take(3);
+            var topRuns = experimentResult.RunDetails
+                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.RootMeanSquaredError))
+                .OrderBy(r => r.ValidationMetrics.RootMeanSquaredError).Take(3);
 
             Console.WriteLine("Top models ranked by root mean squared error --");
             ConsoleHelper.PrintRegressionMetricsHeader();

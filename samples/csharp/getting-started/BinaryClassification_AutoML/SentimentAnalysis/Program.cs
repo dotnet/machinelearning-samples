@@ -113,7 +113,9 @@ namespace SentimentAnalysis
         private static void PrintTopModels(ExperimentResult<BinaryClassificationMetrics> experimentResult)
         {
             // Get top few runs ranked by accuracy
-            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.Accuracy).Take(3);
+            var topRuns = experimentResult.RunDetails
+                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.Accuracy))
+                .OrderByDescending(r => r.ValidationMetrics.Accuracy).Take(3);
 
             Console.WriteLine("Top models ranked by accuracy --");
             ConsoleHelper.PrintBinaryClassificationMetricsHeader();

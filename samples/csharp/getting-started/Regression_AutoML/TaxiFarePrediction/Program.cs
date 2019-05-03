@@ -290,7 +290,9 @@ namespace TaxiFarePrediction
         private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
         {
             // Get top few runs ranked by R-Squared
-            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.RSquared).Take(3);
+            var topRuns = experimentResult.RunDetails
+                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.RSquared))
+                .OrderByDescending(r => r.ValidationMetrics.RSquared).Take(3);
 
             Console.WriteLine("Top models ranked by R-Squared --");
             ConsoleHelper.PrintRegressionMetricsHeader();

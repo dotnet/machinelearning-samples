@@ -108,7 +108,9 @@ namespace MNIST
         private static void PrintTopModels(ExperimentResult<MulticlassClassificationMetrics> experimentResult)
         {
             // Get top few runs ranked by accuracy
-            var topRuns = experimentResult.RunDetails.OrderByDescending(r => r.ValidationMetrics.MicroAccuracy).Take(3);
+            var topRuns = experimentResult.RunDetails
+                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.MicroAccuracy))
+                .OrderByDescending(r => r.ValidationMetrics.MicroAccuracy).Take(3);
 
             Console.WriteLine("Top models ranked by accuracy --");
             ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
