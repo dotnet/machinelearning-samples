@@ -19,4 +19,4 @@ http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits
 
 Citation Request:
 
-Please refer to the Machine Learning Repository's citation policy
+Please refer to the Machine Learning Repository's citation policy 
