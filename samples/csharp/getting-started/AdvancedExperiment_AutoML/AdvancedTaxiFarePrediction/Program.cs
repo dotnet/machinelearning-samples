@@ -298,7 +298,7 @@ namespace AdvancedTaxiFarePrediction
 
                 // Set axis limits
                 const int xMinLimit = 0;
-                const int xMaxLimit = 35; //Rides larger than $35 are not shown in the chart
+                const int xMaxLimit = 35; // Rides larger than $35 are not shown in the chart
                 const int yMinLimit = 0;
                 const int yMaxLimit = 35;  //Rides larger than $35 are not shown in the chart
                 pl.env(xMinLimit, xMaxLimit, yMinLimit, yMaxLimit, AxesScale.Independent, AxisBox.BoxTicksLabelsAxes);
