@@ -11,7 +11,7 @@
         internal static readonly InputData MNIST2 = new InputData()
         {
             PixelValues = new float[] { 0, 0, 1, 8, 15, 10, 0, 0, 0, 3, 13, 15, 14, 14, 0, 0, 0, 5, 10, 0, 10, 12, 0, 0, 0, 0, 3, 5, 15, 10, 2, 0, 0, 0, 16, 16, 16, 16, 12, 0, 0, 1, 8, 12, 14, 8, 3, 0, 0, 0, 0, 10, 13, 0, 0, 0, 0, 0, 0, 11, 9, 0, 0, 0 }
-        };//num 7
+        }; //num 7
 
         internal static readonly InputData MNIST3 = new InputData()
         {
