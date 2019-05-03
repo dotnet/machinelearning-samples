@@ -1,5 +1,5 @@
-const serviceUrl = 'http://localhost:5000/api/ObjectDetection/IdentifyObjects';
-const form = document.querySelector('form');
+var serviceUrl = 'http://localhost:5000/api/ObjectDetection/IdentifyObjects';
+var form = document.querySelector('form');
 
 form.addEventListener('submit', e => {
     e.preventDefault();
