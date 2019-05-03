@@ -396,7 +396,7 @@ namespace AdvancedTaxiFarePrediction
                 // end page (writes output to disk)
                 pl.eop();
 
-                // output version of PLplot
+                // Output version of PLplot
                 pl.gver(out var verText);
                 Console.WriteLine("PLplot version " + verText);
 
