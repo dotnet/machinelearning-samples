@@ -11,25 +11,18 @@ form.addEventListener('submit', e => {
 
     formData.append('imageFile', files[0]);
 
-    // If multiple files uploaded at the same time:
-    //for (let i = 0; i < files.length; i++) {
-    //    let file = files[i];
-    //
-    //    formData.append('imageFile[]', file);
-    //}
-   
-
-    fetch(serviceUrl, {
-        method: 'POST',
-        body: formData
-    }).then((resp) => resp.json())
-      .then(function (response) {
-          console.info('Response', response);
-          console.log('Response', response);
-                    
-          document.getElementById('divPrediction').innerHTML = "Detected Objects are: " + response;
-
-          return response;
-        });
+    // Sending the image data to Server
+    $.ajax({
+        type: 'POST',
+        url: serviceUrl,
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            console.info('Response', data);
+            console.log('Response', data);
+            document.getElementById('divPrediction').innerHTML = "Detected Objects are: " + data;            
+                }
+    });
 
 });
