@@ -176,19 +176,11 @@ phases:
     inputs:
       projects: '.\samples\csharp\end-to-end-apps\ScalableMLModelOnWebAPI-IntegrationPkg\ScalableMLModelOnWebAPI-IntegrationPkg.sln'
 
-- phase: ScalableSentimentAnalysisBlazorWebApp
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build ScalableSentimentAnalysisBlazorWebApp
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\ScalableSentimentAnalysisBlazorWebApp\BlazorSentimentAnalysis.sln'
-
 - phase: DatabaseIntegration
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Database Integration
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\DatabaseIntegration\DatabaseIntegration.sln'
+      projects: '.\samples\csharp\getting-started\DatabaseIntegration\DatabaseIntegration.sln'
 
