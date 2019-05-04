@@ -108,7 +108,7 @@ These additional technologies for automating model generation are in PREVIEW sta
 
 The ML.NET CLI (command-line interface) is a tool you can run on any command-prompt (Windows, Mac or Linux) for generating good quality ML.NET models based on training datasets you provide. In addition, it also generates sample C# code to run/score that model plus the C# code that was used to create/train it so you can research what algorithm and settings it is using.
 
-| CLI (Command Line Interface)                   |
+| CLI (Command Line Interface) samples                  |
 |----------------------------------|
 | [Binary Classification sample](/samples/CLI/BinaryClassification_CLI)   |
 | [MultiClass Classification sample](/samples/CLI/MulticlassClassification_CLI) |
@@ -117,14 +117,14 @@ The ML.NET CLI (command-line interface) is a tool you can run on any command-pro
 
 ## AutoML API samples: (Preview state)
 
-ML.NET AutoML API is basically a set of libraries packaged as a NuGet package you can use from your .NET code. AutoML eliminates the task of selecting different algorithms, hyperparameters. AutoML will intelligently generate many combinations of algorithms and hyperparameters and will find the "best models" for you.
+ML.NET AutoML API is basically a set of libraries packaged as a NuGet package you can use from your .NET code. AutoML eliminates the task of selecting different algorithms, hyperparameters. AutoML will intelligently generate many combinations of algorithms and hyperparameters and will find high quality models for you.
 
-| AutoML API                    |
+| AutoML API samples                    |
 |----------------------------------|
 | [Binary Classification sample](/samples/csharp/getting-started/BinaryClassification_AutoML)   |
 | [MultiClass Classification sample](/samples/csharp/getting-started/MulticlassClassification_AutoML) |
 | [Regression sample](/samples/csharp/getting-started/Regression_AutoML)                |
-| [Cross-cutting topics sample](/samples/csharp/getting-started/Crosscutting_AutoML)                |
+| [Advanced experiment sample](/samples/csharp/getting-started/AdvancedExperiment_AutoML)                |
 
 
 -------------------------------------------------------
