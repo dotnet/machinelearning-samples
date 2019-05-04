@@ -39,7 +39,7 @@ namespace OnnxObjectDetectionWebAPI
             // If set to be used as Singleton is very important to use critical sections in the code
             // because the 'Predict()' method is not reentrant. 
             //
-            services.AddSingleton<IOnnxModelScorer, OnnxModelScorer>();
+            services.AddTransient<IOnnxModelScorer, OnnxModelScorer>();
 
             // Another choice is to create the TFModelScorer as ServiceLifetime.Scoped or .AddScoped() when adding to services
             // In this case you don't need a critical section but every Http request will need to create a prediction function
