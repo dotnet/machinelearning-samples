@@ -99,7 +99,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
 # Automate ML.NET models generation (Preview state)
 
 The previous samples show you how to use the ML.NET API 1.0 (GA since May 2019). 
-However, we're also working on simplifying ML.NET usage with additional technologies that automate the creation of the model for you so you don't need to write the code by yourself to train a model, you simply need to provide your datasets, the model and the code for running the model will be generated for you.
+
+However, we're also working on simplifying ML.NET usage with additional technologies that automate the creation of the model for you so you don't need to write the code by yourself to train a model, you simply need to provide your datasets. The "best" model and the code for running it will be generated for you.
 
 These additional technologies for automating model generation are in PREVIEW state and currently only support *Binary-Classification, Multiclass Classification and Regression*. In upcoming versions we'll be supporting additional ML Tasks such as *Recommendations, Anomaly Detection, Clustering, etc.*.
 
