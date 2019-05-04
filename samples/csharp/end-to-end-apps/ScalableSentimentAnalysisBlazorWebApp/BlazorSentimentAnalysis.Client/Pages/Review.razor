@@ -2,9 +2,8 @@
 @inject HttpClient Http
 
 <h2>Live Sentiment</h2>
-<p>Write what you think about stuff in general.</p>
 
-<p><textarea oninput=@UpdateScoreAsync cols="45"></textarea></p>
+<p><textarea oninput=@UpdateScoreAsync cols="45" placeholder="Type any text like a short product review"></textarea></p>
 
 <HappinessScale Value=@happiness />
 
@@ -17,6 +16,9 @@
 
         //Make a real call to Sentiment service
         happiness = await PredictSentimentAsync(targetText);
+
+        // See issue https://github.com/aspnet/Blazor/issues/519.  This is needed otherwise the binding to happiness isn't updated after the async call for prediction.
+        StateHasChanged();
     }
 
     private async Task<float> PredictSentimentAsync(string targetText)
@@ -28,14 +30,4 @@
         return percentage;
     }
 
-    // Sample test without ML.NET model
-    //
-    //void UpdateScore(UIChangeEventArgs evt)
-    //{
-    //    string targetText = (string)evt.Value;
-
-    //    //Random percentage
-    //    Random random = new Random();
-    //    happiness = random.Next(0, 100);
-    //}
 }
