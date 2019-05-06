@@ -13,6 +13,7 @@ At the end, developers can generate code for training and consuming this model i
 
 **Which Machine Learning scenario is right for me?**
 
+Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. The table below describes a brief description of these scenarios along with the machine learning tasks associated with them. 
 
 
 
