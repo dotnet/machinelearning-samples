@@ -15,7 +15,7 @@ At the end, developers can generate code for training and consuming this model i
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. The table below describes a brief description of these scenarios along with the machine learning tasks associated with them. 
 
-Scenario             | Scenario Description                                                         | Machine Learning Task       
+Scenario             | Scenario Description                                                         | ML Task     
 ---------------------| -----------------------------------------------------------------------------| ---------------------------
 Price Prediction     | Predict the price for a particular item                                      | Regression                 |
 Sales Forecast       | Forecast the sales for items this month                                      | Regression                 |
