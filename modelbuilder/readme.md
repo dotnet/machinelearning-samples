@@ -73,6 +73,23 @@ Issue Classification | Tag different issues or tickets filed into particular are
     ProductSales
     </td>
   </tr> 
+    <tr>
+    <td align="middle">
+    Sentiment Analysis  
+    </td>
+    <td align="middle">
+    Determine the sentiment for customer reviews as positive of negative        
+    </td>
+    <td align="middle">
+    Classification 
+    </td>
+    <td align="middle">
+      <a href="https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv">Link</a>
+    </td>
+    <td align="middle">
+    Label
+    </td>
+  </tr> 
  </table>
                      
 ## Train
