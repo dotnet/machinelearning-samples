@@ -9,6 +9,16 @@ Model Builder leverages best in class automated machine learning to evaluate dif
 
 At the end, developers can generate code for training and consuming this model in their applications.
 
+## Scenario 
+
+**Which Machine Learning scenario is right for me?**
+
+
+
+
+
+
+
 ## Train
 
 **How long should I train for?**
