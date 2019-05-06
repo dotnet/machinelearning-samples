@@ -15,7 +15,7 @@ At the end, developers can generate code for training and consuming this model i
 
 Model Builder uses AutoML to explore multiple models to find you the best performing model. 
 
-In general longer training periods will allow AutoML to explore more models with multiple trainers and settings. The table below summarizes the average time taken to get good performance for our internal datasets we tested with. 
+In general longer training periods will allow AutoML to explore more models with multiple trainers and settings. The table below summarizes the average time taken to get good performance for the datasets we tested with. 
 
 Dataset Size  | Dataset Type       | Avg. Time to train  
 ------------- | ------------------ | --------------
