@@ -154,6 +154,9 @@ You can use these datasets to get started with Model Builder
   </tr> 
  </table>
                      
+By default, Model Builder will take all but the **column to predict (Label)** as input for training the model. 
+
+The Label is what you are predicting,  The rest of the columns are Features, which are attributes that help predict the Label. Limiting to most relevant attributes or features will result in providing you the best performance for your models. 
 
 ## Train
 
@@ -174,6 +177,7 @@ Dataset Size  | Dataset Type       | Avg. Time to train
 The exact time to train is a function of a few parameters e.g. the number of features or columns being used to predict, the type of columns i.e. text vs. numeric and the type of machine learning task. 
 
 We have tested Model Builder with even 1TB dataset but building a high quality model for that size of dataset can take upto four days. 
+
 
 ## Evaluate 
 
