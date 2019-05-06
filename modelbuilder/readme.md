@@ -11,12 +11,12 @@ Model Builder leverages best in class automated machine learning (AutoML) to eva
 At the end, developers can generate code for training and consuming this model in their applications. 
 
 This readme provides details on each Model Builder Screen.
-* <a href="https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Scenario">Scenario</a>
-* [Data](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Data)
-* [Train](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Train)
-* [Evaluate](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Evaluate)
-* [Improve](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Improve)
-* [File Issues](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Issues)
+* <a href="https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Scenario">Scenario</a>
+* [Data](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Data)
+* [Train](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Train)
+* [Evaluate](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Evaluate)
+* [Improve](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Improve)
+* [File Issues](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Issues)
 
 ## Scenario 
 
