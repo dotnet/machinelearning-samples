@@ -14,7 +14,7 @@ At the end, developers can generate code for training and consuming this model i
 * [Train](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Train)
 * [Evaluate](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Evaluate)
 * [Improve](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Improve)
-* [File Issues and Bugs](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#File Issues)
+* [File Issues](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Issues)
 
 ## Scenario 
 
@@ -238,7 +238,7 @@ For [more details on understanding model evaluation metrics please refer to this
 There are a few things you can try to 
 
 
-## File Issues
+## Issues
 Please file any issues you observer with the Model Builder extension @ the https://github.com/dotnet/machinelearning repo
 
 
