@@ -217,7 +217,7 @@ Another important metric for Multi-class classification is Macro-accuracy, simil
 
 * Macro-accuracy -- for an average team, how often is an incoming ticket correct for their team?
 
-<img src="assets/multi_classification-metrics.png">
+<img src="assets/multi_classification-metrics.png" width=294 height=181>
 
 For [more details on understanding model evaluation metrics please refer to this guide](https://aka.ms/mlnet-metrics) which provides details on each of these metrics.
 
