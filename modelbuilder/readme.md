@@ -14,6 +14,20 @@ At the end, developers can generate code for training and consuming this model i
 **Which Machine Learning scenario is right for me?**
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. 
+
+If you are trying to predict a value e.g. price of a car or how many units of this product will be sold these are examples of regression ML tasks.
+
+If you are trying to classify data into two or multiple categories those are examples of classification machine learning tasks e.g.
+* If a sentiment is positive or negative is an example of binary classification
+* If a sentiment is positive, negative or nuetral (2 or more categories) is an example of multi-classification task 
+
+Model Builder currently comes with two scenario templates which provide an example each of regression (i.e. Price Prediction) and binary-classification (i.e. Sentiment Analysis).
+
+The custom scenario template allows you to pick the ML task during the train phase hence allowing you to build your own ML scenario.
+
+Model Builder currently supports Regression, Binary-Classification and Multi-Classification tasks. 
+
+Pick the scenario template which makes the most sense for you!
       
 ## Data
 
