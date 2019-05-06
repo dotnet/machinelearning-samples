@@ -11,14 +11,13 @@ At the end, developers can generate code for training and consuming this model i
 
 ## Scenario 
 
-**Which Machine Learning scenario is right for me?**
+
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. The table below describes a brief description of these scenarios along with the machine learning tasks associated with them. 
 
 Scenario              | Scenario Description                    | Machine Learning Task      | Sample Dataset 
-----------------------| ----------------------------------------| ---------------------------|-------------------------- 
-Price Prediction      | Predict the price for a particular      | Regression                 |
-                      | order or transaction                    |                            | 
+--------------------- | --------------------------------------- | -------------------------- |-------------------------- 
+Price Prediction      | Predict the price for a particular item | Regression                 |
 Sales Forecast        | Forecast the sales for items this month | Regression                 |
 Sentiment Analysis    | Determine the sentiment for customer    | Binary Classification      |
                       | reviews as positive or negative         |                            |
@@ -29,7 +28,12 @@ Spam Detection        | Determine whether a particular email is | Binary Classif
 Fraud Detection       | Determine whether a particular          | Binary Classification      |
                       | transaction is fraud or not!            |                            |
 Issue Classification  | Tag different issues or tickets filed   | Multi-Class Classification |
-                        into particular area tags               |                            | 
+                      | into particular area tags               |                            | 
+
+
+
+
+**Which Machine Learning scenario is right for me?**
 
 ## Train
 
