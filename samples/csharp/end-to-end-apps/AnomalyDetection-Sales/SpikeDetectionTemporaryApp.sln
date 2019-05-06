@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeDetectionModelTrainer", "SpikeDetection.ModelTrainer\SpikeDetectionModelTrainer.csproj", "{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeDetectionModelTrainer", "SpikeDetectionE2EApp\SpikeDetection.ModelTrainer\SpikeDetectionModelTrainer.csproj", "{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Debug|x64.Build.0 = Debug|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Release|x64.ActiveCfg = Release|Any CPU
-		{C330911C-52DF-4ACF-9C62-4F933A0D6CAC}.Release|x64.Build.0 = Release|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Debug|x64.Build.0 = Debug|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{4A9F86CE-17DD-4488-83B8-8392C27C1E6C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

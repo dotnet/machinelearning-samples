@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
+| v1.0.0           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression | FastTreeTweedie Regression |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
@@ -20,6 +20,8 @@ This end-to-end sample app highlights the usage of ML.NET API by showing the fol
 The app is also using a SQL Server database for regular product catalog and orders info, as many typical web apps using SQL Server. In this case, since it is an example, it is, by default, using a localdb SQL database so there's no need to setup a real SQL Server. The localdb database will be created, along with sample populated data, the first time you run the web app.
 
 If you want to use a real SQL Server or Azure SQL Database, you just need to change the connection string in the app.
+
+When you run the app, it opens the webpage with a serach box says "Type a product". You can type for any product say "bottle". Then a list of products related to keyword "bottle" will show in autocomplete suggestions. Once you select any product then the sales forecast of that product will be shown as below.
 
 Here's a sample screenshot of the web app and one of the forecast predictions:
 

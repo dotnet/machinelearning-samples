@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientRazorWebApp", "OnnxObjectDetectionE2EAPP\ClientRazorWebApp\ClientRazorWebApp.csproj", "{0B8FB2BE-B72F-4EE9-930E-06483C0BC102}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnnxObjectDetectionWebAPI", "OnnxObjectDetectionE2EAPP\OnnxObjectDetectionWebAPI\OnnxObjectDetectionWebAPI.csproj", "{5A13B350-BAAF-4B50-8D3B-E005FB50A577}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B8FB2BE-B72F-4EE9-930E-06483C0BC102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B8FB2BE-B72F-4EE9-930E-06483C0BC102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B8FB2BE-B72F-4EE9-930E-06483C0BC102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B8FB2BE-B72F-4EE9-930E-06483C0BC102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A13B350-BAAF-4B50-8D3B-E005FB50A577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A13B350-BAAF-4B50-8D3B-E005FB50A577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A13B350-BAAF-4B50-8D3B-E005FB50A577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A13B350-BAAF-4B50-8D3B-E005FB50A577}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F4CBF1D-464D-4F31-942B-5F3F8117275E}
+	EndGlobalSection
+EndGlobal
