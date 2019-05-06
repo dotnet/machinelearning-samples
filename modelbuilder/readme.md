@@ -15,8 +15,8 @@ At the end, developers can generate code for training and consuming this model i
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. The table below describes a brief description of these scenarios along with the machine learning tasks associated with them. 
 
-Scenario             | Scenario Description                                                         | ML Task     
----------------------| -----------------------------------------------------------------------------| ---------------------------
+Scenario             | Scenario Description                                                         | ML Task                    |
+---------------------| -----------------------------------------------------------------------------| ---------------------------|
 Price Prediction     | Predict the price for a particular item                                      | Regression                 |
 Sales Forecast       | Forecast the sales for items this month                                      | Regression                 |
 Sentiment Analysis   | Determine the sentiment for customer reviews as positive of negative         | Binary Classification      |
@@ -24,6 +24,33 @@ Sentiment Analysis   | Determine the sentiment for customer reviews as positive,
 Spam Detection       | Determine whether a particular email is a scam or not                        | Binary Classification      |
 Fraud Detection      | Determine whether a particular transaction is fraud or not!                  | Binary Classfication       |      
 Issue Classification | Tag different issues or tickets filed into particular area tags              | Multi-Class Classification |
+
+
+<table align="middle" width=100%> 
+  <tr>
+    <td align="middle"> Scenario
+    </td>
+    <td align="middle"> Scenario Description 
+    </td>
+    <td align="middle"> ML Task 
+    </td>
+    <td align="middle"> Dataset 
+    </td>
+    <td align="middle"> Column to Predict (Label)
+    </td>
+  </tr>
+  <tr>
+    <td align="middle">
+    Price Prediction   
+    </td>
+    <td align="middle">
+    Predict the price for a particular item           
+    </td>
+    <td align="middle">
+    Regression    
+    </td>
+  </tr> 
+ </table>
                      
 ## Train
 
