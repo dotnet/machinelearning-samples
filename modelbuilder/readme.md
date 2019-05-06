@@ -136,6 +136,15 @@ Try out these datasets with Model Builder to get started!
   </tr> 
  </table>
                      
+## Data
+
+**How do I get sample datasets and learn more?**
+
+The table above in the scenario section provides a list of datasets across ML scenarios and tasks. 
+
+You can use these datasets to get started with Model Builder
+ 
+
 ## Train
 
 **How long should I train for?**
