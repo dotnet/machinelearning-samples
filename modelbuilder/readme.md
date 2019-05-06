@@ -22,7 +22,8 @@ Sales Forecast       | Forecast the sales for items this month                  
 Sentiment Analysis   | Determine the sentiment for customer reviews as positive of negative         | Binary Classification      |
 Sentiment Analysis   | Determine the sentiment for customer reviews as positive, negative or toxic  | Multi-Class Classification |
 Spam Detection       | Determine whether a particular email is a scam or not                        | Binary Classification      |
-Fraud Detection      | Determine whether a particular transaction is fraud or not!                  | Binary Classfication       |       Issue Classification | Tag different issues or tickets filed into particular area tags              | Multi-Class Classification |
+Fraud Detection      | Determine whether a particular transaction is fraud or not!                  | Binary Classfication       |      
+Issue Classification | Tag different issues or tickets filed into particular area tags              | Multi-Class Classification |
                      
 ## Train
 
