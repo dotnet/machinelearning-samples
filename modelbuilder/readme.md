@@ -20,7 +20,6 @@ Scenario             | Scenario Description                                     
 Price Prediction     | Predict the price for a particular item                                      | Regression                 |
 Sales Forecast       | Forecast the sales for items this month                                      | Regression                 |
 Sentiment Analysis   | Determine the sentiment for customer reviews as positive of negative         | Binary Classification      |
-Sentiment Analysis   | Determine the sentiment for customer reviews as positive, negative or toxic  | Multi-Class Classification |
 Spam Detection       | Determine whether a particular email is a scam or not                        | Binary Classification      |
 Fraud Detection      | Determine whether a particular transaction is fraud or not!                  | Binary Classfication       |      
 Issue Classification | Tag different issues or tickets filed into particular area tags              | Multi-Class Classification |
@@ -85,6 +84,40 @@ Issue Classification | Tag different issues or tickets filed into particular are
     </td>
     <td align="middle">
       <a href="https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv">Link</a>
+    </td>
+    <td align="middle">
+    Label
+    </td>
+  </tr> 
+  <tr>
+    <td align="middle">
+   Spam Detection 
+    </td>
+    <td align="middle">
+    Determine whether a particular email is a scam or not          
+    </td>
+    <td align="middle">
+    Classification 
+    </td>
+    <td align="middle">
+      <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip">Link</a>
+    </td>
+    <td align="middle">
+    Label
+    </td>
+  </tr> 
+    <tr>
+    <td align="middle">
+   Fraud Detection 
+    </td>
+    <td align="middle">
+     Determine whether a particular transaction is fraud or not!         
+    </td>
+    <td align="middle">
+    Classification 
+    </td>
+    <td align="middle">
+      <a href="https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/input/creditcardfraud-dataset.zip">Link</a>
     </td>
     <td align="middle">
     Label
