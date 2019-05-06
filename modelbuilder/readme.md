@@ -56,6 +56,23 @@ Issue Classification | Tag different issues or tickets filed into particular are
     fare_amount  
     </td>
   </tr> 
+  <tr>
+    <td align="middle">
+    Sales Forecast   
+    </td>
+    <td align="middle">
+    Forecast the sales for items this month          
+    </td>
+    <td align="middle">
+    Regression    
+    </td>
+    <td align="middle">
+      <a href="https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/AnomalyDetection_Sales/SpikeDetection/Data/product-sales.csv">Link</a>
+    </td>
+    <td align="middle">
+    ProductSales
+    </td>
+  </tr> 
  </table>
                      
 ## Train
