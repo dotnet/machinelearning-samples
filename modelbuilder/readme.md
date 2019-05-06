@@ -158,6 +158,8 @@ By default, Model Builder will take all but the **column to predict (Label)** as
 
 The Label is what you are predicting,  The rest of the columns are Features, which are attributes that help predict the Label. Limiting to most relevant attributes or features will result in providing you the best performance for your models. 
 
+We currently support *.tsv*, *.csv* and SQL as the data-types you can use as datasets for the Model Builder 
+
 ## Train
 
 **How long should I train for?**
