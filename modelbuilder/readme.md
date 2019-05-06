@@ -50,7 +50,7 @@ Issue Classification | Tag different issues or tickets filed into particular are
     Regression    
     </td>
     <td align="middle">
-    [Link](https://github.com/dotnet/machinelearning-samples/blob/master/datasets/taxi-fare-train.csv)  
+      <a href="https://github.com/dotnet/machinelearning-samples/blob/master/datasets/taxi-fare-train.csv">Link</a>
     </td>
     <td align="middle">
     fare_amount  
