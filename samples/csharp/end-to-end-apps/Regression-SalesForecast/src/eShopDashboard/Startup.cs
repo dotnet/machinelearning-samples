@@ -1,3 +1,4 @@
+using CommonHelpers;
 using eShopDashboard.Forecast;
 using eShopDashboard.Infrastructure.Data.Catalog;
 using eShopDashboard.Infrastructure.Data.Ordering;
@@ -11,8 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ML;
 using Serilog;
-
-using Common;
 
 namespace eShopDashboard
 {

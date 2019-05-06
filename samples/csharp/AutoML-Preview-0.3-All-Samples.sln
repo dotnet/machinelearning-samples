@@ -1,0 +1,56 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SentimentAnalysis.Solution", "SentimentAnalysis.Solution", "{1797162E-8E0C-4A8D-AD56-3303473C98FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaxiFarePrediction.Solution", "TaxiFarePrediction.Solution", "{FC0C477F-873D-4C30-ACE4-DB4CF4BCC7D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdvancedTaxiFarePrediction.Solution", "AdvancedTaxiFarePrediction.Solution", "{F2C6195A-CD8B-4C40-A816-4A05A22A5D0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MNIST.Solution", "MNIST.Solution", "{6AF99207-D4AD-4CCB-A156-2AFE92299635}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedTaxiFarePrediction", "getting-started\AdvancedExperiment_AutoML\AdvancedTaxiFarePrediction\AdvancedTaxiFarePrediction.csproj", "{2FCC93D1-AC44-4E45-85B4-6A8CD04B6B17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MNIST", "getting-started\MulticlassClassification_AutoML\MNIST\MNIST.csproj", "{E20E7264-1E2C-41E3-AEE1-4B96717E4C9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysis", "getting-started\BinaryClassification_AutoML\SentimentAnalysis\SentimentAnalysis.csproj", "{95C8A3E0-CBEC-4ADA-8094-77BF1780E1BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "getting-started\Regression_AutoML\TaxiFarePrediction\TaxiFarePrediction.csproj", "{58F9FDAE-62DB-41FB-8ABD-EDBA04579337}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FCC93D1-AC44-4E45-85B4-6A8CD04B6B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FCC93D1-AC44-4E45-85B4-6A8CD04B6B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FCC93D1-AC44-4E45-85B4-6A8CD04B6B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FCC93D1-AC44-4E45-85B4-6A8CD04B6B17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E20E7264-1E2C-41E3-AEE1-4B96717E4C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E20E7264-1E2C-41E3-AEE1-4B96717E4C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E20E7264-1E2C-41E3-AEE1-4B96717E4C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E20E7264-1E2C-41E3-AEE1-4B96717E4C9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95C8A3E0-CBEC-4ADA-8094-77BF1780E1BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95C8A3E0-CBEC-4ADA-8094-77BF1780E1BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95C8A3E0-CBEC-4ADA-8094-77BF1780E1BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95C8A3E0-CBEC-4ADA-8094-77BF1780E1BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F9FDAE-62DB-41FB-8ABD-EDBA04579337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F9FDAE-62DB-41FB-8ABD-EDBA04579337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F9FDAE-62DB-41FB-8ABD-EDBA04579337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F9FDAE-62DB-41FB-8ABD-EDBA04579337}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2FCC93D1-AC44-4E45-85B4-6A8CD04B6B17} = {F2C6195A-CD8B-4C40-A816-4A05A22A5D0E}
+		{E20E7264-1E2C-41E3-AEE1-4B96717E4C9F} = {6AF99207-D4AD-4CCB-A156-2AFE92299635}
+		{95C8A3E0-CBEC-4ADA-8094-77BF1780E1BD} = {1797162E-8E0C-4A8D-AD56-3303473C98FE}
+		{58F9FDAE-62DB-41FB-8ABD-EDBA04579337} = {FC0C477F-873D-4C30-ACE4-DB4CF4BCC7D4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C17CCFA-EBF2-4569-A313-56979ACAB772}
+	EndGlobalSection
+EndGlobal

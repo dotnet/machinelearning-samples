@@ -6,7 +6,7 @@
 
 @if (Program.GetSeedingProgress() < 100)
 {
-    @Html.Partial("_Seeding.cshtml")
+    @Html.PartialAsync("_Seeding.cshtml")
 }
 
 <div class="row">

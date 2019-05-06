@@ -16,6 +16,22 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
 
+- phase: HeartDiseaseDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Heart Disease Detection (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection.sln'
+
+- phase: SpamDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Spam Detection (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp.sln'
+
 - phase: CustomerSegmentation
   queue: Hosted VS2017
   steps:
@@ -38,7 +54,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: TensorFlow Scorer (Image Classification)
     inputs:
-      projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TF.Model.Scorer.sln'
+      projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TFModelScorer.sln'
 
 - phase: TensorFlowFeaturizerEstimator
   queue: Hosted VS2017
@@ -46,7 +62,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: TensorFlow Featurizer Estimator (Image Classification)
     inputs:
-      projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TF.Featurizer.Estimator.sln'
+      projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TFFeaturizerEstimator.sln'
 
 - phase: IrisMultiClass
   queue: Hosted VS2017
@@ -110,15 +126,15 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Mnist (MulticlassClassification)
     inputs:
-      projects: '.\samples\csharp\getting-started\MulticlassClassification_mnist\MulticlassClassification_mnist.sln'
+      projects: '.\samples\csharp\getting-started\MulticlassClassification_MNIST\MNISTConsoleApp.sln'
 
-- phase: ShampooSalesSpikeAndChangeDetection
+- phase: SalesSpikeAndChangeDetection
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build Shampoo Sales spike and change Detection (Time Series)
+    displayName: Build Sales spike and change Detection (Anomaly Detection)
     inputs:
-      projects: '.\samples\csharp\getting-started\SpikeDetection_ShampooSales\ShampooSales.sln'
+      projects: '.\samples\csharp\getting-started\AnomalyDetection_Sales\SpikeDetection.sln'
 
 - phase: PowerConsumptionAnomalyDetection
   queue: Hosted VS2017
@@ -126,20 +142,45 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Power Anomaly Detection (Time Series)
     inputs:
-      projects: '.\samples\csharp\getting-started\TimeSeries_PowerAnomalyDetection\PowerAnomalyDetection.sln'
+      projects: '.\samples\csharp\getting-started\AnomalyDetection_PowerMeterReadings\PowerAnomalyDetection.sln'
 
-- phase: YoloOnnxScorer
+- phase: ObjectDetectionConsoleApp
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build Onnx scorer (Object Detection)
+    displayName: Build Object Detection (Onnx Scorer)
     inputs:
       projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
 
-- phase: ShampooSalesSpikeChangeDetectionE2E
+- phase: ObjectDetectionE2EAPP
   queue: Hosted VS2017
   steps:
   - task: DotNetCoreCLI@2
-    displayName: Build Shampoo Sales spike and change Detection E2E(Time Series)
+    displayName: Build Object Detection E2E (Onnx Scorer)
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\SpikeDetection-ShampooSales-WinForms\ShampooSalesSpikeDetectionConsole.sln'
+      projects: '.\samples\csharp\end-to-end-apps\DeepLearning_ObjectDetection_Onnx\OnnxObjectDetectionE2EApp.sln'
+
+- phase: SalesSpikeChangeDetectionE2E
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Sales spike and change Detection E2E(Anomaly Detection)
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-Sales\SpikeDetectionTemporaryApp.sln'
+
+- phase: ScalableMLModelOnWebAPIIntegrationPkg
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Scalable ML Model On WebAPI Integration Pkg
+    inputs:
+      projects: '.\samples\csharp\end-to-end-apps\ScalableMLModelOnWebAPI-IntegrationPkg\ScalableMLModelOnWebAPI-IntegrationPkg.sln'
+
+- phase: DatabaseIntegration
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build Database Integration
+    inputs:
+      projects: '.\samples\csharp\getting-started\DatabaseIntegration\DatabaseIntegration.sln'
+

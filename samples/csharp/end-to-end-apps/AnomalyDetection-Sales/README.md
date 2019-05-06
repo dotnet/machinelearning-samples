@@ -2,9 +2,9 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Product Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
+| v1.0.0         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Product Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
-![Alt Text](./SpikeDetection.WinForms/images/productsales.gif)
+![Alt Text](./SpikeDetectionE2EApp/SpikeDetection.WinForms/images/productsales.gif)
 
 ## Overview
 Product Sales Spike Detection is a simple application which builds and consumes time series anomaly detection models to detect [spikes](#spike-detection) and [change points](#change-point-detection) in product sales.
@@ -29,9 +29,9 @@ Note: This app is written in .NET Framework, so you must manually restore the nu
     * Uses [IidSpikeDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidspikedetector?view=ml-dotnet) and [IidChangePointDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidchangepointdetector?view=ml-dotnet).
 
 ## Dataset
-we have created sample dataset for Product sales that looks like below.
+We have created sample dataset for Product sales. The dataset `product-sales.csv` can be found [here](./Data/product-sales.csv)
 
-**Product Sales DataSet:**
+Format of **Product Sales DataSet** looks like below.
 
 | Month  | ProductSales |
 |--------|--------------|
@@ -41,13 +41,13 @@ we have created sample dataset for Product sales that looks like below.
 | 1-Feb  | 199.3        |
 | ...    | ....         |
 
-The Product-sales dataset is referenced from product-sales dataset and the license for shampoo-sales dataset is available [here](./Data/SHAMPOO-SALES-LICENSE.txt).
+The data format in Product Sales dataset is referenced from **shampoo-sales dataset** and the license for shampoo-sales dataset is available [here](./Data/SHAMPOO-SALES-LICENSE.txt).
 
 ## Problem
 This problem is focused on finding spikes and change points in product sales over a 3 month period, which can then be helpful in analyzing trends or abnormal behavior in sales.
 
 To solve this problem, we will build an ML model that takes as inputs:
-* Date- Month)
+* Date-Month
 * Number of product sales
 
 and will generate an alert if/where a spike or change point in product sales is detected.

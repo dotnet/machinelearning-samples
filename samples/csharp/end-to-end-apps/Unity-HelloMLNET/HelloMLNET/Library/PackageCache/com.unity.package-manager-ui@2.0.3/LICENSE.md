@@ -1,6 +1,6 @@
 **Unity Companion License ("_License_")**
 
-Software Copyright © 2018 Unity Technologies ApS** **
+Software Copyright (c) 2018 Unity Technologies ApS** **
 
 Unity Technologies ApS ("**_Unity_**") grants to you a worldwide, non-exclusive, no-charge, and royalty-free copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute the software that is made available under this License (“**_Software_**”), subject to the following terms and conditions:
 

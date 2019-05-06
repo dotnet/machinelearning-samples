@@ -12,6 +12,7 @@
     <PackageReference Include="Dapper.StrongName" Version="1.50.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
@@ -23,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\Migrations\Ordering\" />
-    <Folder Include="Common\" />
     <Folder Include="ReportsContext\" />
   </ItemGroup>
   <ItemGroup>
@@ -31,11 +31,16 @@
     <Content Include="Infrastructure\Setup\DataFiles\*.*" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Common\**" />
+    <Content Remove="Common\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <None Remove="Common\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="ProductImages\coming_soon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\common\MLModelEngine.cs" Link="Common\MLModelEngine.cs" />
-    <Compile Include="..\..\..\..\common\ObjectPool.cs" Link="Common\ObjectPool.cs" />
+    <ProjectReference Include="..\CommonHelper\CommonHelpers.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Forecast\ModelFiles\country_month_fastTreeTweedie.zip">

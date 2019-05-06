@@ -1,0 +1,19 @@
+Original source: Online Retail Dataset from UCI: http://archive.ics.uci.edu/ml/datasets/online+retail
+
+Citation Policy:
+
+If you publish material based on databases obtained from this repository, then, in your acknowledgements, please note the assistance you received by using this repository. This will help others to obtain the same data sets and replicate your experiments. We suggest the following pseudo-APA reference format for referring to this repository:
+
+Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+
+Here is a BiBTeX citation as well:
+
+@misc{Dua:2019 , author = "Dua, Dheeru and Graff, Casey", year = "2017", title = "{UCI} Machine Learning Repository", url = "http://archive.ics.uci.edu/ml", institution = "University of California, Irvine, School of Information and Computer Sciences" }
+
+A few data sets have additional citation requests. These requests can be found on the bottom of each data set's web page.
+
+http://archive.ics.uci.edu/ml/datasets/online+retail, in turn, contains the following notice:
+
+Citation Request:
+
+Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197–208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
