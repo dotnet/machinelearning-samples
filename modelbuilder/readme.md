@@ -12,7 +12,7 @@ At the end, developers can generate code for training and consuming this model i
 
 ## Evaluate 
 
-**How to understand model performance**
+**How do I understand my model performance?**
 
 Model Builder by default splits the data you provide into train and test data respectively. The train data (80% split) is used to train your model and the test data (20% split) is used to evaluate your model. 
 
