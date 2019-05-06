@@ -12,7 +12,7 @@ namespace CreditCardFraudDetection.Common.DataModels
         public float Score;
         public float Probability;
 
-        public void PrintToConsole()
+        public virtual void PrintToConsole()
         {
             Console.WriteLine($"Predicted Label: {PredictedLabel}");
             Console.WriteLine($"Probability: {Probability}  ({Score})");

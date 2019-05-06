@@ -5,6 +5,7 @@ using System;
 using Common;
 using CreditCardFraudDetection.Common.DataModels;
 using System.IO.Compression;
+using Microsoft.ML.Trainers;
 using static Microsoft.ML.DataOperationsCatalog;
 
 namespace CreditCardFraudDetection.Trainer
@@ -104,22 +105,28 @@ namespace CreditCardFraudDetection.Trainer
             ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainDataView, dataProcessPipeline, 1);
           
             // Set the training algorithm
-            IEstimator<ITransformer> trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: nameof(TransactionObservation.Label),
+            var trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: nameof(TransactionObservation.Label),
                                                                                                 featureColumnName: "FeaturesNormalizedByMeanVar",
                                                                                                 numberOfLeaves: 20,
                                                                                                 numberOfTrees: 100,
                                                                                                 minimumExampleCountPerLeaf: 10,
                                                                                                 learningRate: 0.2);
 
-            IEstimator <ITransformer> trainingPipeline = dataProcessPipeline.Append(trainer);
+            var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             ConsoleHelper.ConsoleWriteHeader("=============== Training model ===============");
 
-            ITransformer model = trainingPipeline.Fit(trainDataView);
+            var model = trainingPipeline.Fit(trainDataView);
 
             ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
-            return (model, trainer.ToString());
+            // Append feature contribution calculator in the pipeline. This will be used
+            // at prediction time for explainability. 
+            var fccPipeline = model.Append(mlContext.Transforms
+                .CalculateFeatureContribution(model.LastTransformer)
+                .Fit(dataProcessPipeline.Fit(trainDataView).Transform(trainDataView)));
+
+            return (fccPipeline, fccPipeline.ToString());
 
         }
 
@@ -134,7 +141,6 @@ namespace CreditCardFraudDetection.Trainer
                                                                   scoreColumnName: "Score");
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainerName, metrics);
-
         }
 
         public static string GetAbsolutePath(string relativePath)
