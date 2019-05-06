@@ -202,7 +202,7 @@ Other metrics reported such as absolute-loss, squared-loss and RMS loss are addi
 
 The default metric for classification problems is **accuracy**. **Accuracy** defines the proportion of correct predictions your model is making over the test dataset. The **closer to 100% or 1.0 the better it is**. 
 
-<img src="assets/binary-classification-metrics.png">
+<img src="assets/binary_classification-metrics.png">
 
 Other metrics reported such as AUC (Area under the curve) which measures the true positive rate vs. the false positive rate should be greater than 0.50 for models to be acceptable. 
 
@@ -216,6 +216,8 @@ Another important metric for Multi-class classification is Macro-accuracy, simil
 * Micro-accuracy -- how often does an incoming ticket get classified to the right team?
 
 * Macro-accuracy -- for an average team, how often is an incoming ticket correct for their team?
+
+<img src="assets/multi_classification-metrics.png">
 
 For [more details on understanding model evaluation metrics please refer to this guide](https://aka.ms/mlnet-metrics) which provides details on each of these metrics.
 
