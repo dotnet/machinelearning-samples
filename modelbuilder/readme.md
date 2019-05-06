@@ -11,30 +11,19 @@ At the end, developers can generate code for training and consuming this model i
 
 ## Scenario 
 
-
+**Which Machine Learning scenario is right for me?**
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. The table below describes a brief description of these scenarios along with the machine learning tasks associated with them. 
 
-Scenario              | Scenario Description                    | Machine Learning Task      | Sample Dataset 
---------------------- | --------------------------------------- | -------------------------- |-------------------------- 
-Price Prediction      | Predict the price for a particular item | Regression                 |
-Sales Forecast        | Forecast the sales for items this month | Regression                 |
-Sentiment Analysis    | Determine the sentiment for customer    | Binary Classification      |
-                      | reviews as positive or negative         |                            |
-Sentiment Analysis    | Determine the sentiment for customer    |                            |
-                      | reviews as positive, negative or toxic  | Multi-Class Classification |
-Spam Detection        | Determine whether a particular email is | Binary Classification      |
-                      | a scam or not!                          |                            | 
-Fraud Detection       | Determine whether a particular          | Binary Classification      |
-                      | transaction is fraud or not!            |                            |
-Issue Classification  | Tag different issues or tickets filed   | Multi-Class Classification |
-                      | into particular area tags               |                            | 
-
-
-
-
-**Which Machine Learning scenario is right for me?**
-
+Scenario             | Scenario Description                                                         | Machine Learning Task       
+---------------------| -----------------------------------------------------------------------------| ---------------------------
+Price Prediction     | Predict the price for a particular item                                      | Regression                 |
+Sales Forecast       | Forecast the sales for items this month                                      | Regression                 |
+Sentiment Analysis   | Determine the sentiment for customer reviews as positive of negative         | Binary Classification      |
+Sentiment Analysis   | Determine the sentiment for customer reviews as positive, negative or toxic  | Multi-Class Classification |
+Spam Detection       | Determine whether a particular email is a scam or not                        | Binary Classification      |
+Fraud Detection      | Determine whether a particular transaction is fraud or not!                  | Binary Classfication       |       Issue Classification | Tag different issues or tickets filed into particular area tags              | Multi-Class Classification |
+                     
 ## Train
 
 **How long should I train for?**
