@@ -237,8 +237,11 @@ For [more details on understanding model evaluation metrics please refer to this
 ## Improve 
 
 **Train for a longer time, add more data or learn more on the web**
+
 There are a few things you can try to improve your model performance
+
 * Train for a longer period of time during the train phase. This will provide Automated ML to try out more trainers and find you a better model for your ML scenario
+
 * Sometimes the amount of data or quality of data is not sufficient to train a high quality ML Model. Try adding more data for Model Builder to operate on. In case of classification tasks, you can make sure that their is good amount of data available per classification category
 
 ## Issues
