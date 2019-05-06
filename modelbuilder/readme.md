@@ -49,6 +49,12 @@ Issue Classification | Tag different issues or tickets filed into particular are
     <td align="middle">
     Regression    
     </td>
+    <td align="middle">
+    (Link)[https://github.com/dotnet/machinelearning-samples/blob/master/datasets/taxi-fare-train.csv]    
+    </td>
+    <td align="middle">
+    fare_amount  
+    </td>
   </tr> 
  </table>
                      
