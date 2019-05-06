@@ -196,11 +196,11 @@ The default metric for regression problems is **RSquared**, the value of **RSqua
 
 <img src="assets/regression-metrics.png">
 
-Other metrics reported such as absolute-loss, squared-loss and RMS loss are additional metrics which can be used to understand how your model is performing or comparing it against other regression models. 
+Other metrics reported such as absolute-loss, squared-loss and RMS loss are additional metrics which can be used to understand how your model is performing and comparing it against other regression models. 
 
 #### Binary Classification (e.g. Sentiment Analysis)
 
-The default metric for classification problems is accuracy. Accuracy defines the proportion of correct predictions your model is making over the test dataset. The closer to 100% or 1.0 the better it is. 
+The default metric for classification problems is **accuracy**. **Accuracy** defines the proportion of correct predictions your model is making over the test dataset. The **closer to 100% or 1.0 the better it is**. 
 
 Other metrics reported such as AUC (Area under the curve) which measures the true positive rate vs. the false positive rate should be greater than 0.50 for models to be acceptable. 
 
