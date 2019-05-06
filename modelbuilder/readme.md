@@ -9,6 +9,23 @@ Model Builder leverages best in class automated machine learning to evaluate dif
 
 At the end, developers can generate code for training and consuming this model in their applications.
 
+## Train
+
+**How long should I train for?**
+
+Model Builder uses AutoML to explore multiple models to find you the best performing model. 
+
+In general longer training periods will allow AutoML to explore more models with multiple trainers and settings. The table below summarizes the average time taken to get good performance for our internal datasets we tested with. 
+
+Dataset Size  | Dataset Type       | Avg. Time to train  
+------------- | ------------------ | --------------
+0 - 10 Mb     | Numeric and Text   | 10 sec
+10 - 100 Mb   | Numeric and Text   | 10 min 
+100 - 500 Mb  | Numeric and Text   | 30 min 
+500 - 1 Gb    | Numeric and Text   | 60 min 
+1 Gb+         | Numeric and Text   | 3 hour+ 
+
+We have tested Model Builder with even 1TB dataset but building a high quality model for that size of dataset can take upto four days. 
 
 ## Evaluate 
 
@@ -19,11 +36,13 @@ Model Builder by default splits the data you provide into train and test data re
 When using the Model Builder each scenario maps to a machine learning task. Each ML task has it’s own set of evaluation metrics. The table below describes these mappings of scenario and ML tasks. 
 
 #### Regression (e.g. Price Prediction)
+
 The default metric for regression problems is r-squared, the value of r-square ranges between 0 and 1. 1 is the best possible value or in other words the closer the value of r-square to 1 the better your model is performing. 
 
 Other metrics reported such as absolute-loss, squared-loss and RMS loss are additional metrics which can be used to understand how your model is performing or comparing it against other regression models. 
 
 #### Binary Classification (e.g. Sentiment Analysis)
+
 The default metric for classification problems is accuracy. Accuracy defines the proportion of correct predictions your model is making over the test dataset. The closer to 100% or 1.0 the better it is. 
 
 Other metrics reported such as AUC (Area under the curve) which measures the true positive rate vs. the false positive rate should be greater than 0.50 for models to be acceptable. 
