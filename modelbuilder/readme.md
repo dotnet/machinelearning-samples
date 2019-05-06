@@ -202,6 +202,8 @@ Other metrics reported such as absolute-loss, squared-loss and RMS loss are addi
 
 The default metric for classification problems is **accuracy**. **Accuracy** defines the proportion of correct predictions your model is making over the test dataset. The **closer to 100% or 1.0 the better it is**. 
 
+<img src="assets/binary-classification-metrics.png">
+
 Other metrics reported such as AUC (Area under the curve) which measures the true positive rate vs. the false positive rate should be greater than 0.50 for models to be acceptable. 
 
 Additional metrics like F1 score can be used to control the balance between Precision and Recall. 
