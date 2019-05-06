@@ -1,6 +1,7 @@
 # ML.NET Model Builder Guide 
 
 ## Introduction
+<img src="assets/ModelBuilder.png">
 
 Model Builder is a simple UI tool for developers to build, train and ship custom machine learning models in their applications. 
 
