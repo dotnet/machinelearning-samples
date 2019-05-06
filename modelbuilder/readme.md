@@ -6,7 +6,7 @@
 Model Builder is a simple UI tool for developers to build, train and ship custom machine learning models in their applications. 
 
 Developers with no ML expertise can use this simple visual interface to connect to their data stored in files, SQL Server and more for training the model.
-Model Builder leverages best in class automated machine learning to evaluate different models. It produces the best model for your scenario without any tuning required from the developer.
+Model Builder leverages best in class automated machine learning (AutoML) to evaluate different models. It produces the best model for your scenario without any tuning required from the developer.
 
 At the end, developers can generate code for training and consuming this model in their applications.
 
@@ -229,3 +229,13 @@ For [more details on understanding model evaluation metrics please refer to this
 ## Improve 
 
 **Train for a longer time, add more data or learn more on the web**
+There are a few things you can try to 
+
+
+## File Issues
+Please file any issues you observer with the Model Builder extension @ the https://github.com/dotnet/machinelearning repo
+
+
+
+
+
