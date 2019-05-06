@@ -194,7 +194,7 @@ When using the Model Builder each scenario maps to a machine learning task. Each
 
 The default metric for regression problems is **RSquared**, the value of **RSquared** ranges between 0 and 1. 1 is the best possible value or in other words the closer the value of **RSquared** to 1 the better your model is performing. 
 
-<img src="assets/regression-metrics.png">
+<img src="assets/regression-metrics.png" width=548 height=331>
 
 Other metrics reported such as absolute-loss, squared-loss and RMS loss are additional metrics which can be used to understand how your model is performing and comparing it against other regression models. 
 
@@ -202,7 +202,7 @@ Other metrics reported such as absolute-loss, squared-loss and RMS loss are addi
 
 The default metric for classification problems is **accuracy**. **Accuracy** defines the proportion of correct predictions your model is making over the test dataset. The **closer to 100% or 1.0 the better it is**. 
 
-<img src="assets/binary_classification-metrics.png">
+<img src="assets/binary_classification-metrics.png" width=511 height=342>
 
 Other metrics reported such as AUC (Area under the curve) which measures the true positive rate vs. the false positive rate should be greater than 0.50 for models to be acceptable. 
 
