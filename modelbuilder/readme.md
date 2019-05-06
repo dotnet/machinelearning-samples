@@ -167,9 +167,11 @@ We currently support *.tsv*, *.csv* and SQL as the data-types you can use as dat
 
 Model Builder uses AutoML to explore multiple models to find you the best performing model. 
 
-In general longer training periods will allow AutoML to explore more models with multiple trainers and settings. The table below summarizes the average time taken to get good performance for the datasets we tested with. 
+In general longer training periods will allow AutoML to explore more models with multiple trainers and settings. 
 
-Dataset Size  | Dataset Type       | Avg. Time to train  
+The table below summarizes the average time taken to get good performance for the datasets we tested with. 
+
+*Dataset Size  | Dataset Type       | Avg. Time to train*
 ------------- | ------------------ | --------------
 0 - 10 Mb     | Numeric and Text   | 10 sec
 10 - 100 Mb   | Numeric and Text   | 10 min 
@@ -178,9 +180,9 @@ Dataset Size  | Dataset Type       | Avg. Time to train
 1 Gb+         | Numeric and Text   | 3 hour+ 
 
 The exact time to train is a function of a few parameters like:
-*The number of features or columns being used to predict
-*The type of columns i.e. text vs. numeric 
-*Type of machine learning task. 
+* The number of features or columns being used to predict
+* The type of columns i.e. text vs. numeric 
+* The Type of machine learning task (e.g. regression vs. classification) 
 
 We have tested Model Builder with even 1TB dataset but building a high quality model for that size of dataset can take upto four days. 
 
