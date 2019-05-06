@@ -15,10 +15,12 @@ At the end, developers can generate code for training and consuming this model i
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. The table below describes a brief description of these scenarios along with the machine learning tasks associated with them. 
 
-Scenario              | Scenario Description                                                       | Machine Learning Task  
-----------------------| -------------------------------------------------------------------------  | ------------------
-Price Prediction      | Predict the price for a particular order or transaction                    | Regression 
-Sales Forecast        | Forecast the sales for items this month                                    | Regression
+Scenario              | Scenario Description                    | Machine Learning Task     | Sample Dataset 
+----------------------| ----------------------------------------| --------------------------|-------------------------- 
+Price Prediction      | Predict the price for a particular      | Regression                |
+                      | order or transaction                    |                           | 
+--------------------------------------------------------------------------------------------------------------------------
+Sales Forecast        | Forecast the sales for items this month | Regression                |
 Sentiment Analysis    | Determine the sentiment for customer reviews as positive or negative       | Binary Classification
 Sentiment Analysis    | Determine the sentiment for customer reviews as positive, negative or toxic| Multi-Class Classification 
 Spam Detection        | Determine whether a particular email is a scam or not!                     | Binary Classification 
