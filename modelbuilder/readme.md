@@ -192,9 +192,9 @@ When using the Model Builder each scenario maps to a machine learning task. Each
 
 #### Regression (e.g. Price Prediction)
 
-The default metric for regression problems is r-squared, the value of r-square ranges between 0 and 1. 1 is the best possible value or in other words the closer the value of r-square to 1 the better your model is performing. 
+The default metric for regression problems is **RSquared**, the value of **RSquared** ranges between 0 and 1. 1 is the best possible value or in other words the closer the value of **RSquared** to 1 the better your model is performing. 
 
-<img src="assets/regression-metrics.png" style="border: 1px solid #000; max-width:32px; max-height:32px;">
+<img src="assets/regression-metrics.png">
 
 Other metrics reported such as absolute-loss, squared-loss and RMS loss are additional metrics which can be used to understand how your model is performing or comparing it against other regression models. 
 
