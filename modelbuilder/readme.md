@@ -15,11 +15,11 @@ At the end, developers can generate code for training and consuming this model i
 
 Model Builder allows you to solve many real life scenarios by supporting a wide variety of machine learning tasks. 
 
-If you are trying to predict a value e.g. price of a car or how many units of this product will be sold these are examples of regression ML tasks.
+If you are trying to predict a value e.g. price of a car or how many units of this product will be sold these are examples of **regression ML tasks**.
 
 If you are trying to classify data into two or multiple categories those are examples of classification machine learning tasks e.g.
-* If a sentiment is positive or negative is an example of binary classification
-* If a sentiment is positive, negative or nuetral (2 or more categories) is an example of multi-classification task 
+* If a sentiment is positive or negative is an example of **binary classification**
+* If a sentiment is positive, negative or nuetral (2 or more categories) is an example of **multi-classification task**
 
 Model Builder currently comes with two scenario templates which provide an example each of regression (i.e. Price Prediction) and binary-classification (i.e. Sentiment Analysis).
 
@@ -208,3 +208,6 @@ Another important metric for Multi-class classification is Macro-accuracy, simil
 
 For [more details on understanding model evaluation metrics please refer to this guide](https://aka.ms/mlnet-metrics) which provides details on each of these metrics.
 
+## Improve 
+
+**Train for a longer time, add more data or learn more on the web**
