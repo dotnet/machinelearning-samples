@@ -25,6 +25,8 @@ Dataset Size  | Dataset Type       | Avg. Time to train
 500 - 1 Gb    | Numeric and Text   | 60 min 
 1 Gb+         | Numeric and Text   | 3 hour+ 
 
+The exact time to train is a function of a few parameters e.g. the number of features or columns being used to predict, the type of columns i.e. text vs. numeric and the type of machine learning task. 
+
 We have tested Model Builder with even 1TB dataset but building a high quality model for that size of dataset can take upto four days. 
 
 ## Evaluate 
