@@ -8,7 +8,13 @@ Model Builder is a simple UI tool for developers to build, train and ship custom
 Developers with no ML expertise can use this simple visual interface to connect to their data stored in files, SQL Server and more for training the model.
 Model Builder leverages best in class automated machine learning (AutoML) to evaluate different models. It produces the best model for your scenario without any tuning required from the developer.
 
-At the end, developers can generate code for training and consuming this model in their applications.
+At the end, developers can generate code for training and consuming this model in their applications. This readme provides details on each Model Builder Screen.
+* [Scenario](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Scenario)
+* [Data](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Data)
+* [Train](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Train)
+* [Evaluate](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Evaluate)
+* [Improve](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#Improve)
+* [File Issues and Bugs](https://github.com/dotnet/machinelearning-samples/edit/master/modelbuilder/readme.md#File Issues)
 
 ## Scenario 
 
