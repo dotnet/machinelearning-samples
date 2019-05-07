@@ -3,7 +3,7 @@
 ## Introduction
 <img src="assets/ModelBuilder.png">
 
-Model Builder is a simple UI tool for developers to build, train and ship custom machine learning models in their applications, available as [Visual Studio Extension](https://marketplace.visualstudio.com/items?itemName=MLNET.07). 
+Model Builder is a simple UI tool for developers to build, train and ship custom machine learning models in their applications. Model Builder is available for download in the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=MLNET.07). 
 
 Developers with no ML expertise can use this simple visual interface to connect to their data stored in files, SQL Server and more for training the model.
 Model Builder leverages best in class automated machine learning (AutoML) to evaluate different models. It produces the best model for your scenario without any tuning required from the developer.
