@@ -15,6 +15,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [Beer-ML](https://github.com/adrag239/beer-ml) | Demo project uses Systembolaget (government owned chain of liquor stores in Sweden) database for four types of ML Tasks | Binary Classification, Multi-Class Classification, Regression, Clustering                                                     | ML.NET v1.0.0-preview  | Alexander Dragunov, adrag239 | 
 | [Simple Linear Regression](https://github.com/jwood803/MLNetExamples/tree/master/MLNetExamples/SimpleRegression) | Predicts salary based off years of experience.  | Regression      | Uses Static API. Needs to migrate to Dynamic API  | Jon Wood, jwood803 | 
 | [ONNX model scoring](https://github.com/cosmincatalin/mxnet-onnx-mlnet) | Apache MXNet MLP model exported to ONNX and used in ML.NET  | Regression      |   | Cosmin Catalin, cosmincatalin | 
+| [IRIS Flowers Classifier - UWP APP](https://github.com/PaulaScholz/MLDotNetUWP) | IRIS Flower Species Prediction  | Multiclass Classification      |   | Paula Scholz,PaulaScholz  | 
 
 **Chinese Samples**
 
