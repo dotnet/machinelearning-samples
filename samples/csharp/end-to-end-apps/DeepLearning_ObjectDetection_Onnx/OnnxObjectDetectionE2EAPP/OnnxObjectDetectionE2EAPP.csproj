@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\tempImages\image1.jpeg" />
+    <Content Remove="wwwroot\tempImages\image2.jpg" />
+    <Content Remove="wwwroot\tempImages\image3.jpg" />
+    <Content Remove="wwwroot\tempImages\image4.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\tempImages\image1.jpeg" />
+    <None Include="wwwroot\tempImages\image2.jpg" />
+    <None Include="wwwroot\tempImages\image3.jpg" />
+    <None Include="wwwroot\tempImages\image4.jpg" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="0.12.0" />
+    <PackageReference Include="Microsoft.ML" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="Model\yolov3.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
