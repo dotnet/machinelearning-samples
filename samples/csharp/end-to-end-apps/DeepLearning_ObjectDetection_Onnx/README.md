@@ -60,12 +60,12 @@ set both projects as startup projects and run.
 
 when ClientRazorWebApp UI shows up, Click on 'select' to select an image and then click upload.
 
-![](./docs/Screenshots/select.png)
+![](./docs/Screenshots/SelectImages.png)
 
 Then the request goes to WebApi service.The service processes the images and returns labels to UI.Also output image with bounding boxes is stored in [Output](./OnnxObjectDetectionE2EAPP/OnnxObjectDetectionWebAPI/Output) folder of WebApi project. 
 
 
-![](./docs/Screenshots/OutputImage.png)
+![](./docs/Screenshots/ProcessedImage.PNG)
 
 The service saves the uploaded image in a folder named `ImagesTemp`.
 
