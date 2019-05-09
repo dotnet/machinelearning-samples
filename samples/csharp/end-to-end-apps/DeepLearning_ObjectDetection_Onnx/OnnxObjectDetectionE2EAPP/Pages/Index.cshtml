@@ -1,0 +1,49 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@section Scripts {
+    <script src="~/js/JavaScript.js"></script>
+}
+
+<style>
+    ul { list-style-type:none; margin-top: 20px; }
+    ul li { display: inline-block; }
+    img { padding: 10px; }
+    img.active { border: 1px solid #ddd; }
+    #result { height: 400px; }
+    #imagediv {
+        background-color: lightgray;
+        align-content :center;
+        width :auto;
+    }
+    #headerDiv { 
+        color : blue;
+        text-align :center;
+    }
+</style>
+<div id="headerDiv"><h1>Object Detection</h1></div>
+<br/>
+<div class="container text-center">
+    <div><h4>Processed Images</h4></div>
+    <div id="imagediv">
+        <img id="result" />
+    </div>
+    <div><h4>Sample Input Images</h4></div>
+    <ul>
+        <li><img class="input-image" src="~/tempImages/image1.jpeg" alt="Sample Photo" height="100" width="100" /></li>
+        <li><img class="input-image" src="~/tempImages/image2.jpg" alt="Sample Photo" height="100" width="100" /></li>
+        <li><img class="input-image" src="~/tempImages/image3.jpg" alt="Sample Photo" height="100" width="100" /></li>
+        <li><img class="input-image" src="~/tempImages/image4.jpg" alt="Sample Photo" height="100" width="100" /></li>
+    </ul>
+    <div><p style="color:lightblue">Hello</p></div>
+</div>
+
+
+
+
+
+
+
