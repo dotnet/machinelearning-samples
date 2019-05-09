@@ -50,24 +50,12 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 
 
 ##  Solution
-There are 2 projects in this sample.
+The sample contains Razor Webapp which contains both **Razor UI pages** and **API controller** classes to process images.
 
-**1. ClientRazorWebApp** -This is web application to upload images and getting the scores on UI.
+When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
 
-**2. OnnxObjectDetectionWebAPI** - this is a WebApi service which will load model, scores the images and draws bounding boxes aroung the objects in the image.
+![](./docs/Screenshots/ObjectDetection.gif)
 
-set both projects as startup projects and run.
-
-when ClientRazorWebApp UI shows up, Click on 'select' to select an image and then click upload.
-
-![](./docs/Screenshots/SelectImages.png)
-
-Then the request goes to WebApi service.The service processes the images and returns labels to UI.Also output image with bounding boxes is stored in [Output](./OnnxObjectDetectionE2EAPP/OnnxObjectDetectionWebAPI/Output) folder of WebApi project. 
-
-
-![](./docs/Screenshots/ProcessedImage.PNG)
-
-The service saves the uploaded image in a folder named `ImagesTemp`.
 
 ##  Code Walkthrough
 
