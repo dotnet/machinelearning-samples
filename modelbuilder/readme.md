@@ -1,22 +1,38 @@
 # ML.NET Model Builder Guide 
 
 ## Introduction
-<img src="assets/ModelBuilder.png">
-
-Model Builder is a simple UI tool for developers to build, train and ship custom machine learning models in their applications. Model Builder is available for download in the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=MLNET.07). 
+Model Builder is a simple UI tool that runs locally for developers to build, train and ship custom machine learning models in your applications. [Try Model Builder preview now!](https://aka.ms/mlnettemplates). 
 
 Developers with no ML expertise can use this simple visual interface to connect to their data stored in files, SQL Server and more for training the model.
+
 Model Builder leverages best in class automated machine learning (AutoML) to evaluate different models. It produces the best model for your scenario without any tuning required from the developer.
 
 At the end, developers can generate code for training and consuming this model in their applications. 
 
-This readme provides details on each Model Builder Screen.
+<img src="assets/ml-dotnet-model-builder.gif">
+
+
+This readme provides the following details for Model Builder:
+* <a href="https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Installation">Installation</a>
 * <a href="https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Scenario">Scenario</a>
 * [Data](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Data)
 * [Train](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Train)
 * [Evaluate](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Evaluate)
 * [Improve](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Improve)
+* [Preview limitations](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Limitations)
 * [File Issues](https://github.com/dotnet/machinelearning-samples/blob/master/modelbuilder/readme.md#Issues)
+
+## Installation
+
+Model Builder can be installed on Visual Studio 2017/ 2019. You can install it by clicking "Download" from the [Visual Studio Marketplace](https://aka.ms/mlnettemplates)
+
+<img src="assets/downloadext.png">
+
+
+**Pre-requisites**
+* Visual Studio 2017 15.6 or later or Visual Studio 2019
+* All SKU's of Visual Studio
+* .NET Core 2.1 SDK
 
 ## Scenario 
 
@@ -64,7 +80,7 @@ You can use these datasets to get started with Model Builder
     Price Prediction   
     </td>
     <td align="middle">
-    Predict the price for a particular item           
+    Predict the price for a particular item
     </td>
     <td align="middle">
     Regression    
@@ -73,9 +89,9 @@ You can use these datasets to get started with Model Builder
       <a href="https://github.com/dotnet/machinelearning-samples/blob/master/datasets/taxi-fare-train.csv">Link</a>
     </td>
     <td align="middle">
-    fare_amount  
+    fare_amount 
     </td>
-  </tr> 
+    </tr> 
   <tr>
     <td align="middle">
     Sales Forecast   
