@@ -244,10 +244,11 @@ There are a few things you can try to improve your model performance
 
 * Sometimes the amount of data or quality of data is not sufficient to train a high quality ML Model. Try adding more data for Model Builder to operate on. In case of classification tasks, you can make sure that their is good amount of data available per classification category
 
+## Limitations
+This is the first preview of Model Builder and has the following limitations. We are actively working on improving the experience in the future releases.
+
+* There is a limit of 1GB on the training dataset.
+* SQL Server has a limit of 100K rows for training
+
 ## Issues
 Please file any issues you observer with the Model Builder extension @ the https://github.com/dotnet/machinelearning repo
-
-
-
-
-
