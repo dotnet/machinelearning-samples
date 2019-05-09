@@ -7,6 +7,11 @@
 ## Problem 
 Object detection is one of the classical problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
 
+How the app works?
+
+When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
+
+![](./docs/Screenshots/ObjectDetection.gif)
  
 ## DataSet
 There are two data sources: the `tsv` file and the image files.  The [tsv file](./OnnxObjectDetectionE2EAPP/TestImages/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
@@ -51,11 +56,6 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 
 ##  Solution
 The sample contains Razor Webapp which contains both **Razor UI pages** and **API controller** classes to process images.
-
-When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
-
-![](./docs/Screenshots/ObjectDetection.gif)
-
 
 ##  Code Walkthrough
 
