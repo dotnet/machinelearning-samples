@@ -67,12 +67,9 @@ namespace mnist
                 var trainingPipeline = dataProcessPipeline.Append(trainer).Append(mlContext.Transforms.Conversion.MapKeyToValue("Number","Label"));
 
                 // STEP 4: Train the model fitting to the DataSet
-                var watch = System.Diagnostics.Stopwatch.StartNew();
-                Console.WriteLine("=============== Training the model ===============");
 
+                Console.WriteLine("=============== Training the model ===============");
                 ITransformer trainedModel = trainingPipeline.Fit(trainData);
-                long elapsedMs = watch.ElapsedMilliseconds;
-                Console.WriteLine($"***** Training time: {elapsedMs / 1000} seconds *****");
 
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
                 var predictions = trainedModel.Transform(testData);

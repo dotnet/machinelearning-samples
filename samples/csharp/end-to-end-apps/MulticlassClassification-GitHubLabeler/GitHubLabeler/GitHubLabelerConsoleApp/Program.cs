@@ -98,32 +98,13 @@ namespace GitHubLabeler
             // in order to evaluate and get the model's accuracy metrics
 
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-
-            //Measure cross-validation time
-            var watchCrossValTime = System.Diagnostics.Stopwatch.StartNew();
-
             var crossValidationResults= mlContext.MulticlassClassification.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName:"Label");
-
-            //Stop measuring time
-            watchCrossValTime.Stop();
-            long elapsedMs = watchCrossValTime.ElapsedMilliseconds;
-            Console.WriteLine($"Time Cross-Validating: {elapsedMs} miliSecs");           
-            
+                    
             ConsoleHelper.PrintMulticlassClassificationFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
             // STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============");
-
-            //Measure training time
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
             var trainedModel = trainingPipeline.Fit(trainingDataView);
-
-            //Stop measuring time
-            watch.Stop();
-            long elapsedCrossValMs = watch.ElapsedMilliseconds;
-
-            Console.WriteLine($"Time Training the model: {elapsedCrossValMs} miliSecs");
 
             // (OPTIONAL) Try/test a single prediction with the "just-trained model" (Before saving the model)
             GitHubIssue issue = new GitHubIssue() { ID = "Any-ID", Title = "WebSockets communication is slow in my machine", Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." };
