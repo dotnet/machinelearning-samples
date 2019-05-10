@@ -11,7 +11,7 @@ How the app works?
 
 When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
 
-![](./docs/Screenshots/ObjectDetection1.gif)
+![](./docs/Screenshots/ObjectDetection.gif)
 
 Alternatively you can try uploading your own images as shown below.
 
