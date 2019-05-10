@@ -11,7 +11,7 @@ namespace OnnxObjectDetectionE2EAPP.OnnxModelScorers
 {
     public interface IOnnxModelScorer
     {
-        IList<string> DetectObjectsUsingModel(string imagesFilePath);
+        void DetectObjectsUsingModel(string imagesFilePath);
         PredictionEngine<ImageNetData, ImageNetPrediction> CreatePredictionEngine(string imagesFolder, string modelLocation);
         Image PaintImages(string imageFilePath);
     }
@@ -93,18 +93,12 @@ namespace OnnxObjectDetectionE2EAPP.OnnxModelScorers
             return predictionEngine;
         }
 
-        public IList<string> DetectObjectsUsingModel(string imagesFilePath)
+        public void DetectObjectsUsingModel(string imagesFilePath)
         {
             var imageInputData = new ImageNetData { ImagePath = imagesFilePath };
             var probs = _predictionEngine.Predict(imageInputData).PredictedLabels;
             IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
-            filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);
-            List<string> objectsNames = new List<string>();
-            foreach (var box in filteredBoxes)
-            {
-                objectsNames.Add(box.Label);
-            }
-            return objectsNames;
+            filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);            
         }
 
         public Image PaintImages(string imageFilePath)

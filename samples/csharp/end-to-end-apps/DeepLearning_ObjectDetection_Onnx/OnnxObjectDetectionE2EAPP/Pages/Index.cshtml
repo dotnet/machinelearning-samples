@@ -5,39 +5,83 @@
 }
 
 @section Scripts {
-    <script src="~/js/JavaScript.js"></script>
+    <script src="~/js/PostImages.js"></script>
 }
 
 <style>
-    ul { list-style-type:none; margin-top: 20px; }
-    ul li { display: inline-block; }
-    img { padding: 10px; }
-    img.active { border: 1px solid #ddd; }
-    #result { height: 400px; }
-    #imagediv {
-        background-color: lightgray;
-        align-content :center;
-        width :auto;
+    ul {
+        list-style-type: none;
+        margin-top: 20px;
+        text-align: center;
     }
-    #headerDiv { 
-        color : blue;
-        text-align :center;
+
+        ul img {
+            padding: 10px;
+        }
+
+            ul img.active {
+                border: 1px solid #ddd;
+            }
+
+    #result {
+        height: 400px;
+    }
+
+    /*#imagediv img {
+        width: 150%;
+    }*/
+
+    img:not([src]) {
+        background-color: lightgray
+    }
+
+    #imagediv {
+        align-content: center
+    }
+
+    #headerDiv {
+        color: blue;
+        text-align: center;
     }
 </style>
+
+
 <div id="headerDiv"><h1>Object Detection</h1></div>
-<br/>
-<div class="container text-center">
-    <div><h4>Processed Images</h4></div>
-    <div id="imagediv">
-        <img id="result" />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div id="imagediv" class="col-sm-6">            
+           <img id="result" />
+        </div>
+        <div class="col-sm-6">
+            <ul>
+                <li><img class="input-image" src="~/ImagesList/image1.jpeg" alt="Sample Photo" height="100" width="100" /></li>
+                <li><img class="input-image" src="~/ImagesList/image2.jpg" alt="Sample Photo" height="100" width="100" /></li>
+                <li><img class="input-image" src="~/ImagesList/image3.jpg" alt="Sample Photo" height="100" width="100" /></li>
+                <li><img class="input-image" src="~/ImagesList/image4.jpg" alt="Sample Photo" height="100" width="100" /></li>
+            </ul>
+        </div>
     </div>
-    <div><h4>Sample Input Images</h4></div>
-    <ul>
-        <li><img class="input-image" src="~/tempImages/image1.jpeg" alt="Sample Photo" height="100" width="100" /></li>
-        <li><img class="input-image" src="~/tempImages/image2.jpg" alt="Sample Photo" height="100" width="100" /></li>
-        <li><img class="input-image" src="~/tempImages/image3.jpg" alt="Sample Photo" height="100" width="100" /></li>
-        <li><img class="input-image" src="~/tempImages/image4.jpg" alt="Sample Photo" height="100" width="100" /></li>
-    </ul>
+</div>
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <br />
+        <div>
+            <h5>Try uploading your own images:</h5>
+        </div>
+        <br />
+        <div>
+            <input type="file" name="imageFile">
+        </div>
+        <div>
+            <br />
+            <input type="submit" value="Upload File" name="submit">
+        </div>
+    </form>
+    <br />
+    <br />
 </div>
 
 
