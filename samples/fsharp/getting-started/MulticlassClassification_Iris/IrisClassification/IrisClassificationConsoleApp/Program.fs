@@ -37,22 +37,9 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     let trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName = "LabelKey", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 
-
-
-
     // STEP 4: Train the model fitting to the DataSet
-
-    //Measure training time
-    let watch = System.Diagnostics.Stopwatch.StartNew()
-
     printfn "=============== Training the model ==============="
     let trainedModel = trainingPipeline.Fit(trainingDataView)
-
-    //Stop measuring time
-    watch.Stop()
-    let elapsedMs = float watch.ElapsedMilliseconds
-    printfn "***** Training time: %f seconds *****" (elapsedMs/1000.)
-
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="

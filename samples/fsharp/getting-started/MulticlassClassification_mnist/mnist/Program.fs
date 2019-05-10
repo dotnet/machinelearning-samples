@@ -66,11 +66,8 @@ let trainingPipeline =
         .Append(mlContext.Transforms.Conversion.MapKeyToValue("Number", "Label"))
 
 // STEP 4: Train the model fitting to the DataSet
-let watch = System.Diagnostics.Stopwatch.StartNew();
 printfn "=============== Training the model ==============="
 let trainedModel = trainingPipeline.Fit(trainData)
-
-printfn "***** Training time: %d seconds *****" watch.Elapsed.Seconds
 
 printfn "===== Evaluating Model's accuracy with Test data ====="
 let predictions = trainedModel.Transform(testData)
