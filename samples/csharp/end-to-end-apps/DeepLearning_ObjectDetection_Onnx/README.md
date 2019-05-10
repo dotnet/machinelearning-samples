@@ -11,7 +11,11 @@ How the app works?
 
 When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
 
-![](./docs/Screenshots/ObjectDetection.gif)
+![](./docs/Screenshots/ObjectDetection1.gif)
+
+Alternatively you can try uploading your own images as shown below.
+
+![](./docs/Screenshots/FileUpload.gif)
  
 ## DataSet
 There are two data sources: the `tsv` file and the image files.  The [tsv file](./OnnxObjectDetectionE2EAPP/TestImages/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
