@@ -1,6 +1,6 @@
 
 
-# ASP.NET Core WebAPI sample optimized for scalability and performance when runnig/scoring an ML.NET model (Using the new '.NET Core Integration Package')
+# ASP.NET Core WebAPI sample optimized for scalability and performance when running/scoring an ML.NET model (Using the new '.NET Core Integration Package')
 
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
@@ -10,7 +10,7 @@
 
 **This posts explains how to optimize your code when running an ML.NET model on an ASP.NET Core WebAPI service.** The code would be very similar when running it on an ASP.NET Core MVC or Razor web app, too.
 
-This code has been very much simplified by **using a new '.NET Core Integration Package'** that the .NET team has created (in experimental state) which implementes all the 'plumbing' for doing object pooling for the PredictionEngine.
+This code has been very much simplified by **using a new '.NET Core Integration Package'** that the .NET team has created (in experimental state) which implements all the 'plumbing' for doing object pooling for the PredictionEngine.
 
 
 # Goal
@@ -21,7 +21,7 @@ This code has been very much simplified by **using a new '.NET Core Integration 
 SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
 ```
 
-As simple as a single line. The object _predictionEnginePool will be injected in the controller's constructor or into you custom class. 
+As simple as a single line. The object _predictionEnginePool will be injected in the controller's constructor or into your custom class. 
 
 Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
@@ -31,7 +31,7 @@ The problem running/scoring an ML.NET model in multi-threaded applications comes
 
 # Solution
 
-## Use the new '.NET Core Integration Pakage' that implements Object Pooling of PredictionEngine objects for you 
+## Use the new '.NET Core Integration Package' that implements Object Pooling of PredictionEngine objects for you 
 
 **'.NET Core Integration Package' NuGet feed**
 
@@ -58,7 +58,7 @@ SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
 
 It is that simple.
 
-For a much more detailed explanation of a PredictionEngine Object Pool comparable to the implementaion done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
+For a much more detailed explanation of a PredictionEngine Object Pool comparable to the implementation done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
 
 **Detailed Blog Post** for further background documentation:
 

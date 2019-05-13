@@ -1,6 +1,6 @@
 
 
-# SENTIMENT ANALYSIS: Blazor sample (ASP.NET Core 3.0 Preview) optimized for scalability and performance when runnig/scoring an ML.NET model (Using the new '.NET Core Integration Package for ML.NET')
+# SENTIMENT ANALYSIS: Blazor sample (ASP.NET Core 3.0 Preview) optimized for scalability and performance when running/scoring an ML.NET model (Using the new '.NET Core Integration Package for ML.NET')
 
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
@@ -45,7 +45,7 @@ The problem running/scoring an ML.NET model in multi-threaded applications comes
 
 # Solution
 
-## Use the new '.NET Core Integration Pakage' that implements Object Pooling of PredictionEngine objects for you 
+## Use the new '.NET Core Integration Package' that implements Object Pooling of PredictionEngine objects for you 
 
 **'.NET Core Integration Package' NuGet**
 
@@ -73,7 +73,7 @@ SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
 
 It is that simple.
 
-For a much more detailed explanation of a PredictionEngine Object Pool comparable to the implementaion done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
+For a much more detailed explanation of a PredictionEngine Object Pool comparable to the implementation done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
 
 **Detailed Blog Post** for further documentation:
 
