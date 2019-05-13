@@ -7,5 +7,7 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 5.	Restructure the project folders in samples according to CLI generated sample
 6.	Remove TransformData in PeekDataView in ConsoleHelper class.
 7.	Remove code of Measuring training time in samples.
-8.  Model Expalinability (using Taxi Fare sample)
+8. Add a sample on Model Expalinability (using Taxi Fare sample)
+9. Add a sample on Loading images from in-memory instead of files.
+
 
