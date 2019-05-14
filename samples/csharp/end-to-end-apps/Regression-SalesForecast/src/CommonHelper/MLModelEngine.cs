@@ -32,10 +32,7 @@ namespace CommonHelpers
             _mlContext = mlContext;
 
             //Load the ProductSalesForecast model from the .ZIP file
-            using (var fileStream = File.OpenRead(modelFilePathName))
-            {
-                _model = mlContext.Model.Load(fileStream,out var modelInputSchema);
-            }
+            _model = mlContext.Model.Load(modelFilePathName, out var modelInputSchema);
 
             _minPredictionEngineObjectsInPool = minPredictionEngineObjectsInPool;
             _maxPredictionEngineObjectsInPool = maxPredictionEngineObjectsInPool;

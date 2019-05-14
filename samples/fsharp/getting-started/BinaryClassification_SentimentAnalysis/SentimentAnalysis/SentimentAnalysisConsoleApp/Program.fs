@@ -39,17 +39,10 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     let trainer = mlContext.BinaryClassification.Trainers.FastTree(labelColumnName = "Label", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
     
-    //Measure training time
-    let watch = System.Diagnostics.Stopwatch.StartNew()
-
     // STEP 4: Train the model fitting to the DataSet
     printfn "=============== Training the model ==============="
     let trainedModel = trainingPipeline.Fit(trainingDataView)
     
-    //Stop measuring time
-    watch.Stop()
-    printfn "***** Training time: %d seconds *****" (int(round(watch.Elapsed.TotalSeconds)))
-
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
     let predictions = trainedModel.Transform testDataView

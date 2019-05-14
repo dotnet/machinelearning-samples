@@ -1,11 +1,11 @@
 
 
-# ASP.NET Core WebAPI sample optimized for scalability and performance when runnig/scoring an ML.NET model
+# ASP.NET Core WebAPI sample optimized for scalability and performance when running/scoring an ML.NET model
 
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0-preview           | Up-to-date | ASP.NET Core 2.2 WebAPI | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
+| v1.0.0           | Up-to-date | ASP.NET Core 2.2 WebAPI | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
 
 
 **This posts explains how to optimize your code when running an ML.NET model on an ASP.NET Core WebAPI service.** The code would be very similar when running it on an ASP.NET Core MVC or Razor web app, too.
@@ -25,7 +25,7 @@ For a much more detailed explanation, including design diagrams, read the follow
 SamplePrediction prediction = _modelEngine.Predict(sampleData);
 ```
 
-As simple as a single line. The object _modelEngine will be injected in the controller's constructor or into you custom class. 
+As simple as a single line. The object _modelEngine will be injected in the controller's constructor or into your custom class. 
 
 Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
@@ -37,7 +37,7 @@ The problem running/scoring an ML.NET model in multi-threaded applications comes
 
 ## Use Object Pooling for PredictionEngine objects  
 
-Since a PredictionEngine object cannot be singleton because it is not 'thread safe', a good solution for being able to have 'ready to use' PredictionEngine objects  is to use an object pooling-based approach.
+Since a PredictionEngine object cannot be singleton because it is not 'thread safe', a good solution for being able to have 'ready to use' PredictionEngine objects is to use an object pooling-based approach.
 
 When it is necessary to work with a number of objects that are particularly expensive to instantiate and each object is only needed for a short period of time, the performance of an entire application may be adversely affected. This issue will happen if you instantiate a Prediction Engine object whenever you get an Http request.
 
@@ -45,4 +45,4 @@ An object pool design pattern can be very effective in such cases.
 
 The [object pool pattern](https://en.wikipedia.org/wiki/Object_pool_pattern) is a design pattern that uses a set of initialized objects kept ready to use (a 'pool') rather than allocating and destroying them on demand. 
 
-This solution's implementation is based on a higher level custom class (named **MLModelEngine**) which is instantiated as singleton and creates the needed infrastructure for such an object pool solution.
+This solution's implementation is based on a higher-level custom class (named **MLModelEngine**) which is instantiated as singleton and creates the needed infrastructure for such an object pool solution.

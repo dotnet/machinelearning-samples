@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\ImagesList\image3.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ImagesList\image1.jpeg" />
+    <None Remove="ImagesList\image2.jpg" />
+    <None Remove="ImagesList\image4.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ImagesList\image1.jpeg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="ImagesList\image2.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="ImagesList\image4.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\ImagesList\image1.jpeg" />
+    <None Include="wwwroot\ImagesList\image2.jpg" />
+    <None Include="wwwroot\ImagesList\image3.jpg" />
+    <None Include="wwwroot\ImagesList\image4.jpg" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="0.12.0" />
+    <PackageReference Include="Microsoft.ML" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="ImagesTemp\Readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Model\yolov3.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -101,23 +101,14 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
         dataProcessPipeline
             .Append(trainer)
             .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
-
-    
+  
     // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
     // in order to evaluate and get the model's accuracy metrics
     printfn "=============== Cross-validating to get model's accuracy metrics ==============="
 
-    //Measure cross-validation time
-    let watchCrossValTime = System.Diagnostics.Stopwatch.StartNew()
-
     let crossValidationResults = 
         mlContext.MulticlassClassification.CrossValidate(data = trainingDataView, estimator = downcastPipeline modelBuilder, numberOfFolds = 6, labelColumnName = "Label")
-        
-
-    //Stop measuring time
-    watchCrossValTime.Stop()
-    printfn "Time Cross-Validating: %d miliSecs"  watchCrossValTime.ElapsedMilliseconds
-           
+                   
     crossValidationResults
     |> Seq.toArray
     |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString()) 
