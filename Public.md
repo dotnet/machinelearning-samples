@@ -8,7 +8,7 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
   </tr>
   <tr>
     <td>1</td>
-    <td>Add a sample on training on large datasets. The dataset should contain hundreds of columns and may be tera bytes of size. The dataset should be used for MultiClass classification or Regression.</td>
+    <td>Add a sample on training on large datasets. The dataset should contain hundreds of columns, contain miliions of rows and size can be between 1gb and 100gb. The dataset should be used for MultiClass classification or Regression.</td>
     <td></td>
   </tr>
   <tr>
