@@ -59,7 +59,6 @@ To perform training we just call the method providing the training dataset (optd
 
 ```fsharp
 // STEP 4: Train the model fitting to the DataSet
-let watch = System.Diagnostics.Stopwatch.StartNew();
 printfn "=============== Training the model ==============="
 let trainedModel = trainingPipeline.Fit(trainData)
 ```

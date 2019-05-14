@@ -8,6 +8,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 |-------------------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------|-----------------------------|
 | [Photo-Search](https://github.com/Tak-Au/Photo-Search)  | Sample WPF app running an ONNX model which was previously built with Keras and exported to ONNX model format. | Deep Learning, Image classification | ML.NET v0.9 and .NET Core 3.0 | Kudos for Tak-Au      |
 | [ML.NET Custom Transform](https://github.com/endintiers/Unearth.Demo.MLCustomTransform)  | Show a custom transform implementation in ML.NET | Transform | Updated to ML.NET v0.9 | Kudos for endintiers |
+| [Additional ML.NET Demos](https://github.com/jeffprosise/ML.NET)  | Multiple additional ML.NET demos/samples | Multiple ML tasks | ML.NET v1.0 | Kudos for jeffprosise      |
 | [VB.NET samples for ML.NET](https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic)  | VB.NET samples, similar to some of the Getting Started samples, but implemented with VB.NET | Most in ML.NET | Updated to ML.NET v0.9 | Kudos for Nukepayload2      |
 | [ML.NET in visual desktop UWP app](https://github.com/XamlBrewer/UWP-MachineLearning-Sample)  | Demonstrates how to use ML.NET to implement some Machine Learning use cases in UWP. [Blog Post here](https://xamlbrewer.wordpress.com/2019/01/25/machine-learning-with-ml-net-in-uwp-clustering/) | Multiple ML tasks | ML.NET v1.0-preview | Kudos for @diederikkrols  |
 | [Multi-Output Regression with ML.NET & TensorFlow](https://github.com/zeahmed/DeepLearningWithMLdotNet/tree/master/NYCTaxiMultiOutputRegression)  | Multi-Output Regression with ML.Net and TensorFlow | Regression with TF | Updated to ML.NET v0.9 | Kudos for zeahmed |
@@ -15,6 +16,8 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [Beer-ML](https://github.com/adrag239/beer-ml) | Demo project uses Systembolaget (government owned chain of liquor stores in Sweden) database for four types of ML Tasks | Binary Classification, Multi-Class Classification, Regression, Clustering                                                     | ML.NET v1.0.0-preview  | Alexander Dragunov, adrag239 | 
 | [Simple Linear Regression](https://github.com/jwood803/MLNetExamples/tree/master/MLNetExamples/SimpleRegression) | Predicts salary based off years of experience.  | Regression      | Uses Static API. Needs to migrate to Dynamic API  | Jon Wood, jwood803 | 
 | [ONNX model scoring](https://github.com/cosmincatalin/mxnet-onnx-mlnet) | Apache MXNet MLP model exported to ONNX and used in ML.NET  | Regression      |   | Cosmin Catalin, cosmincatalin | 
+| [IRIS Flowers Classifier - UWP APP](https://github.com/PaulaScholz/MLDotNetUWP) | IRIS Flower Species Prediction  | Multiclass Classification      | ML.Net 1.0.0  | Paula Scholz,PaulaScholz  | 
+| [Taco vs Burrito Image Classifier](https://github.com/sethjuarez/TacosML) | Taco vs Burrito Image Classifier  | Image Classification using TensorFlow -Transfer Learning | 1.0.0  | Seth Juarez,sethjuarez  | 
 
 **Chinese Samples**
 
