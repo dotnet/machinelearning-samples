@@ -265,6 +265,7 @@ This is the first preview of Model Builder and has the following limitations. We
 
 * There is a limit of 1GB on the training dataset.
 * SQL Server has a limit of 100K rows for training
+* Microsoft SQL Server Data Tools for Visual Studio 2017 is not supported.
 
 ## Issues
 Please file any issues you observer with the Model Builder extension @ the https://github.com/dotnet/machinelearning repo

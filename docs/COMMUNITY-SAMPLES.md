@@ -17,6 +17,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [Simple Linear Regression](https://github.com/jwood803/MLNetExamples/tree/master/MLNetExamples/SimpleRegression) | Predicts salary based off years of experience.  | Regression      | Uses Static API. Needs to migrate to Dynamic API  | Jon Wood, jwood803 | 
 | [ONNX model scoring](https://github.com/cosmincatalin/mxnet-onnx-mlnet) | Apache MXNet MLP model exported to ONNX and used in ML.NET  | Regression      |   | Cosmin Catalin, cosmincatalin | 
 | [IRIS Flowers Classifier - UWP APP](https://github.com/PaulaScholz/MLDotNetUWP) | IRIS Flower Species Prediction  | Multiclass Classification      | ML.Net 1.0.0  | Paula Scholz,PaulaScholz  | 
+| [Taco vs Burrito Image Classifier](https://github.com/sethjuarez/TacosML) | Taco vs Burrito Image Classifier  | Image Classification using TensorFlow -Transfer Learning | 1.0.0  | Seth Juarez,sethjuarez  | 
 
 **Chinese Samples**
 
