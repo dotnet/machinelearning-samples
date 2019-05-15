@@ -33,7 +33,7 @@ namespace OnnxObjectDetectionE2EAPP
             });
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSingleton<IOnnxModelScorer, OnnxModelScorer>();
+            services.AddTransient<IOnnxModelScorer, OnnxModelScorer>();
             services.AddTransient<IImageFileWriter, ImageFileWriter>();
         }
 
