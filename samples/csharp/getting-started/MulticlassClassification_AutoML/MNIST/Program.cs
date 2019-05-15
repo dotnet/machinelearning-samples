@@ -65,9 +65,10 @@ namespace MNIST
                 // STEP 3: Run an AutoML multiclass classification experiment
                 ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
+                var preFeaturizer = mlContext.Transforms.Conversion.MapValueToKey("Number", "Number", keyOrdinality: Microsoft.ML.Transforms.ValueToKeyMappingEstimator.KeyOrdinality.ByValue);
                 ExperimentResult<MulticlassClassificationMetrics> experimentResult = mlContext.Auto()
                     .CreateMulticlassClassificationExperiment(ExperimentTime)
-                    .Execute(trainData, "Number", progressHandler: progressHandler);
+                    .Execute(trainData, "Number", progressHandler: progressHandler, preFeaturizer: preFeaturizer);
 
                 // Print top models found by AutoML
                 Console.WriteLine();
@@ -133,7 +134,7 @@ namespace MNIST
             //InputData data1 = SampleMNISTData.MNIST1;
             var predictedResult1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
-            Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {predictedResult1.Score[0]:0.####}");
+            Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {predictedResult1.Score[0]:0.####}");
             Console.WriteLine($"                                           One :  {predictedResult1.Score[1]:0.####}");
             Console.WriteLine($"                                           two:   {predictedResult1.Score[2]:0.####}");
             Console.WriteLine($"                                           three: {predictedResult1.Score[3]:0.####}");
@@ -147,7 +148,7 @@ namespace MNIST
                        
             var predictedResult2 = predEngine.Predict(SampleMNISTData.MNIST2);
 
-            Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {predictedResult2.Score[0]:0.####}");
+            Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {predictedResult2.Score[0]:0.####}");
             Console.WriteLine($"                                           One :  {predictedResult2.Score[1]:0.####}");
             Console.WriteLine($"                                           two:   {predictedResult2.Score[2]:0.####}");
             Console.WriteLine($"                                           three: {predictedResult2.Score[3]:0.####}");
