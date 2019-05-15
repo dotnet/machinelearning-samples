@@ -33,7 +33,7 @@ let testData = load testDataPath
 
 ## Step 2: Build a Machine Learning Model Using AutoML
 
-Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`ExperimentTime`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
+Instantiate and run an AutoML experiment. In doing so, specify how long the experiment should run in seconds (`experimentTimeInSeconds`), and set a progress handler that will receive notifications after AutoML trains & evaluates each new model.
 
 ```fsharp
 // Run an AutoML multiclass classification experiment
@@ -80,7 +80,7 @@ sampleData
     )
 ```
 
-where `SampleMNISTData.MNIST1` stores the pixel values of the digit that want to predict using the ML model
+where `sampleData` stores the pixel values of the digit that want to predict using the ML model
 
 ```fsharp
 

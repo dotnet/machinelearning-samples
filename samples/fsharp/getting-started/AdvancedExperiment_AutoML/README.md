@@ -75,7 +75,7 @@ experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent) |> i
 Create the AutoML experiment using the initialized experiment settings:
 
 ```fsharp
-let experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings
+let experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings)
 ```
 
 ## Step 7: Execute the AutoML Experiment
