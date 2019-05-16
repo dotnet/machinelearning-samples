@@ -2,6 +2,7 @@
 using eShopDashboard.Forecast;
 using eShopDashboard.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 
 namespace eShopDashboard.Controllers
@@ -11,10 +12,10 @@ namespace eShopDashboard.Controllers
     public class ProductDemandForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly MLModelEngine<ProductData, ProductUnitPrediction> productSalesModel;
+        private readonly PredictionEnginePool<ProductData, ProductUnitPrediction> productSalesModel;
 
         public ProductDemandForecastController(IOptionsSnapshot<AppSettings> appSettings,
-                                               MLModelEngine<ProductData, ProductUnitPrediction> productSalesModel)
+                                               PredictionEnginePool<ProductData, ProductUnitPrediction> productSalesModel)
         {
             this.appSettings = appSettings.Value;
 

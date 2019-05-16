@@ -65,8 +65,7 @@ function updateProductInfo(data) {
     $("#product").removeClass("d-none");
     $("#productName").text(data.description);
     $("#productPrice").text(`${data.price.toCurrencyLocaleString()}`);
-    $("#productImage").attr("src", data.pictureUri).attr("alt", data.description);
-    //console.log(data.id);
+    $("#productImage").attr("src", data.pictureUri).attr("alt", data.description);   
 }
 
 function getProductData(product) {
