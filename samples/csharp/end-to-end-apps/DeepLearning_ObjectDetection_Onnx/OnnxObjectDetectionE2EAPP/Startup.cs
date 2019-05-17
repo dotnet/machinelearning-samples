@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnnxObjectDetectionE2EAPP.Infrastructure;
-using OnnxObjectDetectionE2EAPP.OnnxModelScorers;
+using Microsoft.Extensions.ML;
+using OnnxObjectDetectionE2EAPP.Services;
+using System.IO;
+using OnnxObjectDetectionE2EAPP.Utilities;
 
 namespace OnnxObjectDetectionE2EAPP
 {
@@ -33,8 +32,12 @@ namespace OnnxObjectDetectionE2EAPP
             });
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddTransient<IOnnxModelScorer, OnnxModelScorer>();
+
+            services.AddPredictionEnginePool<ImageNetData, ImageNetPrediction>().
+                FromFile(CommonHelpers.GetAbsolutePath(Configuration["MLModelPath"]));
+
             services.AddTransient<IImageFileWriter, ImageFileWriter>();
+            services.AddTransient<IObjectDetectionService, ObjectDetectionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
