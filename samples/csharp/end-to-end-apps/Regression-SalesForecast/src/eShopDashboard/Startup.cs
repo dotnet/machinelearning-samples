@@ -41,9 +41,6 @@ namespace eShopDashboard
             services.AddScoped<CatalogContextSetup>();
             services.AddScoped<OrderingContextSetup>();
 
-            string prodModelPath = Configuration["ProductMLModelPath"];
-            string countryModelPath = Configuration["CountryMLModelPath"];
-
             services.AddPredictionEnginePool<ProductData, ProductUnitPrediction>()
                 .FromFile(Configuration["ProductMLModelPath"]);
             services.AddPredictionEnginePool<CountryData, CountrySalesPrediction>()
