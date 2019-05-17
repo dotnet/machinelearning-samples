@@ -268,4 +268,4 @@ This is the first preview of Model Builder and has the following limitations. We
 * Microsoft SQL Server Data Tools for Visual Studio 2017 is not supported.
 
 ## Issues
-Please file any issues you observer with the Model Builder extension @ the https://github.com/dotnet/machinelearning repo
+Please file any issues you observe with the Model Builder extension @  https://aka.ms/modelbuilderissues
