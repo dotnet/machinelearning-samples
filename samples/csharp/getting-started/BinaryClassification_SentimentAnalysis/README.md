@@ -99,5 +99,6 @@ Where in `resultprediction.PredictionLabel` will be either True or False dependi
 
 
 ## Try it
+This sample is compatible with [Try .NET](https://github.com/dotnet/try).  Follow [these instructions](https://github.com/dotnet/try#setup) to setup Try .NET, then `cd` to this directory and run `dotnet try` to run the sample.
 ```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj  --region try
 ```
