@@ -51,5 +51,11 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
     <td>Add a sample on Model Expalinability (using Taxi Fare sample)</td>
     <td></td>
   </tr>
+    <tr>
+    <td>10</td>
+    <td>Sample using an .IDV format dataset for performace (TBD what app sample)</td>
+    <td></td>
+  </tr>
+  
 </table>
 
