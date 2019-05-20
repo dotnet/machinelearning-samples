@@ -39,7 +39,7 @@ Building a model includes:
 
 The initial code is similar to the following:
 
-```CSharp
+```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj --editable false  --region step1to3
 // STEP 1: Common data loading configuration
 IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
 
@@ -48,7 +48,7 @@ IDataView trainingData = trainTestSplit.TrainSet;
 IDataView testData = trainTestSplit.TestSet;
 
 // STEP 2: Common data process configuration with pipeline data transformations          
-var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName:nameof(SentimentIssue.Text));
+var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName: nameof(SentimentIssue.Text));
 
 // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
 var trainer = mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features");
@@ -60,8 +60,9 @@ Training the model is a process of running the chosen algorithm on a training da
 
 To perform training you need to call the `Fit()` method while providing the training dataset in a DataView object.
 
-```CSharp
-ITransformer trainedModel = trainingPipeline.Fit(testTrainSplit.TrainSet);
+```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj --editable false  --region step4
+// STEP 4: Train the model fitting to the DataSet
+ITransformer trainedModel = trainingPipeline.Fit(trainingData);
 ```
 
 Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
@@ -72,11 +73,10 @@ We need this step to conclude how accurate our model operates on new data. To do
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
-```CSharp
+```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj --editable false  --region step5
+// STEP 5: Evaluate the model and show accuracy stats
 var predictions = trainedModel.Transform(testData);
-var metrics = mlContext.BinaryClassification.Evaluate(data:predictions, labelColumnName: "Label", scoreColumnName: "Score");
-
-ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
+var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "Label", scoreColumnName: "Score");
 ```
 
 If you are not satisfied with the quality of the model, you can try to improve it by providing larger training datasets and by choosing different training algorithms with different hyper-parameters for each algorithm.
@@ -87,12 +87,18 @@ If you are not satisfied with the quality of the model, you can try to improve i
 
 After the model is trained, you can use the `Predict()` API to predict the sentiment for new sample text. 
 
-```CSharp
+```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj --editable false  --region consume
 // Create prediction engine related to the loaded trained model
-var predEngine= mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
+var predEngine = mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
 
-//Score
+// Score
 var resultprediction = predEngine.Predict(sampleStatement);
 ```
 
 Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a Toxic or Non toxic predicted sentiment.
+
+
+## Try it
+This sample is compatible with [Try .NET](https://github.com/dotnet/try).  Follow [these instructions](https://github.com/dotnet/try#setup) to setup Try .NET, then `cd` to this directory and run `dotnet try` to run the sample.
+```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj  --region try
+```
