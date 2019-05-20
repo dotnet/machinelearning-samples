@@ -9,6 +9,7 @@ using Microsoft.Extensions.ML;
 using OnnxObjectDetectionE2EAPP.Services;
 using System.IO;
 using OnnxObjectDetectionE2EAPP.Utilities;
+using OnnxObjectDetectionE2EAPP.MLModel;
 
 namespace OnnxObjectDetectionE2EAPP
 {
@@ -17,6 +18,7 @@ namespace OnnxObjectDetectionE2EAPP
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            OnnxModelSettings.SetupModel();
         }
 
         public IConfiguration Configuration { get; }

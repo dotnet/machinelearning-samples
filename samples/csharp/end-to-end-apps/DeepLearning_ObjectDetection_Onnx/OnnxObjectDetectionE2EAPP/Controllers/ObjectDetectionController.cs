@@ -39,7 +39,7 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         [HttpGet()]
         public IActionResult Get([FromQuery]string url)
         {
-            string imageFileRelativePath = @"../../.." + url;
+            string imageFileRelativePath = @"../../../assets/inputs" + url;
             string imageFilePath = CommonHelpers.GetAbsolutePath(imageFileRelativePath);
             try
             {

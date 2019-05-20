@@ -7,16 +7,16 @@
   </PropertyGroup>
  
   <ItemGroup>
-    <Content Include="ImagesList\image2.jpg">
+    <Content Include="Assets\inputs\imagesList\image2.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="ImagesList\image4.jpg">
+    <Content Include="Assets\inputs\imagesList\image4.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>    
-    <Content Include="ImagesList\image1.jpg">
+    <Content Include="Assets\inputs\imagesList\image1.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="ImagesList\image3.jpg">
+    <Content Include="Assets\inputs\imagesList\image3.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
@@ -32,11 +32,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\inputs\model\TinyYolo2_model.onnx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\outputs\ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ImagesTemp\Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="MLModel\TinyYoloModel.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>    
   </ItemGroup>
 
