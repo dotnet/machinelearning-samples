@@ -1,1 +1,0 @@
-This folder is empty until an image is saved.

@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OnnxObjectDetectionE2EAPP.Infrastructure;
-using OnnxObjectDetectionE2EAPP.OnnxModelScorers;
+using OnnxObjectDetectionE2EAPP.Services;
+using OnnxObjectDetectionE2EAPP.Utilities;
 
 namespace OnnxObjectDetectionE2EAPP.Controllers
 {
@@ -17,17 +18,17 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         private readonly string _imagesTmpFolder;        
 
         private readonly ILogger<ObjectDetectionController> _logger;
-        private readonly IOnnxModelScorer _modelScorer;
+        private readonly IObjectDetectionService _objectDetectionService;
 
         private string base64String = string.Empty;
 
-        public ObjectDetectionController(IOnnxModelScorer modelScorer, ILogger<ObjectDetectionController> logger, IImageFileWriter imageWriter) //When using DI/IoC (IImageFileWriter imageWriter)
+        public ObjectDetectionController(IObjectDetectionService ObjectDetectionService, ILogger<ObjectDetectionController> logger, IImageFileWriter imageWriter) //When using DI/IoC (IImageFileWriter imageWriter)
         {
             //Get injected dependencies
-            _modelScorer = modelScorer;
+            _objectDetectionService = ObjectDetectionService;
             _logger = logger;
             _imageWriter = imageWriter;
-            _imagesTmpFolder = ModelHelpers.GetAbsolutePath(@"../../../ImagesTemp");
+            _imagesTmpFolder = CommonHelpers.GetAbsolutePath(@"../../../ImagesTemp");
         }
 
         public class Result
@@ -38,8 +39,8 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         [HttpGet()]
         public IActionResult Get([FromQuery]string url)
         {
-            string imageFileRelativePath = @"../../.." + url;
-            string imageFilePath = ModelHelpers.GetAbsolutePath(imageFileRelativePath);
+            string imageFileRelativePath = @"../../../assets/inputs" + url;
+            string imageFilePath = CommonHelpers.GetAbsolutePath(imageFileRelativePath);
             try
             {
                 //Detect the objects in the image                
@@ -83,8 +84,8 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         private Result DetectAndPaintImage(string imageFilePath)
         {
             //Predict the objects in the image
-            _modelScorer.DetectObjectsUsingModel(imageFilePath);
-            var img = _modelScorer.PaintImages(imageFilePath);
+            _objectDetectionService.DetectObjectsUsingModel(imageFilePath);
+            var img = _objectDetectionService.PaintImages(imageFilePath);
 
             using (MemoryStream m = new MemoryStream())
             {

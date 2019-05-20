@@ -3,6 +3,7 @@ using eShopDashboard.Forecast;
 using eShopDashboard.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 
 namespace eShopDashboard.Controllers
@@ -12,11 +13,11 @@ namespace eShopDashboard.Controllers
     public class CountrySalesForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly MLModelEngine<CountryData, CountrySalesPrediction> countrySalesModel;
+        private readonly PredictionEnginePool<CountryData, CountrySalesPrediction> countrySalesModel;
         private readonly ILogger<CountrySalesForecastController> logger;
 
         public CountrySalesForecastController(IOptionsSnapshot<AppSettings> appSettings,
-                                              MLModelEngine<CountryData, CountrySalesPrediction> countrySalesModel,                                             
+                                              PredictionEnginePool<CountryData, CountrySalesPrediction> countrySalesModel,                                             
                                               ILogger<CountrySalesForecastController> logger)
         {
             this.appSettings = appSettings.Value;

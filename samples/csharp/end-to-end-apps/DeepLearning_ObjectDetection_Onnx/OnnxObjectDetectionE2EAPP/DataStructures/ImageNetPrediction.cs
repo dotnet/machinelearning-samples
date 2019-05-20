@@ -4,7 +4,7 @@ namespace OnnxObjectDetectionE2EAPP
 {
     public class ImageNetPrediction
     {
-        [ColumnName(OnnxModelScorers.OnnxModelScorer.TinyYoloModelSettings.ModelOutput)]
+        [ColumnName("grid")]
         public float[] PredictedLabels;
     }
 }
