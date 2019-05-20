@@ -74,8 +74,5 @@ namespace OnnxObjectDetectionE2EAPP.Services
             }
             return image;
         }
-
-
-
     }
 }
