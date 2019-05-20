@@ -73,7 +73,8 @@ namespace SentimentAnalysisConsoleApp
 
             Console.WriteLine($"=============== Single Prediction  ===============");
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Non Toxic")} sentiment | Probability of being toxic: {resultprediction.Probability} ");
-            Console.WriteLine($"==================================================");
+            Console.WriteLine($"================End of Process.Hit any key to exit==================================");
+            Console.ReadLine();
             #endregion
         }
 
