@@ -1,61 +1,14 @@
 Refactoring of Samples: Here are the list of backlog items created on MachineLearning Samples. Feel free to add any tasks that you want to add for refactoring of samples.
 
-<table>
-  <tr>
-    <th>Number</th>
-    <th>Backlog item</th>
-    <th>Priority</th>
-  </tr>
-  <tr>
-    <td>1</td>
-    <td>Add a sample on training on large datasets. The dataset should contain hundreds of columns, contain miliions of rows and size can be between 1gb and 100gb. The dataset should be used for MultiClass classification or Regression.</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>Add a sample on Ranking</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Add a sample on Loading images from in-memory instead of files using ONNX model</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>4</td>
-    <td>Add a sample on Loading images from in-memory instead of files using TensorFlow model<br>   &nbsp;&nbsp;&nbsp;--&gt;First Migrate the Cesar/TensorFlowImagaClassficationWebAPI app to 1.0.0 and also migrate using Microsoft.Extensions.ML DI package<br>&nbsp;&nbsp;&nbsp;--&gt;then use loading in-memory images<br>   </td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>5</td>
-    <td><br>Add Large dataset  stored in SQL server for Database sample instead of sql lite and small dataset.</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>6</td>
-    <td>Add Microsoft.Extensions ScalableML integration package to End-to-End apps to remove Object pooling in samples SalesDashboard etc</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>7</td>
-    <td>Restructure the project folders in samples according to CLI generated sample</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>8</td>
-    <td>Remove TransformData in PeekDataView in ConsoleHelper class.</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>9</td>
-    <td>Add a sample on Model Expalinability (using Taxi Fare sample)</td>
-    <td></td>
-  </tr>
-    <tr>
-    <td>10</td>
-    <td>Sample using an .IDV format dataset for performace (TBD what app sample)</td>
-    <td></td>
-  </tr>
-  
-</table>
-
+| S.No | Backlog item                                                                                                                                                                                                                                                               | Priority | Status     |
+|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|------------|
+| 1    | Add a sample on training on large datasets. The dataset should contain hundreds of columns, contain miliions of rows and size can be between 1gb and 100gb. The dataset should be used for MultiClass classification or Regression.                                     | p0       | InProgress |
+| 2    | Add a sample on Ranking                                                                                                                                                                                                                                                 | p1       |            |
+| 3    | Add Microsoft.Extensions ScalableML integration package to End-to-End apps to remove Object pooling in samples SalesDashboard etc                                                                                                                                       | p0       | Done       |
+| 4    | Add a sample on Loading images from in-memory instead of files using ONNX model                                                                                                                                                                                         | p1       |            |
+| 5    | Add a sample on Loading images from in-memory instead of files using TensorFlow model     -->First Migrate the Cesar/TensorFlowImagaClassficationWebAPI app to 1.0.0 and also migrate using Microsoft.Extensions.ML DI package     -->then use loading in-memory images | p1       |            |
+| 6    | Add Large dataset stored in SQL server for Database sample instead of sql lite and small dataset.                                                                                                                                                                       | p1       |            |
+| 7    | Restructure the project folders in samples according to CLI generated sample                                                                                                                                                                                            | p1       |            |
+| 8    | Remove TransformData in PeekDataView in ConsoleHelper class.Run the preview code only in debugger mode.not in prod environment                                                                                                                                          | p2       |            |
+| 9    | Add a sample on Model Expalinability (using Taxi Fare sample)                                                                                                                                                                                                           |          |            |
+| 10   | Sample using an .IDV format dataset for performace (TBD what app sample)                                                                                                                                                                                                |          |            |
