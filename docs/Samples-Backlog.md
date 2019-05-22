@@ -14,6 +14,8 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 10   | Sample using an .IDV format dataset for performace (TBD what app sample) - Check this PR/code for it: https://github.com/dotnet/machinelearning/pull/3745                                                                                                                                                                                                | p1         |            |
 | 11   | Binary Classification: Flight delay prediction. Migrate from Azure ML Studio: https://gallery.azure.ai/Experiment/Binary-Classification-Flight-delay-prediction-3
                                                                                                                                                                                                 | p2         |            |
+                                                                                                                                         | 11   | Anomaly Detection for Fraud, something that could break, etc. AnomalyDetection-PCA
+                                                                                                                                                                                                | p1         |            |                                                    
 
 
 
