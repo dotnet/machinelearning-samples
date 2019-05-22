@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.ML;
 using movierecommender.Services;
+using MovieRecommender.DataStructures;
 
 namespace movierecommender
 {
@@ -21,6 +23,7 @@ namespace movierecommender
         {
             services.AddSingleton<IProfileService, ProfileService>();
             services.AddSingleton<IMovieService, MovieService>();
+            services.AddPredictionEnginePool<MovieRating, MovieRatingPrediction>().FromFile(Configuration["MLModelPath"]);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

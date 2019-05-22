@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.ML;
 
@@ -7,17 +8,15 @@ namespace ObjectDetection
 {
     class OnnxModelScorer
     {
-        private readonly string imagesLocation;
         private readonly string imagesFolder;
         private readonly string modelLocation;
         private readonly MLContext mlContext;
 
-        private IList<YoloBoundingBox> _boxes = new List<YoloBoundingBox>();
+        private IList<YoloBoundingBox> _boundingBoxes = new List<YoloBoundingBox>();
         private readonly YoloWinMlParser _parser = new YoloWinMlParser();
 
-        public OnnxModelScorer(string imagesLocation, string imagesFolder, string modelLocation)
+        public OnnxModelScorer(string imagesFolder, string modelLocation)
         {
-            this.imagesLocation = imagesLocation;
             this.imagesFolder = imagesFolder;
             this.modelLocation = modelLocation;
             mlContext = new MLContext();
@@ -44,19 +43,18 @@ namespace ObjectDetection
 
         public void Score()
         {
-            var model = LoadModel(imagesFolder, modelLocation);
+            var model = LoadModel(modelLocation);
 
-            PredictDataUsingModel(imagesLocation, imagesFolder, model);
+            PredictDataUsingModel(imagesFolder, model);
         }
 
-        private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string imagesFolder, string modelLocation)
+        private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string modelLocation)
         {
             Console.WriteLine("Read model");
             Console.WriteLine($"Model location: {modelLocation}");
-            Console.WriteLine($"Images folder: {imagesFolder}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight})");
 
-            var data = mlContext.Data.LoadFromTextFile<ImageNetData>(imagesLocation, hasHeader: true);
+            var data = CreateDataViewFromList();
 
             var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
                             .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
@@ -70,22 +68,20 @@ namespace ObjectDetection
             return predictionEngine;
         }
 
-        protected void PredictDataUsingModel(string imagesLocation,
-                                                                  string imagesFolder,
-                                                                  PredictionEngine<ImageNetData, ImageNetPrediction> model)
+        protected void PredictDataUsingModel(string imagesFolder, PredictionEngine<ImageNetData, ImageNetPrediction> model)
         {
-            Console.WriteLine($"Tags file location: {imagesLocation}");
+            Console.WriteLine($"Images location: {imagesFolder}");
             Console.WriteLine("");
             Console.WriteLine("=====Identify the objects in the images=====");
             Console.WriteLine("");
 
-            var testData = ImageNetData.ReadFromCsv(imagesLocation, imagesFolder);
+            var testData = GetImagesData(imagesFolder);
 
             foreach (var sample in testData)
             {
                 var probs = model.Predict(sample).PredictedLabels;
-                IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
-                var filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);
+                _boundingBoxes = _parser.ParseOutputs(probs);
+                var filteredBoxes = _parser.NonMaxSuppress(_boundingBoxes, 5, .5F);
 
                 Console.WriteLine(".....The objects in the image {0} are detected as below....", sample.Label);
                 foreach (var box in filteredBoxes)
@@ -94,6 +90,25 @@ namespace ObjectDetection
                 }
                 Console.WriteLine("");
             }
+        }
+        private static IEnumerable<ImageNetData> GetImagesData(string folder)
+        {
+            List<ImageNetData> imagesList = new List<ImageNetData>();
+            string[] filePaths = Directory.GetFiles(folder);
+            foreach (var filePath in filePaths)
+            {
+                ImageNetData imagedata = new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) };
+                imagesList.Add(imagedata);
+            }
+            return imagesList;
+        }
+        private IDataView CreateDataViewFromList()
+        {
+            //Create empty DataView. We just need the schema to call fit()
+            List<ImageNetData> list = new List<ImageNetData>();
+            IEnumerable<ImageNetData> enumerableData = list;
+            var dv = mlContext.Data.LoadFromEnumerable(enumerableData);
+            return dv;
         }
     }
 }

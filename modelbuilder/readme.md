@@ -44,7 +44,7 @@ If you are trying to predict a value e.g. price of a car or how many units of th
 
 If you are trying to classify data into two or multiple categories those are examples of classification machine learning tasks e.g.
 * If a sentiment is positive or negative is an example of **binary classification**
-* If a sentiment is positive, negative or nuetral (2 or more categories) is an example of **multi-classification task**
+* If a sentiment is positive, negative or neutral (2 or more categories) is an example of **multi-classification task**
 
 Model Builder currently comes with two scenario templates which provide an example each of regression (i.e. Price Prediction) and binary-classification (i.e. Sentiment Analysis).
 
@@ -263,9 +263,11 @@ There are a few things you can try to improve your model performance
 ## Limitations
 This is the first preview of Model Builder and has the following limitations. We are actively working on improving the experience in the future releases.
 
+* Visual Studio 2017 15.9.12 or greater
+* Supported Visual Studio SKUs - Enterprise, Professional, and Community 
 * There is a limit of 1GB on the training dataset.
 * SQL Server has a limit of 100K rows for training
 * Microsoft SQL Server Data Tools for Visual Studio 2017 is not supported.
 
 ## Issues
-Please file any issues you observer with the Model Builder extension @ the https://github.com/dotnet/machinelearning repo
+Please file any issues you observe with the Model Builder extension @  https://aka.ms/modelbuilderissues

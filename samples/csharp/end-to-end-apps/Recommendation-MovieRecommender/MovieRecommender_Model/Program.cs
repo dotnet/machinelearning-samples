@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace MovieRecommenderModel
 {
@@ -51,18 +52,16 @@ namespace MovieRecommenderModel
 
             //STEP 4: Transform your data by encoding the two features userId and movieID.
             //        These encoded features will be provided as input to FieldAwareFactorizationMachine learner
-            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "userIdFeaturized", inputColumnName: nameof(MovieRating.userId))
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "userIdFeaturized", inputColumnName: nameof(MovieRating.userId))
                                           .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "movieIdFeaturized", inputColumnName: nameof(MovieRating.movieId))
-                                          .Append(mlContext.Transforms.Concatenate("Features", "userIdFeaturized", "movieIdFeaturized"))
-                                          .Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] {"Features"})));
-
-            var preview = pipeline.Preview(trainingDataView, maxRows: 10);
-
+                                          .Append(mlContext.Transforms.Concatenate("Features", "userIdFeaturized", "movieIdFeaturized"))); 
+            Common.ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 10);
+            
             // STEP 5: Train the model fitting to the DataSet
             Console.WriteLine("=============== Training the model ===============", color);
             Console.WriteLine();
-
-            var model = pipeline.Fit(trainingDataView);
+            var trainingPipeLine = dataProcessPipeline.Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(new string[] { "Features" }));
+            var model = trainingPipeLine.Fit(trainingDataView);
 
             //STEP 6: Evaluate the model performance
             Console.WriteLine("=============== Evaluating the model ===============", color);
