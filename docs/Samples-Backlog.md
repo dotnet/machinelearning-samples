@@ -12,3 +12,8 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 8    | Remove TransformData in PeekDataView in ConsoleHelper class.Run the preview code only in debugger mode.not in prod environment                                                                                                                                          | p2       |            |
 | 9    | Add a sample on Model Expalinability (using Taxi Fare sample)                                                                                                                                                                                                           |  p1      |            |
 | 10   | Sample using an .IDV format dataset for performace (TBD what app sample) - Check this PR/code for it: https://github.com/dotnet/machinelearning/pull/3745                                                                                                                                                                                                | p1         |            |
+| 11   | Binary Classification: Flight delay prediction. Migrate from Azure ML Studio: https://gallery.azure.ai/Experiment/Binary-Classification-Flight-delay-prediction-3
+                                                                                                                                                                                                | p2         |            |
+
+
+
