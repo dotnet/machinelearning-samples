@@ -171,6 +171,7 @@ namespace Common
         }
 
         [Conditional("DEBUG")]
+        // This method using 'DebuggerExtensions.Preview()' should only be used when debugging/developing, not for release/production trainings
         public static void PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Peek data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
@@ -198,6 +199,7 @@ namespace Common
         }
 
         [Conditional("DEBUG")]
+        // This method using 'DebuggerExtensions.Preview()' should only be used when debugging/developing, not for release/production trainings
         public static void PeekVectorColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Peek data in DataView: : Show {0} rows with just the '{1}' column", numberOfRows, columnName );
