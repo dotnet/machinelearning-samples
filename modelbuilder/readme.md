@@ -263,6 +263,8 @@ There are a few things you can try to improve your model performance
 ## Limitations
 This is the first preview of Model Builder and has the following limitations. We are actively working on improving the experience in the future releases.
 
+* Visual Studio 2017 15.9.12 or greater
+* Supported Visual Studio SKUs - Enterprise, Professional, and Community 
 * There is a limit of 1GB on the training dataset.
 * SQL Server has a limit of 100K rows for training
 * Microsoft SQL Server Data Tools for Visual Studio 2017 is not supported.
