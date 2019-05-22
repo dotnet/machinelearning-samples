@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.ML.Data;
 using Microsoft.ML;
 using static Microsoft.ML.TrainCatalogBase;
+using System.Diagnostics;
 
 namespace Common
 {
@@ -169,6 +170,7 @@ namespace Common
             }
         }
 
+        [Conditional("DEBUG")]
         public static void PeekDataViewInConsole(MLContext mlContext, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Peek data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
@@ -194,8 +196,9 @@ namespace Common
                 Console.WriteLine(lineToPrint + "\n");
             }
         }
-      
-        public static List<float[]> PeekVectorColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
+
+        [Conditional("DEBUG")]
+        public static void PeekVectorColumnDataInConsole(MLContext mlContext, string columnName, IDataView dataView, IEstimator<ITransformer> pipeline, int numberOfRows = 4)
         {
             string msg = string.Format("Peek data in DataView: : Show {0} rows with just the '{1}' column", numberOfRows, columnName );
             ConsoleWriteHeader(msg);
@@ -216,8 +219,6 @@ namespace Common
                                             }
                                             Console.WriteLine(concatColumn);
                                           });
-
-            return someColumnData;
         }
 
         public static void ConsoleWriteHeader(params string[] lines)
