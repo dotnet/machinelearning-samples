@@ -2,20 +2,14 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | Up-to-date | Console app | .tsv + image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
+| v1.0.0           | Dynamic API | Up-to-date | Console app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
 
 ## Problem 
 Object detection is one of the classical problems in computer vision: Recognize what the objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
 
  
 ## DataSet
-There are two data sources: the `tsv` file and the image files.  The [tsv file](./ObjectDetectionConsoleApp/assets/images/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
-```tsv
-dog2.jpg	dog2
-Intersection-Counts.jpg	intersection
-ManyPets.jpg	ManyPets
-```
-The images are located in the [assets](./ObjectDetectionConsoleApp/assets/images) folder. These images have been downloaded internet 
+The dataset contains images which are located in the [assets](./ObjectDetectionConsoleApp/assets/images) folder. These images are taken from [wikimedia commons site](https://commons.wikimedia.org/wiki/Main_Page). Go to [Wikimediacommon.md](./ObjectDetectionConsoleApp/assets/images/wikimedia.md) to refer to the image urls and their licenses.
 
 ## Pre-trained model
 There are multiple models which are pre-trained for identifying multiple objects in the images. here we are using the pretrained model, **Tiny Yolo2** in  **ONNX** format. This model is a real-time neural network for object detection that detects 20 different classes. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.

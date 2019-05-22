@@ -3,54 +3,44 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>07b5f177-2aea-4405-8e78-4121f2a881ff</UserSecretsId>
   </PropertyGroup>
-
+ 
   <ItemGroup>
-    <Content Remove="wwwroot\ImagesList\image3.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ImagesList\image1.jpeg" />
-    <None Remove="ImagesList\image2.jpg" />
-    <None Remove="ImagesList\image4.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="ImagesList\image1.jpeg">
+    <Content Include="Assets\inputs\imagesList\image2.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="ImagesList\image2.jpg">
+    <Content Include="Assets\inputs\imagesList\image4.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>    
+    <Content Include="Assets\inputs\imagesList\image1.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="ImagesList\image4.jpg">
+    <Content Include="Assets\inputs\imagesList\image3.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\ImagesList\image1.jpeg" />
-    <None Include="wwwroot\ImagesList\image2.jpg" />
-    <None Include="wwwroot\ImagesList\image3.jpg" />
-    <None Include="wwwroot\ImagesList\image4.jpg" />
-  </ItemGroup>
-
+ 
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="0.12.0" />
-    <PackageReference Include="Microsoft.ML" Version="1.0.0" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLPreviewVersion)" />
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
   </ItemGroup>
 
-
   <ItemGroup>
+    <None Update="Assets\inputs\model\TinyYolo2_model.onnx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\outputs\ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ImagesTemp\Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Model\yolov3.onnx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </None>    
   </ItemGroup>
 
 </Project>

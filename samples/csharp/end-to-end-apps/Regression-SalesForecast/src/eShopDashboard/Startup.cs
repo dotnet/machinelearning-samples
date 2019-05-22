@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.ML;
 using Microsoft.ML;
 using Serilog;
 
@@ -40,34 +41,11 @@ namespace eShopDashboard
             services.AddScoped<CatalogContextSetup>();
             services.AddScoped<OrderingContextSetup>();
 
-
-            //MLContext created as singleton for the whole ASP.NET Core app
-            services.AddSingleton<MLContext, MLContext>((ctx) =>
-            {
-                //Seed set to any number so you have a deterministic environment
-                return new MLContext(seed: 1);
-            });
-
-            services.AddSingleton <MLModelEngine<ProductData, ProductUnitPrediction>>((ctx) =>
-            {
-                MLContext mlContext = ctx.GetRequiredService<MLContext>();
-                string modelFolder = Configuration["ForecastModelsPath"];
-                string modelFilePathName = $"{modelFolder}/product_month_fastTreeTweedie.zip";
-                return new MLModelEngine<ProductData, ProductUnitPrediction>(mlContext, modelFilePathName);
-            });
-
-            services.AddSingleton<MLModelEngine<CountryData, CountrySalesPrediction>>((ctx) =>
-            {
-                MLContext mlContext = ctx.GetRequiredService<MLContext>();
-                string modelFolder = Configuration["ForecastModelsPath"];
-                string modelFilePathName = $"{modelFolder}/country_month_fastTreeTweedie.zip";
-                return new MLModelEngine<CountryData, CountrySalesPrediction>(mlContext, 
-                                                                              modelFilePathName, 
-                                                                              minPredictionEngineObjectsInPool:15,
-                                                                              maxPredictionEngineObjectsInPool:1000,
-                                                                              expirationTime:60000);
-            });
-
+            services.AddPredictionEnginePool<ProductData, ProductUnitPrediction>()
+                .FromFile(Configuration["ProductMLModelPath"]);
+            services.AddPredictionEnginePool<CountryData, CountrySalesPrediction>()
+                .FromFile(Configuration["CountryMLModelPath"]);
+            
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));
 
             services.AddMvc();

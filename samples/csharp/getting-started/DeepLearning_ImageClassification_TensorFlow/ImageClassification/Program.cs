@@ -17,9 +17,6 @@ namespace ImageClassification
             var inceptionPb = Path.Combine(assetsPath, "inputs", "inception", "tensorflow_inception_graph.pb");
             var labelsTxt = Path.Combine(assetsPath, "inputs", "inception", "imagenet_comp_graph_label_strings.txt");
 
-            var customInceptionPb = Path.Combine(assetsPath, "inputs", "inception_custom", "model_tf.pb");
-            var customLabelsTxt = Path.Combine(assetsPath, "inputs", "inception_custom", "labels.txt");
-
             try
             {
                 var modelScorer = new TFModelScorer(tagsTsv, imagesFolder, inceptionPb, labelsTxt);
@@ -38,9 +35,7 @@ namespace ImageClassification
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
-
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
-
             return fullPath;
         }
     }
