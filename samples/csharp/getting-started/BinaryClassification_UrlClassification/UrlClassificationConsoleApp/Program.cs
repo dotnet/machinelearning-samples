@@ -14,9 +14,9 @@ namespace UrlClassification
 {
     class Program
     {
-        static string dataReltivePath = @"../../../Data/train/url_svmlight/*";
-        static string testDataRelativePath = @"../../../Data/test/Day21.svm";
-        static string predictDataRelativePath = @"../../../Data/test/predict.svm";
+        static string dataReltivePath = @"../../../../Data/train/url_svmlight/*";
+        static string testDataRelativePath = @"../../../../Data/test/Day21.svm";
+        static string predictDataRelativePath = @"../../../../Data/test/predict.svm";
 
         //static string AppPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         //static string DataDirectoryPath = Path.Combine(AppPath, "..", "..", "..", "Data1", "train");
