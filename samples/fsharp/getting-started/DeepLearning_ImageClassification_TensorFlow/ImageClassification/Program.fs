@@ -14,7 +14,7 @@ let channelsLast = true
 let OutputTensorName = "softmax2"
 
 [<CLIMutable>]
-type ImageNetData = 
+type ImageNetData =
     {
         [<LoadColumn(0)>]
         ImagePath : string
@@ -35,8 +35,8 @@ type ImageNetDataProbability =
 type ImageNetPipeline =
     {
         ImagePath : string
-        Label : string 
-        PredictedLabelValue : string 
+        Label : string
+        PredictedLabelValue : string
         Score : float32 []
         softmax2_pre_activation : float32 []
     }
@@ -48,7 +48,7 @@ type ImageNetPrediction =
     }
 
 
-let printImagePrediction (x : ImageNetPipeline) = 
+let printImagePrediction (x : ImageNetPipeline) =
     let defaultForeground = Console.ForegroundColor
     let labelColor = ConsoleColor.Magenta
     let probColor = ConsoleColor.Blue
@@ -66,7 +66,7 @@ let printImagePrediction (x : ImageNetPipeline) =
     Console.ForegroundColor <- defaultForeground;
     printfn ""
 
-let printHeader lines = 
+let printHeader lines =
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Yellow
     printfn " "
@@ -74,8 +74,8 @@ let printHeader lines =
     let maxLength = lines |> Seq.map (fun x -> x.Length) |> Seq.max
     printfn "%s" (String('#', maxLength))
     Console.ForegroundColor <- defaultColor
-    
-let printExn lines = 
+
+let printExn lines =
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Red
     printfn " "
@@ -84,8 +84,8 @@ let printExn lines =
     Console.ForegroundColor <- defaultColor
     lines |> Seq.iter (printfn "%s")
 
-let printImageNetProb (x : ImageNetDataProbability) = 
-    
+let printImageNetProb (x : ImageNetDataProbability) =
+
     let defaultForeground = Console.ForegroundColor
     let labelColor = ConsoleColor.Magenta
     let probColor = ConsoleColor.Blue
@@ -101,7 +101,7 @@ let printImageNetProb (x : ImageNetDataProbability) =
     printf "%s" x.Label
     Console.ForegroundColor <- defaultForeground
     printf " predicted as "
-    if x.Label = x.PredictedLabel then 
+    if x.Label = x.PredictedLabel then
         Console.ForegroundColor <- exactLabel
         printf "%s" x.PredictedLabel
     else
@@ -114,7 +114,7 @@ let printImageNetProb (x : ImageNetDataProbability) =
     Console.ForegroundColor <- defaultForeground
     printfn ""
 
-let score dataLocation imagesFolder inputModelLocation labelsTxt = 
+let score dataLocation imagesFolder inputModelLocation labelsTxt =
     printHeader ["Read model"]
     printfn "Model location: %s" inputModelLocation
     printfn "Images folder: %s" imagesFolder
@@ -137,16 +137,16 @@ let score dataLocation imagesFolder inputModelLocation labelsTxt =
     printfn "Labels file: %s" labelsTxt
 
     let labels = File.ReadAllLines(labelsTxt)
-    
+
     File.ReadAllLines(dataLocation)
     |> Seq.map (fun x -> let fields = x.Split '\t' in {ImagePath = Path.Combine(imagesFolder, fields.[0]); Label = fields.[1]})
-    |> Seq.map 
+    |> Seq.map
         (fun sample ->
             let preds = predictionEngine.Predict(sample).PredictedLabels
             let bestLabelIndex =
                 preds
-                |> Seq.mapi (fun i x -> i, x) 
-                |> Seq.maxBy snd 
+                |> Seq.mapi (fun i x -> i, x)
+                |> Seq.maxBy snd
                 |> fst
             {
                 PredictedLabel = labels.[bestLabelIndex]
@@ -156,7 +156,7 @@ let score dataLocation imagesFolder inputModelLocation labelsTxt =
             }
         )
     |> Seq.iter printImageNetProb
-    
+
 [<EntryPoint>]
 let main _argv =
     let assetsPath = Path.Combine(dataRoot.Directory.FullName, @"..\..\..\assets")
@@ -167,9 +167,9 @@ let main _argv =
 
     try
         score tagsTsv imagesFolder inceptionPb labelsTxt
-    with 
-    | e -> printExn [e.Message]
-    
+    with
+    | e -> printExn [e.ToString()]
+
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Green
     printfn " "

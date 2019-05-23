@@ -24,7 +24,7 @@ namespace ImageClassification.Predict
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex.Message);
+                ConsoleWriteException(ex.ToString());
             }
 
             ConsolePressAnyKey();

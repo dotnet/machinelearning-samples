@@ -25,7 +25,7 @@ namespace ImageClassification.Train
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex.Message);
+                ConsoleWriteException(ex.ToString());
             }
 
             ConsolePressAnyKey();

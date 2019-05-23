@@ -30,7 +30,7 @@ namespace CustomerSegmentation
                 clusteringModelScorer.CreateCustomerClusters();
             } catch (Exception ex)
             {
-                Common.ConsoleHelper.ConsoleWriteException(ex.Message);
+                Common.ConsoleHelper.ConsoleWriteException(ex.ToString());
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
