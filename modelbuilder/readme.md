@@ -181,9 +181,9 @@ You can use these datasets to get started with Model Builder
                      
 By default, Model Builder will take all but the **column to predict (Label)** as input for training the model. 
 
-The Label is what you are predicting,  The rest of the columns are Features, which are attributes that help predict the Label. Limiting to most relevant attributes or features will result in providing you the best performance for your models. 
+The Label is what you are predicting,  The rest of the columns are Features, which are attributes that help predict the Label. Limiting to most relevant attributes or features will result in providing you the best performance for your models.
 
-We currently support *.tsv*, *.csv* and SQL as the data-types you can use as datasets for the Model Builder 
+We currently support *.tsv*, *.csv* and SQL as the data-types you can use as datasets for the Model Builder. The files should have a header row. For this preview Model Builder does not support *.txt files or ';' separated or ',' separated files
 
 ## Train
 
@@ -263,6 +263,7 @@ There are a few things you can try to improve your model performance
 ## Limitations
 This is the first preview of Model Builder and has the following limitations. We are actively working on improving the experience in the future releases.
 
+* We currently support *.tsv*, *.csv* and SQL as the data-types you can use as datasets for the Model Builder. The files should have a header row. For this preview Model Builder does not support *.txt files or ';' separated or ',' separated files
 * Visual Studio 2017 15.9.12 or greater
 * Supported Visual Studio SKUs - Enterprise, Professional, and Community 
 * There is a limit of 1GB on the training dataset.
