@@ -60,8 +60,7 @@ namespace CreditCardFraudDetection.Trainer
 
         public static void PrepDatasets(MLContext mlContext, string fullDataSetFilePath, string trainDataSetFilePath, string testDataSetFilePath)
         {
-            //Only prep-datasets if train and test datasets don't exist yet
-
+            // Only prep-datasets if train and test datasets don't exist yet
             if (!File.Exists(trainDataSetFilePath) &&
                 !File.Exists(testDataSetFilePath))
             {
@@ -131,7 +130,7 @@ namespace CreditCardFraudDetection.Trainer
             var options = new RandomizedPcaTrainer.Options
             {
                 //FeatureColumnName = "FeaturesNormalizedByMeanVar",  // The name of the feature column. The column data must be a known-sized vector of Single.
-                FeatureColumnName = "Features",  // The name of the feature column. The column data must be a known-sized vector of Single.
+                FeatureColumnName = "Features",                     // The name of the feature column. The column data must be a known-sized vector of Single.
                 ExampleWeightColumnName = null,                     // The name of the example weight column (optional). To use the weight column, the column data must be of type Single.
                 Rank = 20,                                          // The number of components in the PCA.
                 Oversampling = 20,                                  // Oversampling parameter for randomized PCA training.
@@ -169,19 +168,13 @@ namespace CreditCardFraudDetection.Trainer
 
             var predictions = model.Transform(testDataView);
 
-
-
-            //var metricms = mlContext.BinaryClassification.Evaluate(data: predictions,
-            //labelColumnName: nameof(TransactionObservation.Label),
-            //scoreColumnName: "Score");
-
             AnomalyDetectionMetrics metrics = mlContext.AnomalyDetection.Evaluate(data: predictions,
                                                                                   labelColumnName: "LabelValue",
                                                                                   scoreColumnName: "Score");
 
             //AnomalyDetectionMetrics metrics = mlContext.AnomalyDetection.Evaluate(data: predictions);
 
-            ConsoleHelper.PrintPrediction(metrics.ToString());
+            ConsoleHelper.PrintAnomalyDetectionMetrics("RandomizedPca", metrics);
             //ConsoleHelper.PrintBinaryClassificationMetrics(trainerName, metrics);
         }
 
