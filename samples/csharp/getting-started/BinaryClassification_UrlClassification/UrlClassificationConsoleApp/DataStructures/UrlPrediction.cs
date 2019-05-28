@@ -11,11 +11,7 @@ namespace UrlClassification.DataStructures
         // its default value, which is the name of the field.
         [ColumnName("PredictedLabel")]
         public bool Prediction;
-
-        // No need to specify ColumnName attribute, because the field
-        // name "Probability" is the column name we want.
-        //public float Probability;
-
+        
         public float Score;
     }
 }

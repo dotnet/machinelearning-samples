@@ -5,14 +5,11 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using UrlClassification.DataStructures;
 using static Microsoft.ML.DataOperationsCatalog;
-using static Microsoft.ML.TrainCatalogBase;
 
 namespace UrlClassification
 {
