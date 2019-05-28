@@ -48,6 +48,8 @@ DownloadDataset(originalDataDirectoryPath);
 **Prepare Data:**
 * As the downloaded dataset contains feature columns in **sparse matrix format**, we need to prepare/transform the dataset by adding a new column that is **total number of features in dataset**   before the  features columns(second column in this case) so that the dataset is compatable   for ML.Net API for training and evaluation. As our dataset contains **3231961** features, All the rows in all files contain **3231961**  as second column value after transformation.
 
+Note: As the preparation of data takes some time around 2-3 minutes, this step does not run every time if the data is already trasformed. If you need this to be run everytime then remove the condition if (Directory.GetFiles(transformedDataPath).Length == 0) inside PrepareDataset() method.
+
 ```CSharp
 //Step 2:Prepare/Transofrm data
 PrepareDataset(originalDataPath, transformedDataPath);
