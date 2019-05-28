@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-FieldAwareFactorizationMachine| v1.0.0           | Dynamic API | Up-to-date | Console app | .txt files | URL classification | Binary classification | FastTree |
+| v1.0.0           | Dynamic API | Up-to-date | Console app | .txt files | URL classification | Binary classification | FieldAwareFactorizationMachine |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict whether an URL is malicious or not. In the world of machine learning, this type of classification is known as **binary classification**.
 
