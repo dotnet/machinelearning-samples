@@ -69,7 +69,7 @@ Note that ML.NET works with data with a lazy-load approach, so in reality no dat
 
 ### 3. Evaluate model
 
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments. 
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (trainTestSplit.TestSet). This dataset also contains known sentiments. 
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
