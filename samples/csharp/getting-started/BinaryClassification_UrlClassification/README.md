@@ -15,8 +15,6 @@ This dastaset is collection of 120-days data which contains 2.3 million records 
   - -1 corresponds to Benign URL
 * Remaining columns are features which are arranged in [sparse matrix](https://en.wikipedia.org/wiki/Sparse_matrix) format. 
 
---Citation for this dataset is available at [DataSets-Citation](./HeartDiseaseDetection/Data/DATASETS-CITATION.txt)
-
 ## Problem
 This problem is to classify whether a URL is malicious or not. To solve this problem, we will build an ML model by using  one of the Binary Classification algorithms i.e FieldAwareFactorizationMachine.
 
