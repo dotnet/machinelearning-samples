@@ -5,4 +5,20 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="assets\input\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="assets\input\.gitignore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CreditCardFraudDetection.Common\CreditCardFraudDetection.Common.csproj" />
+  </ItemGroup>
+
 </Project>
