@@ -68,7 +68,6 @@ experimentResult.RunDetails
 |> Seq.truncate 3
 |> Seq.iteri (fun i x -> ConsoleHelper.printBinaryIterationMetrics (i + 1) x.TrainerName x.ValidationMetrics x.RuntimeInSeconds) 
 
-
 // STEP 5: Evaluate the model and print metrics
 ConsoleHelper.consoleWriteHeader "=============== Evaluating model's accuracy with test data ==============="
 let bestRun = experimentResult.BestRun

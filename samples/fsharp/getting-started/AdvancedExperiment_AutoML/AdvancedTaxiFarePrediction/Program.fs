@@ -100,7 +100,7 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
                 "TaxiRegressionDistribution.png"
         pl.sfnam chartFileName
 
-        // use white background with black foreground
+        // Use white background with black foreground
         pl.spal0 "cmap0_alternate.pal"
 
         // Initialize plplot
@@ -117,8 +117,8 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
         // The main title
         pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction")
 
-        // plot using different colors
-        // see http://plplot.sourceforge.net/examples.php?demo=02 for palette indices
+        // Plot using different colors
+        // See: http://plplot.sourceforge.net/examples.php?demo=02 for palette indices
         pl.col0(1)
 
         let testData = 
@@ -131,7 +131,7 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
         // This code is the symbol to paint
         let code = char 9
 
-        // plot using other color
+        // Plot using other color
         //pl.col0(9) //Light Green
         //pl.col0(4) //Red
         pl.col0(2) //Blue
@@ -153,7 +153,6 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
      
         // Regression Line calculation explanation:
         // https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/more-on-regression/v/regression-line-example
-
         let minY = yTotal / totalNumber
         let minX = xTotal / totalNumber
         let minXY = xyMultiTotal / totalNumber
@@ -236,7 +235,7 @@ let experimentResult =
         // (Please note: for an experiment on a large dataset, opting to keep all 
         // models trained by AutoML in memory could cause your system to run out 
         // of memory.)
-        experimentSettings.CacheDirectory <- null
+        //experimentSettings.CacheDirectory <- null
 
         // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
         // (These trainers sometimes underperform on this dataset.)

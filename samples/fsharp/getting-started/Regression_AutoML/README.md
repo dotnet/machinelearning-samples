@@ -29,7 +29,7 @@ Instantiate and run an AutoML experiment. In doing so, specify how long the expe
 
 ```fsharp
 // Run AutoML binary classification experiment
-let experimentResult = mlContext.Auto() .CreateRegressionExperiment(experimentTimeInSeconds).Execute(trainingDataView, labelColumnName, progressHandler= progressHandler)
+let experimentResult = mlContext.Auto().CreateRegressionExperiment(experimentTimeInSeconds).Execute(trainingDataView, labelColumnName, progressHandler= progressHandler)
 ```
 
 ## Step 3: Evaluate Model
