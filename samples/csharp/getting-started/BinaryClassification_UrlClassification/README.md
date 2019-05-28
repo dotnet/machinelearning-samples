@@ -1,26 +1,24 @@
-# Heart disease prediction
+# URL Classification
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | Up-to-date | Console app | .txt files | URL classification | Binary classification | FastTree |
+FieldAwareFactorizationMachine| v1.0.0           | Dynamic API | Up-to-date | Console app | .txt files | URL classification | Binary classification | FastTree |
 
-In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict whether an URL is malicious or not. In the world of machine learning, this type of prediction is known as **binary classification**.
+In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict whether an URL is malicious or not. In the world of machine learning, this type of classification is known as **binary classification**.
 
 ## Dataset
 The dataset used is this: [URL Reputation Data Set] (https://archive.ics.uci.edu/ml/datasets/URL+Reputation)
 This dastaset is collection of 120-days data which contains 2.3 million records and 3.2 million features.
 
 * The first column is Label column where
-+1 means Malicious URL
--1 means Benign URL
+  - +1 corresponds to Malicious URL
+  - -1 corresponds to Benign URL
 * Remaining columns are features which are arranged in [sparse matrix](https://en.wikipedia.org/wiki/Sparse_matrix) format. 
 
 --Citation for this dataset is available at [DataSets-Citation](./HeartDiseaseDetection/Data/DATASETS-CITATION.txt)
 
 ## Problem
-This problem is to classify whether a URL is malicious or not. To solve this problem, we will build an ML model by using  one of the Binary Classification algorithms i.e --TBD
-
-
+This problem is to classify whether a URL is malicious or not. To solve this problem, we will build an ML model by using  one of the Binary Classification algorithms i.e FieldAwareFactorizationMachine.
 
 ## ML task - Binary classification
 The generalized problem of **binary classification** is to classify items into items into one of the two classes (classifying items into more than two classes is called **multiclass classification**).
@@ -38,25 +36,68 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 ### 1. Build model
 
-Building a model includes: 
+**Download Data:**
 
-* Define the data's schema maped to the datasets to load (`HeartTraining.tsv` and `HeartTest.csv`) with a TextLoader.
-
-* Create an Estimator by concatenateing the features into single 'features' column
-
-* Choosing a trainer/learning algorithm (such as `FastTree`) to train the model with. 
-
-The initial code is similar to the following:
+* In this sample, we are downloading the dataset using HttpClient as the dataset is very large.  
 
 ```CSharp
-// STEP 1: Common data loading configuration
-var trainingDataView = mlContext.Data.LoadFromTextFile<HeartData>(TrainDataPath, hasHeader: true, separatorChar: ';');
-var testDataView = mlContext.Data.LoadFromTextFile<HeartData>(TestDataPath, hasHeader: true, separatorChar: ';');
+//STEP 1: Download dataset
+DownloadDataset(originalDataDirectoryPath);
+```
 
-// STEP 2: Concatenate the features and set the training algorithm
-var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", "TrestBps", "Chol", "Fbs", "RestEcg", "Thalac", "Exang", "OldPeak", "Slope", "Ca", "Thal")
-                .Append(mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features"));                         
+**Prepare Data:**
+* As the downloaded dataset contains feature columns in **sparse matrix format**, we need to prepare/transform the dataset by adding a new column that is **total number of features in dataset**   before the  features columns(second column in this case) so that the dataset is compatable   for ML.Net API for training and evaluation. As our dataset contains **3231961** features, All the rows in all files contain **3231961**  as second column value after transformation.
 
+```CSharp
+//Step 2:Prepare/Transofrm data
+PrepareDataset(originalDataPath, transformedDataPath);
+```
+
+* Define the schema of dataset using **UrlData** class. 
+
+```CSharp
+public class UrlData
+    {
+        [LoadColumn(0)]
+        public string LabelColumn;
+        
+        [LoadColumn(1, 3231961)]
+        [VectorType(3231961)]
+        public float[] FeatureVector;
+    }
+```
+* Load the data into dataview using Text Loader.
+
+```CSharp
+var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
+                                                      hasHeader: false,
+                                                      allowSparse: true);
+```                                               
+
+* split the full dataview into 80-20 ratio to train and test data
+
+```CSharp
+//Step 4: Divide the whole dataset into 80% training and 20% testing data.
+TrainTestData trainTestData = mlContext.Data.TrainTestSplit(fullDataView, testFraction: 0.2, seed: 1);
+IDataView trainDataView = trainTestData.TrainSet;
+IDataView testDataView = trainTestData.TestSet;
+```
+* ML.Net API accepts Label value in **Boolean** format. Our dataset contains Label value in **string** format. So map the string values of label into to boolean values.
+
+```CSharp
+//Step 5: Map label value from string to bool
+var UrlLabelMap = new Dictionary<string, bool>();
+UrlLabelMap["+1"] = true; //Malicious url
+UrlLabelMap["-1"] = false; //Benign 
+var dataProcessingPipeLine = mlContext.Transforms.Conversion.MapValue("LabelKey", UrlLabelMap, "LabelColumn");
+```
+
+* Choosing a trainer/learning algorithm (such as `FieldAwareFactorizationMachine`) to train the model with. 
+
+```CSharp
+//Step 6: Append trainer to pipeline
+ var trainingPipeLine = dataProcessingPipeLine.Append(
+                mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(labelColumnName: "LabelKey", featureColumnName: "FeatureVector")); 
 ```
 
 ### 2. Train model
@@ -65,7 +106,8 @@ Training the model is a process of running the chosen algorithm on a training da
 To perform training you need to call the `Fit()` method while providing the training dataset in a DataView object.
 
 ```CSharp
-ITransformer trainedModel = pipeline.Fit(trainingDataView);
+//Step 7: Train the model
+ITransformer trainedModel = pipeline.Fit(trainDataView);
 ```
 
 Note that ML.NET works with data with a lazy-load approach, so in reality no data is really loaded in memory until you actually call the method .Fit().
@@ -83,37 +125,18 @@ var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelCo
 
 ### 4. Consume model
 
-After the model is trained, you can use the `Predict()` API to predict if heart disease is present for a list of heart data set. 
+After the model is trained, you can use the `Predict()` API check if a URL is malicious or benign. Here I have taken first 4 rows from the testDataView for prediction as it is difficult to create a sample data with millions of features manually.
 
 ```CSharp
 // Create prediction engine related to the loaded trained model
-var predictionEngine = mlContext.Model.CreatePredictionEngine<HeartData, HeartPrediction>(trainedModel);                   
+var predEngine = mlContext.Model.CreatePredictionEngine<UrlData, UrlPrediction>(mlModel);                 
 
-foreach (var heartData in HeartSampleData.heartDataList)
-            {
-                var prediction = predictionEngine.Predict(heartData);
-
-                Console.WriteLine($"=============== Single Prediction  ===============");
-                Console.WriteLine($"Age: {heartData.Age} ");
-                Console.WriteLine($"Sex: {heartData.Sex} ");
-                Console.WriteLine($"Cp: {heartData.Cp} ");
-                Console.WriteLine($"TrestBps: {heartData.TrestBps} ");
-                Console.WriteLine($"Chol: {heartData.Chol} ");
-                Console.WriteLine($"Fbs: {heartData.Fbs} ");
-                Console.WriteLine($"RestEcg: {heartData.RestEcg} ");
-                Console.WriteLine($"Thalac: {heartData.Thalac} ");
-                Console.WriteLine($"Exang: {heartData.Exang} ");
-                Console.WriteLine($"OldPeak: {heartData.OldPeak} ");
-                Console.WriteLine($"Slope: {heartData.Slope} ");
-                Console.WriteLine($"Ca: {heartData.Ca} ");
-                Console.WriteLine($"Thal: {heartData.Thal} ");
-                Console.WriteLine($"Prediction Value: {prediction.Prediction} ");
-                Console.WriteLine($"Prediction: {(prediction.Prediction ? "A disease could be present" : "Not present disease" )} ");
-                Console.WriteLine($"Probability: {prediction.Probability} ");
-                Console.WriteLine($"==================================================");
-                Console.WriteLine("");
-                Console.WriteLine("");
-            }
+var sampleDatas = CreateSingleDataSample(mlContext, trainDataView);
+foreach (var sampleData in sampleDatas)
+{
+    UrlPrediction predictionResult = predEngine.Predict(sampleData);
+    Console.WriteLine($"Single Prediction --> Actual value: {sampleData.LabelColumn} | Predicted value: {predictionResult.Prediction}");
+}
 
 ```
 

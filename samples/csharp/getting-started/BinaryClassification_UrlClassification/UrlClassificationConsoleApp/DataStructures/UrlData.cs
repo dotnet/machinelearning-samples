@@ -14,9 +14,4 @@ namespace UrlClassification.DataStructures
         [VectorType(3231961)]
         public float[] FeatureVector;
     }
-
-    public class TransformedData : UrlData
-    {
-        public bool LabelKey { get; set; }
-    }
 }

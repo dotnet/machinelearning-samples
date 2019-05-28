@@ -1,4 +1,5 @@
-﻿using ICSharpCode.SharpZipLib.GZip;
+﻿using Common;
+using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using Microsoft.ML;
 using Microsoft.ML.Data;
@@ -20,74 +21,53 @@ namespace UrlClassification
         static string originalDataDirectoryRelativePath = @"../../../Data/OriginalUrlData";
         static string originalDataReltivePath = @"../../../Data/OriginalUrlData/url_svmlight";
         static string transformedDataReltivePath = @"../../../Data/TransformedUrlData";
-        static string originalPredictDataRelativePath = @"../../../../Data/OriginalPredict/predict.svm";
-        static string transofomedPredictDataRelativePath = @"../../../../Data/TransformedPredict/predict.svm";
 
         static string originalDataDirectoryPath = GetAbsolutePath(originalDataDirectoryRelativePath);
         static string originalDataPath = GetAbsolutePath(originalDataReltivePath);
         static string transformedDataPath = GetAbsolutePath(transformedDataReltivePath);
-        static string originalPredictDataPath = GetAbsolutePath(originalPredictDataRelativePath);
-        static string transformedPredictDataPath = GetAbsolutePath(transofomedPredictDataRelativePath);
 
         //to be removed
         static string fixedDataPath = GetAbsolutePath(@"../../../../Data/train/fixed.svm");
         static void Main(string[] args)
         {
-            DownloadDataset(originalDataPath);
+            //STEP 1: Download dataset
+            DownloadDataset(originalDataDirectoryPath);
 
+            //Step 2:Prepare/Transofrm data
             PrepareDataset(originalDataPath, transformedDataPath);
 
-            //STEP 1: Create MLContext to be shared across the model creation workflow objects 
+            //STEP 3: Create MLContext to be shared across the model creation workflow objects 
             MLContext mlContext = new MLContext();
 
-            var fullData = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
+            var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
                                                       hasHeader: false,
                                                       allowSparse: true);
 
-            TrainTestData trainTestData = mlContext.Data.TrainTestSplit(fullData, testFraction: 0.2, seed: 1);
-            IDataView trainData = trainTestData.TrainSet;
-            IDataView testData = trainTestData.TestSet;
-
-            //var fixedData = mlContext.Data.LoadFromTextFile<UrlData>(path: fixedDataPath,
-            //                                          hasHeader: false,
-            //                                          allowSparse: true);
-            //var y = fixedData.Preview();
-            //var trainPrev = traindata.Preview();
-            //AddFeaturesColumn(testDataPath);
-            //var testDataView = mlContext.Data.LoadFromTextFile<UrlData>(testDataPath,
-            //    hasHeader: false, allowSparse: true);
-
-            //var testPrev = testDataView.Preview();
-
-            //var predictDataView = mlContext.Data.LoadFromTextFile<UrlData>(transformedPredictDataPath,
-              //  hasHeader: false, allowSparse: true);
-            //Map label value from string to bool
+            //Step 4: Divide the whole dataset into 80% training and 20% testing data.
+            TrainTestData trainTestData = mlContext.Data.TrainTestSplit(fullDataView, testFraction: 0.2, seed: 1);
+            IDataView trainDataView = trainTestData.TrainSet;
+            IDataView testDataView = trainTestData.TestSet;
+            
+            //Step 5: Map label value from string to bool
             var UrlLabelMap = new Dictionary<string, bool>();
             UrlLabelMap["+1"] = true; //Malicious url
             UrlLabelMap["-1"] = false; //Benign 
-
-            var pipeLine = mlContext.Transforms.Conversion.MapValue("LabelKey", UrlLabelMap, "LabelColumn");
-
-            var transformer = pipeLine.Fit(trainData);
-
-            var transformedData = transformer.Transform(trainData);
-
-            var preViewTransformedData = transformedData.Preview(10);            
+            var dataProcessingPipeLine = mlContext.Transforms.Conversion.MapValue("LabelKey", UrlLabelMap, "LabelColumn");
+            ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessingPipeLine, 2);   
            
-            var trainingPipeLine = pipeLine.Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(labelColumnName: "LabelKey", featureColumnName: "FeatureVector"));
+            //Step 6: Append trainer to pipeline
+            var trainingPipeLine = dataProcessingPipeLine.Append(
+                mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(labelColumnName: "LabelKey", featureColumnName: "FeatureVector"));                     
 
-            // Evaluate the model using cross-validation.
-            // Cross-validation splits our dataset into 'folds', trains a model on some folds and 
-            // evaluates it on the remaining fold. We are using 5 folds so we get back 5 sets of scores.
-            // Let's compute the average AUC, which should be between 0.5 and 1 (higher is better).
-            //var crossValidationResults = mlContext.BinaryClassification.CrossValidate(data: traindata, estimator: trainingPipeLine, numberOfFolds: 5);
-            //PrintMetrics(crossValidationResults);
-
+            //Step 7: Train the model
             Console.WriteLine("====Training the model=====");            
-            var mlModel = trainingPipeLine.Fit(trainData);
-            var predictions = mlModel.Transform(testData);
+            var mlModel = trainingPipeLine.Fit(trainDataView);
+            Console.WriteLine("====Completed Training the model=====");
+            Console.WriteLine("");
 
-            ////Console.WriteLine("====Evaluating the model=====");
+            //Step 8: Evaluate the model
+            Console.WriteLine("====Evaluating the model=====");
+            var predictions = mlModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "LabelKey", scoreColumnName: "Score");
             Console.WriteLine("");
             Console.WriteLine($"************************************************************");
@@ -97,21 +77,19 @@ namespace UrlClassification
             // Try a single prediction
             var predEngine = mlContext.Model.CreatePredictionEngine<UrlData, UrlPrediction>(mlModel);
             // Create sample data to do a single prediction with it 
-            //var sampleData = CreateSingleDataSample(mlContext, predictDataView);
-            var sampleDatas = CreateSingleDataSample(mlContext, testData);
+            var sampleDatas = CreateSingleDataSample(mlContext, trainDataView);
             foreach (var sampleData in sampleDatas)
             {
                 UrlPrediction predictionResult = predEngine.Predict(sampleData);
-
                 Console.WriteLine($"Single Prediction --> Actual value: {sampleData.LabelColumn} | Predicted value: {predictionResult.Prediction}");
             }
             Console.WriteLine("====End of Process..Press any key to exit====");
             Console.ReadLine();
         }
 
-        public static void DownloadDataset(string originalDataPath)
+        public static void DownloadDataset(string originalDataDirectoryPath)
         {
-            if (!File.Exists(originalDataPath))
+            if (!Directory.Exists(originalDataDirectoryPath))
             {
                 Console.WriteLine("Downloading and extracting data.........");
                 using (var client = new WebClient())
@@ -121,17 +99,14 @@ namespace UrlClassification
                     client.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz", "url_svmlight.zip");
                 }
 
-                //ZipFile.ExtractToDirectory("url_svmlight.zip", dataDirectoryPath);
-
-                Stream inStream = File.OpenRead("url_svmlight.zip");
-                Stream gzipStream = new GZipInputStream(inStream);
-
+                Stream inputStream = File.OpenRead("url_svmlight.zip");
+                Stream gzipStream = new GZipInputStream(inputStream);
                 TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
                 tarArchive.ExtractContents(originalDataDirectoryPath);
-                tarArchive.Close();
 
+                tarArchive.Close();
                 gzipStream.Close();
-                inStream.Close();
+                inputStream.Close();
             }           
         }
 
@@ -141,6 +116,7 @@ namespace UrlClassification
             if (!Directory.Exists(transformedDataPath))
             {
                 Directory.CreateDirectory(transformedDataPath);
+            }
                 Console.WriteLine("Preparing Data for training and evaluation...........");
                 Console.WriteLine("");
                 //ML.Net API checks for number of features column before the sparse matrix format
@@ -162,19 +138,26 @@ namespace UrlClassification
                 Console.WriteLine("");
                 Console.WriteLine("Transformed data path= {0}", transformedDataPath);
                 Console.WriteLine("");
-            }
         }
         
-        public static void AddFeaturesColumn(string originalDataPath,string transformedDataPath)
-        {            
+        public static void AddFeaturesColumn(string sourceFilePath,string transformedDataPath)
+        {
+            string trasnformedFileName = Path.GetFileName(sourceFilePath);
+            string trasnformedFilePath = Path.Combine(transformedDataPath, trasnformedFileName);
+            
+            if (!File.Exists(trasnformedFilePath))
+            {
+                File.Copy(sourceFilePath, trasnformedFilePath, true);
+            }
             string newColumnData =  "3231961";            
-            string[] CSVDump = File.ReadAllLines(originalDataPath);            
+            string[] CSVDump = File.ReadAllLines(trasnformedFilePath);            
             List<List<string>> CSV = CSVDump.Select(x => x.Split(' ').ToList()).ToList();
             for (int i = 0; i < CSV.Count; i++)
             {
                 CSV[i].Insert(1, newColumnData);
             }
-            File.WriteAllLines(transformedDataPath, CSV.Select(x => string.Join('\t', x)));
+           
+            File.WriteAllLines(trasnformedFilePath, CSV.Select(x => string.Join('\t', x)));
         }
 
         public static string GetAbsolutePath(string relativePath)
