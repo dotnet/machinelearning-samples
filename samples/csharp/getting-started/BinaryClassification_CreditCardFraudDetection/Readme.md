@@ -70,13 +70,9 @@ The initial code is similar to the following:
 
 [...]
 
-//Load the original single dataset
-    IDataView originalFullData = mlContext.Data.LoadFromTextFile<TransactionObservation>(fullDataSetFilePath, separatorChar: er: true);
-                 
-    // Split the data 80:20 into train and test sets, train and evaluate.
-    TrainTestData trainTestData = mlContext.Data.TrainTestSplit(originalFullData, testFraction: 0.2, seed: 1);
-    IDataView trainData = trainTestData.TrainSet;
-    IDataView testData = trainTestData.TestSet;
+// Load Datasets
+IDataView trainingDataView = mlContext.Data.LoadFromTextFile<TransactionObservation>(trainDataSetFilePath, separatorChar: ',', hasHeader: true);
+IDataView testDataView = mlContext.Data.LoadFromTextFile<TransactionObservation>(testDataSetFilePath, separatorChar: ',', hasHeader: true);
 
     
 [...]
@@ -108,14 +104,14 @@ The initial code is similar to the following:
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known fraud values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object.
 
-To perform training you need to call the `Fit()` method while providing the training dataset (`trainData.csv`) in a DataView object.
+To perform training you need to call the `Fit()` method by passing `trainingDataView` object.
 
 `````csharp    
-    ITransformer model = pipeline.Fit(_trainData);
+    ITransformer model = pipeline.Fit(trainingDataView);
 `````
 
 ### 3. Evaluate model
-We need this step to conclude how accurate our model is. To do so, the model from the previous step is run against another dataset that was not used in training (`testData.csv`). 
+We need this step to conclude how accurate our model is. To do so, the model from the previous step is run against another dataset that was not used in training (`testDataView`). 
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
