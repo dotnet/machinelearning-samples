@@ -39,7 +39,7 @@ As the columns in dataset are in **sparse format**, the **sparse format** requir
 
 **Download Data:**
 
-* In this sample, we are downloading the dataset using **HttpClient** as the dataset is very large.  
+* In this sample, we are downloading the dataset using **HttpClient** as the dataset is very large. The downloaded data path will be "your_project_directory/Data/OriginalUrlData/url_svmlight"
 
 ```CSharp
 //STEP 1: Download dataset
@@ -49,11 +49,11 @@ DownloadDataset(originalDataDirectoryPath);
 **Prepare Data:**
 * As the downloaded dataset contains feature columns in **sparse matrix format**, we need to prepare the dataset by adding a new column that is **total number of features in dataset**   before the  features columns(second column in this case) so that the dataset is compatable   for ML.Net API for training and evaluation. As our dataset contains **3231961** features, all the rows in all files contain **3231961**  as second column value after preparation.
 
-**Note:** As the preparation of data takes some time around 2-3 minutes, this step does not run every time if the data is already trasformed. If you need this to be run everytime then remove the condition if (Directory.GetFiles(transformedDataPath).Length == 0) inside PrepareDataset() method.
+**Note:** As the preparation of data takes some time around 2-3 minutes, this step does not run every time if the data is already trasformed. If you need this to be run everytime then remove the condition if (Directory.GetFiles(preparedDataPath).Length == 0) inside PrepareDataset() method.
 
 ```CSharp
-//Step 2:Prepare data by adding second column with value total number of features. Copy the file to the location specified by transformedDataPath variable
-PrepareDataset(originalDataPath, transformedDataPath);
+//Step 2: Prepare data by adding second column with value total number of features.
+PrepareDataset(originalDataPath, preparedDataPath);
 ```
 **Original data:**
 ```CSharp
@@ -86,7 +86,7 @@ public class UrlData
 
 ```CSharp
 //STEP 3: Common data loading configuration
-var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
+var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(preparedDataPath, "*"),
                                                       hasHeader: false,
                                                       allowSparse: true);
 ```                                               

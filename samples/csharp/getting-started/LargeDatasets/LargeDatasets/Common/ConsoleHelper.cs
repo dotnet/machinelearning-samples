@@ -155,9 +155,9 @@ namespace Common
             string msg = string.Format("Show data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
 
-            var preViewTransformedData = dataView.Preview(maxRows: numberOfRows);
+            var preViewpreparedData = dataView.Preview(maxRows: numberOfRows);
 
-            foreach (var row in preViewTransformedData.RowView)
+            foreach (var row in preViewpreparedData.RowView)
             {
                 var ColumnCollection = row.Values;
                 string lineToPrint = "Row--> ";
@@ -176,14 +176,14 @@ namespace Common
 
             //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
             var transformer = pipeline.Fit(dataView);
-            var transformedData = transformer.Transform(dataView);
+            var preparedData = transformer.Transform(dataView);
 
-            // 'transformedData' is a 'promise' of data, lazy-loading. call Preview  
+            // 'preparedData' is a 'promise' of data, lazy-loading. call Preview  
             //and iterate through the returned collection from preview.
 
-            var preViewTransformedData = transformedData.Preview(maxRows: numberOfRows);
+            var preViewpreparedData = preparedData.Preview(maxRows: numberOfRows);
 
-            foreach (var row in preViewTransformedData.RowView)
+            foreach (var row in preViewpreparedData.RowView)
             {
                 var ColumnCollection = row.Values;
                 string lineToPrint = "Row--> ";
@@ -201,10 +201,10 @@ namespace Common
             ConsoleWriteHeader(msg);
 
             var transformer = pipeline.Fit(dataView);
-            var transformedData = transformer.Transform(dataView);
+            var preparedData = transformer.Transform(dataView);
 
             // Extract the 'Features' column.
-            var someColumnData = transformedData.GetColumn<float[]>(columnName)
+            var someColumnData = preparedData.GetColumn<float[]>(columnName)
                                                         .Take(numberOfRows).ToList();
 
             // print to console the peeked rows

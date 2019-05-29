@@ -16,23 +16,23 @@ namespace LargeDatasets
     {
         static string originalDataDirectoryRelativePath = @"../../../Data/OriginalUrlData";
         static string originalDataReltivePath = @"../../../Data/OriginalUrlData/url_svmlight";
-        static string transformedDataReltivePath = @"../../../Data/TransformedUrlData";
+        static string preparedDataReltivePath = @"../../../Data/PreparedUrlData/url_svmlight";
 
         static string originalDataDirectoryPath = GetAbsolutePath(originalDataDirectoryRelativePath);
         static string originalDataPath = GetAbsolutePath(originalDataReltivePath);
-        static string transformedDataPath = GetAbsolutePath(transformedDataReltivePath);
+        static string preparedDataPath = GetAbsolutePath(preparedDataReltivePath);
         static void Main(string[] args)
         {
             //STEP 1: Download dataset
             DownloadDataset(originalDataDirectoryPath);
 
-            //Step 2:Prepare data by adding second column with value total number of features. Copy the file in location specified by transformedDataPath variable
-            PrepareDataset(originalDataPath, transformedDataPath);
+            //Step 2: Prepare data by adding second column with value total number of features.
+            PrepareDataset(originalDataPath, preparedDataPath);
             
             MLContext mlContext = new MLContext();
 
             //STEP 3: Common data loading configuration  
-            var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
+            var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(preparedDataPath, "*"),
                                                       hasHeader: false,
                                                       allowSparse: true);
 
@@ -65,6 +65,7 @@ namespace LargeDatasets
             ConsoleHelper.PrintBinaryClassificationMetrics(mlModel.ToString(),metrics);
 
             // Try a single prediction
+            Console.WriteLine("====Predicting sample data=====");
             var predEngine = mlContext.Model.CreatePredictionEngine<UrlData, UrlPrediction>(mlModel);
             // Create sample data to do a single prediction with it 
             var sampleDatas = CreateSingleDataSample(mlContext, trainDataView);
@@ -81,7 +82,7 @@ namespace LargeDatasets
         {
             if (!Directory.Exists(originalDataDirectoryPath))
             {
-                Console.WriteLine("Downloading and extracting data.........");
+                Console.WriteLine("====Downloading and extracting data====");
                 using (var client = new WebClient())
                 {
                     //The code below will download a dataset from a third-party, UCI (link), and may be governed by separate third-party terms. 
@@ -97,57 +98,59 @@ namespace LargeDatasets
                 tarArchive.Close();
                 gzipStream.Close();
                 inputStream.Close();
-            }           
+                Console.WriteLine("====Downloading and extracting is completed====");
+            }
         }
 
-        private static void PrepareDataset(string originalDataPath,string transformedDataPath)
+        private static void PrepareDataset(string originalDataPath,string preparedDataPath)
         {
-            //Create folder for transformed Data path if it does not exist.
-            if (!Directory.Exists(transformedDataPath))
+            //Create folder for prepared Data path if it does not exist.
+            if (!Directory.Exists(preparedDataPath))
             {
-                Directory.CreateDirectory(transformedDataPath);
+                Directory.CreateDirectory(preparedDataPath);
             }
-                Console.WriteLine("Preparing Data for training and evaluation...........");
+                Console.WriteLine("====Preparing Data====");
                 Console.WriteLine("");
                 //ML.Net API checks for number of features column before the sparse matrix format
                 //So add total number of features i.e 3231961 as second column by taking all the files from originalDataPath
-                //and save those files in transformedDataPath.
-                if (Directory.GetFiles(transformedDataPath).Length == 0)
+                //and save those files in preparedDataPath.
+                if (Directory.GetFiles(preparedDataPath).Length == 0)
                 {
                     var ext = new List<string> { ".svm" };
                     var filesInDirectory = Directory.GetFiles(originalDataPath, "*.*", SearchOption.AllDirectories)
                                                 .Where(s => ext.Contains(Path.GetExtension(s)));
                     foreach (var file in filesInDirectory)
                     {
-                        AddFeaturesColumn(Path.GetFullPath(file), transformedDataPath);
+                        AddFeaturesColumn(Path.GetFullPath(file), preparedDataPath);
                     }
                 }
-                Console.WriteLine("Data Preparation is done...........");
+                Console.WriteLine("====Data Preparation is done====");
                 Console.WriteLine("");
                 Console.WriteLine("original data path= {0}", originalDataPath);
                 Console.WriteLine("");
-                Console.WriteLine("Transformed data path= {0}", transformedDataPath);
+                Console.WriteLine("prepared data path= {0}", preparedDataPath);
                 Console.WriteLine("");
         }
         
-        private static void AddFeaturesColumn(string sourceFilePath,string transformedDataPath)
+        private static void AddFeaturesColumn(string sourceFilePath,string preparedDataPath)
         {
-            string trasnformedFileName = Path.GetFileName(sourceFilePath);
-            string trasnformedFilePath = Path.Combine(transformedDataPath, trasnformedFileName);
-            
-            if (!File.Exists(trasnformedFilePath))
+            string sourceFileName = Path.GetFileName(sourceFilePath);
+            string preparedFilePath = Path.Combine(preparedDataPath, sourceFileName);
+
+            //if the file does not exist in preparedFilePath then copy from sourceFilePath and then add new column
+            if (!File.Exists(preparedFilePath))
             {
-                File.Copy(sourceFilePath, trasnformedFilePath, true);
+                File.Copy(sourceFilePath, preparedFilePath, true);
             }
             string newColumnData =  "3231961";            
-            string[] CSVDump = File.ReadAllLines(trasnformedFilePath);            
+            string[] CSVDump = File.ReadAllLines(preparedFilePath);            
             List<List<string>> CSV = CSVDump.Select(x => x.Split(' ').ToList()).ToList();
             for (int i = 0; i < CSV.Count; i++)
             {
                 CSV[i].Insert(1, newColumnData);
             }
            
-            File.WriteAllLines(trasnformedFilePath, CSV.Select(x => string.Join('\t', x)));
+            File.WriteAllLines(preparedFilePath, CSV.Select(x => string.Join('\t', x)));
         }
 
         public static string GetAbsolutePath(string relativePath)
