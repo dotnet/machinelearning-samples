@@ -25,7 +25,7 @@ namespace ImageClassification
             }
             catch (Exception ex)
             {
-                ConsoleHelpers.ConsoleWriteException(ex.Message);
+                ConsoleHelpers.ConsoleWriteException(ex.ToString());
             }
 
             ConsoleHelpers.ConsolePressAnyKey();
