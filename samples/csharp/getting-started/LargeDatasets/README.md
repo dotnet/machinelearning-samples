@@ -4,31 +4,34 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.0.0           | Dynamic API | Up-to-date | Console app | .txt files | URL classification | Binary classification | FieldAwareFactorizationMachine |
 
-In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict whether an URL is malicious or not. In the world of machine learning, this type of classification is known as **binary classification**.
+In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to deal with **large datasets containing millions of records and thousands/millions of features**. ML.Net API can handle upto **1TB** of data. 
+
+In this sample we are using URL dataset to classify whether an URL is malicious or not. In the world of machine learning, this type of classification is known as **binary classification**.
 
 ## Dataset
 The dataset used is this: [URL Reputation Data Set] (https://archive.ics.uci.edu/ml/datasets/URL+Reputation)
-This dastaset is collection of 120-days data which contains 2.3 million records and 3.2 million features.
+This dastaset is collection of 120-days data which contains **2.3 million records** and **3.2 million features**.
 
-* The first column is Label column where
+* The first column is **Label** column where
   - +1 corresponds to Malicious URL
   - -1 corresponds to Benign URL
-* Remaining columns are features which are arranged in [sparse matrix](https://en.wikipedia.org/wiki/Sparse_matrix) format. 
+* Remaining columns are **features** which are arranged in [sparse matrix](https://en.wikipedia.org/wiki/Sparse_matrix) format. 
+
+If you download and extract the dataset it contains 120 files for 120 days as shown below. The filename is in DayX.svm format. where 'X' is day number from 1-120.
+
+![](./docs/screenshots/FilesFormat.PNG)
+
+The data in each file looks like below.
+
+```CSharp
+-1 4:0.0788382 5:0.124138 6:0.117647 11:0.428571 16:0.1 17:0.749633 18:0.843029 19:0.197344 21:0.142856 22:0.142857 23:0.142857 28:1 33:0.0555556 41:0.1 54:1 56:1 64:1 70:1 72:1 74:1 76:1 82:1 84:1 86:1 88:1 90:1 92:1 94:1 96:1 102:1 104:1 106:1 108:1 110:1 112:1 155:1 190:1 204:1 359:1 360:1 361:1 1306:1 1309:1 1310:1 1311:1 2408:1 2921:1 2923:1 7000:1 7001:1 7002:1 7005:1 7006:1 7007:1 7009:1 7010:1 7759:1 7762:1 155153:1 155154:1 155155:1 155156:1 155157:1 155158:1 155159:1 155160:1 155161:1 155163:1 155164:1 155165:1 155166:1 155168:1 155169:1 155170:1 155172:1 155173:1 155174:1 155175:1 155176:1 155177:1 155178:1 155179:1 155180:1 155181:1 155182:1 155183:1 155194:1 155195:1 155196:1 155197:1 155198:1 155199:1 155200:1 155201:1 155202:1 155203:1 155204:1 155205:1 155206:1 155207:1 155208:1 155209:1 155210:1 155211:1 155212:1 155213:1 945789:1 1988571:1 2139257:1 2987739:1 3224681:1
+```
 
 ## Problem
-This problem is to classify whether a URL is malicious or not. To solve this problem, we will build an ML model by using  one of the Binary Classification algorithms i.e FieldAwareFactorizationMachine.
-
-## ML task - Binary classification
-The generalized problem of **binary classification** is to classify items into items into one of the two classes (classifying items into more than two classes is called **multiclass classification**).
-
-* predict if an insurance claim is valid or not.
-* predict if a plane will be delayed or will arrive on time.
-* predict if a face ID (photo) belongs to the owner of a device.
-
-The common feature for all those examples is that the parameter we want to predict can take only one of two values. In other words, this value is represented by `boolean` type.
+The main problem here is to deal with a dataset with **many columns** with **sparse data** (millions of columns per row, however only around 200 columns have data, per row).
 
 ## Solution
-To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
+As the columns in dataset are in **sparse format**, the **sparse format** requires a new column to be the **number of features**. So we need to prepare the data by adding a new column with the value as **total number of features in the dataset**. The column should be added before all of the features i.e second column in this case.  Then we will build an ML model and will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
 
 ![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
@@ -36,7 +39,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 **Download Data:**
 
-* In this sample, we are downloading the dataset using HttpClient as the dataset is very large.  
+* In this sample, we are downloading the dataset using **HttpClient** as the dataset is very large.  
 
 ```CSharp
 //STEP 1: Download dataset
@@ -44,14 +47,23 @@ DownloadDataset(originalDataDirectoryPath);
 ```
 
 **Prepare Data:**
-* As the downloaded dataset contains feature columns in **sparse matrix format**, we need to prepare/transform the dataset by adding a new column that is **total number of features in dataset**   before the  features columns(second column in this case) so that the dataset is compatable   for ML.Net API for training and evaluation. As our dataset contains **3231961** features, All the rows in all files contain **3231961**  as second column value after transformation.
+* As the downloaded dataset contains feature columns in **sparse matrix format**, we need to prepare the dataset by adding a new column that is **total number of features in dataset**   before the  features columns(second column in this case) so that the dataset is compatable   for ML.Net API for training and evaluation. As our dataset contains **3231961** features, all the rows in all files contain **3231961**  as second column value after preparation.
 
-Note: As the preparation of data takes some time around 2-3 minutes, this step does not run every time if the data is already trasformed. If you need this to be run everytime then remove the condition if (Directory.GetFiles(transformedDataPath).Length == 0) inside PrepareDataset() method.
+**Note:** As the preparation of data takes some time around 2-3 minutes, this step does not run every time if the data is already trasformed. If you need this to be run everytime then remove the condition if (Directory.GetFiles(transformedDataPath).Length == 0) inside PrepareDataset() method.
 
 ```CSharp
-//Step 2:Prepare/Transofrm data
+//Step 2:Prepare data by adding second column with value total number of features. Copy the file to the location specified by transformedDataPath variable
 PrepareDataset(originalDataPath, transformedDataPath);
 ```
+**Original data:**
+```CSharp
+-1 4:0.0788382 5:0.124138 6:0.117647 11:0.428571 16:0.1.....
+```
+
+**Preapred data**
+```CSharp
+-1	3231961	4:0.0788382	5:0.124138	6:0.117647	11:0.428571	16:0.1.....
+```	
 
 * Define the schema of dataset using **UrlData** class. 
 
@@ -66,9 +78,14 @@ public class UrlData
         public float[] FeatureVector;
     }
 ```
-* Load the data into dataview using Text Loader.
+* Load the data into dataview using Text Loader. 
+
+* To load multiple files from a folder, you need specify wild card character like *. For more information on how to load multiple files check this [ML.Net API documentation](https://docs.microsoft.com/en-us/dotnet/machine-learning/how-to-guides/load-data-ml-net#load-data-from-multiple-files) 
+
+**Note:** As columns in dataset are sparse format we need to set **allowSparse** parameter to **true**.
 
 ```CSharp
+//STEP 3: Common data loading configuration
 var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
                                                       hasHeader: false,
                                                       allowSparse: true);

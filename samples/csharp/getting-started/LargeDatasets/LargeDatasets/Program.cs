@@ -2,16 +2,15 @@
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using Microsoft.ML;
-using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using UrlClassification.DataStructures;
+using LargeDatasets.DataStructures;
 using static Microsoft.ML.DataOperationsCatalog;
 
-namespace UrlClassification
+namespace LargeDatasets
 {
     class Program
     {
@@ -22,20 +21,17 @@ namespace UrlClassification
         static string originalDataDirectoryPath = GetAbsolutePath(originalDataDirectoryRelativePath);
         static string originalDataPath = GetAbsolutePath(originalDataReltivePath);
         static string transformedDataPath = GetAbsolutePath(transformedDataReltivePath);
-
-        //to be removed
-        static string fixedDataPath = GetAbsolutePath(@"../../../../Data/train/fixed.svm");
         static void Main(string[] args)
         {
             //STEP 1: Download dataset
             DownloadDataset(originalDataDirectoryPath);
 
-            //Step 2:Prepare/Transofrm data
+            //Step 2:Prepare data by adding second column with value total number of features. Copy the file in location specified by transformedDataPath variable
             PrepareDataset(originalDataPath, transformedDataPath);
-
-            //STEP 3: Create MLContext to be shared across the model creation workflow objects 
+            
             MLContext mlContext = new MLContext();
 
+            //STEP 3: Common data loading configuration  
             var fullDataView = mlContext.Data.LoadFromTextFile<UrlData>(path: Path.Combine(transformedDataPath, "*"),
                                                       hasHeader: false,
                                                       allowSparse: true);
@@ -65,11 +61,8 @@ namespace UrlClassification
             //Step 8: Evaluate the model
             Console.WriteLine("====Evaluating the model=====");
             var predictions = mlModel.Transform(testDataView);
-            var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "LabelKey", scoreColumnName: "Score");
-            Console.WriteLine("");
-            Console.WriteLine($"************************************************************");
-            Console.WriteLine($"*       Metrics for {mlModel.ToString()} binary classification model      ");
-            PrintMetrics(metrics);
+            var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "LabelKey", scoreColumnName: "Score");            
+            ConsoleHelper.PrintBinaryClassificationMetrics(mlModel.ToString(),metrics);
 
             // Try a single prediction
             var predEngine = mlContext.Model.CreatePredictionEngine<UrlData, UrlPrediction>(mlModel);
@@ -107,7 +100,7 @@ namespace UrlClassification
             }           
         }
 
-        public static void PrepareDataset(string originalDataPath,string transformedDataPath)
+        private static void PrepareDataset(string originalDataPath,string transformedDataPath)
         {
             //Create folder for transformed Data path if it does not exist.
             if (!Directory.Exists(transformedDataPath))
@@ -137,7 +130,7 @@ namespace UrlClassification
                 Console.WriteLine("");
         }
         
-        public static void AddFeaturesColumn(string sourceFilePath,string transformedDataPath)
+        private static void AddFeaturesColumn(string sourceFilePath,string transformedDataPath)
         {
             string trasnformedFileName = Path.GetFileName(sourceFilePath);
             string trasnformedFilePath = Path.Combine(transformedDataPath, trasnformedFileName);
@@ -171,48 +164,6 @@ namespace UrlClassification
             // Here (ModelInput object) you could provide new test data, hardcoded or from the end-user application, instead of the row from the file.
             List<UrlData> sampleForPredictions = mlContext.Data.CreateEnumerable<UrlData>(dataView, false).Take(4).ToList();                                                                        ;
             return sampleForPredictions;
-        }
-
-        public static void PrintMetrics(CalibratedBinaryClassificationMetrics metrics)
-        {
-            Console.WriteLine("");
-            Console.WriteLine($"************************************************************");
-            // Console.WriteLine($"*       Metrics for {mlModel.ToString()} binary classification model      ");
-            Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"*       Accuracy: {metrics.Accuracy:P2}");
-            Console.WriteLine($"*       Area Under Roc Curve:      {metrics.AreaUnderRocCurve:P2}");
-            Console.WriteLine($"*       Area Under PrecisionRecall Curve:  {metrics.AreaUnderPrecisionRecallCurve:P2}");
-            Console.WriteLine($"*       F1Score:  {metrics.F1Score:P2}");
-            Console.WriteLine($"*       LogLoss:  {metrics.LogLoss:#.##}");
-            Console.WriteLine($"*       LogLossReduction:  {metrics.LogLossReduction:#.##}");
-            Console.WriteLine($"*       PositivePrecision:  {metrics.PositivePrecision:#.##}");
-            Console.WriteLine($"*       PositiveRecall:  {metrics.PositiveRecall:#.##}");
-            Console.WriteLine($"*       NegativePrecision:  {metrics.NegativePrecision:#.##}");
-            Console.WriteLine($"*       NegativeRecall:  {metrics.NegativeRecall:P2}");
-            Console.WriteLine($"************************************************************");
-            Console.WriteLine("");
-        }
-
-        //public static void PrintMetrics(IReadOnlyList<CrossValidationResult<CalibratedBinaryClassificationMetrics>> results)
-        //{
-        //    var me = results;
-        //    var metrics= me.Select(x => x.Metrics);
-        //    Console.WriteLine("");
-        //    Console.WriteLine($"************************************************************");
-        //    // Console.WriteLine($"*       Metrics for {mlModel.ToString()} binary classification model      ");
-        //    Console.WriteLine($"*-----------------------------------------------------------");
-        //    Console.WriteLine($"*       Accuracy: {metrics.Select(x=>x.Accuracy):P2}");
-        //    Console.WriteLine($"*       Area Under Roc Curve:      {metrics.Select(x => x.AreaUnderRocCurve):P2}");
-        //    Console.WriteLine($"*       Area Under PrecisionRecall Curve:  {metrics.Select(x => x.AreaUnderPrecisionRecallCurve):P2}");
-        //    Console.WriteLine($"*       F1Score:  {metrics.Select(x => x.F1Score):P2}");
-        //    Console.WriteLine($"*       LogLoss:  {metrics.Select(x => x.LogLoss):#.##}");
-        //    Console.WriteLine($"*       LogLossReduction:  {metrics.Select(x => x.LogLossReduction):#.##}");
-        //    Console.WriteLine($"*       PositivePrecision:  {metrics.Select(x => x.PositivePrecision):#.##}");
-        //    Console.WriteLine($"*       PositiveRecall:  {metrics.Select(x => x.PositiveRecall):#.##}");
-        //    Console.WriteLine($"*       NegativePrecision:  {metrics.Select(x => x.NegativePrecision):#.##}");
-        //    Console.WriteLine($"*       NegativeRecall:  {metrics.Select(x => x.NegativeRecall):P2}");
-        //    Console.WriteLine($"************************************************************");
-        //    Console.WriteLine("");
-        //}
+        }      
     }
 }
