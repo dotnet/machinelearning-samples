@@ -108,14 +108,14 @@ The initial code is similar to the following:
 ### 2. Train model
 Training the model is a process of running the chosen algorithm on a training data (with known fraud values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object.
 
-To perform training you need to call the `Fit()` method while providing the training dataset (`trainData.csv`) in a DataView object.
+To perform training you need to call the `Fit()` method while providing the training dataset (`trainDataView`) in a DataView object.
 
 `````csharp    
-    ITransformer model = pipeline.Fit(_trainData);
+    var model = trainingPipeline.Fit(trainDataView);
 `````
 
 ### 3. Evaluate model
-We need this step to conclude how accurate our model is. To do so, the model from the previous step is run against another dataset that was not used in training (`testData.csv`). 
+We need this step to conclude how accurate our model is. To do so, the model from the previous step is run against another dataset that was not used in training (`testDataView`). 
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
