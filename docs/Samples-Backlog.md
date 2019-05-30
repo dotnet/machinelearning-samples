@@ -18,3 +18,4 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 14   |  Fix the pedigreescan results                                                                                                    | p1       |            |
 | 15   |  Create a sample using Azure functions    | p1       |            |
 | 16   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |            |
+| 17   |  Up-to-date Azure Functions sample scoring an ML.NET model                                                    | p2       |            |
