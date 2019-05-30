@@ -16,4 +16,6 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 12   | Anomaly Detection for Fraud, something that could break, etc. AnomalyDetection-PCA                                                                                                                                                                                      | p1       |            |
 | 13   |  Add a sample on loading dataset containing millions of collumns with sparse format stored in database like cosmos DB. How to load sparse farmat into IEnumerable                                                                                                     | p1       |            |
 | 14   |  Fix the pedigreescan results                                                                                                    | p1       |            |
-| 15   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |            |
+| 15   |  Create a sample using Azure functions
+| p1       |            |
+| 16   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |            |
