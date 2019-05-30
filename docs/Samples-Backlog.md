@@ -18,4 +18,6 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 14   |  Fix the pedigreescan results                                                                                                    | p1       | Have some questions.waiting for Richard to clarify           | Prathyusha Korrapati(v-prkor)
 | 15   |  Up-to-date Azure Functions sample scoring an ML.NET model    |  p2       |            |
 | 16   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |   Check with Rowan about Icon design if it looks ok         | Prathyusha Korrapati(v-prkor)
+| 17   |  Use latest version of Inception 5h model in TensorFlow samples | p2       |           | Prathyusha Korrapati(v-prkor)
+
 
