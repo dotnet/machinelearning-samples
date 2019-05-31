@@ -76,8 +76,7 @@ try
     // STEP 3: Run an AutoML multiclass classification experiment
     ConsoleHelper.consoleWriteHeader "=============== Running AutoML experiment ==============="
     printfn "Running AutoML multiclass classification experiment for %d seconds..." experimentTimeInSeconds
-    let preFeaturizer = mlContext.Transforms.Conversion.MapValueToKey("Number", "Number", keyOrdinality = Transforms.ValueToKeyMappingEstimator.KeyOrdinality.ByValue) |> ConsoleHelper.downcastPipeline
-    let experimentResult = mlContext.Auto().CreateMulticlassClassificationExperiment(experimentTimeInSeconds).Execute(trainData, "Number", progressHandler = progressHandler, preFeaturizer = preFeaturizer)
+    let experimentResult = mlContext.Auto().CreateMulticlassClassificationExperiment(experimentTimeInSeconds).Execute(trainData, "Number", progressHandler = progressHandler)
 
     // Print top models found by AutoML
     printfn ""
@@ -104,21 +103,31 @@ with
 | ex -> printfn "%O" ex
 
 
-let loadedTrainedModel, _modelInputSchema = mlContext.Model.Load modelPath
+let loadedTrainedModel, modelInputSchema = mlContext.Model.Load modelPath
 
 // Create prediction engine related to the loaded trained model
 let predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutputData>(loadedTrainedModel)
+
+// Get the key value mapping for Number to Score index
+let key =
+    let outputSchema = loadedTrainedModel.GetOutputSchema(modelInputSchema)
+    let mutable keyValues = Unchecked.defaultof<_>
+    outputSchema.["Number"].GetKeyValues<float32>(&keyValues)
+    keyValues.Items() 
+    |> Seq.map (fun x -> int x.Value, x.Key )
+    |> dict
+    
 
 sampleData
 |> Array.iter 
     (fun (n,dat) ->
         let p = predEngine.Predict dat
-        printfn "Actual: %d     Predicted probability:       zero:  %.4f" n p.Score.[0]
+        printfn "Actual: %d     Predicted probability:       zero:  %.4f" n p.Score.[key.[0]]
         ["one:"; "two:"; "three:"; "four:"; "five:"; "six:"; "seven:"; "eight:"; "nine:"]
         |> List.iteri 
             (fun i w ->
                 let i = i + 1
-                printfn "                                           %-6s %.4f" w p.Score.[i]
+                printfn "                                           %-6s %.4f" w p.Score.[key.[i]]
             )
         printfn ""
     )
