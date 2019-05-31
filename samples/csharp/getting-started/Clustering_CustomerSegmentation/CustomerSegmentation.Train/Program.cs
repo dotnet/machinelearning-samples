@@ -41,13 +41,13 @@ namespace CustomerSegmentation
                 //STEP 2: Configure data transformations in pipeline
                 var dataProcessPipeline = mlContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2)
                  .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "LastNameKey", inputColumnName: nameof(PivotData.LastName), OneHotEncodingEstimator.OutputKind.Indicator));
-                
 
-                // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations  
+
+                // (Optional) Peek data in training DataView after applying the ProcessPipeline's transformations
                 Common.ConsoleHelper.PeekDataViewInConsole(mlContext, pivotDataView, dataProcessPipeline, 10);
                 Common.ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
 
-                //STEP 3: Create the training pipeline                
+                //STEP 3: Create the training pipeline
                 var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
 
@@ -69,11 +69,11 @@ namespace CustomerSegmentation
             }
             catch (Exception ex)
             {
-                Common.ConsoleHelper.ConsoleWriteException(ex.Message);
+                Common.ConsoleHelper.ConsoleWriteException(ex.ToString());
             }
 
             Common.ConsoleHelper.ConsolePressAnyKey();
-           
+
         }
         public static string GetAbsolutePath(string relativePath)
         {
