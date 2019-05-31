@@ -21,7 +21,7 @@ namespace MNIST
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/Model.zip";
         private static string ModelPath = GetAbsolutePath(ModelRelativePath);
         
-        private static uint ExperimentTime = 10;
+        private static uint ExperimentTime = 60;
 
         static void Main(string[] args)
         {
