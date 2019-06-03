@@ -45,7 +45,7 @@ namespace DatabaseIntegration
                                                                                  outputColumnName: "FeaturesNormalizedByMeanVar")));
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
-            ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessPipeline, 10);
+            ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessPipeline, 2);
             //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", trainDataView, dataProcessPipeline, 1);
 
             // Set the training algorithm
@@ -88,7 +88,7 @@ namespace DatabaseIntegration
         public void PredictModel(MLContext mlContext, ITransformer model, IDataView predictDataView)
         {
             var predictionEngine = mlContext.Model.CreatePredictionEngine<CreditCardTransaction, TransactionFraudPredictionWithContribution>(model);
-            Console.WriteLine($"\n \n Test {predictDataView} transactions, from the test datasource, that should be predicted as fraud (true):");
+            Console.WriteLine($"\n \n Test 5 transactions, from the test datasource, that should be predicted as fraud (true):");
 
             mlContext.Data.CreateEnumerable<CreditCardTransaction>(predictDataView, reuseRowObject: false)
                        .Where(x => x.Class == true)
@@ -102,6 +102,22 @@ namespace DatabaseIntegration
                            predictionEngine.Predict(predictData).PrintToConsole();
                            Console.WriteLine($"-------------------");
                        });
+
+            Console.WriteLine($"\n \n Test 5 transactions, from the test datasource, that should NOT be predicted as fraud (false):");
+
+            mlContext.Data.CreateEnumerable<CreditCardTransaction>(predictDataView, reuseRowObject: false)
+                       .Where(x => x.Class == false)
+                       .Take(5)
+                       .Select(predictData => predictData)
+                       .ToList()
+                       .ForEach(predictData =>
+                       {
+                           Console.WriteLine($"--- Transaction ---");
+                           PrintToConsole(predictData);
+                           predictionEngine.Predict(predictData).PrintToConsole();
+                           Console.WriteLine($"-------------------");
+                       });
+
         }
 
         public static void PrintToConsole(CreditCardTransaction transaction)
