@@ -20,7 +20,7 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 16   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |   Check with Rowan about Icon design if it looks ok         | Prathyusha Korrapati(v-prkor)
 | 17   |  Use latest version of Inception 5h model in TensorFlow samples | p2       |           | Prathyusha Korrapati(v-prkor)
 | 18   |  Create Image Classification/Clustering Sample w/ DnnImageFeaturizerTransform(check this issue https://github.com/dotnet/machinelearning-samples/issues/225) | p2       |           | Prathyusha Korrapati(v-prkor)
-| 19   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression | p0       |           | Prathyusha Korrapati(v-prkor)
+| 19   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression  -check this PR (https://github.com/dotnet/machinelearning/pull/1900) | p0       |           | Prathyusha Korrapati(v-prkor)
 
 
 
