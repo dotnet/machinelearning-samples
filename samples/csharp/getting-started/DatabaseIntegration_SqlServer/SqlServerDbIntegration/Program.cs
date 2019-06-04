@@ -9,19 +9,19 @@ namespace SqlServerDbIntegration
         {
             var mlContext = new MLContext(seed: 1);
 
-            ModelTrainerScorer sqlServerModelHelper = new ModelTrainerScorer();
+            ModelTrainerScorer modelTrainerScorer = new ModelTrainerScorer();
 
             //Load data from SQL Server Database
-            (IDataView trainDataView, IDataView testDataView) = sqlServerModelHelper.LoadData(mlContext);
+            (IDataView trainDataView, IDataView testDataView) = modelTrainerScorer.LoadData(mlContext);
 
             //Train Model
-            (ITransformer model, string trainerName) = sqlServerModelHelper.TrainModel(mlContext, trainDataView);
+            (ITransformer model, string trainerName) = modelTrainerScorer.TrainModel(mlContext, trainDataView);
 
             //Evaluate Model
-            sqlServerModelHelper.EvaluateModel(mlContext, model, testDataView, trainerName);
+            modelTrainerScorer.EvaluateModel(mlContext, model, testDataView, trainerName);
 
             //Predict model
-            sqlServerModelHelper.PredictModel(mlContext, model, testDataView);
+            modelTrainerScorer.PredictModel(mlContext, model, testDataView);
 
             Console.WriteLine("=============== Press any key ===============");
             Console.ReadKey();

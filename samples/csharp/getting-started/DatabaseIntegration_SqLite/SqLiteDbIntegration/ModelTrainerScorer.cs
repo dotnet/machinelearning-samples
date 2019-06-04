@@ -2,26 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.ML;
 using Microsoft.ML.Transforms;
-using Microsoft.ML.Trainers;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DatabaseIntegration
 {
-    public class SqlLiteModel
-    {
-        public (IDataView, IDataView) LoadData(MLContext mlContext)
+    public class ModelTrainerScorer
+    {   
+        public ModelTrainerScorer(string datasetUrl)
         {
-            // The url for the dataset that will be downloaded
-            string datasetUrl = "https://raw.githubusercontent.com/dotnet/machinelearning/244a8c2ac832657af282aa312d568211698790aa/test/data/adult.train";
-            
             // Seed the database with the dataset.
             CreateDatabase(datasetUrl);
-
+        }
+        public (IDataView, IDataView) LoadData(MLContext mlContext)
+        { 
             /// Query the data from the database, please see <see cref="QueryData"/> for more information.
             var dataView = mlContext.Data.LoadFromEnumerable(QueryData());
             /// Creates the training and testing data sets.
@@ -29,7 +26,6 @@ namespace DatabaseIntegration
 
             return (trainTestData.TrainSet, trainTestData.TestSet);
         }
-
 
         public (ITransformer, string) TrainModel(MLContext mlContext, IDataView trainDataView)
         {
@@ -77,17 +73,17 @@ namespace DatabaseIntegration
         }
 
 
-    /// <summary>
-    /// Wrapper function that performs the database query and returns an IEnumerable, creating
-    /// a database context each time.
-    /// </summary>
-    /// <remarks>
-    /// ML.Net can traverse an IEnumerable with multiple threads. This will result in Entity Core Framwork throwing an exception
-    /// as multiple threads cannot access the same database context. To work around this, create a database context
-    /// each time a IEnumerable is requested.
-    /// </remarks>
-    /// <returns>An IEnumerable of the resulting data.</returns>
-    private IEnumerable<AdultCensus> QueryData()
+        /// <summary>
+        /// Wrapper function that performs the database query and returns an IEnumerable, creating
+        /// a database context each time.
+        /// </summary>
+        /// <remarks>
+        /// ML.Net can traverse an IEnumerable with multiple threads. This will result in Entity Core Framwork throwing an exception
+        /// as multiple threads cannot access the same database context. To work around this, create a database context
+        /// each time a IEnumerable is requested.
+        /// </remarks>
+        /// <returns>An IEnumerable of the resulting data.</returns>
+        private IEnumerable<AdultCensus> QueryData()
         {
             using (var db = new AdultCensusContext())
             {
