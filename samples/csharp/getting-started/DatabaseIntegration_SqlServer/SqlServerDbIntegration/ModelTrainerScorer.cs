@@ -6,10 +6,10 @@ using Common;
 
 namespace SqlServerDbIntegration
 {
-    public class SqlServerModel
+    public class ModelTrainerScorer
     {
         public masterContext dbContext;
-        public SqlServerModel()
+        public ModelTrainerScorer()
         {
              dbContext = new masterContext();
         }

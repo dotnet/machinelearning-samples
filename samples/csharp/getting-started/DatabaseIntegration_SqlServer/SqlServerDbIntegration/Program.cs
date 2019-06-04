@@ -9,7 +9,7 @@ namespace SqlServerDbIntegration
         {
             var mlContext = new MLContext(seed: 1);
 
-            SqlServerModel sqlServerModelHelper = new SqlServerModel();
+            ModelTrainerScorer sqlServerModelHelper = new ModelTrainerScorer();
 
             //Load data from SQL Server Database
             (IDataView trainDataView, IDataView testDataView) = sqlServerModelHelper.LoadData(mlContext);
