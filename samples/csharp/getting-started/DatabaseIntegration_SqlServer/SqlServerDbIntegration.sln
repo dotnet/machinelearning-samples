@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2041
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseIntegration", "DatabaseIntegration\DatabaseIntegration.csproj", "{E0EA9351-CD82-485F-94DD-5EA500814943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServerDbIntegration", "SqlServerDBIntegration\SqlServerDbIntegration.csproj", "{3DEEE0B7-B073-4061-96DC-D4277EE4D32B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E0EA9351-CD82-485F-94DD-5EA500814943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0EA9351-CD82-485F-94DD-5EA500814943}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0EA9351-CD82-485F-94DD-5EA500814943}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0EA9351-CD82-485F-94DD-5EA500814943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DEEE0B7-B073-4061-96DC-D4277EE4D32B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DEEE0B7-B073-4061-96DC-D4277EE4D32B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DEEE0B7-B073-4061-96DC-D4277EE4D32B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DEEE0B7-B073-4061-96DC-D4277EE4D32B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

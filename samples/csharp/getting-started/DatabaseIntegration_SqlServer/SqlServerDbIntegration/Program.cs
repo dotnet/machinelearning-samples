@@ -1,7 +1,7 @@
 using Microsoft.ML;
 using System;
 
-namespace DatabaseIntegration
+namespace SqlServerDbIntegration
 {
     public class Program
     {  

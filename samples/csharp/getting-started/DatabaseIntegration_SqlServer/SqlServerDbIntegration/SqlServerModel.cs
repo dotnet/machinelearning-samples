@@ -1,14 +1,10 @@
-﻿//using DatabaseIntegration.Models;
-using DatabaseIntegration.Models;
+﻿using SqlServerDbIntegration.Models;
 using Microsoft.ML;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Common;
-using Microsoft.ML.Data;
 
-namespace DatabaseIntegration
+namespace SqlServerDbIntegration
 {
     public class SqlServerModel
     {
