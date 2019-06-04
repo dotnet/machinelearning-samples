@@ -14,13 +14,12 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 10   | Sample using an .IDV format dataset for performace (TBD what app sample) - Check this PR/code for it: https://github.com/dotnet/machinelearning/pull/3745                                                                                                               | p1       |            | Prathyusha Korrapati(v-prkor)
 | 11   | Binary Classification: Flight delay prediction. Migrate from Azure ML Studio: https://gallery.azure.ai/Experiment/Binary-Classification-Flight-delay-prediction-3                                                                                                       | p2       |            | Prathyusha Korrapati(v-prkor)
 | 12   | Anomaly Detection for Fraud, something that could break, etc. AnomalyDetection-PCA                                                                                                                                                                                      | p1       |            | Colby Williams(Colby.Williams)
-| 13   |  Add a sample on loading dataset containing millions of collumns with sparse format stored in database like cosmos DB. How to load sparse farmat into IEnumerable  (check if Ienumerable can hadle millions of columns from database)                                                                                                   | p1       |            |  Prathyusha Korrapati(v-prkor)
-| 14   |  Fix the pedigreescan results                                                                                                    | p1       | Have some questions.waiting for Richard to clarify           | Prathyusha Korrapati(v-prkor)
-| 15   |  Up-to-date Azure Functions sample scoring an ML.NET model    |  p2       |            |
-| 16   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |   Check with Rowan about Icon design if it looks ok         | Prathyusha Korrapati(v-prkor)
-| 17   |  Use latest version of Inception 5h model in TensorFlow samples | p2       |           | Prathyusha Korrapati(v-prkor)
-| 18   |  Create Image Classification/Clustering Sample w/ DnnImageFeaturizerTransform(check this issue https://github.com/dotnet/machinelearning-samples/issues/225) | p2       |           | Prathyusha Korrapati(v-prkor)
-| 19   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression  -check this PR (https://github.com/dotnet/machinelearning/pull/1900) | p0       |           | Prathyusha Korrapati(v-prkor)
+| 13   |  Fix the pedigreescan results                                                                                                    | p1       | Have some questions.waiting for Richard to clarify           | Prathyusha Korrapati(v-prkor)
+| 14   |  Up-to-date Azure Functions sample scoring an ML.NET model    |  p2       |            |
+| 15   |  Add a link in ReadMe file for the LargeDataset sample once icon is finalized                                                    | p1       |   Check with Rowan about Icon design if it looks ok         | Prathyusha Korrapati(v-prkor)
+| 16   |  Use latest version of Inception 5h model in TensorFlow samples | p2       |           | Prathyusha Korrapati(v-prkor)
+| 17   |  Create Image Classification/Clustering Sample w/ DnnImageFeaturizerTransform(check this issue https://github.com/dotnet/machinelearning-samples/issues/225) | p2       |           | Prathyusha Korrapati(v-prkor)
+| 18   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression  -check this PR (https://github.com/dotnet/machinelearning/pull/1900) | p0       |           | Prathyusha Korrapati(v-prkor)
 
 
 
