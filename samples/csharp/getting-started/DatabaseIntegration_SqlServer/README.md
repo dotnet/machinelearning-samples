@@ -31,7 +31,7 @@ Building a model includes:
 
  - **Read the data from database into in-memory variable i.e IEnumerable object:**
 
-    create Database contect object and read database data into IEnumerable object, here the data is in CreditCardTransaction table.
+    create Database context object and read database data into IEnumerable object, here the data is in CreditCardTransaction table.
 
 ```csharp
 dbContext = new masterContext();
@@ -51,7 +51,6 @@ IDataView fullDataView = mlContext.Data.LoadFromEnumerable(fullData);
 
 ```csharp
 var trainTestData = mlContext.Data.TrainTestSplit(fullDataView, testFraction: 0.2, seed: 1);
- return (trainTestData.TrainSet, trainTestData.TestSet);
  ```
 
 - In this dataset we don't need all the columns for training so select the feature columns that you need for training.
