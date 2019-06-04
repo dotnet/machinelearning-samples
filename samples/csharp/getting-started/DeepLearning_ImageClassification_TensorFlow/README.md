@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inceptionv3  | DeepLearning model |
+| v1.0.0           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inception5h  | DeepLearning model |
 
 
 ## Problem
@@ -44,7 +44,7 @@ The training and testing images are located in the assets folders. These images 
 There are multiple models which are pre-trained for classifying images. In this case, we will use a model based on an Inception topology, and trained with images from Image.Net. This model can be downloaded from https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip, but it's also available at `/ src / ImageClassification / assets /inputs / inception / tensorflow_inception_graph.pb`.
 
 ##  Solution
-The console application project `ImageClassification.Score` can be used to classify sample images based on the pre-trained Inception-v3 TensorFlow model. 
+The console application project `ImageClassification.Score` can be used to classify sample images based on the pre-trained Inception-5h TensorFlow model. 
 
 Again, note that this sample only uses/consumes a pre-trained TensorFlow model with ML.NET API. Therefore, it does **not** train any ML.NET model. Currently, TensorFlow is only supported in ML.NET for scoring/predicting with existing TensorFlow trained models. 
 
