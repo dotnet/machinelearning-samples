@@ -137,3 +137,7 @@ Once the prediction engine has been created you can predict scores of two produc
                              CoPurchaseProductID = 63
                              });
 ```
+
+#### Score in Matrix Factorization
+
+The score produced by matrix factorization represents the likelihood of being a positive case. The larger the score value, the higher probability of being a positive case. However, the score doesn't carry any probability information. When making a prediction, you will have to compute multiple merchandises' scores and pick up the merchandise with the highest score.
