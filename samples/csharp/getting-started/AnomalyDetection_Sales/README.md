@@ -80,12 +80,12 @@ var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(Pro
 ```
 
 ### 2. Transform model
-**In TimeSeries Spike detection, we don't need to do training, we just need to do transformation**. So the model is created using
+**In IID Spike detection or IID change point detection, we don't need to do training, we just need to do transformation**. So the model is created using
 `Fit()` API by passing **empty IDataView object**.
 
 ```CSharp
 //STEP 2:The Transformed Model.
-//In TimeSeries Spike detection, we don't need to do training, we just need to do transformation. 
+//In IID Spike detection, we don't need to do training, we just need to do transformation. 
 //If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
 //If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
 //You just need to specify schema of dataset in IDataView.

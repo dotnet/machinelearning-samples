@@ -53,7 +53,7 @@ namespace SpikeDetection.WinFormsTrainer
             var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, pvalueHistoryLength: size / 4);
 
             //STEP 2:The Transformed Model.
-            //In TimeSeries Spike detection, we don't need to do training, we just need to do transformation. 
+            //In IID Spike detection, we don't need to do training, we just need to do transformation. 
             //If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
             //If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
             //You just need to specify schema of dataset in IDataView.
@@ -87,7 +87,7 @@ namespace SpikeDetection.WinFormsTrainer
             var estimator = mlContext.Transforms.DetectIidChangePoint(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
 
             //STEP 2:The Transformed Model.
-            //In TimeSeries Change point detection, we don't need need to do training, we just need to do transformation. 
+            //In IID Change point detection, we don't need need to do training, we just need to do transformation. 
             //If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
             //If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
             //You just need to specify schema of dataset in IDataView.
