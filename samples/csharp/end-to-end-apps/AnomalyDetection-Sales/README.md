@@ -72,48 +72,54 @@ The process of building and training models is the same for spike detection and 
 
 Building a model in the console app includes:
 
-* Preparing and loading the data from (`product-sales.csv`) to an IDataView.
+* Creating empty IDataView with just schema of dataset.
 
-* Creating an Estimator by choosing a trainer/learning algorithm (e.g. `IidSpikeDetector` or `IidChangePointDetector`) and setting parameters (in this case confidence level and p-value).
+* Creating an Estimator by applying Transformer (e.g. `IidSpikeDetector` or `IidChangePointDetector`) and setting parameters (in this case confidence level and p-value).
 
 The initial code for Spike Detection is similar to the following:
 
 ```CSharp
+CreateEmptyDataView();
+
 //Create ML Context object
 MLContext mlcontext = new MLContext();
 
-// STEP 1: Common data loading configuration
-IDataView dataView = mlcontext.Data.LoadFromTextFile<ProductSalesData>(path: DatasetPath, hasHeader:true, separatorChar:',');
+//STEP 1: Create Esimtator   
+var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, pvalueHistoryLength: size / 4);
 
-//STEP 2: Set the training algorithm    
-var trainingPipeLine = mlcontext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales),confidence: 95, pvalueHistoryLength: size / 4);
 ```
 
-### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known anomaly values) to tune the parameters of the model. It is implemented in the `Fit()` API.
+### 2. Transform model
+**In TimeSeries Spike detection, we don't need to do training, we just need to do transformation**. So the model is created using
+`Fit()` API by passing empty IDataView object.
 
-To perform training in the console app, you just call the `Fit()` method while providing the training dataset (`product-sales.csv` file) in a DataView object:
 ```CSharp
-// STEP 3: Train the model by fitting the dataview
-ITransformer trainedModel = trainingPipeline.Fit(dataView);
+//STEP 2:The Transformed Model.
+//In TimeSeries Spike detection, we don't need to do training, we just need to do transformation. 
+//If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
+//If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
+//You just need to specify schema of dataset in IDataView.
+ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 ```
 
 ### 3. Consume model & view predictions
-In the WinForms app, you load and use the trained model to predict anomalies in the data and then view the detected anomalies from the model by accessing the output column:
+In the WinForms app, you load and use the transformed model to predict anomalies in the data and then view the detected anomalies from the model by accessing the output column:
+
+* Load the data to predict from (`product-sales.csv`) to an IDataView and create predictions.
 
 ```CSharp
 var mlcontext = new MLContext();
 
-ITransformer trainedModel;
+ITransformer tansformedModel;
 
 // Load model
 using (FileStream stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
 {
-    trainedModel = mlcontext.Model.Load(stream,out var modelInputSchema);
+    tansformedModel = mlcontext.Model.Load(stream,out var modelInputSchema);
 }
 
 // Apply data transformation to create predictions
-IDataView transformedData = trainedModel.Transform(dataView);
+IDataView transformedData = tansformedModel.Transform(dataView);
 
 var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
 
