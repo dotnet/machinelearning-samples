@@ -52,9 +52,8 @@ namespace SpikeDetection
 
             //STEP 2:The Transformed Model.
             //In IID Spike detection, we don't need to do training, we just need to do transformation. 
-            //If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
-            //If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
-            //You just need to specify schema of dataset in IDataView.
+            //As you are not training the model, there is no need to load IDataView with real data, you just need schema of data.
+            //So create empty data view and pass to Fit() method. 
             ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 
             //STEP 3: Use/test model
@@ -85,14 +84,13 @@ namespace SpikeDetection
 
           //STEP 2:The Transformed Model.
           //In IID Change point detection, we don't need need to do training, we just need to do transformation. 
-          //If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
-          //If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
-          //You just need to specify schema of dataset in IDataView.
+          //As you are not training the model, there is no need to load IDataView with real data, you just need schema of data.
+          //So create empty data view and pass to Fit() method. 
           ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 
-            //STEP 3: Use/test model
-            //Apply data transformation to create predictions.
-            IDataView transformedData = tansformedModel.Transform(dataView);
+          //STEP 3: Use/test model
+          //Apply data transformation to create predictions.
+          IDataView transformedData = tansformedModel.Transform(dataView);
           var predictions = mlContext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
                        
           Console.WriteLine($"{nameof(ProductSalesPrediction.Prediction)} column obtained post-transformation.");
@@ -109,7 +107,7 @@ namespace SpikeDetection
                  Console.WriteLine("{0}\t{1:0.00}\t{2:0.00}\t{3:0.00}",  p.Prediction[0], p.Prediction[1], p.Prediction[2], p.Prediction[3]);                  
              }            
           }
-            Console.WriteLine("");
+          Console.WriteLine("");
         }
 
         public static string GetAbsolutePath(string relativePath)

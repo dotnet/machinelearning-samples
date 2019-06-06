@@ -96,9 +96,8 @@ var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(Pro
 ```CSharp
 //STEP 2:The Transformed Model.
 //In IID Spike detection, we don't need to do training, we just need to do transformation. 
-//If you are training the model using trainer, data should be present in IDataView while creating model throught Fit() method.
-//If you are not training the model, just transformation, then there is no need of data in IDataView while creating model throught Fit() method. 
-//You just need to specify schema of dataset in IDataView.
+//As you are not training the model, there is no need to load IDataView with real data, you just need schema of data.
+//So create empty data view and pass to Fit() method. 
 ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 ```
 
