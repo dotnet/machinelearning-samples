@@ -62,38 +62,46 @@ The process of building and training models is the same for spike detection and 
 
 Building a model includes: Building a model includes: 
 
-* Define the data's schema maped to the datasets to load ('Product-sales.csv`) with a TextLoader.
+* Creating empty IDataView with just schema of dataset.
 
-* Create an Estimator by choosing a trainer/learning algorithm (such as `DetectIIDSpike`) to train the model with. 
+* Creating an Estimator by applying Transformer (e.g. `IidSpikeDetector` or `IidChangePointDetector`) and setting parameters (in this case confidence level and p-value).
 
-The initial code is similar to the following:
-
+The initial code for Spike Detection is similar to the following:
 
 ```CSharp
+CreateEmptyDataView();
+
 //Create ML Context object
 MLContext mlcontext = new MLContext();
 
-// STEP 1: Common data loading configuration
-IDataView dataView = mlcontext.Data.LoadFromTextFile<ProductSalesData>(path: DatasetPath, hasHeader:true, separatorChar:',');
+//STEP 1: Create Esimtator   
+var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, pvalueHistoryLength: size / 4);
 
-//STEP 2: Set the training algorithm    
-var trainingPipeLine = mlcontext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales),confidence: 95, pvalueHistoryLength: size / 4);
 ```
 
-### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data to tune the parameters of the model. It is implemented in the `Fit()` API.
+### 2. Transform model
+Note that In IID Spike detection or IID change point detection, we don't need to do training, we just need to do transformation. As you are not training the model, there is no need to load IDataView with real data, you just need schema of data. So the model is created using `Fit()` API by passing **empty IDataView object**.
 
- To perform training we just call the `Fit()` method while providing the while providing the training dataset (`product-sales.csv` file) in a DataView object.
 ```CSharp
-ITransformer trainedModel = trainingPipeLine.Fit(dataView);
+//STEP 2:The Transformed Model.
+//In IID Spike detection, we don't need to do training, we just need to do transformation. 
+//As you are not training the model, there is no need to load IDataView with real data, you just need schema of data.
+//So create empty data view and pass to Fit() method. 
+ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 ```
 
 ### 3. Consume model
-We don't have evaulate step in TimeSeries Anomaly detection. We use the trained model to predict the anomalies in the data.  
+* We don't have evaulate step in TimeSeries Anomaly detection. We use the tansformed model to predict the anomalies in the data.  
+
+* Load the data to predict from (`product-sales.csv`) to an IDataView and create predictions.
 
 ```CSharp
+//Load the data into IDataView.
+//This dataset is used for detecting spikes or changes not for training.
+IDataView dataView = mlContext.Data.LoadFromTextFile<ProductSalesData>(path: DatasetPath, hasHeader: true, separatorChar: ',');
+
 //Apply data transformation to create predictions.
-IDataView transformedData = trainedModel.Transform(dataView);
+IDataView transformedData = tansformedModel.Transform(dataView);
 var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
           
 Console.WriteLine("Alert\tScore\tP-Value");

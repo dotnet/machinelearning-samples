@@ -142,7 +142,7 @@ namespace SpikeDetection.WinForms
             // Create MLContext to be shared across the model creation workflow objects 
             var mlcontext = new MLContext();
 
-            // STEP 1: Common data loading configuration for new data
+            // STEP 1: Load the data into IDataView.
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ProductSalesData>(path: filePath, hasHeader: true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
             // Step 2: Load & use model
@@ -184,10 +184,10 @@ namespace SpikeDetection.WinForms
 
         private void loadAndUseModel(MLContext mlcontext, IDataView dataView, String modelPath, String type, Color color)
         {
-            ITransformer trainedModel = mlcontext.Model.Load(modelPath, out var modelInputSchema);
+            ITransformer tansformedModel = mlcontext.Model.Load(modelPath, out var modelInputSchema);
             
             // Step 3: Apply data transformation to create predictions
-            IDataView transformedData = trainedModel.Transform(dataView);
+            IDataView transformedData = tansformedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
 
             // Index key for dictionary (date, sales)

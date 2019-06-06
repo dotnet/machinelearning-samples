@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.ML;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SpikeDetection.WinFormsTrainer
 {
@@ -15,55 +16,53 @@ namespace SpikeDetection.WinFormsTrainer
         private static string ModelRelativePath1 = $"{BaseModelsRelativePath}/ProductSalesSpikeModel.zip";
         private static string ModelRelativePath2 = $"{BaseModelsRelativePath}/ProductSalesChangePointModel.zip";
 
-
         private static string SpikeModelPath = GetAbsolutePath(ModelRelativePath1);
         private static string ChangePointModelPath = GetAbsolutePath(ModelRelativePath2);
 
-
+        private static MLContext mlContext;
         static void Main()
         {
             // Create MLContext to be shared across the model creation workflow objects 
-            MLContext mlcontext = new MLContext();
+            mlContext = new MLContext();
 
             // Assign the Number of records in dataset file to constant variable
             const int size = 36;
 
-            // STEP 1: Common data loading configuration
-            IDataView dataView = mlcontext.Data.LoadFromTextFile<ProductSalesData>(path: DatasetPath, hasHeader: true, separatorChar: ',');
+            //Load the data into IDataView.
+            //This dataset is used for detecting spikes or changes not for training.
+            IDataView dataView = mlContext.Data.LoadFromTextFile<ProductSalesData>(path: DatasetPath, hasHeader: true, separatorChar: ',');
 
             // Detect temporary changes (spikes) in the pattern
-            ITransformer trainedSpikeModel = DetectSpike(mlcontext, size, dataView);
+            ITransformer trainedSpikeModel = DetectSpike(size, dataView);
 
             // Detect persistent change in the pattern
-            ITransformer trainedChangePointModel =  DetectChangepoint(mlcontext, size, dataView);
+            ITransformer trainedChangePointModel =  DetectChangepoint(size, dataView);
             
-            SaveModel(mlcontext, trainedSpikeModel, SpikeModelPath, dataView);
-            SaveModel(mlcontext, trainedChangePointModel, ChangePointModelPath, dataView);
+            SaveModel(mlContext, trainedSpikeModel, SpikeModelPath, dataView);
+            SaveModel(mlContext, trainedChangePointModel, ChangePointModelPath, dataView);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
-
             Console.ReadLine();
         }
 
-        private static ITransformer DetectSpike(MLContext mlcontext, int size, IDataView dataView)
+        private static ITransformer DetectSpike(int size, IDataView dataView)
         {
-            Console.WriteLine("========Detect spikes========");
+            Console.WriteLine("===============Detect temporary changes in pattern===============");
 
-            // STEP 2: Set the training algorithm 
-            // Note -- This confidence level and p-value work well for the Product-sales dataset;
-            // you may need to adjust for different datasets
-            var trainingPipeLine = mlcontext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales),confidence: 95, pvalueHistoryLength: size / 4);
+            //STEP 1: Create Esimator   
+            var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, pvalueHistoryLength: size / 4);
 
-            // STEP 3: Train the model by fitting the dataview
-            Console.WriteLine("=============== Training the model using Spike Detection algorithm ===============");
-            ITransformer trainedModel = trainingPipeLine.Fit(dataView);
-            Console.WriteLine("=============== End of training process ===============");
+            //STEP 2:The Transformed Model.
+            //In IID Spike detection, we don't need to do training, we just need to do transformation. 
+            //As you are not training the model, there is no need to load IDataView with real data, you just need schema of data.
+            //So create empty data view and pass to Fit() method. 
+            ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 
-            // Step 4: Use/test model
-            // Apply data transformation to create predictions.
-            Console.WriteLine("=============== Using the model to detect anomalies ===============");
-            IDataView transformedData = trainedModel.Transform(dataView);
-            var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
+            //STEP 3: Use/test model
+            //Apply data transformation to create predictions.
+            IDataView transformedData = tansformedModel.Transform(dataView);
+            var predictions = mlContext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
+
             Console.WriteLine("Alert\tScore\tP-Value");
             foreach (var p in predictions)
             {
@@ -76,25 +75,26 @@ namespace SpikeDetection.WinFormsTrainer
                 Console.ResetColor();
             }
             Console.WriteLine("");
-
-            return trainedModel;
+            return tansformedModel;
         }
 
-        private static ITransformer DetectChangepoint(MLContext mlcontext, int size, IDataView dataView)
+        private static ITransformer DetectChangepoint(int size, IDataView dataView)
         {
-            Console.WriteLine("=====Detect Persistent changes in pattern======");
+            Console.WriteLine("===============Detect Persistent changes in pattern===============");
 
-            //STEP 2: Set the training algorithm    
-            var trainingPipeLine = mlcontext.Transforms.DetectIidChangePoint(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
+            //STEP 1: Setup transformations using DetectIidChangePoint
+            var estimator = mlContext.Transforms.DetectIidChangePoint(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, changeHistoryLength: size / 4);
 
-            //STEP 3:Train the model by fitting the dataview
-            Console.WriteLine("=============== Training the model Using Change Point Detection Algorithm===============");
-            ITransformer trainedModel = trainingPipeLine.Fit(dataView);
-            Console.WriteLine("=============== End of training process ===============");
+            //STEP 2:The Transformed Model.
+            //In IID Change point detection, we don't need need to do training, we just need to do transformation. 
+            //As you are not training the model, there is no need to load IDataView with real data, you just need schema of data.
+            //So create empty data view and pass to Fit() method.  
+            ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 
+            //STEP 3: Use/test model
             //Apply data transformation to create predictions.
-            IDataView transformedData = trainedModel.Transform(dataView);
-            var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
+            IDataView transformedData = tansformedModel.Transform(dataView);
+            var predictions = mlContext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
 
             Console.WriteLine($"{nameof(ProductSalesPrediction.Prediction)} column obtained post-transformation.");
             Console.WriteLine("Alert\tScore\tP-Value\tMartingale value");
@@ -111,8 +111,7 @@ namespace SpikeDetection.WinFormsTrainer
                 }
             }
             Console.WriteLine("");
-
-            return trainedModel;
+            return tansformedModel;
         }
 
         private static void SaveModel(MLContext mlcontext, ITransformer trainedModel, string modelPath, IDataView dataView)
@@ -131,6 +130,14 @@ namespace SpikeDetection.WinFormsTrainer
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
 
             return fullPath;
+        }
+
+        private static IDataView CreateEmptyDataView()
+        {
+            //Create empty DataView. We just need the schema to call fit()
+            IEnumerable<ProductSalesData> enumerableData = new List<ProductSalesData>();
+            var dv = mlContext.Data.LoadFromEnumerable(enumerableData);
+            return dv;
         }
     }
 }
