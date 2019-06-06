@@ -20,6 +20,8 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 16   |  Use latest version of Inception 5h model in TensorFlow samples | p2       |           | Prathyusha Korrapati(v-prkor)
 | 17   |  Create Image Classification/Clustering Sample w/ DnnImageFeaturizerTransform(check this issue https://github.com/dotnet/machinelearning-samples/issues/225) | p2       |           | Prathyusha Korrapati(v-prkor)
 | 18   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression  -check this PR (https://github.com/dotnet/machinelearning/pull/1900) | p0       |           | Prathyusha Korrapati(v-prkor)
+| 19   | Migrate all the samples to ML.Net 1.1  | p0       |           | Prathyusha Korrapati(v-prkor)
+| 20   | try this new Anomaly Detection Time series algorithm in our current samples : https://github.com/dotnet/machinelearning/pull/3693 It should be available in ML.NET    | p1       |           | Prathyusha Korrapati(v-prkor)
 
 
 
