@@ -41,7 +41,7 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
 
         public static void SetupModel()
         {
-            var dataView = CreateDataViewFromList();
+            var dataView = CreateEmptyDataView();
 
             var pipeline = _mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: "", inputColumnName: nameof(ImageNetData.ImagePath))
                             .Append(_mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
@@ -54,7 +54,7 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
             _mlContext.Model.Save(model, dataView.Schema, outputModelPath);
         }
        
-        private static IDataView CreateDataViewFromList()
+        private static IDataView CreateEmptyDataView()
         {
             //Create empty DataView. We just need the schema to call fit()
             List<ImageNetData> list = new List<ImageNetData>();
