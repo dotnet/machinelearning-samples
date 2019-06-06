@@ -84,7 +84,7 @@ CreateEmptyDataView();
 //Create ML Context object
 MLContext mlcontext = new MLContext();
 
-//STEP 1: Create Esimtator   
+//STEP 1: Create Estimator   
 var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, pvalueHistoryLength: size / 4);
 
 ```
