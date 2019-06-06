@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\train\**" />
+    <EmbeddedResource Remove="Data\train\**" />
+    <None Remove="Data\train\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="SharpZipLib" Version="1.1.0" />
+  </ItemGroup>
+  
+</Project>
