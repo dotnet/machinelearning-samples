@@ -15,9 +15,9 @@ namespace OnnxObjectDetectionE2EAPP.Services
     {
         private readonly YoloWinMlParser _parser = new YoloWinMlParser();
         IList<YoloBoundingBox> filteredBoxes;
-        private readonly PredictionEnginePool<ImageInputData, ImageNetPrediction> model;
+        private readonly PredictionEnginePool<ImageInputData, ImageObjectPrediction> model;
 
-        public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageNetPrediction> model)
+        public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPrediction> model)
         {
             this.model = model;
         }

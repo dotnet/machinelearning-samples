@@ -43,7 +43,7 @@ namespace OnnxObjectDetectionE2EAPP
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddPredictionEnginePool<ImageInputData, ImageNetPrediction>().
+            services.AddPredictionEnginePool<ImageInputData, ImageObjectPrediction>().
                 FromFile(_mlnetModelFilePath);
 
             services.AddTransient<IImageFileWriter, ImageFileWriter>();
