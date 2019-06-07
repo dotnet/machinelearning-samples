@@ -5,7 +5,7 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 1    | Add a sample on training on large datasets. The dataset should contain hundreds of columns, contain miliions of rows and size can be between 1gb and 100gb. The dataset should be used for MultiClass classification or Regression.                                     | p0       |Done | Prathyusha Korrapati(v-prkor)
 | 2    | Add a sample on Ranking                                                                                                                                                                                                                                                 | p1       |            | Nicole Haugen (nicolela)
 | 3    | Add Microsoft.Extensions ScalableML integration package to End-to-End apps to remove Object pooling in samples SalesDashboard etc                                                                                                                                       | p0       | Done       | Prathyusha Korrapati(v-prkor)
-| 4    | Add a sample on Loading images from in-memory instead of files using ONNX model                                                                                                                                                                                         | p1       |    Created PR        | Prathyusha Korrapati(v-prkor)
+| 4    | Update exisitng sample on Loading images from in-memory instead of files using ONNX model                                                                                                                                                                                         | p1       |    Done        | Prathyusha Korrapati(v-prkor)
 | 5    | Add a sample on Loading images from in-memory instead of files using TensorFlow model     -->First Migrate the Cesar/TensorFlowImagaClassficationWebAPI app to 1.0.0 and also migrate using Microsoft.Extensions.ML DI package     -->then use loading in-memory images | p1       |            | Cesar De la Torre(cesardl)
 | 6    | Add Large dataset stored in SQL server for Database sample instead of sql lite and small dataset.    -->Use the Credit card Fraud detection dataset. Export it to SQL server and use the existing Binary Classification algorithm                                                                                                                                                                     | p1       |            | Prathyusha Korrapati(v-prkor)
 | 7    | Restructure the project folders in samples according to CLI generated sample                                                                                                                                                                                            | p1       |            | Prathyusha Korrapati(v-prkor)
@@ -22,6 +22,13 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 18   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression  -check this PR (https://github.com/dotnet/machinelearning/pull/1900) | p0       |           | Prathyusha Korrapati(v-prkor)
 | 19   | Migrate all the samples to ML.Net 1.1  | p0       |           | Prathyusha Korrapati(v-prkor)
 | 20   | try this new Anomaly Detection Time series algorithm in our current samples : https://github.com/dotnet/machinelearning/pull/3693 It should be available in ML.NET    | p1       |           | Prathyusha Korrapati(v-prkor)
-
+| 21   | Create an UWP app to detection objects in camera 
+-->Check the performance of ML.Net with Live streaming of images
+-->In future convert this UWP app to WPF as UWP does not support in production env| p0      |           | Prathyusha Korrapati(v-prkor)
+| 22   | Custom training the model with your own images instead of pretrained model and pretrained images: By using Cusrom Vision pretrained model you can train your own images and create a new model  either
+  a. TensorFlow model .pb or
+  b. Onnx Model
+-->Use this model to predict the images.
+| p2      |           | Prathyusha Korrapati(v-prkor)
 
 
