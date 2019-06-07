@@ -8,23 +8,22 @@ namespace OnnxObjectDetectionE2EAPP.Services
 {
     public interface IObjectDetectionService
     {
-        void DetectObjectsUsingModel(string imagesFilePath);
+        void DetectObjectsUsingModel(ImageInputData imageInputData);
         Image PaintImages(string imageFilePath);
     }
     public class ObjectDetectionService : IObjectDetectionService
     {
         private readonly YoloWinMlParser _parser = new YoloWinMlParser();
         IList<YoloBoundingBox> filteredBoxes;
-        private readonly PredictionEnginePool<ImageNetData, ImageNetPrediction> model;
+        private readonly PredictionEnginePool<ImageInputData, ImageNetPrediction> model;
 
-        public ObjectDetectionService(PredictionEnginePool<ImageNetData, ImageNetPrediction> model)
+        public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageNetPrediction> model)
         {
             this.model = model;
         }
 
-        public void DetectObjectsUsingModel(string imagesFilePath)
+        public void DetectObjectsUsingModel(ImageInputData imageInputData)
         {
-            var imageInputData = new ImageNetData { ImagePath = imagesFilePath };
             var probs = model.Predict(imageInputData).PredictedLabels;
             IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
             filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);

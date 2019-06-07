@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -44,8 +46,9 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
             try
             {
                 //Detect the objects in the image                
-                var result = DetectAndPaintImage(imageFilePath);
-                return Ok(result);
+                //var result = DetectAndPaintImage(imageFilePath);
+                //return Ok(result);
+                return Ok("hi");
             }
             catch (Exception e)
             {
@@ -66,12 +69,41 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
             string imageFilePath = "", fileName = "";
             try
             {
-                //Save the temp image into the temp-folder 
-                fileName = await _imageWriter.UploadImageAsync(imageFile, _imagesTmpFolder);
+                MemoryStream imageMemoryStream = new MemoryStream();
+                await imageFile.CopyToAsync(imageMemoryStream);
                 imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
+
+                //Check that the image is valid
+                byte[] imageData = imageMemoryStream.ToArray();
+                if (!imageData.IsValidImage())
+                    return StatusCode(StatusCodes.Status415UnsupportedMediaType);
+
                 
+                //Convert to Image
+                Image image = Image.FromStream(imageMemoryStream);
+
+                //save image to a path
+                image.Save(imageFilePath + "\\myImage.Jpeg", ImageFormat.Jpeg);
+
+
+                //Convert to Bitmap
+                Bitmap bitmapImage = (Bitmap)image;
+
+                _logger.LogInformation($"Start processing image...");
+
+                //Measure execution time
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+
+                //Set the specific image data into the ImageInputData type used in the DataView
+                ImageInputData imageInputData = new ImageInputData { Image = bitmapImage };
+
                 //Detect the objects in the image                
-                var result = DetectAndPaintImage(imageFilePath);
+                var result = DetectAndPaintImage(imageInputData, imageFilePath);
+
+                //Stop measuring time
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                _logger.LogInformation($"Image processed in {elapsedMs} miliseconds");
                 return Ok(result);
             }
             catch (Exception e)
@@ -81,10 +113,11 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
             }
         }
 
-        private Result DetectAndPaintImage(string imageFilePath)
+        private Result DetectAndPaintImage(ImageInputData imageInputData, string imageFilePath)
         {
+
             //Predict the objects in the image
-            _objectDetectionService.DetectObjectsUsingModel(imageFilePath);
+            _objectDetectionService.DetectObjectsUsingModel(imageInputData);
             var img = _objectDetectionService.PaintImages(imageFilePath);
 
             using (MemoryStream m = new MemoryStream())

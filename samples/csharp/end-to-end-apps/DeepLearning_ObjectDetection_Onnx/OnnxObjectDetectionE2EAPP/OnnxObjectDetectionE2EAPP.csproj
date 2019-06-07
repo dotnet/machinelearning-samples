@@ -7,16 +7,16 @@
   </PropertyGroup>
  
   <ItemGroup>
-    <Content Include="Assets\inputs\imagesList\image2.jpg">
+    <Content Include="Assets\imagesList\image2.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Assets\inputs\imagesList\image4.jpg">
+    <Content Include="Assets\imagesList\image4.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>    
-    <Content Include="Assets\inputs\imagesList\image1.jpg">
+    <Content Include="Assets\imagesList\image1.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Assets\inputs\imagesList\image3.jpg">
+    <Content Include="Assets\imagesList\image3.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
@@ -32,15 +32,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\inputs\model\TinyYolo2_model.onnx">
+    <None Update="ML\OnnxModel\TinyYolo2_model.onnx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\outputs\ReadMe.txt">
+    <None Update="ML\MLNETModel\ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ImagesTemp\Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MLModel\" />
   </ItemGroup>
 
 </Project>
