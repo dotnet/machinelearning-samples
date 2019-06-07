@@ -22,13 +22,8 @@ Refactoring of Samples: Here are the list of backlog items created on MachineLea
 | 18   | Add a sample on Timeseries for sales Forecast to use a trainer based on Time Series instead of Regression  -check this PR (https://github.com/dotnet/machinelearning/pull/1900) | p0       |           | Prathyusha Korrapati(v-prkor)
 | 19   | Migrate all the samples to ML.Net 1.1  | p0       |           | Prathyusha Korrapati(v-prkor)
 | 20   | try this new Anomaly Detection Time series algorithm in our current samples : https://github.com/dotnet/machinelearning/pull/3693 It should be available in ML.NET    | p1       |           | Prathyusha Korrapati(v-prkor)
-| 21   | Create an UWP app to detection objects in camera 
--->Check the performance of ML.Net with Live streaming of images
--->In future convert this UWP app to WPF as UWP does not support in production env| p0      |           | Prathyusha Korrapati(v-prkor)
-| 22   | Custom training the model with your own images instead of pretrained model and pretrained images: By using Cusrom Vision pretrained model you can train your own images and create a new model  either
-  a. TensorFlow model .pb or
-  b. Onnx Model
--->Use this model to predict the images.
+| 21   | Create an UWP app to detection objects in camera -->Check the performance of ML.Net with Live streaming of images -->In future convert this UWP app to WPF as UWP does not support in production env| p0      |           | Prathyusha Korrapati(v-prkor)
+| 22   | Custom training the model with your own images instead of pretrained model and pretrained images: By using Cusrom Vision pretrained model you can train your own images and create a new model  either   a. TensorFlow model .pb or   b. Onnx Model -->Use this model to predict the images.
 | p2      |           | Prathyusha Korrapati(v-prkor)
 
 
