@@ -41,14 +41,20 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         [HttpGet()]
         public IActionResult Get([FromQuery]string url)
         {
-            string imageFileRelativePath = @"../../../assets/inputs" + url;
+            string imageFileRelativePath = @"../../../assets" + url;
             string imageFilePath = CommonHelpers.GetAbsolutePath(imageFileRelativePath);
             try
             {
+                Image image = Image.FromFile(imageFilePath);
+                //Convert to Bitmap
+                Bitmap bitmapImage = (Bitmap)image;
+
+                //Set the specific image data into the ImageInputData type used in the DataView
+                ImageInputData imageInputData = new ImageInputData { Image = bitmapImage };
+
                 //Detect the objects in the image                
-                //var result = DetectAndPaintImage(imageFilePath);
-                //return Ok(result);
-                return Ok("hi");
+                var result = DetectAndPaintImage(imageInputData,imageFilePath);
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -66,25 +72,25 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
             if (imageFile.Length == 0)
                 return BadRequest();
 
-            string imageFilePath = "", fileName = "";
+            string imageFilePath = "";
+            string fileName = "";
             try
             {
                 MemoryStream imageMemoryStream = new MemoryStream();
-                await imageFile.CopyToAsync(imageMemoryStream);
-                imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
+                await imageFile.CopyToAsync(imageMemoryStream);                
 
                 //Check that the image is valid
                 byte[] imageData = imageMemoryStream.ToArray();
                 if (!imageData.IsValidImage())
                     return StatusCode(StatusCodes.Status415UnsupportedMediaType);
-
                 
                 //Convert to Image
                 Image image = Image.FromStream(imageMemoryStream);
 
+                fileName = string.Format("{0}.Jpeg", image.GetHashCode());
+                imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
                 //save image to a path
-                image.Save(imageFilePath + "\\myImage.Jpeg", ImageFormat.Jpeg);
-
+                image.Save(imageFilePath, ImageFormat.Jpeg);
 
                 //Convert to Bitmap
                 Bitmap bitmapImage = (Bitmap)image;
