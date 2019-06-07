@@ -16,20 +16,17 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
     [ApiController]
     public class ObjectDetectionController : ControllerBase
     {
-        private readonly IImageFileWriter _imageWriter; 
         private readonly string _imagesTmpFolder;        
 
         private readonly ILogger<ObjectDetectionController> _logger;
         private readonly IObjectDetectionService _objectDetectionService;
 
         private string base64String = string.Empty;
-
         public ObjectDetectionController(IObjectDetectionService ObjectDetectionService, ILogger<ObjectDetectionController> logger, IImageFileWriter imageWriter) //When using DI/IoC (IImageFileWriter imageWriter)
         {
             //Get injected dependencies
             _objectDetectionService = ObjectDetectionService;
             _logger = logger;
-            _imageWriter = imageWriter;
             _imagesTmpFolder = CommonHelpers.GetAbsolutePath(@"../../../ImagesTemp");
         }
 
@@ -71,9 +68,6 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         {
             if (imageFile.Length == 0)
                 return BadRequest();
-
-            string imageFilePath = "";
-            string fileName = "";
             try
             {
                 MemoryStream imageMemoryStream = new MemoryStream();
@@ -87,8 +81,8 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
                 //Convert to Image
                 Image image = Image.FromStream(imageMemoryStream);
 
-                fileName = string.Format("{0}.Jpeg", image.GetHashCode());
-                imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
+                string fileName = string.Format("{0}.Jpeg", image.GetHashCode());
+                string imageFilePath = Path.Combine(_imagesTmpFolder, fileName);
                 //save image to a path
                 image.Save(imageFilePath, ImageFormat.Jpeg);
 
@@ -121,7 +115,6 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
 
         private Result DetectAndPaintImage(ImageInputData imageInputData, string imageFilePath)
         {
-
             //Predict the objects in the image
             _objectDetectionService.DetectObjectsUsingModel(imageInputData);
             var img = _objectDetectionService.PaintImages(imageFilePath);
