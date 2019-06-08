@@ -5,6 +5,13 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>07b5f177-2aea-4405-8e78-4121f2a881ff</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MLModel\**" />
+    <Content Remove="MLModel\**" />
+    <EmbeddedResource Remove="MLModel\**" />
+    <None Remove="MLModel\**" />
+  </ItemGroup>
  
   <ItemGroup>
     <Content Include="Assets\imagesList\image2.jpg">
@@ -41,10 +48,6 @@
     <None Update="ImagesTemp\Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>    
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MLModel\" />
   </ItemGroup>
 
 </Project>
