@@ -15,10 +15,18 @@ namespace OnnxObjectDetectionE2EAPP
 {
     public class Startup
     {
+        private readonly string _onnxModelFilePath;
+        private readonly string _mlnetModelFilePath;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            OnnxModelSettings.SetupModel();
+
+            _onnxModelFilePath = GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
+            _mlnetModelFilePath = GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
+
+            OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(_onnxModelFilePath);
+
+            onnxModelConfigurator.SaveMLNetModel(_mlnetModelFilePath);
         }
 
         public IConfiguration Configuration { get; }
@@ -35,8 +43,8 @@ namespace OnnxObjectDetectionE2EAPP
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddPredictionEnginePool<ImageNetData, ImageNetPrediction>().
-                FromFile(CommonHelpers.GetAbsolutePath(Configuration["MLModelPath"]));
+            services.AddPredictionEnginePool<ImageInputData, ImageObjectPrediction>().
+                FromFile(_mlnetModelFilePath);
 
             services.AddTransient<IImageFileWriter, ImageFileWriter>();
             services.AddTransient<IObjectDetectionService, ObjectDetectionService>();
@@ -58,6 +66,15 @@ namespace OnnxObjectDetectionE2EAPP
             app.UseCookiePolicy();
 
             app.UseMvc();
+        }       
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+            return fullPath;
         }
     }
 }
