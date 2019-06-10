@@ -61,13 +61,11 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 ##  Solution
 The sample contains Razor Webapp which contains both **Razor UI pages** and **API controller** classes to process images. 
 
-The difference between the [getting started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) and this end-to-end sample is we load the images from **file** in getting started sample where as we load the images from **in-memory** in end-to-end sample.
-
 ##  Code Walkthrough
 
-### ML.NET: Configure the model
+The difference between the [getting started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) and this end-to-end sample is we load the images from **file** in getting started sample where as we load the images from **in-memory** in end-to-end sample.
 
-Define the schema of data in a class type and refer that type while loading data into IDataView using TextLoader. Here the class type is **ImageInputData**. ML.Net supports Bitmap type for images.
+Define the schema of data in a class type and refer that type while loading data into IDataView using TextLoader. Here the class type is **ImageInputData**. ML.Net supports Bitmap type for images. To load the images from in-memory you just need to specify **Bitmap** type in the class decorated with [ImageType(height, width)] attribute as shown below.
 
 ```csharp
 public class ImageInputData
@@ -77,6 +75,7 @@ public class ImageInputData
     }
 ```
 
+### ML.NET: Configure the model
 
 The first step is to create an empty dataview as we just need schema of data while configuring up model.
 
