@@ -9,7 +9,7 @@
 The problem is how to run/score a TensorFlow model in a web app/service while using in-memory images. 
 
 ## Solution:
-The model (`model.pb) is trained using TensorFlow as disscussed in the blogpost [Run with ML.NET C# code a TensorFlow model exported from Azure Cognitive Services Custom Vision](https://devblogs.microsoft.com/cesardelatorre/run-with-ml-net-c-code-a-tensorflow-model-exported-from-azure-cognitive-services-custom-vision/).
+The model (`model.pb`) is trained using TensorFlow as disscussed in the blogpost [Run with ML.NET C# code a TensorFlow model exported from Azure Cognitive Services Custom Vision](https://devblogs.microsoft.com/cesardelatorre/run-with-ml-net-c-code-a-tensorflow-model-exported-from-azure-cognitive-services-custom-vision/).
 
 see the below architecture that shows how to run/score TensorFlow model in ASP.NET Core Razor web app/service
 
