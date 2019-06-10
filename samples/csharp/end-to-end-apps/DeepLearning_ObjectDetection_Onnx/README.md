@@ -9,7 +9,7 @@ Object detection is one of the classical problems in computer vision: Recognize 
 
 How the app works?
 
-When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
+When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed, it is shown under **Processed Images** section  with the bounding boxes around detected objects as shown below.
 
 ![](./docs/Screenshots/ObjectDetection.gif)
 
