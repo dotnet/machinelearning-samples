@@ -1,11 +1,11 @@
-﻿using Microsoft.ML.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿#region ImageNetDataUsings
+using Microsoft.ML.Data;
+#endregion
 
 namespace ObjectDetection
 {
+
+    #region ImageNetDataClass
     public class ImageNetData
     {
         [LoadColumn(0)]
@@ -14,10 +14,14 @@ namespace ObjectDetection
         [LoadColumn(1)]
         public string Label;
     }
+    #endregion
 
+    #region ImageNetDataProbabilityClass
     public class ImageNetDataProbability : ImageNetData
     {
         public string PredictedLabel;
         public float Probability { get; set; }
     }
+    #endregion
+
 }

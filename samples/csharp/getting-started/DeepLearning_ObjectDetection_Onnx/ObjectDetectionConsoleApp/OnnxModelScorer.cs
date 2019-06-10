@@ -1,28 +1,34 @@
-﻿using System;
+﻿#region OnnxModelScorerUsings
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
+#endregion
 
 namespace ObjectDetection
 {
     class OnnxModelScorer
     {
+        #region OnnxModelScorerMembers
         private readonly string imagesFolder;
         private readonly string modelLocation;
         private readonly MLContext mlContext;
 
         private IList<YoloBoundingBox> _boundingBoxes = new List<YoloBoundingBox>();
         private readonly YoloWinMlParser _parser = new YoloWinMlParser();
+        #endregion
 
+        #region OnnxModelScorerConstructor
         public OnnxModelScorer(string imagesFolder, string modelLocation)
         {
             this.imagesFolder = imagesFolder;
             this.modelLocation = modelLocation;
             mlContext = new MLContext();
         }
+        #endregion
 
         public struct ImageNetSettings
         {
@@ -150,7 +156,7 @@ namespace ObjectDetection
                     thumbnailGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
                     // Define Text Options
-                    Font drawFont = new Font("Arial", 12);
+                    Font drawFont = new Font("Arial",12,FontStyle.Bold);
                     SizeF size = thumbnailGraphic.MeasureString(text, drawFont);
                     SolidBrush fontBrush = new SolidBrush(Color.Black);
                     Point atPoint = new Point((int)x, (int)y - (int)size.Height - 1);
@@ -160,7 +166,8 @@ namespace ObjectDetection
                     SolidBrush colorBrush = new SolidBrush(box.BoxColor);
 
                     // Draw text on image 
-                    thumbnailGraphic.DrawString(text, drawFont, colorBrush, atPoint);
+                    thumbnailGraphic.FillRectangle(colorBrush, (int)x, (int)(y - size.Height - 1),(int)size.Width,(int)size.Height);
+                    thumbnailGraphic.DrawString(text, drawFont, fontBrush, atPoint);
 
                     // Draw bounding box on image
                     thumbnailGraphic.DrawRectangle(pen, x, y, width, height);

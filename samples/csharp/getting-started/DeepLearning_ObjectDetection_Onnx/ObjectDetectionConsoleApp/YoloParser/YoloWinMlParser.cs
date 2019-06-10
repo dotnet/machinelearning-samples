@@ -1,13 +1,17 @@
-﻿using ObjectDetection.YoloParser;
+﻿#region YoloParserUsings
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using ObjectDetection.YoloParser;
+#endregion
 
 namespace ObjectDetection
 {
     class YoloWinMlParser
     {
+        class CellDimensions : DimensionsBase { }
+
         public const int ROW_COUNT = 13;
         public const int COL_COUNT = 13;
         public const int CHANNEL_COUNT = 125;
@@ -45,7 +49,7 @@ namespace ObjectDetection
             Color.Red,
             Color.Aquamarine,
             Color.Lime,
-            Color.Navy,
+            Color.AliceBlue,
             Color.Sienna,
             Color.Orchid,
             Color.Tan,
@@ -57,6 +61,7 @@ namespace ObjectDetection
             Color.DarkTurquoise
         };
 
+        #region ParseOutputsMethod
         public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)
         {
             var boxes = new List<YoloBoundingBox>();
@@ -105,10 +110,11 @@ namespace ObjectDetection
                     }
                 }
             }
-
             return boxes;
         }
+        #endregion
 
+        #region FilterBoundingBoxMethod
         public IList<YoloBoundingBox> FilterBoundingBoxes(IList<YoloBoundingBox> boxes, int limit, float threshold)
         {
             var activeCount = boxes.Count;
@@ -154,10 +160,99 @@ namespace ObjectDetection
                         break;
                 }
             }
-
             return results;
         }
+        #endregion
+        
+        #region HelperFunctions
 
+        #region GetOffsetMethod
+        private int GetOffset(int x, int y, int channel)
+        {
+            // YOLO outputs a tensor that has a shape of 125x13x13, which 
+            // WinML flattens into a 1D array.  To access a specific channel 
+            // for a given (x,y) cell position, we need to calculate an offset
+            // into the array
+            return (channel * this.channelStride) + (y * COL_COUNT) + x;
+        }
+        #endregion
+
+        #region SigmoidMethod
+        private float Sigmoid(float value)
+        {
+            var k = (float)Math.Exp(value);
+            return k / (1.0f + k);
+        }
+        #endregion
+
+        #region SoftmaxMethod
+        private float[] Softmax(float[] values)
+        {
+            var maxVal = values.Max();
+            var exp = values.Select(v => Math.Exp(v - maxVal));
+            var sumExp = exp.Sum();
+
+            return exp.Select(v => (float)(v / sumExp)).ToArray();
+        }
+        #endregion
+
+        #region ExtractBoundingBoxDimensionsMethod
+        private BoundingBoxDimensions ExtractBoundingBoxDimensions(float[] modelOutput, int x, int y, int channel)
+        {
+            return new BoundingBoxDimensions
+            {
+                X = modelOutput[GetOffset(x, y, channel)],
+                Y = modelOutput[GetOffset(x, y, channel + 1)],
+                Width = modelOutput[GetOffset(x, y, channel + 2)],
+                Height = modelOutput[GetOffset(x, y, channel + 3)]
+            };
+        }
+        #endregion
+
+        #region GetConfidenceMethod
+        private float GetConfidence(float[] modelOutput, int x, int y, int channel)
+        {
+            return Sigmoid(modelOutput[GetOffset(x, y, channel + 4)]);
+        }
+        #endregion
+
+        #region MapBoundingBoxToCellMethod
+        private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions)
+        {
+            return new CellDimensions
+            {
+                X = ((float)x + Sigmoid(boxDimensions.X)) * CELL_WIDTH,
+                Y = ((float)y + Sigmoid(boxDimensions.Y)) * CELL_HEIGHT,
+                Width = (float)Math.Exp(boxDimensions.Width) * CELL_WIDTH * anchors[box * 2],
+                Height = (float)Math.Exp(boxDimensions.Height) * CELL_HEIGHT * anchors[box * 2 + 1],
+            };
+        }
+        #endregion
+
+        #region ExtractClassesMethod
+        public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
+        {
+            float[] predictedClasses = new float[CLASS_COUNT];
+            int predictedClassOffset = channel + BOX_INFO_FEATURE_COUNT;
+            for (int predictedClass = 0; predictedClass < CLASS_COUNT; predictedClass++)
+            {
+                predictedClasses[predictedClass] = modelOutput[GetOffset(x, y, predictedClass + predictedClassOffset)];
+            }
+            return Softmax(predictedClasses);
+        }
+        #endregion
+
+        #region GetTopResultMethod
+        public ValueTuple<int, float> GetTopResult(float[] predictedClasses)
+        {
+            return predictedClasses
+                .Select((predictedClass, index) => (Index: index, Value: predictedClass))
+                .OrderByDescending(result => result.Value)
+                .First();
+        }
+        #endregion
+
+        #region IntersectionOverUnionMethod
         private float IntersectionOverUnion(RectangleF boundingBoxA, RectangleF boundingBoxB)
         {
             var areaA = boundingBoxA.Width * boundingBoxA.Height;
@@ -179,80 +274,8 @@ namespace ObjectDetection
 
             return intersectionArea / (areaA + areaB - intersectionArea);
         }
+        #endregion
 
-
-        # region Helper Functions
-
-        private int GetOffset(int x, int y, int channel)
-        {
-            // YOLO outputs a tensor that has a shape of 125x13x13, which 
-            // WinML flattens into a 1D array.  To access a specific channel 
-            // for a given (x,y) cell position, we need to calculate an offset
-            // into the array
-            return (channel * this.channelStride) + (y * COL_COUNT) + x;
-        }
-
-        private float Sigmoid(float value)
-        {
-            var k = (float)Math.Exp(value);
-
-            return k / (1.0f + k);
-        }
-
-        private float[] Softmax(float[] values)
-        {
-            var maxVal = values.Max();
-            var exp = values.Select(v => Math.Exp(v - maxVal));
-            var sumExp = exp.Sum();
-
-            return exp.Select(v => (float)(v / sumExp)).ToArray();
-        }
-
-        private BoundingBoxDimensions ExtractBoundingBoxDimensions(float[] modelOutput, int x, int y, int channel)
-        {
-            return new BoundingBoxDimensions
-            {
-                X = modelOutput[GetOffset(x, y, channel)],
-                Y = modelOutput[GetOffset(x, y, channel + 1)],
-                Width = modelOutput[GetOffset(x, y, channel + 2)],
-                Height = modelOutput[GetOffset(x, y, channel + 3)]
-            };
-        }
-        
-        private float GetConfidence(float[] modelOutput, int x, int y, int channel)
-        {
-            return Sigmoid(modelOutput[GetOffset(x, y, channel + 4)]);
-        }
-
-        private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions)
-        {
-            return new CellDimensions
-            {
-                X = ((float)x + Sigmoid(boxDimensions.X)) * CELL_WIDTH,
-                Y = ((float)y + Sigmoid(boxDimensions.Y)) * CELL_HEIGHT,
-                Width = (float)Math.Exp(boxDimensions.Width) * CELL_WIDTH * anchors[box * 2],
-                Height = (float)Math.Exp(boxDimensions.Height) * CELL_HEIGHT * anchors[box * 2 + 1],
-            };
-        }
-
-        public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
-        {
-            float[] predictedClasses = new float[CLASS_COUNT];
-            int predictedClassOffset = channel + BOX_INFO_FEATURE_COUNT;
-            for (int predictedClass = 0; predictedClass < CLASS_COUNT; predictedClass++)
-            {
-                predictedClasses[predictedClass] = modelOutput[GetOffset(x, y, predictedClass + predictedClassOffset)];
-            }
-            return Softmax(predictedClasses);
-        }
-
-        public ValueTuple<int, float> GetTopResult(float[] predictedClasses)
-        {
-            return predictedClasses
-                .Select((predictedClass, index) => (Index: index, Value: predictedClass))
-                .OrderByDescending(result => result.Value)
-                .First();
-        }
-        # endregion
+        #endregion
     }
 }
