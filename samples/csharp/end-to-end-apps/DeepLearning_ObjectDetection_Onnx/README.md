@@ -61,7 +61,7 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 ##  Solution
 The sample contains Razor Webapp which contains both **Razor UI pages** and **API controller** classes to process images. 
 
-The difference between the [getting started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) and this end-to-end sample is we load the images from file in getting started sample where as we load the images from **in-memory** in end-to-end sample.
+The difference between the [getting started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) and this end-to-end sample is we load the images from **file** in getting started sample where as we load the images from **in-memory** in end-to-end sample.
 
 ##  Code Walkthrough
 
