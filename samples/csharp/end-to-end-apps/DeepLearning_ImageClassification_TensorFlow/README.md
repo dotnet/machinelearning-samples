@@ -17,3 +17,5 @@ see the below architecture that shows how to run/score TensorFlow model in ASP.N
 
 
 The difference between [getting started sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow) and this end-to-end sample is that the images are loaded from  **file** in getting started sample where as the images are loaded from **in-memory** in this end-to-end sample.
+
+**Note:**  this sample is trained using Custom images and it predicts the only specific images that are in [TestImages](./TestImages) Folder.
