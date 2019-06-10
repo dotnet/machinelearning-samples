@@ -2,7 +2,7 @@
 
 namespace OnnxObjectDetectionE2EAPP
 {
-    public class ImageNetPrediction
+    public class ImageObjectPrediction
     {
         [ColumnName("grid")]
         public float[] PredictedLabels;
