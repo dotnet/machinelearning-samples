@@ -1,4 +1,4 @@
-# Image Classification - AspNet core Web/service Sample
+# Image Classification - Asp.Net core Web/service Sample
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
