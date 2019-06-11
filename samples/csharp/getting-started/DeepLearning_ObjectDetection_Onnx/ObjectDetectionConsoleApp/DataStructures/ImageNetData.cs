@@ -1,6 +1,6 @@
-﻿#region ImageNetDataUsings
+﻿// <ImageNetDataUsings>
 using Microsoft.ML.Data;
-#endregion
+// </ImageNetDataUsings>
 
 namespace ObjectDetection
 {
