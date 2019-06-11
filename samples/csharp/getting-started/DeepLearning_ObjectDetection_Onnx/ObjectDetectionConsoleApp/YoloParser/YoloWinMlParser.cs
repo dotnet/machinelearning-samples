@@ -1,4 +1,4 @@
-﻿#region YoloParserUsings
+﻿#region ParserUsings
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,8 +10,11 @@ namespace ObjectDetection
 {
     class YoloWinMlParser
     {
+        #region CellDimensionsClass
         class CellDimensions : DimensionsBase { }
+        #endregion
 
+        #region ParserConstants
         public const int ROW_COUNT = 13;
         public const int COL_COUNT = 13;
         public const int CHANNEL_COUNT = 125;
@@ -20,14 +23,18 @@ namespace ObjectDetection
         public const int CLASS_COUNT = 20;
         public const float CELL_WIDTH = 32;
         public const float CELL_HEIGHT = 32;
-
+        
         private int channelStride = ROW_COUNT * COL_COUNT;
+        #endregion
 
+        #region ModelAnchors
         private float[] anchors = new float[]
         {
             1.08F, 1.19F, 3.42F, 4.41F, 6.63F, 11.38F, 9.42F, 5.11F, 16.62F, 10.52F
         };
+        #endregion
 
+        #region ClassLabel
         private string[] labels = new string[]
         {
             "aeroplane", "bicycle", "bird", "boat", "bottle",
@@ -35,7 +42,9 @@ namespace ObjectDetection
             "diningtable", "dog", "horse", "motorbike", "person",
             "pottedplant", "sheep", "sofa", "train", "tvmonitor"
         };
+        #endregion
 
+        #region Colors
         private static Color[] classColors = new Color[]
         {
             Color.Khaki,
@@ -60,6 +69,7 @@ namespace ObjectDetection
             Color.SandyBrown,
             Color.DarkTurquoise
         };
+        #endregion
 
         #region ParseOutputsMethod
         public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)

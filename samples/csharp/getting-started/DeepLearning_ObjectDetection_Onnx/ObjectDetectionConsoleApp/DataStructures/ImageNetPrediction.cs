@@ -1,4 +1,6 @@
-﻿using Microsoft.ML.Data;
+﻿#region ImagePredictionUsings
+using Microsoft.ML.Data;
+#endregion
 
 namespace ObjectDetection
 {

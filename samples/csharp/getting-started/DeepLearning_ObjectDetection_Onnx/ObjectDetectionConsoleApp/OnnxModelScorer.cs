@@ -30,12 +30,15 @@ namespace ObjectDetection
         }
         #endregion
 
+        #region ImageSettings
         public struct ImageNetSettings
         {
             public const int imageHeight = 416;
             public const int imageWidth = 416;
         }
+        #endregion
 
+        #region ModelSettings
         public struct TinyYoloModelSettings
         {
             // for checking TIny yolo2 Model input and  output  parameter names,
@@ -48,14 +51,18 @@ namespace ObjectDetection
             // output tensor name
             public const string ModelOutput = "grid";
         }
+        #endregion
 
+        #region ScoreMethod
         public void Score()
         {
             var model = LoadModel(modelLocation);
 
             PredictDataUsingModel(imagesFolder, model);
         }
+        #endregion
 
+        #region LoadModelMethod
         private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string modelLocation)
         {
             Console.WriteLine("Read model");
@@ -75,7 +82,9 @@ namespace ObjectDetection
 
             return predictionEngine;
         }
+        #endregion
 
+        #region PredictDataUsingModelMethod
         protected void PredictDataUsingModel(string imagesFolder, PredictionEngine<ImageNetData, ImageNetPrediction> model)
         {
             Console.WriteLine($"Images location: {imagesFolder}");
@@ -105,6 +114,9 @@ namespace ObjectDetection
                 Console.WriteLine("");
             }
         }
+        #endregion
+
+        #region GetImagesDataMethod
         private static IEnumerable<ImageNetData> GetImagesData(string folder)
         {
             List<ImageNetData> imagesList = new List<ImageNetData>();
@@ -116,6 +128,9 @@ namespace ObjectDetection
             }
             return imagesList;
         }
+        #endregion
+
+        #region CreateDataViewFromListMethod
         private IDataView CreateDataViewFromList()
         {
             //Create empty DataView. We just need the schema to call fit()
@@ -124,7 +139,9 @@ namespace ObjectDetection
             var dv = mlContext.Data.LoadFromEnumerable(enumerableData);
             return dv;
         }
+        #endregion
 
+        #region DrawBoundingBoxMethod
         public void DrawBoundingBox(string inputImageLocation, string outputImageLocation, string imageName, IList<YoloBoundingBox> filteredBoundingBoxes)
         {
             Image image = Image.FromFile(Path.Combine(inputImageLocation, imageName));
@@ -181,6 +198,7 @@ namespace ObjectDetection
 
             image.Save(Path.Combine(outputImageLocation, imageName));
         }
+        #endregion
     }
 }
 
