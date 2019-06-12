@@ -159,8 +159,6 @@ namespace ObjectDetection
             return results;
         }
 
-        #region HelperFunctions
-
         private float Sigmoid(float value)
         {
             var k = (float)Math.Exp(value);
@@ -252,6 +250,5 @@ namespace ObjectDetection
 
             return intersectionArea / (areaA + areaB - intersectionArea);
         }
-        #endregion
     }
 }
