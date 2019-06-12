@@ -1,15 +1,15 @@
-# Object Detection End-to-End
+# Object Detection - Asp.Net cpre Web/Service Sample
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
+| v1.1.0           | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
 
 ## Problem 
 Object detection is one of the classical problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
 
 How the app works?
 
-When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed it shows under **Processed Images** section as shown below.
+When the app runs it shows the images list on the bottom at **Sample Input Images** section.select any image to process. After the image is processed, it is shown under **Processed Images** section  with the bounding boxes around detected objects as shown below.
 
 ![](./docs/Screenshots/ObjectDetection.gif)
 
@@ -59,42 +59,36 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 
 
 ##  Solution
-The sample contains Razor Webapp which contains both **Razor UI pages** and **API controller** classes to process images.
+The sample contains Razor Webapp which contains both **Razor UI pages** and **API controller** classes to process images. 
 
 ##  Code Walkthrough
 
-### ML.NET: Model Scoring
+The difference between the [getting started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) and this end-to-end sample is we load the images from **file** in getting started sample where as we load the images from **in-memory** in end-to-end sample.
 
-Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is **ImageNetData**. 
+Define the schema of data in a class type and refer that type while loading data into IDataView using TextLoader. Here the class type is **ImageInputData**. ML.Net supports Bitmap type for images. To load the images from in-memory you just need to specify **Bitmap** type in the class decorated with [ImageType(height, width)] attribute as shown below.
 
 ```csharp
-public class ImageNetData
+public class ImageInputData
     {
-        [LoadColumn(0)]
-        public string ImagePath;
-
-        [LoadColumn(1)]
-        public string Label;
-
+        [ImageType(416, 416)]
+        public Bitmap Image { get; set; }
     }
 ```
 
+### ML.NET: Configure the model
 
-The first step is to create an empty dataview as WebApi service reads images from `ImagesTemp` folder.
+The first step is to create an empty dataview as we just need schema of data while configuring up model.
 
 ```csharp
-var dataView = CreateDataView();
+var dataView = CreateEmptyDataView();
 ```
-
-The image file used to load images has two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. 
 
 The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
 ```csharp
- var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
-                            .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
+var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
+                            .Append(_mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
+                            .Append(_mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModelFilePath, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
 
 
 ```
@@ -120,13 +114,38 @@ Define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
 
 ![inspecting neural network with netron](./docs/Netron/netron.PNG)
 
-Finally, we extract the prediction engine after *fitting* the estimator pipeline. The prediction engine receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`), and then returns and object of type `ImagePrediction`.  
+Create the model by fitting the dataview. 
 
 ```
-  var model = pipeline.Fit(data);
-  var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model);
+  var model = pipeline.Fit(dataView);
 ```
-When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by YoloMlPraser class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. On console we display the label value of each bounding box.
+
+#Detect objects in the image:
+
+After the model is configured, we need to save the model, load the saved model and the pass the image to the model to detect objects.
+When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by YoloMlPraser class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. 
+```
+ var probs = model.Predict(imageInputData).PredictedLabels;
+ IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
+ filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);
+```
+
+#Draw bounding boxes around detected objects in Image.
+
+The final step is we draw the bounding boxes around the objects using Paint API and return the image to the browser and it is displayed on the browser
+
+var img = _objectDetectionService.PaintImages(imageFilePath);
+
+using (MemoryStream m = new MemoryStream())
+{
+   img.Save(m, img.RawFormat);
+   byte[] imageBytes = m.ToArray();
+
+   // Convert byte[] to Base64 String
+   base64String = Convert.ToBase64String(imageBytes);
+   var result = new Result { imageString = base64String };
+   return result;
+}
 
 **Note** The Tiny Yolo2 model is not having much accuracy compare to full YOLO2 model. As this is a sample program we are using Tiny version of Yolo model i.e Tiny_Yolo2
 

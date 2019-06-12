@@ -73,7 +73,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle" colspan="3">Computer Vision</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow model scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow model scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon">&nbsp;
+    <a href="samples/csharp/end-to-end-apps/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td><b></td>
     <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow Estimator)<br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
     <td align="middle"><img src="images/object-detection.png" alt="Object Detection chart"><br><br><b>Object Detection<br>    (ONNX model scoring)<br>
     <a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon">
@@ -94,6 +95,9 @@ The official ML.NET samples are divided in multiple categories depending on the 
   
   <td align="middle"><img src="images/database.png" alt="Database chart"><br><b>Training model with Database<br><a href="samples/csharp/getting-started/DatabaseIntegration">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
   <td align="middle"><img src="images/smile.png" alt="Database chart"><br><b>Scalable Blazor web app<br><a href="samples/csharp/end-to-end-apps/ScalableSentimentAnalysisBlazorWebApp">C#</a> &nbsp; &nbsp; <img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
+</tr>
+<tr>
+  <td align="middle"><img src="images/large-data-set.png" alt="large file chart"><br><b>Large Datasets<br><a href="samples/csharp/getting-started/LargeDatasets">C#</a> &nbsp; &nbsp; <img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
   </tr>
 </table>
 

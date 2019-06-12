@@ -17,11 +17,11 @@ namespace eShopForecastModelsTrainer
 
         static void Main(string[] args)
         {
-            
+
             try
             {
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
-                
+
                 ProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
                 ProductModelHelper.TestPrediction(mlContext);
 
@@ -30,7 +30,7 @@ namespace eShopForecastModelsTrainer
             }
             catch (Exception ex)
             {
-                ConsoleWriteException(ex.Message);
+                ConsoleWriteException(ex.ToString());
             }
             ConsolePressAnyKey();
         }

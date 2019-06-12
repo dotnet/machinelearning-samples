@@ -56,9 +56,9 @@ namespace ObjectDetection
             Console.WriteLine($"Model location: {modelLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight})");
 
-            var data = CreateDataViewFromList();
+            var data = CreateEmptyDataView();
 
-            var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
+            var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: "", inputColumnName: nameof(ImageNetData.ImagePath))
                             .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
                             .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
                             .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
@@ -111,8 +111,8 @@ namespace ObjectDetection
             }
             return imagesList;
         }
-
-        private IDataView CreateDataViewFromList()
+      
+        private IDataView CreateEmptyDataView()
         {
             //Create empty DataView. We just need the schema to call fit()
             List<ImageNetData> list = new List<ImageNetData>();

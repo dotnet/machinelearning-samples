@@ -19,7 +19,7 @@ namespace ObjectDetection
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.ToString());
             }
 
             Console.WriteLine("========= End of Process..Hit any Key ========");
