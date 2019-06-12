@@ -103,7 +103,7 @@ namespace ObjectDetection
         private static IEnumerable<ImageNetData> GetImagesData(string folder)
         {
             List<ImageNetData> imagesList = new List<ImageNetData>();
-            string[] filePaths = Directory.GetFiles(folder);
+            string[] filePaths = Directory.GetFiles(folder).Where(filePath => Path.GetExtension(filePath) != ".md").ToArray();
             foreach (var filePath in filePaths)
             {
                 ImageNetData imagedata = new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) };
