@@ -94,7 +94,7 @@ namespace ObjectDetection
         private static IEnumerable<ImageNetData> GetImagesData(string folder)
         {
             List<ImageNetData> imagesList = new List<ImageNetData>();
-            string[] filePaths = Directory.GetFiles(folder);
+            string[] filePaths = Directory.GetFiles(folder, "*.jpg");
             foreach (var filePath in filePaths)
             {
                 ImageNetData imagedata = new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) };
