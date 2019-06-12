@@ -1,20 +1,16 @@
-﻿#region ParserUsings
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using ObjectDetection.YoloParser;
-#endregion
 
 namespace ObjectDetection
 {
     class YoloWinMlParser
     {
-        #region CellDimensionsClass
-        class CellDimensions : DimensionsBase { }
-        #endregion
 
-        #region ParserConstants
+        class CellDimensions : DimensionsBase { }
+
         public const int ROW_COUNT = 13;
         public const int COL_COUNT = 13;
         public const int CHANNEL_COUNT = 125;
@@ -23,18 +19,14 @@ namespace ObjectDetection
         public const int CLASS_COUNT = 20;
         public const float CELL_WIDTH = 32;
         public const float CELL_HEIGHT = 32;
-        
-        private int channelStride = ROW_COUNT * COL_COUNT;
-        #endregion
 
-        #region ModelAnchors
+        private int channelStride = ROW_COUNT * COL_COUNT;
+
         private float[] anchors = new float[]
         {
             1.08F, 1.19F, 3.42F, 4.41F, 6.63F, 11.38F, 9.42F, 5.11F, 16.62F, 10.52F
         };
-        #endregion
 
-        #region ClassLabel
         private string[] labels = new string[]
         {
             "aeroplane", "bicycle", "bird", "boat", "bottle",
@@ -42,9 +34,7 @@ namespace ObjectDetection
             "diningtable", "dog", "horse", "motorbike", "person",
             "pottedplant", "sheep", "sofa", "train", "tvmonitor"
         };
-        #endregion
 
-        #region Colors
         private static Color[] classColors = new Color[]
         {
             Color.Khaki,
@@ -69,9 +59,7 @@ namespace ObjectDetection
             Color.SandyBrown,
             Color.DarkTurquoise
         };
-        #endregion
 
-        #region ParseOutputsMethod
         public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)
         {
             var boxes = new List<YoloBoundingBox>();
@@ -97,10 +85,10 @@ namespace ObjectDetection
                             continue;
 
                         float[] predictedClasses = ExtractClasses(yoloModelOutputs, row, column, channel);
-                        
+
                         var (topResultIndex, topResultScore) = GetTopResult(predictedClasses);
                         var topScore = topResultScore * confidence;
-                        
+
                         if (topScore < threshold)
                             continue;
 
@@ -122,9 +110,7 @@ namespace ObjectDetection
             }
             return boxes;
         }
-        #endregion
 
-        #region FilterBoundingBoxMethod
         public IList<YoloBoundingBox> FilterBoundingBoxes(IList<YoloBoundingBox> boxes, int limit, float threshold)
         {
             var activeCount = boxes.Count;
@@ -172,30 +158,15 @@ namespace ObjectDetection
             }
             return results;
         }
-        #endregion
-        
+
         #region HelperFunctions
 
-        #region GetOffsetMethod
-        private int GetOffset(int x, int y, int channel)
-        {
-            // YOLO outputs a tensor that has a shape of 125x13x13, which 
-            // WinML flattens into a 1D array.  To access a specific channel 
-            // for a given (x,y) cell position, we need to calculate an offset
-            // into the array
-            return (channel * this.channelStride) + (y * COL_COUNT) + x;
-        }
-        #endregion
-
-        #region SigmoidMethod
         private float Sigmoid(float value)
         {
             var k = (float)Math.Exp(value);
             return k / (1.0f + k);
         }
-        #endregion
 
-        #region SoftmaxMethod
         private float[] Softmax(float[] values)
         {
             var maxVal = values.Max();
@@ -204,9 +175,16 @@ namespace ObjectDetection
 
             return exp.Select(v => (float)(v / sumExp)).ToArray();
         }
-        #endregion
 
-        #region ExtractBoundingBoxDimensionsMethod
+        private int GetOffset(int x, int y, int channel)
+        {
+            // YOLO outputs a tensor that has a shape of 125x13x13, which 
+            // WinML flattens into a 1D array.  To access a specific channel 
+            // for a given (x,y) cell position, we need to calculate an offset
+            // into the array
+            return (channel * this.channelStride) + (y * COL_COUNT) + x;
+        }
+
         private BoundingBoxDimensions ExtractBoundingBoxDimensions(float[] modelOutput, int x, int y, int channel)
         {
             return new BoundingBoxDimensions
@@ -217,16 +195,12 @@ namespace ObjectDetection
                 Height = modelOutput[GetOffset(x, y, channel + 3)]
             };
         }
-        #endregion
 
-        #region GetConfidenceMethod
         private float GetConfidence(float[] modelOutput, int x, int y, int channel)
         {
             return Sigmoid(modelOutput[GetOffset(x, y, channel + 4)]);
         }
-        #endregion
 
-        #region MapBoundingBoxToCellMethod
         private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions)
         {
             return new CellDimensions
@@ -237,9 +211,7 @@ namespace ObjectDetection
                 Height = (float)Math.Exp(boxDimensions.Height) * CELL_HEIGHT * anchors[box * 2 + 1],
             };
         }
-        #endregion
 
-        #region ExtractClassesMethod
         public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
         {
             float[] predictedClasses = new float[CLASS_COUNT];
@@ -250,9 +222,7 @@ namespace ObjectDetection
             }
             return Softmax(predictedClasses);
         }
-        #endregion
 
-        #region GetTopResultMethod
         public ValueTuple<int, float> GetTopResult(float[] predictedClasses)
         {
             return predictedClasses
@@ -260,9 +230,7 @@ namespace ObjectDetection
                 .OrderByDescending(result => result.Value)
                 .First();
         }
-        #endregion
 
-        #region IntersectionOverUnionMethod
         private float IntersectionOverUnion(RectangleF boundingBoxA, RectangleF boundingBoxB)
         {
             var areaA = boundingBoxA.Width * boundingBoxA.Height;
@@ -284,8 +252,6 @@ namespace ObjectDetection
 
             return intersectionArea / (areaA + areaB - intersectionArea);
         }
-        #endregion
-
         #endregion
     }
 }

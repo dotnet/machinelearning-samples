@@ -1,11 +1,8 @@
-﻿#region BoundingBoxUsings
-using ObjectDetection.YoloParser;
+﻿using ObjectDetection.YoloParser;
 using System.Drawing;
-#endregion
 
 namespace ObjectDetection
 {
-    #region YoloBoundingBoxClass
     class YoloBoundingBox
     {
         public BoundingBoxDimensions Dimensions { get; set; }
@@ -21,9 +18,6 @@ namespace ObjectDetection
 
         public Color BoxColor { get; set; }
     }
-    #endregion
 
-    #region BoundingBoxDimensionsClass
     class BoundingBoxDimensions : DimensionsBase { }
-    #endregion
 }

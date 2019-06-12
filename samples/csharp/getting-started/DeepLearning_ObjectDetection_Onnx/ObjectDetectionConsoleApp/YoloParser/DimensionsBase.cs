@@ -1,6 +1,5 @@
 ﻿namespace ObjectDetection.YoloParser
 {
-    #region DimensionsBaseClass
     public class DimensionsBase
     {
         public float X { get; set; }
@@ -8,5 +7,4 @@
         public float Height { get; set; }
         public float Width { get; set; }
     }
-    #endregion
 }

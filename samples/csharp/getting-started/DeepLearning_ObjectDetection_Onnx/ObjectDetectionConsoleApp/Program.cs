@@ -1,7 +1,5 @@
-﻿#region MainUsings
-using System;
+﻿using System;
 using System.IO;
-#endregion
 
 namespace ObjectDetection
 {
@@ -9,14 +7,11 @@ namespace ObjectDetection
     {
         public static void Main()
         {
-            #region MainDefinePaths
             var assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
             var modelFilePath = Path.Combine(assetsPath, "Model", "TinyYolo2_model.onnx");
-            var imagesFolder = Path.Combine(assetsPath,"images");
-            #endregion
+            var imagesFolder = Path.Combine(assetsPath, "images");
 
-            #region MainProgram
             try
             {
                 var modelScorer = new OnnxModelScorer(imagesFolder, modelFilePath);
@@ -26,13 +21,11 @@ namespace ObjectDetection
             {
                 Console.WriteLine(ex.Message);
             }
-            
+
             Console.WriteLine("========= End of Process..Hit any Key ========");
             Console.ReadLine();
-            #endregion 
         }
 
-        #region GetAbsolutePathMethod
         public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
@@ -42,7 +35,6 @@ namespace ObjectDetection
 
             return fullPath;
         }
-        #endregion
     }
 }
 
