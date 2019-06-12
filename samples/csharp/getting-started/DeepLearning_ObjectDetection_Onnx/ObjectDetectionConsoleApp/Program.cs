@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
-using System.Net;
 
 namespace ObjectDetection
 {
@@ -12,7 +10,7 @@ namespace ObjectDetection
             var assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
             var modelFilePath = Path.Combine(assetsPath, "Model", "TinyYolo2_model.onnx");
-            var imagesFolder = Path.Combine(assetsPath,"images");
+            var imagesFolder = Path.Combine(assetsPath, "images");
 
             try
             {
