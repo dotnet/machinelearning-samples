@@ -50,13 +50,12 @@ namespace BlazorSentimentAnalysis.Server
             }
 
             app.UseRouting();
-
+            app.UseClientSideBlazorFiles<Client.Startup>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
             });
-
-            app.UseBlazor<Client.Startup>();
         }
     }
 }
