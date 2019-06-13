@@ -16,19 +16,19 @@ namespace SqlServerDbIntegration
     {  
         public static void Main()
         {
-            //SetUp();
             var mlContext = new MLContext(seed: 1);            
 
             var dataView = mlContext.Data.LoadFromEnumerable(QueryData());
 
             var trainTestData = mlContext.Data.TrainTestSplit(dataView);
 
-            var trainClicks = mlContext.Data.CreateEnumerable<UrlClicks>(trainTestData.TrainSet, reuseRowObject: false).Take(100).ToList();
+            var train100RowsEnumerable = mlContext.Data.CreateEnumerable<UrlClicks>(trainTestData.TrainSet, reuseRowObject: false).Take(100).ToList();
 
-            var train100RowsDataView = mlContext.Data.LoadFromEnumerable(trainClicks);
+            var train100RowsDataView = mlContext.Data.LoadFromEnumerable(train100RowsEnumerable);
+
             //do the transformation in IDataView
             //Transform categorical features into binary
-            var dataProcessingPipeline = mlContext.Transforms.Conversion.ConvertType(nameof(UrlClicks.Label), outputKind:Microsoft.ML.Data.DataKind.Boolean).
+            var CatogoriesTranformer = mlContext.Transforms.Conversion.ConvertType(nameof(UrlClicks.Label), outputKind:Microsoft.ML.Data.DataKind.Boolean).
                 Append(mlContext.Transforms.Categorical.OneHotEncoding(new[] {
                 new InputOutputColumnPair("Cat14Encoded", "Cat14"),
                 new InputOutputColumnPair("Cat15Encoded", "Cat15"),
@@ -57,12 +57,8 @@ namespace SqlServerDbIntegration
                 new InputOutputColumnPair("Cat38Encoded", "Cat38"),
                 new InputOutputColumnPair("Cat391Encoded", "Cat391")
             }, OneHotEncodingEstimator.OutputKind.Binary));
-
-            //ConsoleHelper.PeekDataViewInConsole(mlContext, trainTestData.TrainSet, dataProcessingPipeline, 2);
-
-            ConsoleHelper.PeekDataViewInConsole(mlContext, train100RowsDataView, dataProcessingPipeline, 2);
-
-            var featuresTransformer = dataProcessingPipeline.Append(
+            
+            var featuresTransformer = CatogoriesTranformer.Append(
                 mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Feat01Featurized", inputColumnName: nameof(UrlClicks.Feat01)))
                 .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Feat02Featurized", inputColumnName: nameof(UrlClicks.Feat02)))
                 .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Feat03Featurized", inputColumnName: nameof(UrlClicks.Feat03)))
@@ -77,7 +73,7 @@ namespace SqlServerDbIntegration
                 .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Feat12Featurized", inputColumnName: nameof(UrlClicks.Feat12)))
                 .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Feat13Featurized", inputColumnName: nameof(UrlClicks.Feat13)));
 
-            var tempFinalTransformerPipeLine = featuresTransformer.Append(mlContext.Transforms.Concatenate("Features",
+            var finalTransformerPipeLine = featuresTransformer.Append(mlContext.Transforms.Concatenate("Features",
                             "Feat01Featurized",
                             "Feat02Featurized",
                             "Feat03Featurized",
@@ -96,55 +92,33 @@ namespace SqlServerDbIntegration
                             "Cat26Encoded", "Cat27Encoded", "Cat28Encoded", "Cat29Encoded", "Cat30Encoded", "Cat31Encoded",
                             "Cat32Encoded", "Cat33Encoded", "Cat34Encoded", "Cat35Encoded", "Cat36Encoded", "Cat37Encoded",
                             "Cat38Encoded", "Cat391Encoded"));
-            ConsoleHelper.PeekDataViewInConsole(mlContext, train100RowsDataView, tempFinalTransformerPipeLine, 2);
 
-            var trainingPipeLine = tempFinalTransformerPipeLine.Append(mlContext.BinaryClassification.Trainers.LightGbm(labelColumnName: "Label", featureColumnName: "Features"));
-                //.Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName:"Label",inputColumnName:"LabelKey"));
+            ConsoleHelper.PeekDataViewInConsole(mlContext, train100RowsDataView, finalTransformerPipeLine, 2);
 
+            var trainingPipeLine = finalTransformerPipeLine.Append(mlContext.BinaryClassification.Trainers.LightGbm(labelColumnName: "Label", featureColumnName: "Features"));
+            
             Console.WriteLine("Training model...");
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            //var model = trainingPipeLine.Fit(train100RowsDataView);
+
             var model = trainingPipeLine.Fit(trainTestData.TrainSet);            
 
             watch.Stop();
             Console.WriteLine("elapsed time for training the model = {0}", watch.ElapsedMilliseconds);
 
             Console.WriteLine("Evaluating the model...");
-            var testsetEnumerable = mlContext.Data.CreateEnumerable<UrlClicks>(trainTestData.TestSet,false).Take(100).ToList();
-            //Console.WriteLine("actual test data count ={0}", mlContext.Data.CreateEnumerable<UrlClicks>(trainTestData.TestSet, false).ToList().Count);
-            var test100RowsDataView = mlContext.Data.LoadFromEnumerable(testsetEnumerable);
-
-            //var predictions = model.Transform(test100RowsDataView);
             var predictions = model.Transform(trainTestData.TestSet);
             watch.Start();
+
             // Now that we have the predictions, calculate the metrics of those predictions and output the results.
             var metrics = mlContext.BinaryClassification.Evaluate(predictions);
             watch.Stop();
             Console.WriteLine("elapsed time for evaluating the model = {0}", watch.ElapsedMilliseconds);
-            ConsoleHelper.PrintBinaryClassificationMetrics("Database Example", metrics);
-
-            //Load the data into IdataView
-
-            // ModelTrainerScorer modelTrainerScorer = new ModelTrainerScorer();
-
-            ////Load data from SQL Server Database
-            //(IDataView trainDataView, IDataView testDataView) = modelTrainerScorer.LoadData(mlContext);
-
-            ////Train Model
-            //(ITransformer model, string trainerName) = modelTrainerScorer.TrainModel(mlContext, trainDataView);
-
-            ////Evaluate Model
-            //modelTrainerScorer.EvaluateModel(mlContext, model, testDataView, trainerName);
-
-            ////Predict model
-            //modelTrainerScorer.PredictModel(mlContext, model, testDataView);
+            ConsoleHelper.PrintBinaryClassificationMetrics("====Evaluation Metrics for Large datasets stored in Database====", metrics);
 
             Console.WriteLine("=============== Press any key ===============");
             Console.ReadKey();
         }
-
-
 
         private static IEnumerable<UrlClicks> QueryData()
         {
@@ -162,41 +136,6 @@ namespace SqlServerDbIntegration
                     yield return urlClickRecord;
                 }
             }
-        }
-        //public static void SetUp()
-        //{
-        //    //Load the file into in-memory structure i.e Array
-        //    CriteoContextSetup criteoContextSetup = new CriteoContextSetup();
-        //    criteoContextSetup.GetOrdersDataToLoad();
-
-        //    //seed the database from Array 
-
-
-        //}
-
-        //public static void LoadCSVFileIntoMemory(string csvFile)
-        //{
-
-        //}
-
-        //public static void UnZipDataSet(string zipDataSet, string destinationFile)
-        //{
-        //    if (!File.Exists(destinationFile))
-        //    {
-        //        var destinationDirectory = Path.GetDirectoryName(destinationFile);
-        //        ZipFile.ExtractToDirectory(zipDataSet, $"{destinationDirectory}");
-        //    }
-        //}
-
-        //public static string GetAbsolutePath(string relativePath)
-        //{
-        //    FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-        //    string assemblyFolderPath = _dataRoot.Directory.FullName;
-
-        //    string fullPath = Path.Combine(assemblyFolderPath, relativePath);
-
-        //    return fullPath;
-        //}
-
+        }       
     }
 }

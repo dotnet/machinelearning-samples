@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ModelBuildercs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview5.19227.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-    <Compile Include="ModelBuildercs" />
   </ItemGroup>
 
 

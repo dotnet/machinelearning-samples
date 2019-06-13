@@ -1,4 +1,5 @@
-#  Using SQL Server database as a data source - Credit card Fraud Detection
+#  Using SQL Server database as a data source - Url Clikc Prediction
+Need to add more changes
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
