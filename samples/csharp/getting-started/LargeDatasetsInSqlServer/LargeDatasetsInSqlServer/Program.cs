@@ -1,5 +1,4 @@
 using Common;
-using DatabaseIntegration;
 using Microsoft.ML;
 using Microsoft.ML.Transforms;
 using System;
@@ -10,7 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace SqlServerDbIntegration
+namespace LargeDatasetsInSqlServer
 {
     public class Program
     {  

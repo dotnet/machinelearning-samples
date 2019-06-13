@@ -22,9 +22,7 @@
     <PackageReference Include="TinyCsvParser" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="assets\input\" />
     <Folder Include="Common\" />
-    <Folder Include="DbFile\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
