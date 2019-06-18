@@ -30,7 +30,7 @@ Model Builder can be installed on Visual Studio 2017/ 2019. You can install it b
 
 
 **Pre-requisites**
-* Visual Studio 2017 15.6 or later or Visual Studio 2019
+* Visual Studio 2017 15.9.12 or later or Visual Studio 2019
 * All SKU's of Visual Studio
 * .NET Core 2.1 SDK
 
