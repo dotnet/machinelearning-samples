@@ -404,7 +404,7 @@ namespace AdvancedTaxiFarePrediction
 
             } // The pl object is disposed here
 
-            // Open Chart File In Microsoft Photos App (Or default app, like browser for .svg)
+            // Open chart file in Microsoft Photos App (or default app for .svg or .png, like browser)
 
             Console.WriteLine("Showing chart...");
             var p = new Process();
