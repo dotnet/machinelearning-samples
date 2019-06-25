@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using static Microsoft.ML.DataOperationsCatalog;
 
 namespace PersonalizedRanking
@@ -13,12 +14,12 @@ namespace PersonalizedRanking
     class Program
     {
         const string AssetsPath = @"../../../Assets";
-        static string TrainDatasetPath = Path.Combine(AssetsPath, "InputData_Train.csv");
-        static string TestDatasetPath = Path.Combine(AssetsPath, "InputData_Test.csv");
-        static string ModelPath = Path.Combine(AssetsPath, "RankingModel.csv");
+        readonly static string TrainDatasetPath = Path.Combine(AssetsPath, "InputData_Train.csv");
+        readonly static string TestDatasetPath = Path.Combine(AssetsPath, "InputData_Test.csv");
+        readonly static string ModelPath = Path.Combine(AssetsPath, "RankingModel.csv");
 
-        static string OriginalDatasetPath = Path.Combine(AssetsPath, "Train.csv");
-        static string OriginalExampleDatasetPath = Path.Combine(AssetsPath, "Test.csv");
+        readonly static string OriginalDatasetPath = Path.Combine(AssetsPath, "Train.csv");
+        readonly static string OriginalExampleDatasetPath = Path.Combine(AssetsPath, "Test.csv");
 
         static void Main(string[] args)
         {
@@ -48,50 +49,50 @@ namespace PersonalizedRanking
         {
             const string DatasetUrl = "https://www.kaggle.com/c/expedia-personalized-sort/download/data.zip";
 
-            if (!File.Exists(trainDatasetPath) || !File.Exists(testDatasetPath))
-            {
-                if (!File.Exists(originalDatasetPath))
+                if (!File.Exists(trainDatasetPath) || !File.Exists(testDatasetPath))
                 {
-                    throw new InvalidOperationException($"This samples requires the Expedia dataset.  Please ensure that you have downloaded and extracted the contents of the .zip file to the following directory: {assetPath}. The .zip file can be downloaded from here: {DatasetUrl}");
+                    if (!File.Exists(originalDatasetPath))
+                    {
+                        throw new InvalidOperationException($"This samples requires the Expedia dataset.  Please ensure that you have downloaded and extracted the contents of the .zip file to the following directory: {assetPath}. The .zip file can be downloaded from here: {DatasetUrl}");
+                    }
+
+                    Console.WriteLine("===== Prepare the testing/training datasets =====");
+
+                    // Load dataset using TextLoader by specifying the type name that holds the data's schema to be mapped with datasets.
+                    IDataView data = mlContext.Data.LoadFromTextFile<HotelData>(originalDatasetPath, separatorChar: ',', hasHeader: true);
+
+                    Console.WriteLine("===== Label the dataset with ideal ranking value =====");
+
+                    // Create an Estimator and use a custom mapper to transform label hotel instances to values 0, 1, or 2.
+                    IEstimator<ITransformer> dataPipeline = mlContext.Transforms.CustomMapping(Mapper.GetLabelMapper(mlContext, data), null);
+
+                    // To transform the data, call the Fit() method.
+                    ITransformer dataTransformer = dataPipeline.Fit(data);
+                    IDataView labeledData = dataTransformer.Transform(data);
+
+                    Console.WriteLine("===== Split the data into testing/training datasets =====");
+
+                    // When splitting the data, 20% is held for the test dataset.
+                    // To avoid label leakage, the GroupId (e.g. search\query id) is specified as the samplingKeyColumnName.  
+                    // This ensures that if two or more hotel instances share the same GroupId, that they are guaranteed to appear in the same subset of data (train or test).
+                    TrainTestData trainTestData = mlContext.Data.TrainTestSplit(labeledData, testFraction: .2, samplingKeyColumnName: nameof(HotelData.GroupId), seed: 1);
+                    IDataView trainData = trainTestData.TrainSet;
+                    IDataView testData = trainTestData.TestSet;
+
+                    Console.WriteLine("===== Save the testing/training datasets =====");
+
+                    // Save the test dataset to a file to make it faster to load in subsequent runs.
+                    using (var fileStream = File.Create(trainDatasetPath))
+                    {
+                        mlContext.Data.SaveAsText(trainData, fileStream, separatorChar: ',', headerRow: true, schema: true);
+                    }
+
+                    // Save the train dataset to a file to make it faster to load in subsequent runs.
+                    using (var fileStream = File.Create(testDatasetPath))
+                    {
+                        mlContext.Data.SaveAsText(testData, fileStream, separatorChar: ',', headerRow: true, schema: true);
+                    }
                 }
-
-                Console.WriteLine("===== Prepare the testing/training datasets =====");
-
-                // Load dataset using TextLoader by specifying the type name that holds the data's schema to be mapped with datasets.
-                IDataView data = mlContext.Data.LoadFromTextFile<HotelData>(originalDatasetPath, separatorChar: ',', hasHeader: true);
-
-                Console.WriteLine("===== Label the dataset with ideal ranking value =====");
-
-                // Create an Estimator and use a custom mapper to transform label hotel instances to values 0, 1, or 2.
-                IEstimator<ITransformer> dataPipeline = mlContext.Transforms.CustomMapping(Mapper.GetLabelMapper(mlContext, data), null);
-
-                // To transform the data, call the Fit() method.
-                ITransformer dataTransformer = dataPipeline.Fit(data);
-                IDataView labeledData = dataTransformer.Transform(data);
-
-                Console.WriteLine("===== Split the data into testing/training datasets =====");
-
-                // When splitting the data, 20% is held for the test dataset.
-                // To avoid label leakage, the GroupId (e.g. search\query id) is specified as the samplingKeyColumnName.  
-                // This ensures that if two or more hotel instances share the same GroupId, that they are guaranteed to appear in the same subset of data (train or test).
-                TrainTestData trainTestData = mlContext.Data.TrainTestSplit(labeledData, testFraction: .2, samplingKeyColumnName: nameof(HotelData.GroupId), seed: 1);
-                IDataView trainData = trainTestData.TrainSet;
-                IDataView testData = trainTestData.TestSet;
-
-                Console.WriteLine("===== Save the testing/training datasets =====");
-
-                // Save the test dataset to a file to make it faster to load in subsequent runs.
-                using (var fileStream = File.Create(trainDatasetPath))
-                {
-                    mlContext.Data.SaveAsText(trainData, fileStream, separatorChar: ',', headerRow: true, schema: true);
-                }
-
-                // Save the train dataset to a file to make it faster to load in subsequent runs.
-                using (var fileStream = File.Create(testDatasetPath))
-                {
-                    mlContext.Data.SaveAsText(testData, fileStream, separatorChar: ',', headerRow: true, schema: true);
-                }
-            }
         }
 
         static ITransformer TrainModel(MLContext mlContext, string trainDatasetPath, string modelPath)

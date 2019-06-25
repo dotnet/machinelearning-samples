@@ -45,7 +45,7 @@ To label the data with ideal ranking values, the sample follows [Expedia's evalu
 * 1 - The user clicked through to see more information on this hotel.
 * 2 - The user purchased\booked a room at this hotel.
 
-Expedia's dataset includes both **Click_Bool** and **Booking_Bool** columns that indicate whether the user has clicked or purchased/booked a hotel.  Applying the above guidelines to these columns, we create a new "Label" column that contains values {0, 1, 2} for each hotel search result.
+Expedia's dataset includes both **Click_Bool** and **Booking_Bool** columns that indicate whether the user has clicked or purchased/booked a hotel.  Applying the above guidelines to these columns, we create a new **Label** column that contains values {0, 1, 2} for each hotel search result.
 
 The code for labeling the data is similar to the following:
 
@@ -111,13 +111,13 @@ using (var fileStream = File.Create(testDatasetPath))
 `````
 
 ### 3. Train Model
-This sample trains the model using the LightGbmRankingTrainer which relies on the LightGbm Lambdarank algorithm.  The model requires the following inputs:
+This sample trains the model using the LightGbmRankingTrainer which relies on the LightGbm Lambdarank algorithm.  The model requires the following input columns:
 
-* Group Id - Data instances are contained in logical groupings and each group has an identifier known as the group id.  In the case of the Expedia dataset, hotel search results are grouped by their corresponding query where the Group Id corresponds to the query or search id.  The input group data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype). 
-* Label:  Ideal rank (e.g. degree of relevance) of each data instance where higher values indicate higher relevance.  The input label data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype) or [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single). 
-* Features: Values that are influential in determining the relevance\rank of a data instance.  The input feature data must be a fixed size vector of type [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single).
+* Group Id - Column that contains the group id for each data instance.  Data instances are contained in logical groupings and each group has an identifier known as the group id.  In the case of the Expedia dataset, hotel search results are grouped by their corresponding query where the group id corresponds to the query or search id.  The input group id data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype). 
+* Label:  Column that contains the deal rank (e.g. degree of relevance) of each data instance where higher values indicate higher relevance.  The input label data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype) or [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single). 
+* Features: The columns that are influential in determining the relevance\rank of a data instance.  The input feature data must be a fixed size vector of type [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single).
 
-When the trainer is set, custom gains are used to apply weights to each of the rank values used in labels.  As described earlier in the sample, the labels contain values {0, 1, 2} which directly correlate to the specified gains {0, 1, 5}.  This helps to ensure that the model will place more emphasis on ranking hotel search results labeled with 2 (e.g. signifies the user purchased\booked the hotel) so that they are positioned higher when compared to results labeled with 0 or 1.    
+When the trainer is set, **custom gains** are used to apply weights to each of the labeled rank values.  As described earlier in the sample, the potential label rank values are {0, 1, 2} which directly correlates to the specified gains {0, 1, 5}.  This helps to ensure that the model places more emphasis on ranking hotel search results labeled with 2 (e.g. signifies the user purchased\booked the hotel) so that they are positioned higher when compared to results labeled with 0 or 1.    
 
 The following code is used to train the model:
 
@@ -148,7 +148,7 @@ options.FeatureColumnName = FeaturesVectorName;
 // Create an Estimator and transform the data:
 // 1. Concatenate the feature columns into a single Features vector.
 // 2. Create a key type for the label input data by using the value to key transform.
-// 3. Create a key type for the group input data by using a hash transform.
+// 3. Create a key type for the group input data by using a hash transform. TODO: Verify that we can't use a key type mapping here???
 IEstimator<ITransformer> dataPipeline = mlContext.Transforms.Concatenate(FeaturesVectorName, featureCols)
     .Append(mlContext.Transforms.Conversion.MapValueToKey(nameof(HotelData.Label)))
     .Append(mlContext.Transforms.Conversion.Hash(nameof(HotelData.GroupId), nameof(HotelData.GroupId), numberOfBits: 20));
@@ -169,14 +169,14 @@ We need this step to conclude how accurate our model is. To do so, the model fro
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.  Specifically, we can gauge the accuracy of our model using Discounted Cumulative Gain (DCG) and Normalized Discounted Cumulative Gain (NDCG) which are included in the `RankingMetrics` returned by `Evaluate()`. 
 
-When evaluating the `RankingMetrics` for this sample's model, you'll notice that the following metrics are reported for DCG and NDCG:
+When evaluating the `RankingMetrics` for this sample's model, you'll notice that the following metrics are reported for DCG and NDCG (the values that you see when running the sample will be similar to these):
 * DCG - @1:1.0191, @2:1.5128, @3:1.8371, @4:2.0922, @5:2.2982, @6:2.4641, @7:2.6051, @8:2.7240, @9:2.8234, @10:2.9133
 
 * NDCG - @1:0.1184, @2:0.1719, @3:0.2082, @4:0.2372, @5:0.2608, @6:0.2798, @7:0.2960, @8:0.3096, @9:0.3210, @10:0.3314
 
 The NDCG values are most useful to examine since this allows us to compare accuracy across different queries.  The potential value of NDCG ranges from **0.0** to **1.0**, with 1.0 being a perfect model that exactly matches the ideal ranking.  
 
-With this in mind, let's look at our model's values for NDCG.  In particular, let's look at the value for **NDCG@10** which is **.3314**. This is the average NDCG for a query returning the top **10** hotel search results.  While **.3314** may seem low compared to **1.0**, a more realistic goal is to reach **.5407** which is the score of the first place winner in [Expedia's Personalize Hotel Search contest on Kaggle](https://www.kaggle.com/c/expedia-personalized-sort/leaderboard).  To increase the model's accuracy, you would need to continue experimenting with feature engineering improvements.
+With this in mind, let's look at our model's values for NDCG.  In particular, let's look at the value for **NDCG@10** which is **.3314**. This is the average NDCG for a query returning the top **10** hotel search results.  While **.3314** may seem low compared to **1.0**, a more realistic goal is to reach **.5407** which is the score of the first place winner in [Expedia's Personalize Hotel Search contest on Kaggle](https://www.kaggle.com/c/expedia-personalized-sort/leaderboard).  To increase the model's accuracy, we would need to experiment with feature engineering to continue to improve our model.
 
 Refer to the following code used to test and evaluate the model:
 
