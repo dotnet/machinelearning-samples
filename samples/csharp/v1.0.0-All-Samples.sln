@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BikeSharingDemand.Solution", "BikeSharingDemand.Solution", "{820E8AF2-A47D-4AB8-A4AF-5CDFF97EBCDF}"
 EndProject
@@ -128,6 +128,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TFImageClassififcationE2E.Solution", "TFImageClassififcationE2E.Solution", "{F59681C2-D829-4538-A41A-568F7A7D07FD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TensorFlowImageClassification", "end-to-end-apps\DeepLearning_ImageClassification_TensorFlow\TensorFlowImageClassification\TensorFlowImageClassification.csproj", "{C5D5BEBF-DC10-4065-A27B-AB56E1ABCA47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PersonalizedRanking.Solution", "PersonalizedRanking.Solution", "{B76DD928-A78E-497C-BA7D-83C5864452F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalizedRanking", "getting-started\Ranking_PersonalizedSort\PersonalizedRanking.csproj", "{C5886C5F-539A-4B9D-A03A-9C5B57E77763}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -425,6 +429,14 @@ Global
 		{C5D5BEBF-DC10-4065-A27B-AB56E1ABCA47}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5D5BEBF-DC10-4065-A27B-AB56E1ABCA47}.Release|x64.ActiveCfg = Release|Any CPU
 		{C5D5BEBF-DC10-4065-A27B-AB56E1ABCA47}.Release|x64.Build.0 = Release|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -466,6 +478,7 @@ Global
 		{EA9E37C6-8C62-4370-A9CF-369D002B89B6} = {7C3A7DA5-CBEB-420F-B7AC-CDE34BE2D52E}
 		{F2C0FCE9-9F76-4318-826E-892441E4A169} = {EF9F8695-25DE-4FE4-894A-6DE24E0BDD73}
 		{C5D5BEBF-DC10-4065-A27B-AB56E1ABCA47} = {F59681C2-D829-4538-A41A-568F7A7D07FD}
+		{C5886C5F-539A-4B9D-A03A-9C5B57E77763} = {B76DD928-A78E-497C-BA7D-83C5864452F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
