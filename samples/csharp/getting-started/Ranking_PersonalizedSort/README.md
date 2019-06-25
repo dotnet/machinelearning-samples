@@ -185,11 +185,10 @@ Refer to the following code used to test and evaluate the model:
 IDataView testData = mlContext.Data.LoadFromTextFile<HotelData>(testDatasetPath, separatorChar: ',', hasHeader: true);
 IDataView predictions = model.Transform(testData);
 
-// Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
-ConsoleHelper.EvaluateMetrics(mlContext, predictions);
+[...]
 
-// Evaluate metrics for up to 10 search results (e.g. NDCG@10).
-ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
+// Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
+RankingMetrics metrics = mlContext.Ranking.Evaluate(scoredData);
 `````
 
 ### 5.  Consume Model
