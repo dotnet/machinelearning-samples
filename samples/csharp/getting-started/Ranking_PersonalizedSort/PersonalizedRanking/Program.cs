@@ -126,7 +126,7 @@ namespace PersonalizedRanking
             // Create an Estimator and transform the data:
             // 1. Concatenate the feature columns into a single Features vector.
             // 2. Create a key type for the label input data by using the value to key transform.
-            // 3. Create a key type for the group input data by using a hash transform. TODO: Verify that we can't use a key type mapping here???
+            // 3. Create a key type for the group input data by using a hash transform.
             IEstimator<ITransformer> dataPipeline = mlContext.Transforms.Concatenate(FeaturesVectorName, featureCols)
                 .Append(mlContext.Transforms.Conversion.MapValueToKey(nameof(HotelData.Label)))
                 .Append(mlContext.Transforms.Conversion.Hash(nameof(HotelData.GroupId), nameof(HotelData.GroupId), numberOfBits: 20));
