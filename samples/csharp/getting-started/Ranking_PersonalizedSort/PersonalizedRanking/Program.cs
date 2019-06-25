@@ -160,7 +160,7 @@ namespace PersonalizedRanking
             // Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
             ConsoleHelper.EvaluateMetrics(mlContext, predictions);
 
-            // Evaluate metrics for up to 10 search results (e.g. NDCG@10);
+            // Evaluate metrics for up to 10 search results (e.g. NDCG@10).
             ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
         }
 
@@ -182,7 +182,7 @@ namespace PersonalizedRanking
             var firstGroupId = hotelQueries.First<HotelPrediction>().GroupId;
             IEnumerable<HotelPrediction> firstGroupPredictions = hotelQueries.Take(50).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.PredictedRank).ToList();
 
-            // The individual scores themselves are NOT a useful measure of accuracy; insteady, they are used to determine the ranking where a higher score indicates a higher ranking.
+            // The individual scores themselves are NOT a useful measure of accuracy; instead, they are used to determine the ranking where a higher score indicates a higher ranking.
             ConsoleHelper.PrintScores(firstGroupPredictions);
         }
     }

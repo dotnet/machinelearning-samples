@@ -114,8 +114,8 @@ using (var fileStream = File.Create(testDatasetPath))
 This sample trains the model using the LightGbmRankingTrainer which relies on the LightGbm Lambdarank algorithm.  The model requires the following input columns:
 
 * Group Id - Column that contains the group id for each data instance.  Data instances are contained in logical groupings and each group has an identifier known as the group id.  In the case of the Expedia dataset, hotel search results are grouped by their corresponding query where the group id corresponds to the query or search id.  The input group id data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype). 
-* Label:  Column that contains the deal rank (e.g. degree of relevance) of each data instance where higher values indicate higher relevance.  The input label data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype) or [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single). 
-* Features: The columns that are influential in determining the relevance\rank of a data instance.  The input feature data must be a fixed size vector of type [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single).
+* Label - Column that contains the deal rank (e.g. degree of relevance) of each data instance where higher values indicate higher relevance.  The input label data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype) or [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single). 
+* Features - The columns that are influential in determining the relevance\rank of a data instance.  The input feature data must be a fixed size vector of type [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single).
 
 When the trainer is set, **custom gains** are used to apply weights to each of the labeled rank values.  As described earlier in the sample, the potential label rank values are {0, 1, 2} which directly correlates to the specified gains {0, 1, 5}.  This helps to ensure that the model places more emphasis on ranking hotel search results labeled with 2 (e.g. signifies the user purchased\booked the hotel) so that they are positioned higher when compared to results labeled with 0 or 1.    
 
@@ -148,7 +148,7 @@ options.FeatureColumnName = FeaturesVectorName;
 // Create an Estimator and transform the data:
 // 1. Concatenate the feature columns into a single Features vector.
 // 2. Create a key type for the label input data by using the value to key transform.
-// 3. Create a key type for the group input data by using a hash transform. TODO: Verify that we can't use a key type mapping here???
+// 3. Create a key type for the group input data by using a hash transform.
 IEstimator<ITransformer> dataPipeline = mlContext.Transforms.Concatenate(FeaturesVectorName, featureCols)
     .Append(mlContext.Transforms.Conversion.MapValueToKey(nameof(HotelData.Label)))
     .Append(mlContext.Transforms.Conversion.Hash(nameof(HotelData.GroupId), nameof(HotelData.GroupId), numberOfBits: 20));
@@ -188,7 +188,7 @@ IDataView predictions = model.Transform(testData);
 // Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
 ConsoleHelper.EvaluateMetrics(mlContext, predictions);
 
-// Evaluate metrics for up to 10 search results (e.g. NDCG@10);
+// Evaluate metrics for up to 10 search results (e.g. NDCG@10).
 ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
 `````
 
@@ -211,6 +211,6 @@ IEnumerable<HotelPrediction> hotelQueries = mlContext.Data.CreateEnumerable<Hote
 var firstGroupId = hotelQueries.First<HotelPrediction>().GroupId;
 IEnumerable<HotelPrediction> firstGroupPredictions = hotelQueries.Take(50).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.PredictedRank).ToList();
 
-// The individual scores themselves are NOT a useful measure of accuracy; insteady, they are used to determine the ranking where a higher score indicates a higher ranking.
+// The individual scores themselves are NOT a useful measure of accuracy; instead, they are used to determine the ranking where a higher score indicates a higher ranking.
 ConsoleHelper.PrintScores(firstGroupPredictions);
 `````
