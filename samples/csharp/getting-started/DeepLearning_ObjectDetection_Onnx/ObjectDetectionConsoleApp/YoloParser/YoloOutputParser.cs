@@ -58,6 +58,98 @@ namespace ObjectDetection.YoloParser
             Color.DarkTurquoise
         };
 
+        private float Sigmoid(float value)
+        {
+            var k = (float)Math.Exp(value);
+            return k / (1.0f + k);
+        }
+
+        private float[] Softmax(float[] values)
+        {
+            var maxVal = values.Max();
+            var exp = values.Select(v => Math.Exp(v - maxVal));
+            var sumExp = exp.Sum();
+
+            return exp.Select(v => (float)(v / sumExp)).ToArray();
+        }
+
+        private int GetOffset(int x, int y, int channel)
+        {
+            // YOLO outputs a tensor that has a shape of 125x13x13, which 
+            // WinML flattens into a 1D array.  To access a specific channel 
+            // for a given (x,y) cell position, we need to calculate an offset
+            // into the array
+            return (channel * this.channelStride) + (y * COL_COUNT) + x;
+        }
+
+        private BoundingBoxDimensions ExtractBoundingBoxDimensions(float[] modelOutput, int x, int y, int channel)
+        {
+            return new BoundingBoxDimensions
+            {
+                X = modelOutput[GetOffset(x, y, channel)],
+                Y = modelOutput[GetOffset(x, y, channel + 1)],
+                Width = modelOutput[GetOffset(x, y, channel + 2)],
+                Height = modelOutput[GetOffset(x, y, channel + 3)]
+            };
+        }
+
+        private float GetConfidence(float[] modelOutput, int x, int y, int channel)
+        {
+            return Sigmoid(modelOutput[GetOffset(x, y, channel + 4)]);
+        }
+
+        private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions)
+        {
+            return new CellDimensions
+            {
+                X = ((float)x + Sigmoid(boxDimensions.X)) * CELL_WIDTH,
+                Y = ((float)y + Sigmoid(boxDimensions.Y)) * CELL_HEIGHT,
+                Width = (float)Math.Exp(boxDimensions.Width) * CELL_WIDTH * anchors[box * 2],
+                Height = (float)Math.Exp(boxDimensions.Height) * CELL_HEIGHT * anchors[box * 2 + 1],
+            };
+        }
+
+        public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
+        {
+            float[] predictedClasses = new float[CLASS_COUNT];
+            int predictedClassOffset = channel + BOX_INFO_FEATURE_COUNT;
+            for (int predictedClass = 0; predictedClass < CLASS_COUNT; predictedClass++)
+            {
+                predictedClasses[predictedClass] = modelOutput[GetOffset(x, y, predictedClass + predictedClassOffset)];
+            }
+            return Softmax(predictedClasses);
+        }
+
+        private ValueTuple<int, float> GetTopResult(float[] predictedClasses)
+        {
+            return predictedClasses
+                .Select((predictedClass, index) => (Index: index, Value: predictedClass))
+                .OrderByDescending(result => result.Value)
+                .First();
+        }
+
+        private float IntersectionOverUnion(RectangleF boundingBoxA, RectangleF boundingBoxB)
+        {
+            var areaA = boundingBoxA.Width * boundingBoxA.Height;
+
+            if (areaA <= 0)
+                return 0;
+
+            var areaB = boundingBoxB.Width * boundingBoxB.Height;
+
+            if (areaB <= 0)
+                return 0;
+
+            var minX = Math.Max(boundingBoxA.Left, boundingBoxB.Left);
+            var minY = Math.Max(boundingBoxA.Top, boundingBoxB.Top);
+            var maxX = Math.Min(boundingBoxA.Right, boundingBoxB.Right);
+            var maxY = Math.Min(boundingBoxA.Bottom, boundingBoxB.Bottom);
+
+            var intersectionArea = Math.Max(maxY - minY, 0) * Math.Max(maxX - minX, 0);
+
+            return intersectionArea / (areaA + areaB - intersectionArea);
+        }
+
         public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)
         {
             var boxes = new List<YoloBoundingBox>();
@@ -157,96 +249,5 @@ namespace ObjectDetection.YoloParser
             return results;
         }
 
-        private float Sigmoid(float value)
-        {
-            var k = (float)Math.Exp(value);
-            return k / (1.0f + k);
-        }
-
-        private float[] Softmax(float[] values)
-        {
-            var maxVal = values.Max();
-            var exp = values.Select(v => Math.Exp(v - maxVal));
-            var sumExp = exp.Sum();
-
-            return exp.Select(v => (float)(v / sumExp)).ToArray();
-        }
-
-        private int GetOffset(int x, int y, int channel)
-        {
-            // YOLO outputs a tensor that has a shape of 125x13x13, which 
-            // WinML flattens into a 1D array.  To access a specific channel 
-            // for a given (x,y) cell position, we need to calculate an offset
-            // into the array
-            return (channel * this.channelStride) + (y * COL_COUNT) + x;
-        }
-
-        private BoundingBoxDimensions ExtractBoundingBoxDimensions(float[] modelOutput, int x, int y, int channel)
-        {
-            return new BoundingBoxDimensions
-            {
-                X = modelOutput[GetOffset(x, y, channel)],
-                Y = modelOutput[GetOffset(x, y, channel + 1)],
-                Width = modelOutput[GetOffset(x, y, channel + 2)],
-                Height = modelOutput[GetOffset(x, y, channel + 3)]
-            };
-        }
-
-        private float GetConfidence(float[] modelOutput, int x, int y, int channel)
-        {
-            return Sigmoid(modelOutput[GetOffset(x, y, channel + 4)]);
-        }
-
-        private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions)
-        {
-            return new CellDimensions
-            {
-                X = ((float)x + Sigmoid(boxDimensions.X)) * CELL_WIDTH,
-                Y = ((float)y + Sigmoid(boxDimensions.Y)) * CELL_HEIGHT,
-                Width = (float)Math.Exp(boxDimensions.Width) * CELL_WIDTH * anchors[box * 2],
-                Height = (float)Math.Exp(boxDimensions.Height) * CELL_HEIGHT * anchors[box * 2 + 1],
-            };
-        }
-
-        public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
-        {
-            float[] predictedClasses = new float[CLASS_COUNT];
-            int predictedClassOffset = channel + BOX_INFO_FEATURE_COUNT;
-            for (int predictedClass = 0; predictedClass < CLASS_COUNT; predictedClass++)
-            {
-                predictedClasses[predictedClass] = modelOutput[GetOffset(x, y, predictedClass + predictedClassOffset)];
-            }
-            return Softmax(predictedClasses);
-        }
-
-        private ValueTuple<int, float> GetTopResult(float[] predictedClasses)
-        {
-            return predictedClasses
-                .Select((predictedClass, index) => (Index: index, Value: predictedClass))
-                .OrderByDescending(result => result.Value)
-                .First();
-        }
-
-        private float IntersectionOverUnion(RectangleF boundingBoxA, RectangleF boundingBoxB)
-        {
-            var areaA = boundingBoxA.Width * boundingBoxA.Height;
-
-            if (areaA <= 0)
-                return 0;
-
-            var areaB = boundingBoxB.Width * boundingBoxB.Height;
-
-            if (areaB <= 0)
-                return 0;
-
-            var minX = Math.Max(boundingBoxA.Left, boundingBoxB.Left);
-            var minY = Math.Max(boundingBoxA.Top, boundingBoxB.Top);
-            var maxX = Math.Min(boundingBoxA.Right, boundingBoxB.Right);
-            var maxY = Math.Min(boundingBoxA.Bottom, boundingBoxB.Bottom);
-
-            var intersectionArea = Math.Max(maxY - minY, 0) * Math.Max(maxX - minX, 0);
-
-            return intersectionArea / (areaA + areaB - intersectionArea);
-        }
     }
 }

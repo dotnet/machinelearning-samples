@@ -26,7 +26,7 @@ namespace ObjectDetection
             try
             {
                 // Load Data
-                IEnumerable<ImageNetData> images = ImageNetData.LoadImageNetData(imagesFolder);
+                IEnumerable<ImageNetData> images = ImageNetData.ReadFromFile(imagesFolder);
                 IDataView imageDataView = mlContext.Data.LoadFromEnumerable(images);
 
                 // Create instance of model scorer
