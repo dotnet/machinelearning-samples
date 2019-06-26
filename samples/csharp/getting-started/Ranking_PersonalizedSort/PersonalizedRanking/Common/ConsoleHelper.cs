@@ -55,7 +55,7 @@ namespace PersonalizedRanking.Common
         {
             foreach (var prediction in predictions)
             {
-                Console.WriteLine($"GroupId: {prediction.GroupId}, Score: {prediction.PredictedRank}");
+                Console.WriteLine($"GroupId: {prediction.GroupId}, Score: {prediction.Score}");
             }
         }
     }

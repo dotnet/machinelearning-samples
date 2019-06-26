@@ -73,9 +73,9 @@ namespace PersonalizedRanking
                     Console.WriteLine("===== Split the data into testing/training datasets =====");
 
                     // When splitting the data, 20% is held for the test dataset.
-                    // To avoid label leakage, the GroupId (e.g. search\query id) is specified as the samplingKeyColumnName.  
+                    // To avoid data leakage, the GroupId (e.g. search\query id) is specified as the samplingKeyColumnName.  
                     // This ensures that if two or more hotel instances share the same GroupId, that they are guaranteed to appear in the same subset of data (train or test).
-                    TrainTestData trainTestData = mlContext.Data.TrainTestSplit(labeledData, testFraction: .2, samplingKeyColumnName: nameof(HotelData.GroupId), seed: 1);
+                    TrainTestData trainTestData = mlContext.Data.TrainTestSplit(labeledData, testFraction: 0.2, samplingKeyColumnName: nameof(HotelData.GroupId), seed: 1);
                     IDataView trainData = trainTestData.TrainSet;
                     IDataView testData = trainTestData.TestSet;
 
@@ -117,7 +117,7 @@ namespace PersonalizedRanking
                     c == nameof(HotelData.Prop_Review_Score))
                  .ToArray();
 
-            // Set trainer options.  
+            // Set trainer options.
             LightGbmRankingTrainer.Options options = new LightGbmRankingTrainer.Options();
             options.CustomGains = new int[] { 0, 1, 5 };
             options.RowGroupColumnName = nameof(HotelData.GroupId);
@@ -132,7 +132,7 @@ namespace PersonalizedRanking
                 .Append(mlContext.Transforms.Conversion.MapValueToKey(nameof(HotelData.Label)))
                 .Append(mlContext.Transforms.Conversion.Hash(nameof(HotelData.GroupId), nameof(HotelData.GroupId), numberOfBits: 20));
 
-            // Set the LightGbm Lambdarank trainer.
+            // Set the LightGBM LambdaRank trainer.
             IEstimator<ITransformer> trainer = mlContext.Ranking.Trainers.LightGbm(options);
             IEstimator<ITransformer> trainerPipeline = dataPipeline.Append(trainer);
 
@@ -151,7 +151,7 @@ namespace PersonalizedRanking
 
         static void EvaluateModel(MLContext mlContext, ITransformer model, string testDatasetPath)
         {
-            Console.WriteLine("===== Evaluate the model's accuracy with test data =====");
+            Console.WriteLine("===== Evaluate the model's result quality with test data =====");
 
             // Load the test data and use the model to perform predictions on the test data.
             IDataView testData = mlContext.Data.LoadFromTextFile<HotelData>(testDatasetPath, separatorChar: ',', hasHeader: true);
@@ -180,9 +180,10 @@ namespace PersonalizedRanking
             // In the predictions, get the scores of the hotel search results included in the first query (e.g. group).
             IEnumerable<HotelPrediction> hotelQueries = mlContext.Data.CreateEnumerable<HotelPrediction>(predictions, reuseRowObject: false);
             var firstGroupId = hotelQueries.First<HotelPrediction>().GroupId;
-            IEnumerable<HotelPrediction> firstGroupPredictions = hotelQueries.Take(50).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.PredictedRank).ToList();
+            IEnumerable<HotelPrediction> firstGroupPredictions = hotelQueries.Take(50).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.Score).ToList();
 
-            // The individual scores themselves are NOT a useful measure of accuracy; instead, they are used to determine the ranking where a higher score indicates a higher ranking.
+            // The individual scores themselves are NOT a useful measure of result quality; instead, they are only useful as a relative measure to other scores in the group. 
+            // The scores are used to determine the ranking where a higher score indicates a higher ranking versus another candidate result.
             ConsoleHelper.PrintScores(firstGroupPredictions);
         }
     }
