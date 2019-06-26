@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ObjectDetection.YoloParser;
 
-namespace ObjectDetection
+namespace ObjectDetection.YoloParser
 {
-    class YoloWinMlParser
+    class YoloOutputParser
     {
-
         class CellDimensions : DimensionsBase { }
 
         public const int ROW_COUNT = 13;
@@ -79,7 +77,7 @@ namespace ObjectDetection
 
                         float confidence = GetConfidence(yoloModelOutputs, row, column, channel);
 
-                        CellDimensions mappedBoundingBoxes = MapBoundingBoxToCell(row, column, box, boundingBoxDimensions);
+                        CellDimensions mappedBoundingBox = MapBoundingBoxToCell(row, column, box, boundingBoxDimensions);
 
                         if (confidence < threshold)
                             continue;
@@ -96,10 +94,10 @@ namespace ObjectDetection
                         {
                             Dimensions = new BoundingBoxDimensions
                             {
-                                X = (mappedBoundingBoxes.X - mappedBoundingBoxes.Width / 2),
-                                Y = (mappedBoundingBoxes.Y - mappedBoundingBoxes.Height / 2),
-                                Width = mappedBoundingBoxes.Width,
-                                Height = mappedBoundingBoxes.Height,
+                                X = (mappedBoundingBox.X - mappedBoundingBox.Width / 2),
+                                Y = (mappedBoundingBox.Y - mappedBoundingBox.Height / 2),
+                                Width = mappedBoundingBox.Width,
+                                Height = mappedBoundingBox.Height,
                             },
                             Confidence = topScore,
                             Label = labels[topResultIndex],
@@ -221,7 +219,7 @@ namespace ObjectDetection
             return Softmax(predictedClasses);
         }
 
-        public ValueTuple<int, float> GetTopResult(float[] predictedClasses)
+        private ValueTuple<int, float> GetTopResult(float[] predictedClasses)
         {
             return predictedClasses
                 .Select((predictedClass, index) => (Index: index, Value: predictedClass))
