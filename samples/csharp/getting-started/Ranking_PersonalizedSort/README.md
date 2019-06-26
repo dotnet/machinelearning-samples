@@ -4,7 +4,7 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.1.0         | Dynamic API       | Up-to-date                    | Console app | .csv file | Ranking hotel search results | Ranking          | LightGbm |
 
-This introductory sample shows how to use ML.NET to predict the the best order to display hotel search result. In the world of machine learning, this type of prediction is known as ranking.
+This introductory sample shows how to use ML.NET to predict the the best order to display hotel search results. In the world of machine learning, this type of prediction is known as ranking.
 
 ## Problem
 The ability to perform ranking is a common problem faced by search engines since users expect query results to be ranked\sorted according to their relevance.  This problem extends beyond the needs of search engines to include a variety of business scenarios where personalized sorting is key to the user experience.  Here are a few specific examples:
@@ -26,18 +26,18 @@ Expedia's datasets consist of hotel search results that are grouped according to
 * Information on similar competitor hotel offerings.
 
 ## ML Task - Ranking
-As previously mentioned, this sample uses the LightGBM LambdaRank algorithm which is applied using a supervised learning technique known as [**Learning to Rank**](https://en.wikipedia.org/wiki/Learning_to_rank).  This technique requires that train/test datasets contain groups of data instances that are each labeled with their relevance scores.  The label is a numerical\ordinal value, such as {0, 1, 2, 3, 4} or a text value {"Bad", "Fair", "Good", Excellent", or "Perfect"}.  The process for labeling these data instances with their relevance scores can be done manually by subject matter experts.  Or, the labels can be determined using other metrics, such as the number of clicks on a given search result. This sample uses the latter 
+As previously mentioned, this sample uses the LightGBM LambdaRank algorithm which is applied using a supervised learning technique known as [**Learning to Rank**](https://en.wikipedia.org/wiki/Learning_to_rank).  This technique requires that train\test datasets contain groups of data instances that are each labeled with their relevance score.  The label is a numerical\ordinal value, such as {0, 1, 2, 3, 4} or a text value {"Bad", "Fair", "Good", Excellent", or "Perfect"}.  The process for labeling these data instances with their relevance scores can be done manually by subject matter experts.  Or, the labels can be determined using other metrics, such as the number of clicks on a given search result. This sample uses the latter 
 approach.
 
 It is expected that the dataset will have many more "Bad" relevance scores than "Perfect".  This helps to avoid converting a ranked list directly into equally sized bins of {0, 1, 2, 3, 4}.  The relevance scores are also reused so that you will have many items **per group** that are labeled 0, which means the result is "Bad".  And, only one or a few labeled 4, which means that the result is "Perfect". 
 
-Once the train/test datasets are labeled with relevance scores, the model (e.g. ranker) can then be trained and tested using this data.  Through the model training process, the ranker learns how to score each data instance within a group based on their label value.  The resulting score of an individual data instance by itself isn't important -- instead, the scores should be compared against one another to determine the relative ordering of a group's data instances.  The higher the score a data instance has, the more relevant and more highly ranked it is within its group.      
+Once the train\test datasets are labeled with relevance scores, the model (e.g. ranker) can then be trained and tested using this data.  Through the model training process, the ranker learns how to score each data instance within a group based on their label value.  The resulting score of an individual data instance by itself isn't important -- instead, the scores should be compared against one another to determine the relative ordering of a group's data instances.  The higher the score a data instance has, the more relevant and more highly ranked it is within its group.      
 
 ## Solution
 The sample performs the following high-level steps to rank Expedia hotel search results:
 1. Each hotel search result is **labeled** with its relevance score.
 2. Once the dataset is labeled, the data is **split** into training and testing datasets.  
-3. The model is **trained** using the train dataset using LightGBM LambdaRank.  
+3. The model is **trained** using the train dataset with LightGBM LambdaRank.  
 4. The model is **tested** using the test dataset.  This results in a **prediction** that includes a **score** for each hotel instance.  The score is used to determine the ranking relative to other hotels within the same query (e.g. group).  The predictions are then **evaluated** by examining metrics; specifically the [Normalized Discounted Cumulative Gain](https://en.wikipedia.org/wiki/Discounted_cumulative_gain)(NDCG).
 5. The final step is to **consume** the model to perform ranking predictions for new incoming hotel searches.
 
@@ -48,7 +48,7 @@ To label the data with relevance scores, the sample follows [Expedia's evaluatio
 * 1 - The user clicked through to see more information on this hotel.
 * 2 - The user purchased\booked a room at this hotel.
 
-Expedia's dataset includes both **Click_Bool** and **Booking_Bool** columns that indicate whether the user has clicked or purchased/booked a hotel.  Applying the above guidelines to these columns, we create a new **Label** column that contains values {0, 1, 2} for each hotel search result which maps to the relevance gains {0, 1, 5}.
+Expedia's dataset includes both **Click_Bool** and **Booking_Bool** columns that indicate whether the user has clicked or purchased\booked a hotel.  Applying the above guidelines to these columns, we create a new **Label** column that contains values {0, 1, 2} for each hotel search result which maps to the relevance gains {0, 1, 5}.  You can find more information on how the relevance gains are used when we train the model later in this sample.
 
 The code for labeling the data is similar to the following:
 
@@ -88,7 +88,7 @@ public static Action<HotelData, HotelRelevance> GetLabelMapper(MLContext mlConte
 }
 `````
 ### 2. Split Data
- With the data properly labeled, it is ready to be split into the train/test datasets.  When splitting the data, it's important to make sure all of the results for a single hotel search remain in the same dataset split.  Otherwise, this would cause data leakage where the same query in our training dataset also exists within the testing dataset. The samplingKeyColumnName parameter of TrainTestSplit is used to ensure proper splitting.
+ With the data properly labeled, it is ready to be split into the train/test datasets.  When splitting the data, it's important to make sure all of the results for a single hotel search remain in the same dataset split.  Otherwise, this would cause data leakage where the same query in our training dataset also exists within the testing dataset. The **samplingKeyColumnName** parameter of **TrainTestSplit** is used to ensure proper splitting.
 
  Refer to the following code which shows how to split the data:
 
@@ -120,7 +120,7 @@ This sample trains the model using the LightGbmRankingTrainer which relies on Li
 * Label - Column that contains the relevance label of each data instance where higher values indicate higher relevance.  The input label data type must be [key type](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.keydataviewtype) or [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single). 
 * Features - The columns that are influential in determining the relevance\rank of a data instance.  The input feature data must be a fixed size vector of type [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single).
 
-When the trainer is set, **custom gains** are used to apply weights to each of the labeled rank values.  As described earlier in the sample, the potential label rank values are {0, 1, 2} which directly correlates to the specified gains {0, 1, 5}.  This helps to ensure that the model places more emphasis on ranking hotel search results labeled with 2 (e.g. signifies the user purchased\booked the hotel) so that they are positioned higher when compared to results labeled with 0 or 1.    
+When the trainer is set, **custom gains** (or relevance gains) are used to apply weights to each of the labeled relevance scores.  As described earlier in the sample, the potential relevance scores are {0, 1, 2} which directly correlates to relevance gains {0, 1, 5}.  This helps to ensure that the model places more emphasis on ranking hotel search results labeled with 2 (e.g. signifies the user purchased\booked the hotel) so that they are positioned higher when compared to results labeled with 0 or 1.    
 
 The following code is used to train the model:
 
@@ -168,7 +168,7 @@ ITransformer model = trainerPipeline.Fit(trainData);
 `````
 
 ### 4. Test and Evaluate Model
-We need this step to conclude how accurate our model is. To do so, the model from the previous step is run against another dataset that was not used in training (e.g. the test dataset).  
+We need this step to determine how effective our model is at ranking. To do so, the model from the previous step is run against another dataset that was not used in training (e.g. the test dataset).  
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics you can explore.  Specifically, we can gauge the quality of our model using Discounted Cumulative Gain (DCG) and Normalized Discounted Cumulative Gain (NDCG) which are included in the `RankingMetrics` returned by `Evaluate()`. 
 
