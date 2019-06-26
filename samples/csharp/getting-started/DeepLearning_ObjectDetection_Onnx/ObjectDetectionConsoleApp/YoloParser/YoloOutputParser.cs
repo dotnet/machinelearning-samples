@@ -154,9 +154,6 @@ namespace ObjectDetection.YoloParser
         {
             var boxes = new List<YoloBoundingBox>();
 
-            var featuresPerBox = BOX_INFO_FEATURE_COUNT + CLASS_COUNT;
-            var stride = featuresPerBox * BOXES_PER_CELL;
-
             for (int row = 0; row < ROW_COUNT; row++)
             {
                 for (int column = 0; column < COL_COUNT; column++)
