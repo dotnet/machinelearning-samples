@@ -13,7 +13,7 @@ namespace ObjectDetection.DataStructures
         [LoadColumn(1)]
         public string Label;
 
-        public static IEnumerable<ImageNetData> LoadImageNetData(string imageFolder)
+        public static IEnumerable<ImageNetData> ReadFromFile(string imageFolder)
         {
             return Directory
                 .GetFiles(imageFolder)
