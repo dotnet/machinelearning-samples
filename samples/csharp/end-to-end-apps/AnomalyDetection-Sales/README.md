@@ -29,7 +29,7 @@ Note: This app is written in .NET Framework, so you must manually restore the nu
     * Uses [IidSpikeDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidspikedetector?view=ml-dotnet) and [IidChangePointDetector](https://docs.microsoft.com/dotnet/api/microsoft.ml.transforms.timeseries.iidchangepointdetector?view=ml-dotnet).
 
 ## Dataset
-We have created sample dataset for Product sales. The dataset `product-sales.csv` can be found [here](./Data/product-sales.csv)
+We have created sample dataset for Product sales. The dataset `product-sales.csv` can be found [here](./SpikeDetectionE2EApp/Data/product-sales.csv)
 
 Format of **Product Sales DataSet** looks like below.
 
