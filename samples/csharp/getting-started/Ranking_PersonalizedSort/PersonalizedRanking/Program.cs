@@ -64,7 +64,6 @@ namespace PersonalizedRanking
                 Console.WriteLine("===== Download the train dataset - this may take several minutes =====\n");
                 using (var client = new WebClient())
                 {
-                    //To use the datasets, you must read and accept the online agreement. By using the datasets, you agree to be bound by the terms of its license.
                     client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
                 }
             }
@@ -74,7 +73,6 @@ namespace PersonalizedRanking
                 Console.WriteLine("===== Download the test dataset - this may take several minutes =====\n");
                 using (var client = new WebClient())
                 {
-                    //To use the datasets, you must read and accept the online agreement. By using the datasets, you agree to be bound by the terms of its license.
                     client.DownloadFile(testDatasetUrl, testDatasetPath);
                 }
             }
