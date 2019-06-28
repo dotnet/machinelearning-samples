@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ObjectDetection.YoloParser
 {
-    class YoloOutputParser
+    class YoloWinMlParser
     {
         class CellDimensions : DimensionsBase { }
 
