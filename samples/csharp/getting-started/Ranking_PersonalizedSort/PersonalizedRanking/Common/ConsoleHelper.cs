@@ -9,18 +9,18 @@ namespace PersonalizedRanking.Common
 {
     public class ConsoleHelper
     {
-        // To evaluate the accuracy of the model's predicted rankings, prints out the Discounted Cumulative Gain and Normalized Discounted Cumulative Gain for hotel search queries.
-        public static void EvaluateMetrics(MLContext mlContext, IDataView scoredData)
+        // To evaluate the accuracy of the model's predicted rankings, prints out the Discounted Cumulative Gain and Normalized Discounted Cumulative Gain for search queries.
+        public static void EvaluateMetrics(MLContext mlContext, IDataView predictions)
         {
             // Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
-            RankingMetrics metrics = mlContext.Ranking.Evaluate(scoredData);
+            RankingMetrics metrics = mlContext.Ranking.Evaluate(predictions);
 
             Console.WriteLine($"DCG: {string.Join(", ", metrics.DiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}");
 
-            Console.WriteLine($"NDCG: {string.Join(", ", metrics.NormalizedDiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}");
+            Console.WriteLine($"NDCG: {string.Join(", ", metrics.NormalizedDiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}\n");
         }
 
-        // Performs evaluation with the truncation level set up to 10 hotel search results within a query.
+        // Performs evaluation with the truncation level set up to 10 search results within a query.
         // This is a temporary workaround for this issue: https://github.com/dotnet/machinelearning/issues/2728.
         public static void EvaluateMetrics(MLContext mlContext, IDataView scoredData, int truncationLevel)
         {
@@ -47,11 +47,11 @@ namespace PersonalizedRanking.Common
 
             Console.WriteLine($"DCG: {string.Join(", ", metrics.DiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}");
 
-            Console.WriteLine($"NDCG: {string.Join(", ", metrics.NormalizedDiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}");
+            Console.WriteLine($"NDCG: {string.Join(", ", metrics.NormalizedDiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}\n");
         }
 
         // Prints out the the individual scores used to determine the relative ranking.
-        public static void PrintScores(IEnumerable<HotelPrediction> predictions)
+        public static void PrintScores(IEnumerable<SearchResultPrediction> predictions)
         {
             foreach (var prediction in predictions)
             {
