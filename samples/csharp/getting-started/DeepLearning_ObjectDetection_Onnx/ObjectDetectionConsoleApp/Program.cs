@@ -89,10 +89,10 @@ namespace ObjectDetection
                 var height = (uint)Math.Min(originalImageHeight - y, box.Dimensions.Height);
 
                 // Resize To Image
-                x = (uint)originalImageWidth * x / 416;
-                y = (uint)originalImageHeight * y / 416;
-                width = (uint)originalImageWidth * width / 416;
-                height = (uint)originalImageHeight * height / 416;
+                x = (uint)originalImageWidth * x / OnnxModelScorer.ImageNetSettings.imageWidth;
+                y = (uint)originalImageHeight * y / OnnxModelScorer.ImageNetSettings.imageHeight;
+                width = (uint)originalImageWidth * width / OnnxModelScorer.ImageNetSettings.imageWidth;
+                height = (uint)originalImageHeight * height / OnnxModelScorer.ImageNetSettings.imageHeight;
 
                 // Bounding Box Text
                 string text = $"{box.Label} ({(box.Confidence * 100).ToString("0")}%)";
