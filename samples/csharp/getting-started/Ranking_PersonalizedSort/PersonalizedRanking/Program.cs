@@ -1,5 +1,4 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Trainers.LightGbm;
 using PersonalizedRanking.Common;
 using PersonalizedRanking.DataStructures;
 using System;
@@ -8,16 +7,17 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using static Microsoft.ML.DataOperationsCatalog;
 
 namespace PersonalizedRanking
 {
     class Program
     {
         const string AssetsPath = @"../../../Assets";
+        const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
+        const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
+
         readonly static string InputPath = Path.Combine(AssetsPath, "Input");
         readonly static string OutputPath = Path.Combine(AssetsPath, "Output");
-        readonly static string DatasetZipPath = Path.Combine(InputPath, "SearchResultDatasets.zip");
         readonly static string TrainDatasetPath = Path.Combine(InputPath, "MSLRWeb10KTrain720kRows.tsv");
         readonly static string TestDatasetPath = Path.Combine(InputPath, "MSLRWeb10KTest240kRows.tsv");
         readonly static string ModelPath = Path.Combine(OutputPath, "RankingModel.zip");
@@ -30,7 +30,7 @@ namespace PersonalizedRanking
 
             try
             {
-                PrepareData(InputPath, OutputPath, DatasetZipPath, TrainDatasetPath, TestDatasetPath);
+                PrepareData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath);
 
                 var model = TrainModel(mlContext, TrainDatasetPath, ModelPath);
 
@@ -46,19 +46,41 @@ namespace PersonalizedRanking
             Console.ReadLine();
         }
 
-        static void PrepareData(string inputPath, string outputPath, string datasetZipPath, string trainDatasetPath, string testDatasetPath)
+        static void PrepareData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl, string testDatasetUrl, string testDatasetPath)
         {
             Console.WriteLine("===== Prepare data =====\n");
-
-            if (!File.Exists(trainDatasetPath) || !File.Exists(testDatasetPath))
-            {
-                ZipFile.ExtractToDirectory(datasetZipPath, inputPath);
-            }
 
             if (!Directory.Exists(outputPath))
             {
                 Directory.CreateDirectory(outputPath);
             }
+
+            if (!Directory.Exists(inputPath))
+            {
+                Directory.CreateDirectory(inputPath);
+            }
+
+            if (!File.Exists(trainDatasetPath))
+            {
+                Console.WriteLine("===== Download the train dataset - this may take several minutes =====\n");
+                using (var client = new WebClient())
+                {
+                    //To use the datasets, you must read and accept the online agreement. By using the datasets, you agree to be bound by the terms of its license.
+                    client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
+                }
+            }
+               
+            if (!File.Exists(testDatasetPath))
+            {
+                Console.WriteLine("===== Download the test dataset - this may take several minutes =====\n");
+                using (var client = new WebClient())
+                {
+                    //To use the datasets, you must read and accept the online agreement. By using the datasets, you agree to be bound by the terms of its license.
+                    client.DownloadFile(testDatasetUrl, testDatasetPath);
+                }
+            }
+
+            Console.WriteLine("===== Download is finished =====\n");
         }
 
         static ITransformer TrainModel(MLContext mlContext, string trainDatasetPath, string modelPath)
