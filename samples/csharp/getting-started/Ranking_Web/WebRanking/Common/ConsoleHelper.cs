@@ -1,11 +1,11 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Data;
-using PersonalizedRanking.DataStructures;
+using WebRanking.DataStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PersonalizedRanking.Common
+namespace WebRanking.Common
 {
     public class ConsoleHelper
     {

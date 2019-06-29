@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace PersonalizedRanking.DataStructures
+namespace WebRanking.DataStructures
 {
     public class SearchResultData
     {

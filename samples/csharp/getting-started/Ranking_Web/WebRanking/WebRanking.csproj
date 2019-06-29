@@ -6,14 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DataStructures\HotelData.cs" />
-    <Compile Remove="DataStructures\HotelPrediction.cs" />
-    <Compile Remove="DataStructures\HotelRelevance.cs" />
-    <Compile Remove="Mapper.cs" />
-    <Compile Remove="Program_old.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="1.1.0" />
     <PackageReference Include="Microsoft.ML.LightGbm" Version="1.1.0" />
   </ItemGroup>

@@ -1,23 +1,25 @@
 ﻿using Microsoft.ML;
-using PersonalizedRanking.Common;
-using PersonalizedRanking.DataStructures;
+using WebRanking.Common;
+using WebRanking.DataStructures;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 
-namespace PersonalizedRanking
+namespace WebRanking
 {
     class Program
     {
         const string AssetsPath = @"../../../Assets";
         const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
+        const string ValidationDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
         const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
 
         readonly static string InputPath = Path.Combine(AssetsPath, "Input");
         readonly static string OutputPath = Path.Combine(AssetsPath, "Output");
         readonly static string TrainDatasetPath = Path.Combine(InputPath, "MSLRWeb10KTrain720kRows.tsv");
+        readonly static string ValidationDatasetPath = Path.Combine(InputPath, "MSLRWeb10KValidate240kRows.tsv");
         readonly static string TestDatasetPath = Path.Combine(InputPath, "MSLRWeb10KTest240kRows.tsv");
         readonly static string ModelPath = Path.Combine(OutputPath, "RankingModel.zip");
 
@@ -29,7 +31,7 @@ namespace PersonalizedRanking
 
             try
             {
-                PrepareData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath);
+                PrepareData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath, ValidationDatasetUrl, ValidationDatasetPath);
 
                 var model = TrainModel(mlContext, TrainDatasetPath, ModelPath);
 
@@ -45,7 +47,8 @@ namespace PersonalizedRanking
             Console.ReadLine();
         }
 
-        static void PrepareData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl, string testDatasetUrl, string testDatasetPath)
+        static void PrepareData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl, 
+            string testDatasetUrl, string testDatasetPath, string validationDatasetUrl, string validationDatasetPath)
         {
             Console.WriteLine("===== Prepare data =====\n");
 
@@ -67,7 +70,16 @@ namespace PersonalizedRanking
                     client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
                 }
             }
-               
+
+            if (!File.Exists(validationDatasetPath))
+            {
+                Console.WriteLine("===== Download the validation dataset - this may take several minutes =====\n");
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(validationDatasetUrl, validationDatasetPath);
+                }
+            }
+
             if (!File.Exists(testDatasetPath))
             {
                 Console.WriteLine("===== Download the test dataset - this may take several minutes =====\n");

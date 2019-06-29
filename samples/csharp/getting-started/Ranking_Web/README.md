@@ -17,7 +17,20 @@ Ranking is useful to any scenario where it is important to list items in an orde
 In this sample, we show how to apply ranking to search engine results.  To perform ranking, there are two algorithms currently available - FastTree Boosting (FastRank) and Light Gradient Boosting Machine (LightGBM).  We use the LightGBM's LambdaRank implementation in this sample to automatically build an ML model to predict ranking. 
 
 ## Dataset
-The training and testing data used by this sample is based on a public [dataset provided by Microsoft](https://www.microsoft.com/en-us/research/project/mslr/) originally provided Microsoft Bing.
+The training and testing data used by this sample is based on a public [dataset provided by Microsoft](https://www.microsoft.com/en-us/research/project/mslr/) originally provided Microsoft Bing. The dataset is released under a [CC-by 4.0](https://creativecommons.org/licenses/by/4.0/) license.  
+
+@article{DBLP:journals/corr/QinL13,
+  author    = {Tao Qin and 
+               Tie{-}Yan Liu},
+  title     = {Introducing {LETOR} 4.0 Datasets},
+  journal   = {CoRR},
+  volume    = {abs/1306.2597},
+  year      = {2013},
+  url       = {https://arxiv.org/abs/1306.2597},
+  timestamp = {Mon, 01 Jul 2013 20:31:25 +0200},
+  biburl    = {https://dblp.uni-trier.de/rec/bib/journals/corr/QinL13},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
 
 The following description is provided for this dataset:
 
