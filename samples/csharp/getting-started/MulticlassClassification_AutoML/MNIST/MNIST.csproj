@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML.AutoML" Version="0.3.0" />
+    <PackageReference Include="Microsoft.ML.AutoML" Version="0.14.0" />
   </ItemGroup>
 
   <ItemGroup>
