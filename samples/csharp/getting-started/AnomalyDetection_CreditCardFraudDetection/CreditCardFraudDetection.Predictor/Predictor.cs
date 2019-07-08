@@ -2,10 +2,8 @@
 using System.Linq;
 
 using Microsoft.ML;
-using Microsoft.ML.Data;
 
 using CreditCardFraudDetection.Common.DataModels;
-
 
 namespace CreditCardFraudDetection.Predictor
 {
@@ -22,7 +20,6 @@ namespace CreditCardFraudDetection.Predictor
 
         public void RunMultiplePredictions(int numberOfPredictions)
         {
-
             var mlContext = new MLContext();
 
             //Load data as input for predictions
@@ -32,13 +29,12 @@ namespace CreditCardFraudDetection.Predictor
 
             ITransformer model = mlContext.Model.Load(_modelfile, out var inputSchema);
 
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<TransactionObservation, TransactionFraudPredictionWithContribution>(model);
-
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(model);
 
             Console.WriteLine($"\n \n Test {numberOfPredictions} transactions, from the test datasource, that should be predicted as fraud (true):");
 
             mlContext.Data.CreateEnumerable<TransactionObservation>(inputDataForPredictions, reuseRowObject: false)
-                        .Where(x => x.Label == true)
+                        .Where(x => x.Label > 0)
                         .Take(numberOfPredictions)
                         .Select(testData => testData)
                         .ToList()
@@ -54,7 +50,7 @@ namespace CreditCardFraudDetection.Predictor
             Console.WriteLine($"\n \n Test {numberOfPredictions} transactions, from the test datasource, that should NOT be predicted as fraud (false):");
 
             mlContext.Data.CreateEnumerable<TransactionObservation>(inputDataForPredictions, reuseRowObject: false)
-                       .Where(x => x.Label == false)
+                       .Where(x => x.Label < 1)
                        .Take(numberOfPredictions)
                        .ToList()
                        .ForEach(testData =>
@@ -62,29 +58,8 @@ namespace CreditCardFraudDetection.Predictor
                                        Console.WriteLine($"--- Transaction ---");
                                        testData.PrintToConsole();
                                        predictionEngine.Predict(testData).PrintToConsole();
-                                       //predictionEngine.Predict(testData).PrintToConsole(model.GetOutputSchema(inputDataForPredictions.Schema));
                                        Console.WriteLine($"-------------------");
                                    });
-        }
-
-        private class TransactionFraudPredictionWithContribution : TransactionFraudPrediction
-        {
-            public float[] FeatureContributions { get; set; }
-
-            public void PrintToConsole(DataViewSchema dataview)
-            {
-                base.PrintToConsole();
-                VBuffer<ReadOnlyMemory<char>> slots = default;
-                dataview.GetColumnOrNull("Features").Value.GetSlotNames(ref slots);
-                ReadOnlyMemory<char>[] featureNames = slots.DenseValues().ToArray();
-
-                Console.WriteLine($"Feature Contributions: " +
-                                  $"[{featureNames[0]}] {FeatureContributions[0]} " +
-                                  $"[{featureNames[1]}] {FeatureContributions[1]} " +
-                                  $"[{featureNames[2]}] {FeatureContributions[2]} ... " +
-                                  $"[{featureNames[27]}] {FeatureContributions[27]} " +
-                                  $"[{featureNames[28]}] {FeatureContributions[28]}");
-            }
         }
     }
 }

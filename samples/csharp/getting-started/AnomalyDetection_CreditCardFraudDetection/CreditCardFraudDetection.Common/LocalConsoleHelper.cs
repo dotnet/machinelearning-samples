@@ -1,6 +1,7 @@
-﻿using Microsoft.ML.Data;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+
+using Microsoft.ML.Data;
 
 namespace CreditCardFraudDetection.Common
 {
@@ -8,10 +9,12 @@ namespace CreditCardFraudDetection.Common
     {
         public static string GetAssetsPath(params string[] paths)
         {
-
             FileInfo _dataRoot = new FileInfo(typeof(LocalConsoleHelper).Assembly.Location);
+
             if (paths == null || paths.Length == 0)
+            {
                 return null;
+            }
 
             return Path.Combine(paths.Prepend(_dataRoot.Directory.FullName).ToArray());
         }
@@ -21,9 +24,11 @@ namespace CreditCardFraudDetection.Common
             var location = GetAssetsPath(paths);
 
             if (!string.IsNullOrWhiteSpace(location) && File.Exists(location))
+            {
                 File.Delete(location);
+            }
+
             return location;
         }
     }
-   
 }

@@ -1,6 +1,7 @@
-﻿using CreditCardFraudDetection.Common;
-using System;
+﻿using System;
 using System.IO;
+
+using CreditCardFraudDetection.Common;
 
 namespace CreditCardFraudDetection.Predictor
 {
@@ -30,7 +31,7 @@ namespace CreditCardFraudDetection.Predictor
             if (!File.Exists(Path.Combine(trainOutput, "testData.csv")) ||
                 !File.Exists(Path.Combine(trainOutput, "randomizedPca.zip")))
             {
-                Console.WriteLine("***** YOU NEED TO RUN THE TRAINING PROJECT IN THE FIRST PLACE *****");
+                Console.WriteLine("***** YOU NEED TO RUN THE TRAINING PROJECT FIRST *****");
                 Console.WriteLine("=============== Press any key ===============");
                 Console.ReadKey();
                 Environment.Exit(0);
@@ -38,10 +39,11 @@ namespace CreditCardFraudDetection.Predictor
 
             // copy files from train output
             Directory.CreateDirectory(assetsPath);
+
             foreach (var file in Directory.GetFiles(trainOutput))
             {
-
                 var fileDestination = Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file));
+
                 if (File.Exists(fileDestination))
                 {
                     LocalConsoleHelper.DeleteAssets(fileDestination);
@@ -49,12 +51,12 @@ namespace CreditCardFraudDetection.Predictor
 
                 File.Copy(file, Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file)));
             }
-
         }
 
         public static string GetAbsolutePath(string relativePath)
         {
             FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);

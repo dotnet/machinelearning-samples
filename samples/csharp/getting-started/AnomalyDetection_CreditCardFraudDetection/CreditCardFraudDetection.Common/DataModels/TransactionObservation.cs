@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using Microsoft.ML.Data;
-//using static Microsoft.ML.Runtime.Data.RoleMappedSchema;
 
 namespace CreditCardFraudDetection.Common.DataModels
 {
@@ -11,7 +10,6 @@ namespace CreditCardFraudDetection.Common.DataModels
 
     public class TransactionObservation : IModelEntity
     {
-        // Note we're not loading the 'Time' column, since que doesn't need it as a feature
         [LoadColumn(0)]
         public float Time;
 
@@ -103,48 +101,11 @@ namespace CreditCardFraudDetection.Common.DataModels
         public float Amount;
 
         [LoadColumn(30)]
-        public bool Label;
+        public float Label;
 
         public void PrintToConsole() {
             Console.WriteLine($"Label: {Label}");
             Console.WriteLine($"Features: [V1] {V1} [V2] {V2} [V3] {V3} ... [V28] {V28} Amount: {Amount}");
         }
-
-        //public static List<KeyValuePair<ColumnRole, string>>  Roles() {
-        //    return new List<KeyValuePair<ColumnRole, string>>() {
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Label, "Label"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V1"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V2"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V3"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V4"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V5"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V6"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V7"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V8"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V9"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V10"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V11"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V12"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V13"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V14"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V15"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V16"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V17"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V18"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V19"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V20"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V21"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V22"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V23"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V24"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V25"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V26"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V27"),
-        //            new KeyValuePair<ColumnRole, string>(ColumnRole.Feature, "V28"),
-        //            new KeyValuePair<ColumnRole, string>(new ColumnRole("Amount"), ""),
-
-        //        };
-        //}
     }
-
 }
