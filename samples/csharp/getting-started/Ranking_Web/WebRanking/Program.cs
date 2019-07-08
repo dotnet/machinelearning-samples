@@ -128,7 +128,7 @@ namespace WebRanking
             // Training the model is a process of running the chosen algorithm on the given data. To perform training you need to call the Fit() method.
             ITransformer model = trainerPipeline.Fit(trainData);
             IDataView transformedTrainData = model.Transform(trainData);
-;
+
             Console.WriteLine("===== Save the model =====\n");
 
             // Save the model

@@ -22,7 +22,7 @@ namespace WebRanking.Common
 
         // Performs evaluation with the truncation level set up to 10 search results within a query.
         // This is a temporary workaround for this issue: https://github.com/dotnet/machinelearning/issues/2728.
-        public static void EvaluateMetrics(MLContext mlContext, IDataView scoredData, int truncationLevel)
+        public static void EvaluateMetrics(MLContext mlContext, IDataView predictions, int truncationLevel)
         {
             if (truncationLevel < 1 || truncationLevel > 10)
             {
@@ -30,7 +30,7 @@ namespace WebRanking.Common
             }
 
             //  Uses reflection to set the truncation level before calling evaluate.
-            var mlAssembly = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Microsoft.ML.Data")).First();
+            var mlAssembly = typeof(TextLoader).Assembly;
             var rankEvalType = mlAssembly.DefinedTypes.Where(t => t.Name.Contains("RankingEvaluator")).First();
 
             var evalArgsType = rankEvalType.GetNestedType("Arguments");
@@ -43,7 +43,7 @@ namespace WebRanking.Common
             var evaluator = ctor.Invoke(new object[] { mlContext, evalArgs });
 
             var evaluateMethod = rankEvalType.GetMethod("Evaluate");
-            RankingMetrics metrics = (RankingMetrics)evaluateMethod.Invoke(evaluator, new object[] { scoredData, "Label", "GroupId", "Score" });
+            RankingMetrics metrics = (RankingMetrics)evaluateMethod.Invoke(evaluator, new object[] { predictions, "Label", "GroupId", "Score" });
 
             Console.WriteLine($"DCG: {string.Join(", ", metrics.DiscountedCumulativeGains.Select((d, i) => $"@{i + 1}:{d:F4}").ToArray())}");
 
