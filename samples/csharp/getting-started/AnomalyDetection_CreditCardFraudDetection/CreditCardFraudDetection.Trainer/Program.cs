@@ -108,49 +108,43 @@ namespace CreditCardFraudDetection.Trainer
 
 
             // Create the data process pipeline
-            IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate("ConcatenatedFeatures", featureColumnNames)
+            IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate("Features", featureColumnNames)
                                                                                .Append(mlContext.Transforms.DropColumns(new string[] { nameof(TransactionObservation.Time) }))
-                                                                               .Append(mlContext.Transforms.NormalizeLpNorm(outputColumnName:"Features", inputColumnName: "ConcatenatedFeatures"))               // AUC: 92.76%  DR@FP: 0.558823529411765
-                                                                               // ^ is row -- also try other norms
-                                                                               //.Append(mlContext.Transforms.NormalizeBinning("Features"))            // AUC: 93.83%  DR@FP: 0.676470588235294
-                                                                               //.Append(mlContext.Transforms.NormalizeGlobalContrast("Features"))     // AUC: 89.19%  DR@FP: 0.362745098039216
-                                                                               //.Append(mlContext.Transforms.NormalizeMinMax("Features"))             // AUC: 94.31%  DR@FP: 0
-                                                                               ;
+                                                                               .Append(mlContext.Transforms.NormalizeLpNorm(outputColumnName:"NormalizedFeatures", inputColumnName: "Features"));
 
             // In Anomaly Detection, the learner assumes all training examples have label 0, as it only learns from normal examples.
             // If any of the training examples has label 1, it is recommended to use a Filter transform to filter them out before training:
-            IDataView normalTrainDataView = mlContext.Data.FilterRowsByColumn(trainDataView, columnName: "Label", lowerBound: 0, upperBound: 1);
+            IDataView normalTrainDataView = mlContext.Data.FilterRowsByColumn(trainDataView, columnName: nameof(TransactionObservation.Label), lowerBound: 0, upperBound: 1);
 
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations into "Features" 
             ConsoleHelper.PeekDataViewInConsole(mlContext, normalTrainDataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", normalTrainDataView, dataProcessPipeline, 2);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "NormalizedFeatures", normalTrainDataView, dataProcessPipeline, 2);
 
 
             var options = new RandomizedPcaTrainer.Options
             {
-                FeatureColumnName = "Features",     // The name of the feature column. The column data must be a known-sized vector of Single.
-                ExampleWeightColumnName = null,     // The name of the example weight column (optional). To use the weight column, the column data must be of type Single.
-                Rank = 28,                          // The number of components in the PCA.
-                Oversampling = 20,                  // Oversampling parameter for randomized PCA training.
-                EnsureZeroMean = true,              // If enabled, data is centered to be zero mean.
-                Seed = 1                            // The seed for random number generation.
+                FeatureColumnName = "NormalizedFeatures",   // The name of the feature column. The column data must be a known-sized vector of Single.
+                ExampleWeightColumnName = null,				// The name of the example weight column (optional). To use the weight column, the column data must be of type Single.
+                Rank = 28,									// The number of components in the PCA.
+                Oversampling = 20,							// Oversampling parameter for randomized PCA training.
+                EnsureZeroMean = true,						// If enabled, data is centered to be zero mean.
+                Seed = 1									// The seed for random number generation.
             };
 
 
-            // Create an anomaly detector. Its underlying algorithm is randomized PCA.
-            var trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(options: options);
+			// Create an anomaly detector. Its underlying algorithm is randomized PCA.
+			IEstimator<ITransformer> trainer = mlContext.AnomalyDetection.Trainers.RandomizedPca(options: options);
 
-            var trainingPipeline = dataProcessPipeline.Append(trainer);
+			EstimatorChain<ITransformer> trainingPipeline = dataProcessPipeline.Append(trainer);
 
             ConsoleHelper.ConsoleWriteHeader("=============== Training model ===============");
 
-            var model = trainingPipeline.Fit(normalTrainDataView);
+			TransformerChain<ITransformer> model = trainingPipeline.Fit(normalTrainDataView);
 
             ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
 
             return model;
-
         }
 
 
@@ -169,8 +163,7 @@ namespace CreditCardFraudDetection.Trainer
 
         public static void InspectData(MLContext mlContext, IDataView data, int records)
         {
-            //We want to make sure we have both True and False observations
-
+            // We want to make sure we have both True and False observations
             Console.WriteLine("Show 4 fraud transactions (true)");
             ShowObservationsFilteredByLabel(mlContext, data, label: true, count: records);
 
