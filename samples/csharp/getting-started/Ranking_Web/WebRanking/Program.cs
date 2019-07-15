@@ -33,17 +33,53 @@ namespace WebRanking
             {
                 PrepareData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath, ValidationDatasetUrl, ValidationDatasetPath);
 
-                var model = TrainModel(mlContext, TrainDatasetPath, ModelPath);
+                // Create the pipeline using the training data's schema; the validation and testing data have the same schema.
+                IDataView trainData = mlContext.Data.LoadFromTextFile<SearchResultData>(TrainDatasetPath, separatorChar: '\t', hasHeader: true);
+                IEstimator<ITransformer> pipeline = CreatePipeline(mlContext, trainData);
 
-                EvaluateModel(mlContext, model, TestDatasetPath);
+                // Train the model on the training dataset. To perform training you need to call the Fit() method.
+                Console.WriteLine("===== Train the model on the training dataset =====\n");
+                ITransformer model = pipeline.Fit(trainData);
 
-                ConsumeModel(mlContext, ModelPath, TestDatasetPath);
+                // Evaluate the model using the metrics from the validation dataset; you would then retrain and reevaluate the model until the desired metrics are achieved.
+                Console.WriteLine("===== Evaluate the model's result quality with the validation data =====\n");
+                IDataView validationData = mlContext.Data.LoadFromTextFile<SearchResultData>(ValidationDatasetPath, separatorChar: '\t', hasHeader: false);
+                EvaluateModel(mlContext, model, validationData);
+
+                // Combine the training and validation datasets.
+                var validationDataEnum = mlContext.Data.CreateEnumerable<SearchResultData>(validationData, false);
+                var trainDataEnum = mlContext.Data.CreateEnumerable<SearchResultData>(trainData, false);
+                var trainValidationDataEnum = validationDataEnum.Concat<SearchResultData>(trainDataEnum);
+                IDataView trainValidationData = mlContext.Data.LoadFromEnumerable<SearchResultData>(trainValidationDataEnum);
+
+                // Train the model on the train + validation dataset.
+                Console.WriteLine("===== Train the model on the training + validation dataset =====\n");
+                model = pipeline.Fit(trainValidationData);
+
+                // Evaluate the model using the metrics from the testing dataset; you do this only once and these are your final metrics.
+                Console.WriteLine("===== Evaluate the model's result quality with the testing data =====\n");
+                IDataView testData = mlContext.Data.LoadFromTextFile<SearchResultData>(TestDatasetPath, separatorChar: '\t', hasHeader: false);
+                EvaluateModel(mlContext, model, testData);
+
+                // Combine the training, validation, and testing datasets.
+                var testDataEnum = mlContext.Data.CreateEnumerable<SearchResultData>(testData, false);
+                var allDataEnum = trainValidationDataEnum.Concat<SearchResultData>(testDataEnum);
+                IDataView allData = mlContext.Data.LoadFromEnumerable<SearchResultData>(allDataEnum);
+
+                // Retrain the model on all of the data, train + validate + test.
+                Console.WriteLine("===== Train the model on the training + validation + test dataset =====\n");
+                model = pipeline.Fit(allData);
+
+                // Save and consume the model to perform predictions.
+                // Normally, you would use new incoming data; however, for the purposes of this sample, we'll reuse the test data to show how to do predictions.
+                ConsumeModel(mlContext, model, ModelPath, testData);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
 
+            Console.Write("Done!");
             Console.ReadLine();
         }
 
@@ -92,19 +128,14 @@ namespace WebRanking
             Console.WriteLine("===== Download is finished =====\n");
         }
 
-        static ITransformer TrainModel(MLContext mlContext, string trainDatasetPath, string modelPath)
+        static IEstimator<ITransformer> CreatePipeline(MLContext mlContext, IDataView dataView)
         {
             const string FeaturesVectorName = "Features";
-
-            Console.WriteLine("===== Load the training dataset =====\n");
-
-            // Load the training dataset.
-            IDataView trainData = mlContext.Data.LoadFromTextFile<SearchResultData>(trainDatasetPath, separatorChar: '\t', hasHeader: true);
 
             Console.WriteLine("===== Set up the trainer =====\n");
 
             // Specify the columns to include in the feature input data.
-            var featureCols = trainData.Schema.AsQueryable()
+            var featureCols = dataView.Schema.AsQueryable()
                 .Select(s => s.Name)
                 .Where(c =>
                     c != nameof(SearchResultData.Label) &&
@@ -123,27 +154,13 @@ namespace WebRanking
             IEstimator<ITransformer> trainer = mlContext.Ranking.Trainers.LightGbm(labelColumnName: nameof(SearchResultData.Label), featureColumnName: FeaturesVectorName, rowGroupColumnName: nameof(SearchResultData.GroupId));
             IEstimator<ITransformer> trainerPipeline = dataPipeline.Append(trainer);
 
-            Console.WriteLine("===== Train the model =====\n");
-
-            // Training the model is a process of running the chosen algorithm on the given data. To perform training you need to call the Fit() method.
-            ITransformer model = trainerPipeline.Fit(trainData);
-            IDataView transformedTrainData = model.Transform(trainData);
-
-            Console.WriteLine("===== Save the model =====\n");
-
-            // Save the model
-            mlContext.Model.Save(model, null, modelPath);
-
-            return model;
+            return trainerPipeline;
         }
 
-        static void EvaluateModel(MLContext mlContext, ITransformer model, string testDatasetPath)
+        static void EvaluateModel(MLContext mlContext, ITransformer model, IDataView data)
         {
-            Console.WriteLine("===== Evaluate the model's result quality with test data =====\n");
-
-            // Load the test data and use the model to perform predictions on the test data.
-            IDataView testData = mlContext.Data.LoadFromTextFile<SearchResultData>(testDatasetPath, separatorChar: '\t', hasHeader: false);
-            IDataView predictions = model.Transform(testData);
+            // Use the model to perform predictions on the test data.
+            IDataView predictions = model.Transform(data);
 
             Console.WriteLine("===== Use metrics for the data using NDCG@3 =====\n");
 
@@ -156,19 +173,21 @@ namespace WebRanking
             ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
         }
 
-        public static void ConsumeModel(MLContext mlContext, string modelPath, string testDatasetPath)
+        static void ConsumeModel(MLContext mlContext, ITransformer model, string modelPath, IDataView data)
         {
+            Console.WriteLine("===== Save the model =====\n");
+
+            // Save the model
+            mlContext.Model.Save(model, null, modelPath);
+
             Console.WriteLine("===== Consume the model =====\n");
 
-            // Load test data and use the model to perform predictions on it.
-            IDataView testData = mlContext.Data.LoadFromTextFile<SearchResultData>(testDatasetPath, separatorChar: '\t', hasHeader: false);
-
-            // Load the model.
+            // Load the model to perform predictions with it.
             DataViewSchema predictionPipelineSchema;
             ITransformer predictionPipeline = mlContext.Model.Load(modelPath, out predictionPipelineSchema);
 
             // Predict rankings.
-            IDataView predictions = predictionPipeline.Transform(testData);
+            IDataView predictions = predictionPipeline.Transform(data);
 
             // In the predictions, get the scores of the search results included in the first query (e.g. group).
             IEnumerable<SearchResultPrediction> searchQueries = mlContext.Data.CreateEnumerable<SearchResultPrediction>(predictions, reuseRowObject: false);
