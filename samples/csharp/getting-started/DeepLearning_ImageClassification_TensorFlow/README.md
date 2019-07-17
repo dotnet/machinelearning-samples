@@ -64,24 +64,24 @@ Define the schema of data in a class type and refer that type while loading data
 
 ```csharp
 public class ImageNetData
+{
+    [LoadColumn(0)]
+    public string ImagePath;
+
+    [LoadColumn(1)]
+    public string Label;
+
+    public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
     {
-        [LoadColumn(0)]
-        public string ImagePath;
-
-        [LoadColumn(1)]
-        public string Label;
-
-        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
-        {
-            return File.ReadAllLines(file)
-             .Select(x => x.Split('\t'))
-             .Select(x => new ImageNetData()
-             {
-                 ImagePath = Path.Combine(folder,x[0]),
-                 Label = x[1],
-             });
-        }
+        return File.ReadAllLines(file)
+         .Select(x => x.Split('\t'))
+         .Select(x => new ImageNetData()
+         {
+             ImagePath = Path.Combine(folder, x[0]),
+             Label = x[1],
+         });
     }
+}
 ```
 The first step is to load the data using TextLoader
 
@@ -102,16 +102,27 @@ teddy1.jpg	teddy bear
 ```
 As you can observe, the file does not have a header row.
 
-The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
+The Inception model has several default parameters you need to pass in.
 
 ```csharp
+public struct ImageNetSettings
+{
+    public const int imageHeight = 224;
+    public const int imageWidth = 224;
+    public const float mean = 117;
+    public const bool channelsLast = true;
+}                
+```
+
+The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
+
+```csharp      
 var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "input", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "input", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "input"))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", interleavePixelColors: ImageNetSettings.channelsLast, offsetImage: ImageNetSettings.mean))
-                            .Append(mlContext.Model.LoadTensorFlowModel(modelLocation).
-                            ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2" },
-                                                inputColumnNames: new[] { "input" }, addBatchDimensionInput:true));
-                        
+    .Append(mlContext.Transforms.ResizeImages(outputColumnName: "input", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "input"))
+    .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", interleavePixelColors: ImageNetSettings.channelsLast, offsetImage: ImageNetSettings.mean))
+    .Append(mlContext.Model.LoadTensorFlowModel(modelLocation)
+        .ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2" }, inputColumnNames: new[] { "input" },
+            addBatchDimensionInput:true));
 ```
 You also need to check the neural network, and check the names of the input / output nodes. In order to inspect the model, you can use tools like [Netron](https://github.com/lutzroeder/netron), which is automatically installed with [Visual Studio Tools for AI](https://visualstudio.microsoft.com/downloads/ai-tools-vs/). 
 These names are used later in the definition of the estimation pipe: in the case of the inception network, the input tensor is named 'input' and the output is named 'softmax2'
