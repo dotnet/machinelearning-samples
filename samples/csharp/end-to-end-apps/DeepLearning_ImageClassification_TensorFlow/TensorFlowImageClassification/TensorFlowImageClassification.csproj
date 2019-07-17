@@ -24,9 +24,6 @@
 
 
   <ItemGroup>
-    <None Update="ML\MLNETModel\MLModel.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="ML\TensorFlowModel\labels.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

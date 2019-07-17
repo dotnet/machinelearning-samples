@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
+using Microsoft.ML;
 using TensorFlowImageClassification.ML;
 using TensorFlowImageClassification.ML.DataModels;
 
@@ -19,21 +15,18 @@ namespace TensorFlowImageClassification
     public class Startup
     {
         private readonly string _tensorFlowModelFilePath;
-        private readonly string _mlnetModelFilePath;
+        private readonly ITransformer _mlnetModel;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
 
             _tensorFlowModelFilePath = GetAbsolutePath(Configuration["MLModel:TensorFlowModelFilePath"]);
-            _mlnetModelFilePath = GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
 
             /////////////////////////////////////////////////////////////////
             //Configure the ML.NET model for the pre-trained TensorFlow model
             TensorFlowModelConfigurator tensorFlowModelConfigurator = new TensorFlowModelConfigurator(_tensorFlowModelFilePath);
-
-            // Save the ML.NET model .zip file based on the TensorFlow model and related configuration
-            tensorFlowModelConfigurator.SaveMLNetModel(_mlnetModelFilePath);
+            _mlnetModel = tensorFlowModelConfigurator.Model;
         }
 
         public IConfiguration Configuration { get; }
@@ -53,8 +46,12 @@ namespace TensorFlowImageClassification
             /////////////////////////////////////////////////////////////////////////////
             // Register the PredictionEnginePool as a service in the IoC container for DI
             //
-            services.AddPredictionEnginePool<ImageInputData, ImageLabelPredictions>()
-                    .FromFile(_mlnetModelFilePath);
+            services.AddPredictionEnginePool<ImageInputData, ImageLabelPredictions>();
+            services.AddOptions<PredictionEnginePoolOptions<ImageInputData, ImageLabelPredictions>>()
+                .Configure(options =>
+                {
+                    options.ModelLoader = new InMemoryModelLoader(_mlnetModel);
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
