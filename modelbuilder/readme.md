@@ -266,7 +266,6 @@ This is the first preview of Model Builder and has the following limitations. We
 * We currently support *.tsv*, *.csv* and SQL as the data-types you can use as datasets for the Model Builder. The files should have a header row. For this preview Model Builder does not support *.txt files or ';' separated or ',' separated files
 * Visual Studio 2017 15.9.12 or greater
 * Supported Visual Studio SKUs - Enterprise, Professional, and Community 
-* There is a limit of 1GB on the training dataset.
 * SQL Server has a limit of 100K rows for training
 * Microsoft SQL Server Data Tools for Visual Studio 2017 is not supported.
 
