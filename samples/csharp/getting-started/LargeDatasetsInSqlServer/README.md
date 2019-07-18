@@ -10,9 +10,7 @@ This sample demonstrates how to use SQL server database as a data source for an 
 
 ## DataSet
 
-For this sample we are using Credit Card Fraud Transactions data to predict whether a transaction is fraud or not. In this sample, I have exporimported the data from .csv file to local SQL server and inserted auto-identity column so that Entity framework creates entity models from database. The table name in my lcoal database is CreditCardTransaction. 
-
-Details of Credit card dataset can be found [here](./docs/Dataset_Details.txt)
+Dataset explanation TBD.
 
 ## Problem
 Enterprise users have a need to use their existing data set that is in their company's database to train and predict with ML.Net. They need support to leverage their existing relational table schema, ability to read from the database directly, and to be aware of memory limitations as the data is being consumed.
