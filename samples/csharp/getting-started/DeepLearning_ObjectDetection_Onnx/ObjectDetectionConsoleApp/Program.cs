@@ -36,7 +36,7 @@ namespace ObjectDetection
                 IEnumerable<float[]> probabilities = modelScorer.Score(imageDataView);
 
                 // Post-process model output
-                YoloWinMlParser parser = new YoloWinMlParser();
+                YoloOutputParser parser = new YoloOutputParser();
 
                 var boundingBoxes =
                     probabilities
