@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ObjectDetection.YoloParser;
 
-namespace ObjectDetection
+namespace ObjectDetection.YoloParser
 {
     class YoloWinMlParser
     {
-
         class CellDimensions : DimensionsBase { }
 
         public const int ROW_COUNT = 13;
@@ -59,105 +57,6 @@ namespace ObjectDetection
             Color.SandyBrown,
             Color.DarkTurquoise
         };
-
-        public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)
-        {
-            var boxes = new List<YoloBoundingBox>();
-
-            var featuresPerBox = BOX_INFO_FEATURE_COUNT + CLASS_COUNT;
-            var stride = featuresPerBox * BOXES_PER_CELL;
-
-            for (int row = 0; row < ROW_COUNT; row++)
-            {
-                for (int column = 0; column < COL_COUNT; column++)
-                {
-                    for (int box = 0; box < BOXES_PER_CELL; box++)
-                    {
-                        var channel = (box * (CLASS_COUNT + BOX_INFO_FEATURE_COUNT));
-
-                        BoundingBoxDimensions boundingBoxDimensions = ExtractBoundingBoxDimensions(yoloModelOutputs, row, column, channel);
-
-                        float confidence = GetConfidence(yoloModelOutputs, row, column, channel);
-
-                        CellDimensions mappedBoundingBoxes = MapBoundingBoxToCell(row, column, box, boundingBoxDimensions);
-
-                        if (confidence < threshold)
-                            continue;
-
-                        float[] predictedClasses = ExtractClasses(yoloModelOutputs, row, column, channel);
-
-                        var (topResultIndex, topResultScore) = GetTopResult(predictedClasses);
-                        var topScore = topResultScore * confidence;
-
-                        if (topScore < threshold)
-                            continue;
-
-                        boxes.Add(new YoloBoundingBox()
-                        {
-                            Dimensions = new BoundingBoxDimensions
-                            {
-                                X = (mappedBoundingBoxes.X - mappedBoundingBoxes.Width / 2),
-                                Y = (mappedBoundingBoxes.Y - mappedBoundingBoxes.Height / 2),
-                                Width = mappedBoundingBoxes.Width,
-                                Height = mappedBoundingBoxes.Height,
-                            },
-                            Confidence = topScore,
-                            Label = labels[topResultIndex],
-                            BoxColor = classColors[topResultIndex]
-                        });
-                    }
-                }
-            }
-            return boxes;
-        }
-
-        public IList<YoloBoundingBox> FilterBoundingBoxes(IList<YoloBoundingBox> boxes, int limit, float threshold)
-        {
-            var activeCount = boxes.Count;
-            var isActiveBoxes = new bool[boxes.Count];
-
-            for (int i = 0; i < isActiveBoxes.Length; i++)
-                isActiveBoxes[i] = true;
-
-            var sortedBoxes = boxes.Select((b, i) => new { Box = b, Index = i })
-                                .OrderByDescending(b => b.Box.Confidence)
-                                .ToList();
-
-            var results = new List<YoloBoundingBox>();
-
-            for (int i = 0; i < boxes.Count; i++)
-            {
-                if (isActiveBoxes[i])
-                {
-                    var boxA = sortedBoxes[i].Box;
-                    results.Add(boxA);
-
-                    if (results.Count >= limit)
-                        break;
-
-                    for (var j = i + 1; j < boxes.Count; j++)
-                    {
-                        if (isActiveBoxes[j])
-                        {
-                            var boxB = sortedBoxes[j].Box;
-
-                            if (IntersectionOverUnion(boxA.Rect, boxB.Rect) > threshold)
-                            {
-                                isActiveBoxes[j] = false;
-                                activeCount--;
-
-                                if (activeCount <= 0)
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (activeCount <= 0)
-                        break;
-                }
-            }
-            return results;
-        }
 
         private float Sigmoid(float value)
         {
@@ -221,7 +120,7 @@ namespace ObjectDetection
             return Softmax(predictedClasses);
         }
 
-        public ValueTuple<int, float> GetTopResult(float[] predictedClasses)
+        private ValueTuple<int, float> GetTopResult(float[] predictedClasses)
         {
             return predictedClasses
                 .Select((predictedClass, index) => (Index: index, Value: predictedClass))
@@ -250,5 +149,102 @@ namespace ObjectDetection
 
             return intersectionArea / (areaA + areaB - intersectionArea);
         }
+
+        public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)
+        {
+            var boxes = new List<YoloBoundingBox>();
+
+            for (int row = 0; row < ROW_COUNT; row++)
+            {
+                for (int column = 0; column < COL_COUNT; column++)
+                {
+                    for (int box = 0; box < BOXES_PER_CELL; box++)
+                    {
+                        var channel = (box * (CLASS_COUNT + BOX_INFO_FEATURE_COUNT));
+
+                        BoundingBoxDimensions boundingBoxDimensions = ExtractBoundingBoxDimensions(yoloModelOutputs, row, column, channel);
+
+                        float confidence = GetConfidence(yoloModelOutputs, row, column, channel);
+
+                        CellDimensions mappedBoundingBox = MapBoundingBoxToCell(row, column, box, boundingBoxDimensions);
+
+                        if (confidence < threshold)
+                            continue;
+
+                        float[] predictedClasses = ExtractClasses(yoloModelOutputs, row, column, channel);
+
+                        var (topResultIndex, topResultScore) = GetTopResult(predictedClasses);
+                        var topScore = topResultScore * confidence;
+
+                        if (topScore < threshold)
+                            continue;
+
+                        boxes.Add(new YoloBoundingBox()
+                        {
+                            Dimensions = new BoundingBoxDimensions
+                            {
+                                X = (mappedBoundingBox.X - mappedBoundingBox.Width / 2),
+                                Y = (mappedBoundingBox.Y - mappedBoundingBox.Height / 2),
+                                Width = mappedBoundingBox.Width,
+                                Height = mappedBoundingBox.Height,
+                            },
+                            Confidence = topScore,
+                            Label = labels[topResultIndex],
+                            BoxColor = classColors[topResultIndex]
+                        });
+                    }
+                }
+            }
+            return boxes;
+        }
+
+        public IList<YoloBoundingBox> FilterBoundingBoxes(IList<YoloBoundingBox> boxes, int limit, float threshold)
+        {
+            var activeCount = boxes.Count;
+            var isActiveBoxes = new bool[boxes.Count];
+
+            for (int i = 0; i < isActiveBoxes.Length; i++)
+                isActiveBoxes[i] = true;
+
+            var sortedBoxes = boxes.Select((b, i) => new { Box = b, Index = i })
+                                .OrderByDescending(b => b.Box.Confidence)
+                                .ToList();
+
+            var results = new List<YoloBoundingBox>();
+
+            for (int i = 0; i < boxes.Count; i++)
+            {
+                if (isActiveBoxes[i])
+                {
+                    var boxA = sortedBoxes[i].Box;
+                    results.Add(boxA);
+
+                    if (results.Count >= limit)
+                        break;
+
+                    for (var j = i + 1; j < boxes.Count; j++)
+                    {
+                        if (isActiveBoxes[j])
+                        {
+                            var boxB = sortedBoxes[j].Box;
+
+                            if (IntersectionOverUnion(boxA.Rect, boxB.Rect) > threshold)
+                            {
+                                isActiveBoxes[j] = false;
+                                activeCount--;
+
+                                if (activeCount <= 0)
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (activeCount <= 0)
+                        break;
+                }
+            }
+            return results;
+        }
+
     }
 }

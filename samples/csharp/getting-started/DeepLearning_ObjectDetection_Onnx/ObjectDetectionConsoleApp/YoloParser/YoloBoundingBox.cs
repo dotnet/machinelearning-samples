@@ -1,9 +1,10 @@
-﻿using ObjectDetection.YoloParser;
-using System.Drawing;
+﻿using System.Drawing;
 
-namespace ObjectDetection
+namespace ObjectDetection.YoloParser
 {
-    class YoloBoundingBox
+    public class BoundingBoxDimensions : DimensionsBase { }
+
+    public class YoloBoundingBox
     {
         public BoundingBoxDimensions Dimensions { get; set; }
 
@@ -18,6 +19,5 @@ namespace ObjectDetection
 
         public Color BoxColor { get; set; }
     }
-
-    class BoundingBoxDimensions : DimensionsBase { }
+    
 }
