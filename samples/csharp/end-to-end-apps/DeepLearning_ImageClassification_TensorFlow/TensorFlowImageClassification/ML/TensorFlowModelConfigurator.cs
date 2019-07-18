@@ -1,9 +1,6 @@
 ﻿using Microsoft.ML;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using TensorFlowImageClassification.ML.DataModels;
 
 namespace TensorFlowImageClassification.ML
@@ -11,14 +8,15 @@ namespace TensorFlowImageClassification.ML
     public class TensorFlowModelConfigurator
     {
         private readonly MLContext _mlContext;
-        private readonly ITransformer _mlModel;
+
+        public ITransformer Model { get; }
 
         public TensorFlowModelConfigurator(string tensorFlowModelFilePath)
         {            
             _mlContext = new MLContext();
 
             // Model creation and pipeline definition for images needs to run just once, so calling it from the constructor:
-            _mlModel = SetupMlnetModel(tensorFlowModelFilePath);
+            Model = SetupMlnetModel(tensorFlowModelFilePath);
         }
 
         public struct ImageSettings
@@ -60,12 +58,6 @@ namespace TensorFlowImageClassification.ML
 
             var dv = _mlContext.Data.LoadFromEnumerable<ImageInputData>(list);
             return dv;
-        }
-
-        public void SaveMLNetModel(string mlnetModelFilePath)
-        {
-            // Save/persist the model to a .ZIP file to be loaded by the PredictionEnginePool
-            _mlContext.Model.Save(_mlModel, null, mlnetModelFilePath);
         }
     }
 }
