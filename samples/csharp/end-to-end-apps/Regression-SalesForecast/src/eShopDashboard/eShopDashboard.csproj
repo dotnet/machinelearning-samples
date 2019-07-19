@@ -20,7 +20,7 @@
     <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="TinyCsvParser" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.ML" Version="0.12.0" />
+    <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
   </ItemGroup>
 
   <ItemGroup>
