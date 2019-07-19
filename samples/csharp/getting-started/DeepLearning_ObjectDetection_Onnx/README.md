@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Dynamic API | Up-to-date | Console app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
+| v1.1.0           | Dynamic API | Up-to-date | Console app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
 
 ## Problem 
 Object detection is one of the classical problems in computer vision: Recognize what the objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 

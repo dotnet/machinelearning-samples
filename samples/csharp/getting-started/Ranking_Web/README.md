@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0         | Dynamic API       | Up-to-date                    | Console app | .csv file | Ranking search engine results | Ranking          | LightGBM |
+| v1.1.0         | Dynamic API       | Up-to-date                    | Console app | .csv file | Ranking search engine results | Ranking          | LightGBM |
 
 This introductory sample shows how to use ML.NET to predict the the best order to display search engine results. In the world of machine learning, this type of prediction is known as ranking.
 

@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Product Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
+| v1.1.0         | Dynamic API | Up-to-date | WinForms app | .csv files | Spike and Change Point Detection of Product Sales | Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
 ![Alt Text](./SpikeDetectionE2EApp/SpikeDetection.WinForms/images/productsales.gif)
 
