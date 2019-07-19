@@ -98,7 +98,9 @@ var resultprediction = predEngine.Predict(sampleStatement);
 Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a Toxic or Non toxic predicted sentiment.
 
 
-## Try it
-This sample is compatible with [Try .NET](https://github.com/dotnet/try).  Follow [these instructions](https://github.com/dotnet/try#setup) to setup Try .NET, then `cd` to this directory and run `dotnet try` to run the sample.
-```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj  --region try
-```
+## Try it on 'TRY .NET'
+
+There's a very similar sample compatible with [Try .NET](https://github.com/dotnet/try). The only difference is mostly about the multiple #regions in the code in order to support 'Try .NET'. You can get the code and try it here:
+
+https://github.com/CESARDELATORRE/MLNET-WITH-TRYDOTNET-SAMPLE/blob/master/README.md
+
