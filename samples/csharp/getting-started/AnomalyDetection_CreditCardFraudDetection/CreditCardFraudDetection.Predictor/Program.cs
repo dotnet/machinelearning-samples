@@ -26,6 +26,7 @@ namespace CreditCardFraudDetection.Predictor
             Console.ReadKey();
         }
 
+
         public static void CopyModelAndDatasetFromTrainingProject(string trainOutput, string assetsPath)
         {
             if (!File.Exists(Path.Combine(trainOutput, "testData.csv")) ||
@@ -37,7 +38,7 @@ namespace CreditCardFraudDetection.Predictor
                 Environment.Exit(0);
             }
 
-            // copy files from train output
+            // Copy files from train output
             Directory.CreateDirectory(assetsPath);
 
             foreach (var file in Directory.GetFiles(trainOutput))
@@ -52,6 +53,7 @@ namespace CreditCardFraudDetection.Predictor
                 File.Copy(file, Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file)));
             }
         }
+
 
         public static string GetAbsolutePath(string relativePath)
         {

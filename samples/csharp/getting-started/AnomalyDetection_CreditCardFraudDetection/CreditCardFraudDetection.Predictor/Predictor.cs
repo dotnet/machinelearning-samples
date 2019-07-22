@@ -18,11 +18,12 @@ namespace CreditCardFraudDetection.Predictor
             _dasetFile = dasetFile ?? throw new ArgumentNullException(nameof(dasetFile));
         }
 
+
         public void RunMultiplePredictions(int numberOfPredictions)
         {
             var mlContext = new MLContext();
 
-            //Load data as input for predictions
+            // Load data as input for predictions
             IDataView inputDataForPredictions = mlContext.Data.LoadFromTextFile<TransactionObservation>(_dasetFile, separatorChar: ',', hasHeader: true);
 
             Console.WriteLine($"Predictions from saved model:");

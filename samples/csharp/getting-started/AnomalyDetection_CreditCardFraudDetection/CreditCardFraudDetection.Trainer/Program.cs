@@ -20,7 +20,7 @@ namespace CreditCardFraudDetection.Trainer
     {
         static void Main(string[] args)
         {
-            //File paths
+            // File paths
             string AssetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(AssetsRelativePath);
             string zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
@@ -65,7 +65,7 @@ namespace CreditCardFraudDetection.Trainer
             {
                 Console.WriteLine("===== Preparing train/test datasets =====");
 
-                //Load the original single dataset
+                // Load the original single dataset
                 IDataView originalFullData = mlContext.Data.LoadFromTextFile<TransactionObservation>(fullDataSetFilePath, separatorChar: ',', hasHeader: true);
 
                 // Split the data 80:20 into train and test sets, train and evaluate.
@@ -77,16 +77,16 @@ namespace CreditCardFraudDetection.Trainer
                 // 20% of original dataset
                 IDataView testData = trainTestData.TestSet;
 
-                //Inspect TestDataView to make sure there are true and false observations in test dataset, after spliting 
+                // Inspect TestDataView to make sure there are true and false observations in test dataset, after spliting 
                 InspectData(mlContext, testData, 4);
 
-                // save train split
+                // Save train split
                 using (var fileStream = File.Create(trainDataSetFilePath))
                 {
                     mlContext.Data.SaveAsText(trainData, fileStream, separatorChar: ',', headerRow: true, schema: true);
                 }
 
-                // save test split 
+                // Save test split 
                 using (var fileStream = File.Create(testDataSetFilePath))
                 {
                     mlContext.Data.SaveAsText(testData, fileStream, separatorChar: ',', headerRow: true, schema: true);
@@ -100,7 +100,7 @@ namespace CreditCardFraudDetection.Trainer
 
             // Get all the feature column names (All except the Label and the IdPreservationColumn)
             string[] featureColumnNames = trainDataView.Schema.AsQueryable()
-                .Select(column => column.Name)                               // Get alll the column names
+                .Select(column => column.Name)                               // Get all the column names
                 .Where(name => name != nameof(TransactionObservation.Label)) // Do not include the Label column
                 .Where(name => name != "IdPreservationColumn")               // Do not include the IdPreservationColumn/StratificationColumn
                 .Where(name => name != nameof(TransactionObservation.Time))  // Do not include the Time column. Not needed as feature column
@@ -110,7 +110,7 @@ namespace CreditCardFraudDetection.Trainer
             // Create the data process pipeline
             IEstimator<ITransformer> dataProcessPipeline = mlContext.Transforms.Concatenate("Features", featureColumnNames)
                                                                                .Append(mlContext.Transforms.DropColumns(new string[] { nameof(TransactionObservation.Time) }))
-                                                                               .Append(mlContext.Transforms.NormalizeLpNorm(outputColumnName:"NormalizedFeatures", inputColumnName: "Features"));
+                                                                               .Append(mlContext.Transforms.NormalizeLpNorm(outputColumnName: "NormalizedFeatures", inputColumnName: "Features"));
 
             // In Anomaly Detection, the learner assumes all training examples have label 0, as it only learns from normal examples.
             // If any of the training examples has label 1, it is recommended to use a Filter transform to filter them out before training:
@@ -181,7 +181,7 @@ namespace CreditCardFraudDetection.Trainer
                                             .Take(count)
                                             .ToList();
 
-            // print to console
+            // Print to console
             data.ForEach(row => { row.PrintToConsole(); });
         }
 
