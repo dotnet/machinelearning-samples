@@ -53,8 +53,8 @@ namespace SentimentAnalysisConsoleApp
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
-            // TRY IT: Make a single test prediction loding the model from .ZIP file
-            SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
+            // TRY IT: Make a single test prediction, loading the model from .ZIP file
+            SentimentIssue sampleStatement = new SentimentIssue { Text = "I love this movie!" };
 
             // Create prediction engine related to the loaded trained model
             var predEngine = mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
