@@ -10,7 +10,7 @@ There are two types of samples/apps in the repo:
 
 * Getting Started  ![](./images/app-type-getting-started.png) : ML.NET code focused samples for each ML task or area, usually implemented as simple console apps.
 
-* End-End apps ![](./images/app-type-e2e-black.png) : Real world examples of web, desktop, mobile, and other applications infused with Machine Learning using ML.NET
+* End-End apps ![](./images/app-type-e2e-black.png) : End-user sample web and desktop apps infused with Machine Learning models based on ML.NET.
 
 The official ML.NET samples are divided in multiple categories depending on the scenario and machine learning problem/task, accessible through the following tables:
 
