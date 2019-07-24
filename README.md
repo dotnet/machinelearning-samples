@@ -84,7 +84,7 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle" colspan="3">Ranking</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/image-classification.png" alt="Ranking chart"><br><br><b>Rank Search Engine Results<br><a href="samples/csharp/getting-started/Ranking_Web">C#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+    <td align="middle"><img src="images/ranking-numbered.png" alt="Ranking chart"><br><br><b>Rank Search Engine Results<br><a href="samples/csharp/getting-started/Ranking_Web">C#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
   </tr>
 </table>
 
