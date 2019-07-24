@@ -80,6 +80,12 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp; &nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon">
     <a href="samples/csharp/end-to-end-apps/DeepLearning_ObjectDetection_Onnx">C#</a> &nbsp;&nbsp;&nbsp;<img src="images/app-type-e2e.png" alt="End-to-end app icon"><b></td>
   </tr> 
+  <tr>
+    <td align="middle" colspan="3">Ranking</td>
+  </tr>
+  <tr>
+    <td align="middle"><img src="images/image-classification.png" alt="Ranking chart"><br><br><b>Rank Search Engine Results<br><a href="samples/csharp/getting-started/Ranking_Web">C#</a>&nbsp;&nbsp;&nbsp;<img src="images/app-type-getting-started.png" alt="Getting started icon"><b></td>
+  </tr>
 </table>
 
 <br>
