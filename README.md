@@ -64,8 +64,8 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle" colspan="3">Anomaly Detection</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/spike-detection.png" alt="spike detection chart"><br><br><b>Sales Spike Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_Sales">C#</a> &nbsp;<img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"> &nbsp&nbsp;&nbsp;&nbsp;
-      <a href="samples/csharp/end-to-end-apps/AnomalyDetection-Sales">C#</a> &nbsp;<img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><b></td>
+    <td align="middle"><img src="images/spike-detection.png" alt="Spike detection chart"><br><br><b>Sales Spike Detection<br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon">&nbsp;<a href="samples/csharp/getting-started/AnomalyDetection_Sales">C#</a>&nbsp&nbsp;&nbsp;&nbsp;&nbsp;
+      <img src="images/app-type-e2e-black.png" alt="End-to-end app icon">&nbsp;<a href="samples/csharp/end-to-end-apps/AnomalyDetection-Sales">C#</a><b></td>
     <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Power Anomaly Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_PowerMeterReadings">C#</a><b></td>
      <td></td>
   </tr> 
@@ -81,12 +81,12 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle" colspan="3">Computer Vision</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow model scoring)<br><a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a> &nbsp;<img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon">&nbsp&nbsp&nbsp&nbsp;&nbsp;
-    <a href="samples/csharp/end-to-end-apps/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp;<img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><b></td><b></td>
+    <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><br><b>Image Classification<br>    (TensorFlow model scoring)<br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon">&nbsp;<a href="samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow">C#</a> &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow">F#</a>&nbsp;&nbsp&nbsp&nbsp&nbsp;&nbsp;
+      <img src="images/app-type-e2e-black.png" alt="End-to-end app icon">&nbsp;<a href="samples/csharp/end-to-end-apps/DeepLearning_ImageClassification_TensorFlow">C#</a><b></td><b></td>
     <td align="middle"><img src="images/image-classification.png" alt="Image Classification chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Image Classification<br>    (TensorFlow Estimator)<br><a href="samples/csharp/getting-started/DeepLearning_TensorFlowEstimator">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator">F#</a><b></td>
     <td align="middle"><img src="images/object-detection.png" alt="Object Detection chart"><br><br><b>Object Detection<br>    (ONNX model scoring)<br>
-    <a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a>&nbsp;<img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon">&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="samples/csharp/end-to-end-apps/DeepLearning_ObjectDetection_Onnx">C#</a>&nbsp;<img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><b></td>
+    <img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon">&nbsp;<a href="samples/csharp/getting-started\DeepLearning_ObjectDetection_Onnx">C#</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <img src="images/app-type-e2e-black.png" alt="End-to-end app icon">&nbsp;<a href="samples/csharp/end-to-end-apps/DeepLearning_ObjectDetection_Onnx">C#</a><b></td>
   </tr> 
 </table>
 
