@@ -41,7 +41,7 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
 
         public ITransformer SetupMlNetModel(string onnxModelFilePath)
         {
-            var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageInputData>()); ;
+            var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
 
             var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
                             .Append(_mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
