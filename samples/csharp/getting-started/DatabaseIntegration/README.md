@@ -20,7 +20,7 @@ This sample uses SQLite to help demonstrate the database integration, but any da
 
 Specifically this code showing how to create a database context each time a IEnumerable is requested plus using a 'no tracking query' is here: https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/DatabaseIntegration/DatabaseIntegration/Program.cs#L44
 
-## High level outline
+## High level process performed by this sample
 
 The sample implements the following:
 
