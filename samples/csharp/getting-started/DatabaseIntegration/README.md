@@ -6,6 +6,16 @@ Enterprise users have a need to use their existing data set that is in their com
 
 Even when in most cases data needs to be clean-up and prepared before training a machine learning model, many enterprises are more familiar with relational databases and SQL statements for transforming and preparing data and prefer to have centralized and secured data into database servers instead of working with exported plain text files.
 
+## Out of scope
+
+Note that the process for preparing your dataset is out of scope for this sample. This sample assumes that you already have prepared your dataset as a single table in a relational database. You can also create/use multiple tables when preparing your dataset and specify a join query when obtaining your IEnumerable, however, the less joins you do when querying data while training an ML model, the better performance you will have and the less time you will need to finish your model training processes. That's why a single table is the ideal case for training a ML model.
+
+For further information on *'Data preparation for machine learning'* read the following articles:
+
+https://machinelearningmastery.com/how-to-prepare-data-for-machine-learning/
+
+https://www.datarobot.com/wiki/data-preparation/
+
 ## Solution
 
 This sample shows how to use Entity Framework Core to connect to a database, query and feed the resulting data into an ML.NET pipeline through an IEnumerable.
