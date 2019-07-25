@@ -30,7 +30,5 @@ The sample implements the following:
 - Converts the IEnumerable to IDataView
 - Trains a LightGBM Binary Classification model 
 - Queries the database for a test dataset
-
-
 - Runs predictions
 - Evaluates the prediction metrics
