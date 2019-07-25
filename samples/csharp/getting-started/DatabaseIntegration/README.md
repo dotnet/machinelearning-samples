@@ -16,7 +16,7 @@ This sample uses SQLite to help demonstrate the database integration, but any da
 
 1. To prevent the Entity Framework Core from loading all the data in from a result, **a no tracking query is used**. 
 
-2. It is important to highlight that the IEnumerable you provide needs to be thread-safe. This example shows you to create an IEnumerable with Entity Framework that won’t cause issues to LoadFromEnumerable() where it makes sure that each new enumeration of the data happen on a separate DbContext and DbConnection by basically creating a database context in your code each time a IEnumerable is requested.
+2. It is important to highlight that **the IEnumerable you provide needs to be thread-safe**. This example shows you to create an IEnumerable with Entity Framework that won’t cause issues to LoadFromEnumerable() because it makes sure that each new enumeration of the data happens on a separate DbContext and DbConnection by basically creating a database context in your code each time a IEnumerable is requested.
 
 Specifically this code showing how to create a database context each time a IEnumerable is requested plus using a 'no tracking query' is here: https://github.com/dotnet/machinelearning-samples/blob/master/samples/csharp/getting-started/DatabaseIntegration/DatabaseIntegration/Program.cs#L44
 
