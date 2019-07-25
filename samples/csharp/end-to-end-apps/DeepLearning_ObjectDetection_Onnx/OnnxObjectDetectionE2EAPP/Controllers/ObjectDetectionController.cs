@@ -117,7 +117,7 @@ namespace OnnxObjectDetectionE2EAPP.Controllers
         {
             //Predict the objects in the image
             _objectDetectionService.DetectObjectsUsingModel(imageInputData);
-            var img = _objectDetectionService.PaintImages(imageFilePath);
+            var img = _objectDetectionService.DrawBoundingBox(imageFilePath);
 
             using (MemoryStream m = new MemoryStream())
             {
