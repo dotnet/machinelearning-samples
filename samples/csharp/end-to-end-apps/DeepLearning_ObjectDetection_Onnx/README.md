@@ -120,7 +120,7 @@ Create the model by fitting the dataview.
   var model = pipeline.Fit(dataView);
 ```
 
-#Detect objects in the image:
+# Detect objects in the image:
 
 After the model is configured, we need to save the model, load the saved model and the pass the image to the model to detect objects.
 When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by `YoloOutputParser` class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. 
@@ -130,7 +130,7 @@ When obtaining the prediction, we get an array of floats in the property `Predic
  filteredBoxes = _parser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
 ```
 
-#Draw bounding boxes around detected objects in Image.
+# Draw bounding boxes around detected objects in Image.
 
 The final step is we draw the bounding boxes around the objects using Paint API and return the image to the browser and it is displayed on the browser
 
