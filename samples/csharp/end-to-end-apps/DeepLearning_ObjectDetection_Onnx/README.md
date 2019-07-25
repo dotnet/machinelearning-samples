@@ -116,8 +116,8 @@ Define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
 
 Create the model by fitting the dataview. 
 
-```
-  var model = pipeline.Fit(dataView);
+```csharp
+var model = pipeline.Fit(dataView);
 ```
 
 # Detect objects in the image:
