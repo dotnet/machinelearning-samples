@@ -10,11 +10,17 @@ Even when in most cases data needs to be clean-up and prepared before training a
 
 Note that the process for preparing your dataset is out of scope for this sample. This sample assumes that you already have prepared your dataset as a single table in a relational database. You can also create/use multiple tables when preparing your dataset and specify a join query when obtaining your IEnumerable, however, the less joins you do when querying data while training an ML model, the better performance you will have and the less time you will need to finish your model training processes. That's why a single table is the ideal case for training a ML model.
 
+### Why Data preparation is important
+
+Why can't you simply create a join query against your transational tables? - Even when tecnically you could create the IEnumerable from any join query, in most real-world situations that won't work for the ML algorithms/trainers. 
+
+Data preparation is important because most machine learning trainers/algorithms require data to be formatted in a very specific way or input feature columns to be in very specific data types, so datasets generally require some data preparation before you can really train a model with it. You also need to clean-up data, some data sources might have missing values (null/nan), or invalid values (data might need to be in a different scale, you might need to upsample or normalize numeric values in features, etc.) making the training process to either break of to produce a less accurate result or even misleading.
+
+Therefore, data preparation is needed in almost 100% of the cases before you can train an ML model.
+
 For further information on *'Data preparation for machine learning'* read the following articles:
 
 https://machinelearningmastery.com/how-to-prepare-data-for-machine-learning/
-
-https://www.datarobot.com/wiki/data-preparation/
 
 ## Solution
 
