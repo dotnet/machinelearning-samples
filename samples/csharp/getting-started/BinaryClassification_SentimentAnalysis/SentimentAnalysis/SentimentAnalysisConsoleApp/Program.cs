@@ -21,12 +21,10 @@ namespace SentimentAnalysisConsoleApp
 
         static void Main(string[] args)
         {
-            #region try
             // Create MLContext to be shared across the model creation workflow objects 
             // Set a random seed for repeatable/deterministic results across multiple trainings.
             var mlContext = new MLContext(seed: 1);
 
-            #region step1to3
             // STEP 1: Common data loading configuration
             IDataView dataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(DataPath, hasHeader: true);
 
@@ -40,18 +38,13 @@ namespace SentimentAnalysisConsoleApp
             // STEP 3: Set the training algorithm, then create and config the modelBuilder                            
             var trainer = mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
-            #endregion
 
-            #region step4
             // STEP 4: Train the model fitting to the DataSet
             ITransformer trainedModel = trainingPipeline.Fit(trainingData);
-            #endregion
 
-            #region step5
             // STEP 5: Evaluate the model and show accuracy stats
             var predictions = trainedModel.Transform(testData);
             var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "Label", scoreColumnName: "Score");
-            #endregion
 
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
@@ -60,22 +53,19 @@ namespace SentimentAnalysisConsoleApp
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
-            // TRY IT: Make a single test prediction loding the model from .ZIP file
-            SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
+            // TRY IT: Make a single test prediction, loading the model from .ZIP file
+            SentimentIssue sampleStatement = new SentimentIssue { Text = "I love this movie!" };
 
-            #region consume
             // Create prediction engine related to the loaded trained model
             var predEngine = mlContext.Model.CreatePredictionEngine<SentimentIssue, SentimentPrediction>(trainedModel);
 
             // Score
             var resultprediction = predEngine.Predict(sampleStatement);
-            #endregion
 
             Console.WriteLine($"=============== Single Prediction  ===============");
             Console.WriteLine($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Non Toxic")} sentiment | Probability of being toxic: {resultprediction.Probability} ");
             Console.WriteLine($"================End of Process.Hit any key to exit==================================");
             Console.ReadLine();
-            #endregion
         }
 
         public static string GetAbsolutePath(string relativePath)
