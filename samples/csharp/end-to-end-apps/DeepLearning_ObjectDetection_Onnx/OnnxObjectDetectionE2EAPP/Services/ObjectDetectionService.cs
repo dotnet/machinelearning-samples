@@ -3,17 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using OnnxObjectDetectionE2EAPP.MLModel;
 
 namespace OnnxObjectDetectionE2EAPP.Services
 {
     public interface IObjectDetectionService
     {
         void DetectObjectsUsingModel(ImageInputData imageInputData);
-        Image PaintImages(string imageFilePath);
+        Image DrawBoundingBox(string imageFilePath);
     }
+
     public class ObjectDetectionService : IObjectDetectionService
     {
-        private readonly YoloWinMlParser _parser = new YoloWinMlParser();
+        private readonly YoloOutputParser _parser = new YoloOutputParser();
         IList<YoloBoundingBox> filteredBoxes;
         private readonly PredictionEnginePool<ImageInputData, ImageObjectPrediction> model;
 
@@ -26,10 +28,10 @@ namespace OnnxObjectDetectionE2EAPP.Services
         {
             var probs = model.Predict(imageInputData).PredictedLabels;
             IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
-            filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);
+            filteredBoxes = _parser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
         }
 
-        public Image PaintImages(string imageFilePath)
+        public Image DrawBoundingBox(string imageFilePath)
         {
             Image image = Image.FromFile(imageFilePath);
             var originalHeight = image.Height;
@@ -37,38 +39,41 @@ namespace OnnxObjectDetectionE2EAPP.Services
             foreach (var box in filteredBoxes)
             {
                 //// process output boxes
-                var x = (uint)Math.Max(box.X, 0);
-                var y = (uint)Math.Max(box.Y, 0);
-                var w = (uint)Math.Min(originalWidth - x, box.Width);
-                var h = (uint)Math.Min(originalHeight - y, box.Height);
+                var x = (uint)Math.Max(box.Dimensions.X, 0);
+                var y = (uint)Math.Max(box.Dimensions.Y, 0);
+                var width = (uint)Math.Min(originalWidth - x, box.Dimensions.Width);
+                var height = (uint)Math.Min(originalHeight - y, box.Dimensions.Height);
 
                 // fit to current image size
-                x = (uint)originalWidth * x / 416;
-                y = (uint)originalHeight * y / 416;
-                w = (uint)originalWidth * w / 416;
-                h = (uint)originalHeight * h / 416;
+                x = (uint)originalWidth * x / OnnxModelConfigurator.ImageSettings.imageWidth;
+                y = (uint)originalHeight * y / OnnxModelConfigurator.ImageSettings.imageHeight;
+                width = (uint)originalWidth * width / OnnxModelConfigurator.ImageSettings.imageWidth;
+                height = (uint)originalHeight * height / OnnxModelConfigurator.ImageSettings.imageHeight;
 
-                string text = string.Format("{0} ({1})", box.Label, box.Confidence);
+                string text = $"{box.Label} ({(box.Confidence * 100).ToString("0")}%)";
 
-                using (Graphics graph = Graphics.FromImage(image))
+                using (Graphics thumbnailGraphic = Graphics.FromImage(image))
                 {
-                    graph.CompositingQuality = CompositingQuality.HighQuality;
-                    graph.SmoothingMode = SmoothingMode.HighQuality;
-                    graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    thumbnailGraphic.CompositingQuality = CompositingQuality.HighQuality;
+                    thumbnailGraphic.SmoothingMode = SmoothingMode.HighQuality;
+                    thumbnailGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                    Font drawFont = new Font("Arial", 16);
-                    SolidBrush redBrush = new SolidBrush(Color.Red);
-                    Point atPoint = new Point((int)x, (int)y);
-                    Pen pen = new Pen(Color.Yellow, 4.0f);
-                    SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
+                    // Define Text Options
+                    Font drawFont = new Font("Arial", 12, FontStyle.Bold);
+                    SizeF size = thumbnailGraphic.MeasureString(text, drawFont);
+                    SolidBrush fontBrush = new SolidBrush(Color.Black);
+                    Point atPoint = new Point((int)x, (int)y - (int)size.Height - 1);
 
-                    // Fill rectangle on which the text is displayed.
-                    RectangleF rect = new RectangleF(x, y, w, 20);
-                    graph.FillRectangle(yellowBrush, rect);
-                    //draw text in red color
-                    graph.DrawString(text, drawFont, redBrush, atPoint);
-                    //draw rectangle around object
-                    graph.DrawRectangle(pen, x, y, w, h);
+                    // Define BoundingBox options
+                    Pen pen = new Pen(box.BoxColor, 3.2f);
+                    SolidBrush colorBrush = new SolidBrush(box.BoxColor);
+
+                    // Draw text on image 
+                    thumbnailGraphic.FillRectangle(colorBrush, (int)x, (int)(y - size.Height - 1), (int)size.Width, (int)size.Height);
+                    thumbnailGraphic.DrawString(text, drawFont, fontBrush, atPoint);
+
+                    // Draw bounding box on image
+                    thumbnailGraphic.DrawRectangle(pen, x, y, width, height);
                 }
             }
             return image;

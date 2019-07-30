@@ -80,7 +80,7 @@ public class ImageInputData
 The first step is to create an empty dataview as we just need schema of data while configuring up model.
 
 ```csharp
-var dataView = CreateEmptyDataView();
+var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageNetData>());
 ```
 
 The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
@@ -116,25 +116,25 @@ Define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
 
 Create the model by fitting the dataview. 
 
-```
-  var model = pipeline.Fit(dataView);
+```csharp
+var model = pipeline.Fit(dataView);
 ```
 
-#Detect objects in the image:
+# Detect objects in the image:
 
 After the model is configured, we need to save the model, load the saved model and the pass the image to the model to detect objects.
-When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by YoloMlPraser class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. 
+When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by `YoloOutputParser` class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. 
 ```
  var probs = model.Predict(imageInputData).PredictedLabels;
  IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
- filteredBoxes = _parser.NonMaxSuppress(boundingBoxes, 5, .5F);
+ filteredBoxes = _parser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
 ```
 
-#Draw bounding boxes around detected objects in Image.
+# Draw bounding boxes around detected objects in Image.
 
 The final step is we draw the bounding boxes around the objects using Paint API and return the image to the browser and it is displayed on the browser
 
-var img = _objectDetectionService.PaintImages(imageFilePath);
+var img = _objectDetectionService.DrawBoundingBox(imageFilePath);
 
 using (MemoryStream m = new MemoryStream())
 {

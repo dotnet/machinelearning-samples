@@ -60,24 +60,26 @@ Define the schema of data in a class type and refer that type while loading data
 
 ```csharp
 public class ImageNetData
+{
+    [LoadColumn(0)]
+    public string ImagePath;
+
+    [LoadColumn(1)]
+    public string Label;
+
+    public static IEnumerable<ImageNetData> ReadFromFile(string imageFolder)
     {
-        [LoadColumn(0)]
-        public string ImagePath;
-
-        [LoadColumn(1)]
-        public string Label;
-
-        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
-        {
-            return File.ReadAllLines(file)
-             .Select(x => x.Split('\t'))
-             .Select(x => new ImageNetData { ImagePath = Path.Combine(folder, x[0]), Label = x[1] } );
-        }
+        return Directory
+            .GetFiles(imageFolder)
+            .Where(filePath => Path.GetExtension(filePath) != ".md")
+            .Select(filePath => new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) });
     }
+}
 ```
 
+### ML.NET: Configure the model
 
-The first step is to load the data using TextLoader
+The first step is to create an empty dataview as we just need schema of data while configuring up model.
 
 ```csharp
 var data = mlContext.Data.LoadFromTextFile<ImageNetData>(imagesLocation, hasHeader: true);
@@ -85,54 +87,61 @@ var data = mlContext.Data.LoadFromTextFile<ImageNetData>(imagesLocation, hasHead
 
 The image file used to load images has two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. 
 
-It is important to highlight that the label in the `ImageNetData` class is not really used when scoring with the Tiny Yolo2 Onnx model. It is used when to print the labels on the console. 
-
-```csv
-dog2.jpg	dog2
-Intersection-Counts.jpg	intersection
-ManyPets.jpg	ManyPets
-```
-As you can observe, the file does not have a header row.
+It is important to highlight that the `Label` in the `ImageNetData` class is not really used when scoring with the Tiny Yolo2 Onnx model. It is used when to print the labels on the console. 
 
 The second step is to define the estimator pipeline. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
 ```csharp
- var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
-                            .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
-
-
+var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: "", inputColumnName: nameof(ImageNetData.ImagePath))
+                .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
+                .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
+                .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
 ```
+
 You also need to check the neural network, and check the names of the input / output nodes. In order to inspect the model, you can use tools like [Netron](https://github.com/lutzroeder/netron), which is automatically installed with [Visual Studio Tools for AI](https://visualstudio.microsoft.com/downloads/ai-tools-vs/). 
 These names are used later in the definition of the estimation pipe: in the case of the inception network, the input tensor is named 'image' and the output is named 'grid'
 
 Define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
 
-```
-    public struct TinyYoloModelSettings
-        {
-            // for checking TIny yolo2 Model input and  output  parameter names,
-            //you can use tools like Netron, 
-            // which is installed by Visual Studio AI Tools
+```csharp
+public struct TinyYoloModelSettings
+{
+    // for checking TIny yolo2 Model input and  output  parameter names,
+    //you can use tools like Netron, 
+    // which is installed by Visual Studio AI Tools
 
-            // input tensor name
-            public const string ModelInput = "image";
+    // input tensor name
+    public const string ModelInput = "image";
 
-            // output tensor name
-            public const string ModelOutput = "grid";
-        }
+    // output tensor name
+    public const string ModelOutput = "grid";
+}
 ```
 
 ![inspecting neural network with netron](./docs/Netron/netron.PNG)
 
-Finally, we extract the prediction engine after *fitting* the estimator pipeline. The prediction engine receives as parameter an object of type `ImageNetData` (containing 2 properties: `ImagePath` and `Label`), and then returns and object of type `ImagePrediction`.  
+Finally, we return the trained model after *fitting* the estimator pipeline. 
 
-```
+```csharp
   var model = pipeline.Fit(data);
-  var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model);
+  return model;
 ```
-When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by YoloMlPraser class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. On console we display the label value of each bounding box.
+When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by `YoloOutputParser` class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. On console we display the label value of each bounding box.
+
+# Detect objects in the image:
+
+After the model is configured, we need to pass the image to the model to detect objects. When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by `YoloOutputParser` class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. 
+
+```csharp
+IEnumerable<float[]> probabilities = modelScorer.Score(imageDataView);
+
+YoloOutputParser parser = new YoloOutputParser();
+
+var boundingBoxes =
+    probabilities
+    .Select(probability => parser.ParseOutputs(probability))
+    .Select(boxes => parser.FilterBoundingBoxes(boxes, 5, .5F));
+```
 
 **Note** The Tiny Yolo2 model is not having much accuracy compare to full YOLO2 model. As this is a sample program we are using Tiny version of Yolo model i.e Tiny_Yolo2
 

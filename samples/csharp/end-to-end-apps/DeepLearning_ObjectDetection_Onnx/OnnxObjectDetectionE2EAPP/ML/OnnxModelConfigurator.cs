@@ -41,7 +41,7 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
 
         public ITransformer SetupMlNetModel(string onnxModelFilePath)
         {
-            var dataView = CreateEmptyDataView();
+            var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
 
             var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
                             .Append(_mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
@@ -56,17 +56,6 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
         {
             // Save/persist the model to a .ZIP file to be loaded by the PredictionEnginePool
             _mlContext.Model.Save(_mlModel, null, mlnetModelFilePath);
-        }
-
-        private IDataView CreateEmptyDataView()
-        {
-            //Create empty DataView ot Images. We just need the schema to call fit()
-            List<ImageInputData> list = new List<ImageInputData>();
-            list.Add(new ImageInputData() { Image = new System.Drawing.Bitmap(ImageSettings.imageWidth, ImageSettings.imageHeight) }); //Test: Might not need to create the Bitmap.. = null; ?
-            IEnumerable<ImageInputData> enumerableData = list;
-
-            var dv = _mlContext.Data.LoadFromEnumerable<ImageInputData>(list);
-            return dv;
         }
     }
 }
