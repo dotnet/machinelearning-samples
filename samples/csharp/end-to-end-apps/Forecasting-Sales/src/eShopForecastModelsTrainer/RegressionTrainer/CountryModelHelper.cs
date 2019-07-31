@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using static eShopForecastModelsTrainer.ConsoleHelpers;
+using static eShopForecastModelsTrainer.ConsoleHelperExt;
 using Common;
 using Microsoft.ML.Data;
 
@@ -29,10 +29,9 @@ namespace eShopForecastModelsTrainer
         /// Build model for predicting next month country unit sales using Learning Pipelines API
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
-        /// <returns></returns>
         private static void CreateCountryModel(MLContext mlContext, string dataPath, string outputModelPath)
         {
-            ConsoleWriteHeader("Training country forecasting model");
+            ConsoleWriteHeader("Training country forecasting Regression model");
 
             var trainingDataView = mlContext.Data.LoadFromTextFile<CountryData>(path:dataPath, hasHeader: true, separatorChar: ',');
             
@@ -49,7 +48,7 @@ namespace eShopForecastModelsTrainer
 
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
-            Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
+            Console.WriteLine("=============== Cross-validating to get Regression model's accuracy metrics ===============");
             var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
@@ -63,23 +62,15 @@ namespace eShopForecastModelsTrainer
         /// Predict samples using saved model
         /// </summary>
         /// <param name="outputModelPath">Model file path</param>
-        /// <returns></returns>
         public static void TestPrediction(MLContext mlContext, string outputModelPath = "country_month_fastTreeTweedie.zip")
         {
-            ConsoleWriteHeader("Testing Country Sales Forecast model");
+            ConsoleWriteHeader("Testing Country Sales Forecast Regression model");
 
             ITransformer trainedModel;
             using (var stream = File.OpenRead(outputModelPath))
             {
                 trainedModel = mlContext.Model.Load(stream,out var modelInputSchema);
             }
-
-            //ITransformer trainedModel;
-            //using (var file = File.OpenRead(outputModelPath))
-            //{
-            //    trainedModel = TransformerChain
-            //        .LoadFrom(mlContext, file);
-            //}
 
             var predictionEngine = mlContext.Model.CreatePredictionEngine<CountryData, CountrySalesPrediction>(trainedModel);
 

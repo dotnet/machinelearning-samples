@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace eShopForecastModelsTrainer
 {
-    public static class ConsoleHelpers
+    public static class ConsoleHelperExt
     {
         public static void ConsoleWriteHeader(params string[] lines)
         {
@@ -42,6 +42,7 @@ namespace eShopForecastModelsTrainer
                 Console.WriteLine(line);
             }
         }
+
     }
 
 }

@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using static eShopForecastModelsTrainer.ConsoleHelpers;
+using static eShopForecastModelsTrainer.ConsoleHelperExt;
 using Common;
 using Microsoft.ML.Data;
 
@@ -25,15 +25,13 @@ namespace eShopForecastModelsTrainer
             CreateProductModelUsingPipeline(mlContext, dataPath, outputModelPath);
         }
 
-
         /// <summary>
         /// Build model for predicting next month country unit sales using Learning Pipelines API
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
-        /// <returns></returns>
         private static void CreateProductModelUsingPipeline(MLContext mlContext, string dataPath, string outputModelPath)
         {
-            ConsoleWriteHeader("Training product forecasting");
+            ConsoleWriteHeader("Training product forecasting Regression model");
 
             var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, hasHeader: true, separatorChar:',');
 
@@ -48,7 +46,7 @@ namespace eShopForecastModelsTrainer
             
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
-            Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
+            Console.WriteLine("=============== Cross-validating to get Regression model's accuracy metrics ===============");
             var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
@@ -63,10 +61,9 @@ namespace eShopForecastModelsTrainer
         /// Predict samples using saved model
         /// </summary>
         /// <param name="outputModelPath">Model file path</param>
-        /// <returns></returns>
         public static void TestPrediction(MLContext mlContext, string outputModelPath = "product_month_fastTreeTweedie.zip")
         {
-            ConsoleWriteHeader("Testing Product Unit Sales Forecast model");
+            ConsoleWriteHeader("Testing Product Unit Sales Forecast Regression model");
 
             // Read the model that has been previously saved by the method SaveModel
 

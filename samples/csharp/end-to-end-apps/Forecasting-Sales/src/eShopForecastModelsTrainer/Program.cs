@@ -1,8 +1,7 @@
 ﻿using Microsoft.ML;
 using System;
 using System.IO;
-using System.Threading.Tasks;
-using static eShopForecastModelsTrainer.ConsoleHelpers;
+using static eShopForecastModelsTrainer.ConsoleHelperExt;
 
 namespace eShopForecastModelsTrainer
 {
@@ -22,11 +21,17 @@ namespace eShopForecastModelsTrainer
             {
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
+                Console.WriteLine("=============== Forecast using Regression model ===============");
+
                 ProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
                 ProductModelHelper.TestPrediction(mlContext);
 
                 CountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
                 CountryModelHelper.TestPrediction(mlContext);
+
+                Console.WriteLine("=============== Forecast using Time Series SSA estimation ===============");
+
+                //TODO: Will add the sample code here for showing forecasting with SSA
             }
             catch (Exception ex)
             {
