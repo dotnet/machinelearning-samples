@@ -8,10 +8,10 @@ using Microsoft.ML.Data;
 
 namespace eShopForecastModelsTrainer
 {
-    public class ProductModelHelper
+    public class RegressionProductModelHelper
     {
         /// <summary>
-        /// Train and save model for predicting next month country unit sales
+        /// Train and save model for predicting the next month's product unit sales
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         /// <param name="outputModelPath">Trained model path</param>
@@ -26,7 +26,7 @@ namespace eShopForecastModelsTrainer
         }
 
         /// <summary>
-        /// Build model for predicting next month country unit sales using Learning Pipelines API
+        /// Build model for predicting next month's product unit sales using Learning Pipelines API
         /// </summary>
         /// <param name="dataPath">Input training file path</param>
         private static void CreateProductModelUsingPipeline(MLContext mlContext, string dataPath, string outputModelPath)
@@ -73,14 +73,15 @@ namespace eShopForecastModelsTrainer
                 trainedModel = mlContext.Model.Load(stream, out var modelInputSchema);
             }
 
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitPrediction>(trainedModel);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitRegressionPrediction>(trainedModel);
 
             Console.WriteLine("** Testing Product 1 **");
 
             // Build sample data
             ProductData dataSample = new ProductData()
             {
-                productId = "263",
+                //productId = "263",
+                productId = 263,
                 month = 10,
                 year = 2017,
                 avg = 91,
@@ -92,12 +93,13 @@ namespace eShopForecastModelsTrainer
             };
 
             // Predict the nextperiod/month forecast to the one provided
-            ProductUnitPrediction prediction = predictionEngine.Predict(dataSample);
+            ProductUnitRegressionPrediction prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
 
             dataSample = new ProductData()
             {
-                productId = "263",
+                //productId = "263",
+                productId = 263,
                 month = 11,
                 year = 2017,
                 avg = 29,
@@ -118,7 +120,8 @@ namespace eShopForecastModelsTrainer
 
             dataSample = new ProductData()
             {
-                productId = "988",
+                //productId = "988",
+                productId = 988,
                 month = 10,
                 year = 2017,
                 avg = 43,
@@ -134,7 +137,8 @@ namespace eShopForecastModelsTrainer
 
             dataSample = new ProductData()
             {
-                productId = "988",
+                //productId = "988",
+                productId = 988,
                 month = 11,
                 year = 2017,
                 avg = 41,

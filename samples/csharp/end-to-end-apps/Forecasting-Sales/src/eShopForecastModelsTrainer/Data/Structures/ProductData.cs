@@ -10,7 +10,7 @@ namespace eShopForecastModelsTrainer
         public float next;
 
         [LoadColumn(1)]
-        public string productId;
+        public float productId;
 
         [LoadColumn(2)]
         public float year;
@@ -37,8 +37,17 @@ namespace eShopForecastModelsTrainer
         public float prev;
     }
 
-    public class ProductUnitPrediction
+    public class ProductUnitRegressionPrediction
     {
         public float Score;
+    }
+
+    public class ProductUnitTimeSeriesPrediction
+    {
+        public float[] ForecastedProductUnits { get; set; }
+
+        public float[] ConfidenceLowerBound { get; set; }
+
+        public float[] ConfidenceUpperBound { get; set; }
     }
 }

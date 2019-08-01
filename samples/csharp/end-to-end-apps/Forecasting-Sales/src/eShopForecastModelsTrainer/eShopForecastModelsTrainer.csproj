@@ -30,7 +30,4 @@
     <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.2.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SSATrainer\" />
-  </ItemGroup>
 </Project>

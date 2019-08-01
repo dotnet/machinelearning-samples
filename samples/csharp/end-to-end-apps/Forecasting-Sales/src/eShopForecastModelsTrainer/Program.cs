@@ -1,4 +1,5 @@
-﻿using Microsoft.ML;
+﻿using eShopForecastModelsTrainer.Data;
+using Microsoft.ML;
 using System;
 using System.IO;
 using static eShopForecastModelsTrainer.ConsoleHelperExt;
@@ -23,15 +24,17 @@ namespace eShopForecastModelsTrainer
 
                 Console.WriteLine("=============== Forecast using Regression model ===============");
 
-                ProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
-                ProductModelHelper.TestPrediction(mlContext);
+                RegressionProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
+                RegressionProductModelHelper.TestPrediction(mlContext);
 
-                CountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
-                CountryModelHelper.TestPrediction(mlContext);
+                RegressionCountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
+                RegressionCountryModelHelper.TestPrediction(mlContext);
 
                 Console.WriteLine("=============== Forecast using Time Series SSA estimation ===============");
 
-                //TODO: Will add the sample code here for showing forecasting with SSA
+                TimeSeriesProductForecaster.TrainAndSaveModel(mlContext, ProductDataPath); //TODO: This currently does prediction too, need to make this more consistent with the regression portion
+
+                TimeSeriesProductForecaster.TrainAndSaveModel(mlContext, ProductDataPath); //TODO: This currently does prediction too, need to make this more consistent with the regression portion
             }
             catch (Exception ex)
             {

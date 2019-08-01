@@ -8,7 +8,7 @@ using Microsoft.ML.Data;
 
 namespace eShopForecastModelsTrainer
 {
-    public class CountryModelHelper
+    public class RegressionCountryModelHelper
     {
         /// <summary>
         /// Train and save model for predicting next month country unit sales
