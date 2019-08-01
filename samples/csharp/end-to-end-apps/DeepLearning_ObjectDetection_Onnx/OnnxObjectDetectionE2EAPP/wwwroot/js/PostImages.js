@@ -1,5 +1,7 @@
 ﻿
 $(function () {
+    $("#resultImagediv").css('background', 'lightgray'); 
+
     $(".input-image").click(function (e) {
         $(".input-image").removeClass("active");
         $(this).addClass("active");
@@ -10,6 +12,7 @@ $(function () {
             url: "/api/ObjectDetection?url=" + url,
             type: "GET",
             success: function (result) {
+                $("#resultImagediv").css('background', 'none'); 
                 var data = result.imageString;
                 $("#result").attr("src", 'data:image/jpeg;base64,' + data);
 
@@ -25,8 +28,6 @@ var form = document.querySelector('form');
 
 form.addEventListener('submit', e => {
     e.preventDefault();
-
-    //alert('Before image submit');
 
     const files = document.querySelector('[type=file]').files;
 

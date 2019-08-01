@@ -37,7 +37,7 @@ namespace mnist
             {
                 // STEP 1: Common data loading configuration
                 var trainData = mlContext.Data.LoadFromTextFile(path: TrainDataPath,
-                        columns : new[] 
+                        columns : new[]
                         {
                             new TextLoader.Column(nameof(InputData.PixelValues), DataKind.Single, 0, 63),
                             new TextLoader.Column("Number", DataKind.Single, 64)
@@ -46,7 +46,7 @@ namespace mnist
                         separatorChar : ','
                         );
 
-                
+
                 var testData = mlContext.Data.LoadFromTextFile(path: TestDataPath,
                         columns: new[]
                         {
@@ -83,7 +83,7 @@ namespace mnist
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.ToString());
                 //return null;
             }
         }
@@ -104,7 +104,7 @@ namespace mnist
 
             // Create prediction engine related to the loaded trained model
             var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
-            
+
             var resultprediction1 = predEngine.Predict(SampleMNISTData.MNIST1);
 
             Console.WriteLine($"Actual: 1     Predicted probability:       zero:  {resultprediction1.Score[0]:0.####}");
@@ -118,7 +118,7 @@ namespace mnist
             Console.WriteLine($"                                           eight: {resultprediction1.Score[8]:0.####}");
             Console.WriteLine($"                                           nine:  {resultprediction1.Score[9]:0.####}");
             Console.WriteLine();
-                       
+
             var resultprediction2 = predEngine.Predict(SampleMNISTData.MNIST2);
 
             Console.WriteLine($"Actual: 7     Predicted probability:       zero:  {resultprediction2.Score[0]:0.####}");

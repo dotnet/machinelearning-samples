@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
+| v1.2.0           | Dynamic API | Up-to-date | Console app | .csv files | Price prediction | Regression | Sdca Regression |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict taxi fares. In the world of machine learning, this type of prediction is known as **regression**.
 
@@ -85,7 +85,7 @@ Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
 If you are not satisfied with the quality of the model, there are a variety of ways to improve it, which will be covered in the *examples* category.
 
->*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size for performance purposes. You can use the original datasets to significantly improve the quality (Original datasets are referenced in datasets [README](../../../datasets/README.md)).*
+>*Keep in mind that for this sample the quality is lower than it could be because the datasets were reduced in size for performance purposes. You can use the original datasets to significantly improve the quality (Original datasets are referenced in datasets [README](../../../../datasets/README.md)).*
 
 ### 4. Consume model
 After the model is trained, we can use the `Predict()` API to predict the fare amount for specified trip. 

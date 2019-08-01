@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data sources | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class classification | SDCA multi-class classifier, AveragedPerceptronTrainer |
+| v1.2.0           | Dynamic API | Up-to-date | Console app | .csv file and GitHub issues | Issues classification | Multi-class classification | SDCA multi-class classifier, AveragedPerceptronTrainer |
 
 
 This is a simple prototype application to demonstrate how to use [ML.NET](https://www.nuget.org/packages/Microsoft.ML/) APIs. The main focus is on creating, training, and using ML (Machine Learning) model that is implemented in Predictor.cs class.
@@ -14,7 +14,7 @@ GitHubLabeler is a .NET Core console application that:
 
 This ML model is using multi-class classification algorithm (`SdcaMultiClassTrainer`) from [ML.NET](https://www.nuget.org/packages/Microsoft.ML/).
 
-## Enter you GitHub configuration data
+## Enter your GitHub configuration data
 1. **Provide your GitHub data** in the `appsettings.json` file:
 
     To allow the app to label issues in your GitHub repository you need to provide the folloving data into the appsettings.json file.

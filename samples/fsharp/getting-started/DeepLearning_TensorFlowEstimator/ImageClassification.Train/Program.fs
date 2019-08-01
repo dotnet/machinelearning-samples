@@ -12,7 +12,7 @@ let scale = 1
 let channelsLast = true
 
 [<CLIMutable>]
-type ImageNetData = 
+type ImageNetData =
     {
         [<LoadColumn(0)>]
         ImagePath : string
@@ -23,13 +23,13 @@ type ImageNetData =
 type ImageNetPipeline =
     {
         ImagePath : string
-        Label : string 
-        PredictedLabelValue : string 
+        Label : string
+        PredictedLabelValue : string
         Score : float32 []
         softmax2_pre_activation : float32 []
     }
 
-let printImagePrediction (x : ImageNetPipeline) = 
+let printImagePrediction (x : ImageNetPipeline) =
     let defaultForeground = Console.ForegroundColor
     let labelColor = ConsoleColor.Magenta
     let probColor = ConsoleColor.Blue
@@ -47,7 +47,7 @@ let printImagePrediction (x : ImageNetPipeline) =
     Console.ForegroundColor <- defaultForeground;
     printfn ""
 
-let printHeader lines = 
+let printHeader lines =
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Yellow
     printfn " "
@@ -55,8 +55,8 @@ let printHeader lines =
     let maxLength = lines |> Seq.map (fun x -> x.Length) |> Seq.max
     printfn "%s" (String('#', maxLength))
     Console.ForegroundColor <- defaultColor
-    
-let printExn lines = 
+
+let printExn lines =
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Red
     printfn " "
@@ -64,9 +64,9 @@ let printExn lines =
     printfn "#########"
     Console.ForegroundColor <- defaultColor
     lines |> Seq.iter (printfn "%s")
-    
 
-let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassifierZip = 
+
+let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassifierZip =
     printfn "Read model"
     printfn "Model location: %s" inputModelLocation
     printfn "Images folder: %s" imagesFolder
@@ -91,7 +91,7 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
     let trainData = model.Transform(data)
     mlContext.Data.CreateEnumerable<_>(trainData, false, true)
     |> Seq.iter printImagePrediction
-    
+
     printHeader ["Classification metrics"]
     let metrics = mlContext.MulticlassClassification.Evaluate(trainData, labelColumnName = "LabelTokey", predictedLabelColumnName = "PredictedLabel")
     printfn "LogLoss is: %.15f" metrics.LogLoss
@@ -99,12 +99,12 @@ let buildAndTrainModel dataLocation imagesFolder inputModelLocation imageClassif
     |> Seq.map string
     |> String.concat " , "
     |> printfn "PerClassLogLoss is: %s"
-    
+
     printHeader ["Save model to local file"]
     let outFile = Path.Combine(dataRoot.Directory.FullName, imageClassifierZip)
-    if File.Exists outFile then 
+    if File.Exists outFile then
         File.Delete(outFile)
-    do 
+    do
         use f = File.OpenWrite(outFile)
         mlContext.Model.Save(model, trainData.Schema, f)
     printfn "Model saved: %s" outFile
@@ -118,9 +118,9 @@ let main _argv =
     let imageClassifierZip = Path.Combine(assetsPath, "outputs", "imageClassifier.zip")
     try
         buildAndTrainModel tagsTsv imagesFolder inceptionPb imageClassifierZip
-    with 
-    | e -> printExn [e.Message]
-    
+    with
+    | e -> printExn [e.ToString()]
+
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Green
     printfn " "

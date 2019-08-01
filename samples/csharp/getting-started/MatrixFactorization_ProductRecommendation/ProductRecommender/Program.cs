@@ -10,7 +10,7 @@ namespace ProductRecommender
     {
         //1. Do remember to replace amazon0302.txt with dataset from https://snap.stanford.edu/data/amazon0302.html
         //2. Replace column names with ProductID and CoPurchaseProductID. It should look like this:
-        //   ProductID	ProductID_Copurchased
+        //   ProductID	CoPurchaseProductID
         //   0	1
         //   0  2
         private static string BaseDataSetRelativePath = @"../../../Data";

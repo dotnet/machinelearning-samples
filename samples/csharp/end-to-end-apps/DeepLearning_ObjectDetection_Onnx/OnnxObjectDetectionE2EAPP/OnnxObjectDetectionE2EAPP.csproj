@@ -5,18 +5,25 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>07b5f177-2aea-4405-8e78-4121f2a881ff</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MLModel\**" />
+    <Content Remove="MLModel\**" />
+    <EmbeddedResource Remove="MLModel\**" />
+    <None Remove="MLModel\**" />
+  </ItemGroup>
  
   <ItemGroup>
-    <Content Include="Assets\inputs\imagesList\image2.jpg">
+    <Content Include="Assets\imagesList\image2.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Assets\inputs\imagesList\image4.jpg">
+    <Content Include="Assets\imagesList\image4.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>    
-    <Content Include="Assets\inputs\imagesList\image1.jpg">
+    <Content Include="Assets\imagesList\image1.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Assets\inputs\imagesList\image3.jpg">
+    <Content Include="Assets\imagesList\image3.jpg">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
@@ -25,17 +32,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLPreviewVersion)" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\inputs\model\TinyYolo2_model.onnx">
+    <None Update="ML\OnnxModel\TinyYolo2_model.onnx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\outputs\ReadMe.txt">
+    <None Update="ML\MLNETModel\ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ImagesTemp\Readme.txt">

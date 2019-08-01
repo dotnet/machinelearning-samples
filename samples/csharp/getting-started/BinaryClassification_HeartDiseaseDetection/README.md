@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0           | Dynamic API | Up-to-date | Console app | .txt files | Heart disease classification | Binary classification | FastTree |
+| v1.2.0           | Dynamic API | Up-to-date | Console app | .txt files | Heart disease classification | Binary classification | FastTree |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict type of heart disease. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -13,7 +13,7 @@ This database contains 76 attributes, but all published experiments refer to usi
 Citation for this dataset is available at [DataSets-Citation](./HeartDiseaseDetection/Data/DATASETS-CITATION.txt)
 
 ## Problem
-This problem is centered around predicting the presence of hearth disease based on 14 attributes. To solve this problem, we will build an ML model that takes as inputs 4 parameters: 
+This problem is centered around predicting the presence of heart disease based on 14 attributes. To solve this problem, we will build an ML model that takes as inputs 4 parameters: 
 Attribute Information:
 
 * (age) - Age
@@ -28,8 +28,8 @@ Attribute Information:
 * (oldpeak) - ST depression induced by exercise relative to rest 
 * (slope) - the slope of the peak exercise ST segment -- Value 1: upsloping -- Value 2: flat -- Value 3: downsloping  
 * (ca) - number of major vessels (0-3) colored by flourosopy
-* (thal) - 3 = normal; 6 = fixed defect; 7 = reversable defect 
-* (num) (the predicted attribute) diagnosis of heart disease (angiographic disease status) -- Value 0: < 50% diameter narrowing -- Value 1: > 50% diameter narrowing (in any major vessel: attributes 59 through 68 are vessels) 
+* (thal) - 3 = normal; 6 = fixed defect; 7 = reversible defect 
+* (num) - (the predicted attribute) diagnosis of heart disease (angiographic disease status) -- Value 0: < 50% diameter narrowing -- Value 1: > 50% diameter narrowing
 
 and predicts the presence of heart disease in the patient with integer values from 0 to 4:
 Experiments with the Cleveland database (dataset used for this example) have concentrated on simply attempting to distinguish presence (value 1) from absence (value 0). 
@@ -45,7 +45,7 @@ The generalized problem of **binary classification** is to classify items into i
 The common feature for all those examples is that the parameter we want to predict can take only one of two values. In other words, this value is represented by `boolean` type.
 
 ## Solution
-To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict a sentiment for new reviews.
+To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to predict if heart disease is present for a list of heart data set.
 
 ![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
 
@@ -73,7 +73,7 @@ var pipeline = mlContext.Transforms.Concatenate("Features", "Age", "Sex", "Cp", 
 ```
 
 ### 2. Train model
-Training the model is a process of running the chosen algorithm on a training data (with known sentiment values) to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
+Training the model is a process of running the chosen algorithm on a training data to tune the parameters of the model. It is implemented in the `Fit()` method from the Estimator object. 
 
 To perform training you need to call the `Fit()` method while providing the training dataset in a DataView object.
 
@@ -85,7 +85,7 @@ Note that ML.NET works with data with a lazy-load approach, so in reality no dat
 
 ### 3. Evaluate model
 
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments. 
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`HeartTest.csv`). This dataset also contains known Label. 
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 

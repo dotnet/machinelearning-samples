@@ -1,10 +1,10 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ObjectDetection
+namespace ObjectDetection.DataStructures
 {
     public class ImageNetPrediction
     {
-        [ColumnName(OnnxModelScorer.TinyYoloModelSettings.ModelOutput)]
+        [ColumnName("grid")]
         public float[] PredictedLabels;
     }
 }

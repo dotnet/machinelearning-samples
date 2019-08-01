@@ -1,22 +1,23 @@
 ﻿using System.Drawing;
 
-namespace ObjectDetection
+namespace ObjectDetection.YoloParser
 {
-    class YoloBoundingBox
-    {
-    
-        public string Label { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
+    public class BoundingBoxDimensions : DimensionsBase { }
 
-        public float Height { get; set; }
-        public float Width { get; set; }
+    public class YoloBoundingBox
+    {
+        public BoundingBoxDimensions Dimensions { get; set; }
+
+        public string Label { get; set; }
 
         public float Confidence { get; set; }
 
         public RectangleF Rect
         {
-            get { return new RectangleF(X, Y, Width, Height); }
+            get { return new RectangleF(Dimensions.X, Dimensions.Y, Dimensions.Width, Dimensions.Height); }
         }
+
+        public Color BoxColor { get; set; }
     }
+    
 }

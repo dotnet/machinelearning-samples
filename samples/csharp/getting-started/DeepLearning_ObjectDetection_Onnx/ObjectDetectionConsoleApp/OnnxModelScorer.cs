@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.ML;
+using Microsoft.ML.Data;
+using ObjectDetection.DataStructures;
+using ObjectDetection.YoloParser;
 
 namespace ObjectDetection
 {
@@ -13,13 +15,12 @@ namespace ObjectDetection
         private readonly MLContext mlContext;
 
         private IList<YoloBoundingBox> _boundingBoxes = new List<YoloBoundingBox>();
-        private readonly YoloWinMlParser _parser = new YoloWinMlParser();
 
-        public OnnxModelScorer(string imagesFolder, string modelLocation)
+        public OnnxModelScorer(string imagesFolder, string modelLocation, MLContext mlContext)
         {
             this.imagesFolder = imagesFolder;
             this.modelLocation = modelLocation;
-            mlContext = new MLContext();
+            this.mlContext = mlContext;
         }
 
         public struct ImageNetSettings
@@ -30,7 +31,7 @@ namespace ObjectDetection
 
         public struct TinyYoloModelSettings
         {
-            // for checking TIny yolo2 Model input and  output  parameter names,
+            // for checking Tiny yolo2 Model input and  output  parameter names,
             //you can use tools like Netron, 
             // which is installed by Visual Studio AI Tools
 
@@ -41,74 +42,46 @@ namespace ObjectDetection
             public const string ModelOutput = "grid";
         }
 
-        public void Score()
-        {
-            var model = LoadModel(modelLocation);
-
-            PredictDataUsingModel(imagesFolder, model);
-        }
-
-        private PredictionEngine<ImageNetData, ImageNetPrediction> LoadModel(string modelLocation)
+        private ITransformer LoadModel(string modelLocation)
         {
             Console.WriteLine("Read model");
             Console.WriteLine($"Model location: {modelLocation}");
             Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight})");
 
-            var data = CreateDataViewFromList();
+            // Create IDataView from empty list to obtain input data schema
+            var data = mlContext.Data.LoadFromEnumerable(new List<ImageNetData>());
 
-            var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath))
+            // Define scoring pipeline
+            var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: "", inputColumnName: nameof(ImageNetData.ImagePath))
                             .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "image"))
                             .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
                             .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
 
+            // Fit scoring pipeline
             var model = pipeline.Fit(data);
 
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model);
-
-            return predictionEngine;
+            return model;
         }
 
-        protected void PredictDataUsingModel(string imagesFolder, PredictionEngine<ImageNetData, ImageNetPrediction> model)
+        private IEnumerable<float[]> PredictDataUsingModel(IDataView testData, ITransformer model)
         {
             Console.WriteLine($"Images location: {imagesFolder}");
             Console.WriteLine("");
             Console.WriteLine("=====Identify the objects in the images=====");
             Console.WriteLine("");
 
-            var testData = GetImagesData(imagesFolder);
+            IDataView scoredData = model.Transform(testData);
 
-            foreach (var sample in testData)
-            {
-                var probs = model.Predict(sample).PredictedLabels;
-                _boundingBoxes = _parser.ParseOutputs(probs);
-                var filteredBoxes = _parser.NonMaxSuppress(_boundingBoxes, 5, .5F);
+            IEnumerable<float[]> probabilities = scoredData.GetColumn<float[]>(TinyYoloModelSettings.ModelOutput);
 
-                Console.WriteLine(".....The objects in the image {0} are detected as below....", sample.Label);
-                foreach (var box in filteredBoxes)
-                {
-                    Console.WriteLine(box.Label + " and its Confidence score: " + box.Confidence);
-                }
-                Console.WriteLine("");
-            }
+            return probabilities;
         }
-        private static IEnumerable<ImageNetData> GetImagesData(string folder)
+
+        public IEnumerable<float[]> Score(IDataView data)
         {
-            List<ImageNetData> imagesList = new List<ImageNetData>();
-            string[] filePaths = Directory.GetFiles(folder);
-            foreach (var filePath in filePaths)
-            {
-                ImageNetData imagedata = new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) };
-                imagesList.Add(imagedata);
-            }
-            return imagesList;
-        }
-        private IDataView CreateDataViewFromList()
-        {
-            //Create empty DataView. We just need the schema to call fit()
-            List<ImageNetData> list = new List<ImageNetData>();
-            IEnumerable<ImageNetData> enumerableData = list;
-            var dv = mlContext.Data.LoadFromEnumerable(enumerableData);
-            return dv;
+            var model = LoadModel(modelLocation);
+
+            return PredictDataUsingModel(data, model);
         }
     }
 }

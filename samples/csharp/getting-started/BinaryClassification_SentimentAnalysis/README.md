@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.0.0          | Dynamic API | up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
+| v1.2.0          | Dynamic API | up-to-date | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to predict a sentiment (positive or negative) for customer reviews. In the world of machine learning, this type of prediction is known as **binary classification**.
 
@@ -69,7 +69,7 @@ Note that ML.NET works with data with a lazy-load approach, so in reality no dat
 
 ### 3. Evaluate model
 
-We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (`wikipedia-detox-250-line-test.tsv`). This dataset also contains known sentiments. 
+We need this step to conclude how accurate our model operates on new data. To do so, the model from the previous step is run against another dataset that was not used in training (trainTestSplit.TestSet). This dataset also contains known sentiments. 
 
 `Evaluate()` compares the predicted values for the test dataset and produces various metrics, such as accuracy, you can explore.
 
@@ -98,7 +98,9 @@ var resultprediction = predEngine.Predict(sampleStatement);
 Where in `resultprediction.PredictionLabel` will be either True or False depending if it is a Toxic or Non toxic predicted sentiment.
 
 
-## Try it
-This sample is compatible with [Try .NET](https://github.com/dotnet/try).  Follow [these instructions](https://github.com/dotnet/try#setup) to setup Try .NET, then `cd` to this directory and run `dotnet try` to run the sample.
-```cs --source-file ./SentimentAnalysis/SentimentAnalysisConsoleApp/Program.cs --project ./SentimentAnalysis/SentimentAnalysisConsoleApp/SentimentAnalysisConsoleApp.csproj  --region try
-```
+## Try it on 'TRY .NET'
+
+There's a very similar sample compatible with [Try .NET](https://github.com/dotnet/try). The only difference is mostly about the multiple #regions in the code in order to support 'Try .NET'. You can get the code and try it here:
+
+https://github.com/CESARDELATORRE/MLNET-WITH-TRYDOTNET-SAMPLE/blob/master/README.md
+
