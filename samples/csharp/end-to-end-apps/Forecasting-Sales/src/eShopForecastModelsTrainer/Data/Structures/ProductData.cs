@@ -38,7 +38,7 @@ namespace eShopForecastModelsTrainer
 
         public override string ToString()
         {
-            return $"ProductData [productId: {productId}, next: {next}, year: {year}, month: {month}, units: {units}, avg: {avg}, count: {count}, max: {max}, min: {min}, prev: {prev}]";
+            return $"ProductData [ productId: {productId}, year: {year}, month: {month:00}, next: {next:0000}, units: {units:0000}, avg: {avg:000}, count: {count:00}, max: {max:000}, min: {min}, prev: {prev:0000} ]";
         }
     }
 

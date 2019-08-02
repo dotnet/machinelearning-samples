@@ -80,6 +80,16 @@ namespace eShopForecastModelsTrainer
 
             int productDataSeriesLength = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false).Count();
 
+            var supplementedProductDataSeries = TimeSeriesDataGenerator.SupplementData (mlContext, productDataSeries);
+
+            Console.WriteLine();
+            Console.WriteLine(supplementedProductDataSeries.Count());
+            foreach (var m in supplementedProductDataSeries)
+            {
+                Console.WriteLine(m);
+            }
+            Console.WriteLine();
+
             // Create and add the forecast estimator to the pipeline.
             IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(ProductUnitTimeSeriesPrediction.ForecastedProductUnits), 

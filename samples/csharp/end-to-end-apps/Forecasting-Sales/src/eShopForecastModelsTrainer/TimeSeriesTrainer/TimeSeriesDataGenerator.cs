@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ML;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,89 +8,60 @@ namespace eShopForecastModelsTrainer
     class TimeSeriesDataGenerator
     {
         /// <summary>
-        /// Each ProductData object has a value for prev (the previous months units)
-        /// and next (the next months units).  This method gets a little clever and
-        /// generates two additional ProductData objects (one for the month prior and
-        /// one for the month after) the given set of monts
+        /// Supplements the data and returns the orignial list of months with addtional months
+        /// prepended to total a full 24 months.
         /// </summary>
-        /// <param name="singleProductSeries">The initial 12 months of product data.</param>
+        /// <param name="singleProductSeries">The original months of product data.</param>
         /// <returns></returns>
-        public static IEnumerable<ProductData> SupplementDataWithPrevNextMonths(IEnumerable<ProductData> singleProductSeries)
+        public static IEnumerable<ProductData> SupplementData (MLContext mlContext, IDataView productDataSeries)
         {
-            var supplementedProductSeries = new List<ProductData>(singleProductSeries);
+            var singleProductSeries = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false);
 
-            float randomCountDelta = 4;
-            float randomMaxDelta = 10;
+            var supplementedProductSeries = new List<ProductData>(singleProductSeries);
 
             // Get the first month in series
             var firstMonth = singleProductSeries.FirstOrDefault(p => p.year == 2017 && p.month == singleProductSeries.Select(pp => pp.month).Min());
 
-            if (firstMonth != null)
+            var referenceMonth = firstMonth;
+
+            float randomCountDelta = 4;
+            float randomMaxDelta = 10;
+
+            if (singleProductSeries.Count() < 12)
             {
-                var month = firstMonth.month == 1 ? 12 : firstMonth.month - 1;
+                var yearDelta = 12 - singleProductSeries.Count();
 
-                var poorlyCalculatedCount = MathF.Round(singleProductSeries.Select(p => p.count).Average()) - randomCountDelta;
-                var poorlyCalculatedMax = MathF.Round(singleProductSeries.Select(p => p.max).Average()) - randomMaxDelta;
-                var poorlyCalculatedMin = MathF.Round(singleProductSeries.Select(p => p.min).Average());
-
-                var previousMonth = new ProductData
+                for (int i = 1; i <= yearDelta; i++)
                 {
-                    next = firstMonth.units,
-                    productId = firstMonth.productId,
-                    year = month == 12 ? 2016 : 2017,
-                    month = month,
-                    units = firstMonth.prev,
-                    avg = MathF.Round(firstMonth.prev / poorlyCalculatedCount),
-                    count = poorlyCalculatedCount,
-                    max = poorlyCalculatedMax,
-                    min = poorlyCalculatedMin,
-                    prev = firstMonth.prev - (firstMonth.units - firstMonth.prev) // subtract the delta from the previous month to this month
-                };
+                    var month = firstMonth.month - i < 1 ? 12 - MathF.Abs(firstMonth.month - i) : firstMonth.month - 1;
 
-                supplementedProductSeries.Insert(0, previousMonth);
+                    var year = month > firstMonth.month ? firstMonth.year - 1 : firstMonth.year;
 
-                Console.WriteLine(previousMonth);
-            }
-            else
-            {
-                Console.WriteLine("This really shouldn't ever happen");
-            }
+                    var calculatedCount = MathF.Round(singleProductSeries.Select(p => p.count).Average()) - randomCountDelta;
+                    var calculatedMax = MathF.Round(singleProductSeries.Select(p => p.max).Average()) - randomMaxDelta;
+                    var calculatedMin = new Random().Next(1, 5);
 
-            // Get the last month in the series
-            var lastMonth = singleProductSeries.FirstOrDefault(p => p.year == 2017 && p.month == singleProductSeries.Select(pp => pp.month).Max());
+                    var productData = new ProductData
+                    {
+                        next = referenceMonth.units,
+                        productId = firstMonth.productId,
+                        year = year,
+                        month = month,
+                        units = referenceMonth.prev,
+                        avg = MathF.Round(referenceMonth.prev / calculatedCount),
+                        count = calculatedCount,
+                        max = calculatedMax,
+                        min = calculatedMin,
+                        prev = referenceMonth.prev - MathF.Round((referenceMonth.units - referenceMonth.prev) / 2) // subtract the delta from the previous month to this month
+                    };
 
-            if (lastMonth != null)
-            {
-                var month = lastMonth.month == 12 ? 1 : lastMonth.month + 1;
+                    supplementedProductSeries.Insert(0, productData);
 
-                var poorlyCalculatedCount = MathF.Round(singleProductSeries.Select(p => p.count).Average()) + randomCountDelta;
-                var poorlyCalculatedMax = MathF.Round(singleProductSeries.Select(p => p.max).Average()) + randomMaxDelta;
-                var poorlyCalculatedMin = MathF.Round(singleProductSeries.Select(p => p.min).Average());
-
-                var nextMonth = new ProductData
-                {
-                    next = lastMonth.next + (lastMonth.next - lastMonth.units),  // add the delta from the previous month to this month
-                    productId = lastMonth.productId,
-                    year = month == 1 ? 2018 : 2017,
-                    month = month,
-                    units = lastMonth.next,
-                    avg = MathF.Round(lastMonth.next / poorlyCalculatedCount),
-                    count = poorlyCalculatedCount,
-                    max = poorlyCalculatedMax,
-                    min = poorlyCalculatedMin,
-                    prev = lastMonth.units
-                };
-
-                Console.WriteLine(nextMonth);
-
-                supplementedProductSeries.Add(nextMonth);
-            }
-            else
-            {
-                Console.WriteLine("This really shouldn't ever happen");
+                    referenceMonth = productData;
+                }
             }
 
-            return supplementedProductSeries;
+            return SupplementDataWithYear(supplementedProductSeries);
         }
 
         /// <summary>
@@ -99,7 +71,7 @@ namespace eShopForecastModelsTrainer
         /// <param name="singleProductSeries">The initial 12 months of product data.</param>
         /// <param name="growth">The amount the values should grow year over year.</param>
         /// <returns></returns>
-        public static IEnumerable<ProductData> SupplementDataWithYear(IEnumerable<ProductData> singleProductSeries, float growth = 0.5f)
+        static IEnumerable<ProductData> SupplementDataWithYear(IEnumerable<ProductData> singleProductSeries, float growth = 0.1f)
         {
             if (singleProductSeries.Count() != 12)
             {
@@ -108,16 +80,18 @@ namespace eShopForecastModelsTrainer
 
             var supplementedProductSeries = new List<ProductData>();
 
+            var growthMultiplier = 1 - growth;
+
             foreach (var product in singleProductSeries)
             {
-                var newUnits = MathF.Floor(product.units * growth);
-                var newCount = MathF.Floor(product.count * growth);
-                var newMax = MathF.Floor(product.max * growth);
-                var newMin = new Random().Next(1, 3);
+                var newUnits = MathF.Floor(product.units * growthMultiplier);
+                var newCount = new Random().Next((int)MathF.Floor(product.count * growthMultiplier), (int)product.count);
+                var newMax = MathF.Floor(product.max * growthMultiplier);
+                var newMin = new Random().Next(1, 4);
 
                 var newProduct = new ProductData
                 {
-                    next = MathF.Floor(product.next * growth),
+                    next = MathF.Floor(product.next * growthMultiplier),
                     productId = product.productId,
                     year = product.year - 1,
                     month = product.month,
@@ -126,7 +100,7 @@ namespace eShopForecastModelsTrainer
                     count = newCount,
                     max = newMax,
                     min = newMin,
-                    prev = MathF.Floor(product.prev * growth)
+                    prev = MathF.Floor(product.prev * growthMultiplier)
                 };
 
                 supplementedProductSeries.Add(newProduct);
