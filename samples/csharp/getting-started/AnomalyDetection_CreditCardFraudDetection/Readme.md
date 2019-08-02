@@ -54,7 +54,7 @@ To solve this problem, first you need to build a machine learning model. Then yo
 
 Building a model includes:
 
-- Preapre the data and split data for training and tests
+- Prepare the data and split data for training and tests.
 
 - Load the data with TextLoader by specifying the type name that holds data's schema to be mapped with datasets.
 
