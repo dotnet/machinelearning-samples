@@ -1,4 +1,4 @@
-# Fraud detection in credit cards
+# Fraud detection in credit cards (binary classification)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
