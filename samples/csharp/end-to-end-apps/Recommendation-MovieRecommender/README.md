@@ -16,7 +16,7 @@ The sample takes insipiration from the popular Netflix application and even thou
 
 ## Features
 * Wep app 
-    * This is an end-end ASP.NET app which presents three user profiles 'Ankit', 'Cesar', 'Gal'. It then provides these three users 
+    * This is an end-end ASP.NET app which presents three user profiles 'Ankit', 'Cesar', 'Amy'. It then provides these three users 
       recommendations using a ML.NET recommendation model.   
 
 * Recommendation Model 
@@ -29,7 +29,7 @@ The sample takes insipiration from the popular Netflix application and even thou
 
 Movie Recommender uses Colloborative Filtering for recommendations. 
 
-The underlying assumption with Colloborative filtering is that if a person A (e.g. Gal) has the same opinion as a person B (e.g. Cesar) on an issue, A (Gal) is more likely to have B’s (Cesar) opinion on a different issue than that of a random person. 
+The underlying assumption with Colloborative filtering is that if a person A (e.g. Amy) has the same opinion as a person B (e.g. Cesar) on an issue, A (Amy) is more likely to have B’s (Cesar) opinion on a different issue than that of a random person. 
 
 For this sample we make use of the http://files.grouplens.org/datasets/movielens/ml-latest-small.zip dataset. 
 
