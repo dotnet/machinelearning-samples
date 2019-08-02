@@ -239,7 +239,6 @@ Specifically, the **Single Spectrum Analysis (SSA)** trainer is the algorithm th
 Specifically, we add the following trainer to the pipeline:
 
 ```csharp
-
     // Create and add the forecast estimator to the pipeline.
     IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
         outputColumnName: nameof(ProductUnitTimeSeriesPrediction.ForecastedProductUnits), 
@@ -283,7 +282,7 @@ TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecas
 forecastEngine.CheckPoint(mlContext, outputModelPath);
 ```
 
-You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model.  **Time Series** is different because it requires that the model's state to be continously updated with new observed values as predictions are made.  As a result, the **CheckPoint** method exists to update and save the model on a reoccurring basis.  This will be shown in further detail in a later step of this sample.  For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
+You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model.  **Time Series** is different because it requires that the model's state to be continously updated with new observed values as predictions are made.  As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis.  This will be shown in further detail in a later step of this sample.  For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
 
 #### 9. Time Series: Test the Prediction
 
@@ -329,7 +328,7 @@ You may notice that the **Predict** method has several overloads that accept the
 
 This allows you to specify new values for **horizon** and **confidenceLevel** each time that you do a prediction. Also, you can pass in new observed **ProductData** values for the time series using the **example** parameter.  
 
-When calling **Predict** with new observed **ProductData** values, this updates the model with these data points in the time series.  You may then choose to save this model to disk by calling the **CheckPoint** method.
+When calling **Predict** with new observed **ProductData** values, this updates the model state with these data points in the time series.  You may then choose to save this model to disk by calling the **CheckPoint** method.
 
 This is also seen in our sample:
 
