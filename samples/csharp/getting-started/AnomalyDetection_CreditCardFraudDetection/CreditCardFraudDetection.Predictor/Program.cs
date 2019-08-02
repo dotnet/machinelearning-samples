@@ -12,10 +12,11 @@ namespace CreditCardFraudDetection.Predictor
             string assetsPath = GetAbsolutePath(@"../../../assets");
             string trainOutput = GetAbsolutePath(@"../../../../CreditCardFraudDetection.Trainer/assets/output");
 
-            CopyModelAndDatasetFromTrainingProject(trainOutput, assetsPath);
-
             var inputDatasetForPredictions = Path.Combine(assetsPath, "input", "testData.csv");
             var modelFilePath = Path.Combine(assetsPath, "input", "randomizedPca.zip");
+
+            //Always copy the trained model from the trainer project just in case there's a new version trained. 
+            CopyModelAndDatasetFromTrainingProject(trainOutput, assetsPath);
 
             // Create model predictor to perform a few predictions
             var modelPredictor = new Predictor(modelFilePath, inputDatasetForPredictions);
@@ -50,7 +51,9 @@ namespace CreditCardFraudDetection.Predictor
                     LocalConsoleHelper.DeleteAssets(fileDestination);
                 }
 
-                File.Copy(file, Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file)));
+                //Only copy the files we need for the scoring project
+                if ((Path.GetFileName(file) == "testData.csv") || (Path.GetFileName(file) == "randomizedPca.zip"))
+                    File.Copy(file, Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file)));
             }
         }
 
