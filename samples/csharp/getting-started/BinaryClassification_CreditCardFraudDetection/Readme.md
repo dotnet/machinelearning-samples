@@ -1,8 +1,8 @@
-# Fraud detection in credit cards based on binary classification and existing PCA-transformed dataset
+# Fraud detection in credit cards
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
+| v1.2.0           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Binary classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
