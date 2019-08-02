@@ -11,16 +11,33 @@ namespace eShopForecastModelsTrainer
     public class TimeSeriesModelHelper
     {
         /// <summary>
-        /// Train and save model for predicting next month's product unit sales
+        /// Predicts future product sales using time series forecasting with SSA (single spectrum analysis).
         /// </summary>
         /// <param name="mlContext">ML.NET context.</param>
         /// <param name="dataPath">Input training data file path.</param>
         public static void PerformTimeSeriesProductForecasting(MLContext mlContext, string dataPath)
         {
-            Console.WriteLine("** Testing Product 1 **");
+            Console.WriteLine("\n=============== Forecasting Product 1 ===============");
 
             // Forecast units sold for product with Id == 263.
             var productId = 263;
+            ForecastProductUnits(mlContext, productId, dataPath);
+
+            Console.WriteLine("=============== Forecasting Product 2 ===============");
+
+            // Forecast units sold for product with Id == 988.
+            productId = 988;
+            ForecastProductUnits(mlContext, productId, dataPath);
+        }
+
+        /// <summary>
+        /// Train and save model for predicting future product sales.
+        /// </summary>
+        /// <param name="mlContext">ML.NET context.</param>
+        /// <param name="productId">Id of the product series to forecast.</param>
+        /// <param name="dataPath">Input training data file path.</param>
+        private static void ForecastProductUnits(MLContext mlContext, int productId, string dataPath)
+        {
             var productModelPath = $"product{productId}_month_timeSeriesSSA.zip";
 
             if (File.Exists(productModelPath))
@@ -28,28 +45,11 @@ namespace eShopForecastModelsTrainer
                 File.Delete(productModelPath);
             }
 
-            IDataView productDataSeries = LoadData(mlContext, productId, dataPath);
-            ProductData lastMonthProductData = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false).OrderBy(p => p.month).Last(); //TODO: If more than 1 year data, then will need to consider year too
+            IDataView productDataView = LoadData(mlContext, productId, dataPath);
+            var singleProductDataSeries = mlContext.Data.CreateEnumerable<ProductData>(productDataView, false).OrderBy(p => p.month);
+            ProductData lastMonthProductData = singleProductDataSeries.Last();
 
-            TrainAndSaveModel(mlContext, productDataSeries, productModelPath);
-            TestPrediction(mlContext, lastMonthProductData, productModelPath);
-
-
-            Console.WriteLine("** Testing Product 2 **");
-
-            // Forecast units sold for product with Id == 988.
-            productId = 988;
-            productModelPath = $"product{productId}_month_timeSeriesSSA.zip";
-
-            if (File.Exists(productModelPath))
-            {
-                File.Delete(productModelPath);
-            }
-
-            productDataSeries = LoadData(mlContext, productId, dataPath);
-            lastMonthProductData = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false).OrderBy(p => p.month).Last(); //TODO: If more than 1 year data, then will need to consider year too
-
-            TrainAndSaveModel(mlContext, productDataSeries, productModelPath);
+            TrainAndSaveModel(mlContext, productDataView, productModelPath);
             TestPrediction(mlContext, lastMonthProductData, productModelPath);
         }
 
@@ -83,14 +83,14 @@ namespace eShopForecastModelsTrainer
             // Create and add the forecast estimator to the pipeline.
             IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(ProductUnitTimeSeriesPrediction.ForecastedProductUnits), 
-                inputColumnName: nameof(ProductData.units),
-                windowSize: 3, // TODO: This should be 12 when we have enough data; but, currently exception is thrown if the windowSize > seriesLength (The length of the window on the series for building the trajectory matrix (parameter L).)
-                seriesLength: productDataSeriesLength, // TODO: Indicates that... (The length of series that is kept in buffer for modeling (parameter N).)
-                trainSize: productDataSeriesLength, // TODO: Indicates that...  (The length of series from the begining used for training.)
-                horizon: 2, // TODO: Indicates that...  (The number of values to forecast.)
-                confidenceLevel: 0.95f, // TODO: Indicates that...  (The confidence level for forecasting.)
-                confidenceLowerBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceLowerBound), // TODO: Indicates that...  (The name of the confidence interval lower bound column. If not specified then confidence intervals will not be calculated.)
-                confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound)); // TODO: Indicates that we will predict the next 3 months of sales (The name of the confidence interval upper bound column. If not specified then confidence intervals will not be calculated.)
+                inputColumnName: nameof(ProductData.units), // This is the column being forecasted.
+                windowSize: 3, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                seriesLength: productDataSeriesLength, // TODO: Need clarification on what this should be set to; assuming product series length for now.
+                trainSize: productDataSeriesLength, // TODO: Need clarification on what this should be set to; assuming product series length for now.
+                horizon: 2, // Indicates the number of values to forecast; 2 indicates that the next 2 months of product units will be forecasted.
+                confidenceLevel: 0.95f, // TODO: Is this the same as prediction interval, where this indicates that we are 95% confidence that the forecasted value will fall within the interval range?
+                confidenceLowerBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceLowerBound), // TODO: See above comment.
+                confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound)); // TODO: See above comment.
 
             // Train the forecasting model for the specified product's data series.
             ITransformer forecastTransformer = forecastEstimator.Fit(productDataSeries);
@@ -122,11 +122,9 @@ namespace eShopForecastModelsTrainer
             // We must create a new prediction engine from the persisted model.
             var forecastEngine = forecaster.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
 
-            Console.WriteLine("** Original prediction **");
-
             // Get the prediction; this will include the forecasted product units sold for the next 2 months since this the time period specified in the `horizon` parameter when the forecast estimator was originally created.
+            Console.WriteLine("\n** Original prediction **");
             var originalSalesPrediction = forecastEngine.Predict();
-
 
             // Compare the units of the first forecasted month to the actual units sold for the next month.
             var predictionMonth = lastMonthProductData.month == 12 ? 1 : lastMonthProductData.month + 1;
@@ -139,21 +137,20 @@ namespace eShopForecastModelsTrainer
 
             // Get the units of the second forecasted month.
             Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {lastMonthProductData.month + 2}, Year: {lastMonthProductData.year}, " +
-                $"Forecasted (units): {originalSalesPrediction.ForecastedProductUnits[0]}");
+                $"Forecasted (units): {originalSalesPrediction.ForecastedProductUnits[1]}");
 
             // Get the second forecasted month's confidence interval bounds.
-            Console.WriteLine($"Confidence interval: [{originalSalesPrediction.ConfidenceLowerBound[0]} - {originalSalesPrediction.ConfidenceUpperBound[0]}]\n");
+            Console.WriteLine($"Confidence interval: [{originalSalesPrediction.ConfidenceLowerBound[1]} - {originalSalesPrediction.ConfidenceUpperBound[1]}]\n");
 
+            // Update the forecasting model with the next month's actual product data to get an updated prediction; this time, only forecast product sales for 1 month ahead.
             Console.WriteLine("** Updated prediction **");
-
-            // Update the forecasting model with the next month's actual product data to get an updated prediction; this time, only forecase product sales for 1 month ahead.
             ProductData newProductData = SampleProductData.MonthlyData.Where(p => p.productId == lastMonthProductData.productId).Single();
             var updatedSalesPrediction = forecastEngine.Predict(newProductData, horizon: 1);
 
             // Get the units of the updated forecast.
-            var predictionMonth2 = lastMonthProductData.month >= 11 ? (lastMonthProductData.month + 2) % 12 : lastMonthProductData.month + 2;
-            var predictionYear2 = predictionMonth2 < lastMonthProductData.month ? lastMonthProductData.year + 1 : lastMonthProductData.year;
-            Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {predictionMonth2}, Year: {predictionYear2}, " +
+            predictionMonth = lastMonthProductData.month >= 11 ? (lastMonthProductData.month + 2) % 12 : lastMonthProductData.month + 2;
+            predictionYear = predictionMonth < lastMonthProductData.month ? lastMonthProductData.year + 1 : lastMonthProductData.year;
+            Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {predictionMonth}, Year: {predictionYear}, " +
                 $"Forecasted (units): {updatedSalesPrediction.ForecastedProductUnits[0]}");
 
             // Get the updated forecast's confidence interval bounds.

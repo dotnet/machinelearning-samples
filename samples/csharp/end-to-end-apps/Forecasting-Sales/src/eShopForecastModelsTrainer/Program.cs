@@ -17,12 +17,11 @@ namespace eShopForecastModelsTrainer
 
         static void Main(string[] args)
         {
-
             try
             {
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
-                Console.WriteLine("=============== Forecast using Regression model ===============");
+                ConsoleWriteHeader("Forecast using Regression model");
 
                 RegressionProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
                 RegressionProductModelHelper.TestPrediction(mlContext);
@@ -30,7 +29,7 @@ namespace eShopForecastModelsTrainer
                 RegressionCountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
                 RegressionCountryModelHelper.TestPrediction(mlContext);
 
-                Console.WriteLine("=============== Forecast using Time Series SSA estimation ===============");
+                ConsoleWriteHeader("Forecast using Time Series SSA estimation");
 
                 TimeSeriesModelHelper.PerformTimeSeriesProductForecasting(mlContext, ProductDataPath);
             }
