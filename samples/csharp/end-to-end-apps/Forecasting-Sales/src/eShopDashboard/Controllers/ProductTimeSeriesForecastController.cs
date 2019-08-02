@@ -8,14 +8,14 @@ using Microsoft.Extensions.Options;
 namespace eShopDashboard.Controllers
 {
     [Produces("application/json")]
-    [Route("api/productdemandforecast")] 
-    public class ProductDemandForecastController : Controller
+    [Route("api/producttimeseriesforecast")]
+    public class ProductTimeSeriesForecastController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly PredictionEnginePool<ProductData, ProductUnitRegressionPrediction> productSalesModel;
+        private readonly PredictionEnginePool<ProductData, ProductUnitTimeSeriesPrediction> productSalesModel;
 
-        public ProductDemandForecastController(IOptionsSnapshot<AppSettings> appSettings,
-                                               PredictionEnginePool<ProductData, ProductUnitRegressionPrediction> productSalesModel)
+        public ProductTimeSeriesForecastController(IOptionsSnapshot<AppSettings> appSettings,
+                                               PredictionEnginePool<ProductData, ProductUnitTimeSeriesPrediction> productSalesModel)
         {
             this.appSettings = appSettings.Value;
 
@@ -24,7 +24,7 @@ namespace eShopDashboard.Controllers
         }
 
         [HttpGet]
-        [Route("product/{productId}/unitdemandestimation")]
+        [Route("product/{productId}/unittimeseriesestimation")]
         public IActionResult GetProductUnitDemandEstimation(string productId,
             [FromQuery]int year, [FromQuery]int month,
             [FromQuery]float units, [FromQuery]float avg,
@@ -33,13 +33,13 @@ namespace eShopDashboard.Controllers
         {
             // Build product sample
             var inputExample = new ProductData(productId, year, month, units, avg, count, max, min, prev);
-          
-            ProductUnitRegressionPrediction nextMonthUnitDemandEstimation = null;
+
+            ProductUnitTimeSeriesPrediction nextMonthUnitDemandEstimation = null;
 
             //Predict
             nextMonthUnitDemandEstimation = this.productSalesModel.Predict(inputExample);
 
-            return Ok(nextMonthUnitDemandEstimation.Score);
+            return Ok(nextMonthUnitDemandEstimation.ForecastedProductUnits);
         }
     }
 }

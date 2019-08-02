@@ -76,6 +76,9 @@ function getProductData(product) {
         .done(function (history) {
             if (history.length < 4) return;
             $.when(
+                // TODO: TimeSeries
+                // Need to figure out which page I'm on (Product vs. TimeSeries)
+                // and call getForecast vs. getTimeSeriesForecast accordingly
                 getForecast(history[history.length - 1], product)
             ).done(function (forecast) {
                 plotLineChart(forecast, history, description, product.price)
@@ -87,6 +90,12 @@ function getForecast(st, pr) {
     // next,productId,year,month,units,avg,count,max,min,prev
     var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&count=${st.count}&prev=${st.prev}&units=${st.units}`;
     return $.getJSON(`${apiUri.forecasting}/product/${st.productId}/unitdemandestimation${surl}`);
+}
+
+function getTimeSeriesForcast(st, pr) {
+    // next,productId,year,month,units,avg,count,max,min,prev
+    var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&count=${st.count}&prev=${st.prev}&units=${st.units}`;
+    return $.getJSON(`${apiUri.timeseriesforcasting}/product/${st.productId}/unittimeseriesestimation${surl}`);
 }
 
 function getHistory(productId) {
@@ -215,7 +224,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
                 width: 3,
             }
         }
-    }
+    };
 }
 
 function TraceMean(labels, values, color) {
@@ -228,9 +237,9 @@ function TraceMean(labels, values, color) {
         hoverinfo: 'none',
         line: {
             color: color,
-            width: 3,
+            width: 3
         }
-    }
+    };
 }
 
 function nextMonth(predictor) {
@@ -262,7 +271,7 @@ function getCountryData(country) {
             $.when(
                 getCountryForecast(history[history.length - 1])
             ).done(function (forecast) {
-                plotLineChartCountry(forecast, history, country)
+                plotLineChartCountry(forecast, history, country);
             });
         });
 }
@@ -313,7 +322,7 @@ function plotLineChartCountry(forecast, historyItems, country) {
             xanchor: "center",
             yanchor: "top",
             y: 1.2,
-            x: 0.85,
+            x: 0.85
         }
     };
 
@@ -352,7 +361,7 @@ function getTraceCountryHistory(historyItems) {
             size: 10,
             line: {
                 color: "black",
-                width: 3,
+                width: 3
             }
         },
     };
@@ -386,7 +395,7 @@ function getTraceCountryForecast(labels, next_y_label, next_text, prev_text, val
             size: 10,
             line: {
                 color: "black",
-                width: 3,
+                width: 3
             }
         }
     };
@@ -416,7 +425,7 @@ function showStatsLayers() {
 
 function populateForecastDashboard(country, historyItems, forecasting, units = false) {
     var lastyear = historyItems[historyItems.length - 1].year;
-    var values = historyItems.map(y => (y.year == lastyear) ? y.sales : 0);
+    var values = historyItems.map(y => y.year == lastyear ? y.sales : 0);
     var total = values.reduce((previous, current) => current += previous);
 
     $("#labelTotal").text(`${lastyear} sales`);
@@ -424,7 +433,7 @@ function populateForecastDashboard(country, historyItems, forecasting, units = f
     $("#labelForecast").text(`${nextFullMonth(historyItems[historyItems.length - 1], true).toLowerCase()} sales`);
     $("#valueForecast").text(units ? forecasting.toNumberLocaleString() : forecasting.toCurrencyLocaleString());
     $("#labelItem").text(country); 
-    $("#tableHeaderCaption").text(`Sales ${units ? "units" : (1).toCurrencyLocaleString().replace("1.00","")} / month`)
+    $("#tableHeaderCaption").text(`Sales ${units ? "units" : (1).toCurrencyLocaleString().replace("1.00", "")} / month`);
 }
 
 function populateHistoryTable(historyItems) {
