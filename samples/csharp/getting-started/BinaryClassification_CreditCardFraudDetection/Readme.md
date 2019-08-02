@@ -6,9 +6,6 @@
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
 
-## API version: Dynamic and Estimators-based API
-It is important to note that this sample uses the dynamic API with Estimators.
-
 ## Problem
 This problem is centered around predicting if credit card transaction (with its related info/variables) is a fraud or no. 
  
