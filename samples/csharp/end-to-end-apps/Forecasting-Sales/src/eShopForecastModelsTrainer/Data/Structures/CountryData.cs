@@ -38,6 +38,11 @@ namespace eShopForecastModelsTrainer
 
         [LoadColumn(10)]
         public float prev;
+
+        public override string ToString()
+        {
+            return $"CountryData [next: {next}, country: {country}, year: {year}, month: {month}, max: {max}, min: {min}, std: {std}, count: {count}, sales: {sales}, med: {med}, prev: {prev}]";
+        }
     }
 
     public class CountrySalesPrediction

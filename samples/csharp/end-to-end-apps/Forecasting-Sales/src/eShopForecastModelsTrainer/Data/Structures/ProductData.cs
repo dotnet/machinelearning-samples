@@ -35,6 +35,11 @@ namespace eShopForecastModelsTrainer
 
         [LoadColumn(9)]
         public float prev;
+
+        public override string ToString()
+        {
+            return $"ProductData [productId: {productId}, next: {next}, year: {year}, month: {month}, units: {units}, avg: {avg}, count: {count}, max: {max}, min: {min}, prev: {prev}]";
+        }
     }
 
     public class ProductUnitRegressionPrediction

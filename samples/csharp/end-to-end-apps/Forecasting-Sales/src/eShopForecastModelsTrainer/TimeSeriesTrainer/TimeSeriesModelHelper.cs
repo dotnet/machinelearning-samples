@@ -34,6 +34,7 @@ namespace eShopForecastModelsTrainer
             TrainAndSaveModel(mlContext, productDataSeries, productModelPath);
             TestPrediction(mlContext, lastMonthProductData, productModelPath);
 
+
             Console.WriteLine("** Testing Product 2 **");
 
             // Forecast units sold for product with Id == 988.
@@ -83,13 +84,13 @@ namespace eShopForecastModelsTrainer
             IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(ProductUnitTimeSeriesPrediction.ForecastedProductUnits), 
                 inputColumnName: nameof(ProductData.units),
-                windowSize:3, // TODO: This should be 12 when we have enough data; but, currently exception is thrown if the windowSize > seriesLength
-                seriesLength: productDataSeriesLength, // TODO: Indicates that...
-                trainSize: productDataSeriesLength, // TODO: Indicates that...
-                horizon: 2, // TODO: Indicates that...
-                confidenceLevel: 0.95f, // TODO: Indicates that...
-                confidenceLowerBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceLowerBound), // TODO: Indicates that...
-                confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound)); // TODO: Indicates that we will predict the next 3 months of sales
+                windowSize: 3, // TODO: This should be 12 when we have enough data; but, currently exception is thrown if the windowSize > seriesLength (The length of the window on the series for building the trajectory matrix (parameter L).)
+                seriesLength: productDataSeriesLength, // TODO: Indicates that... (The length of series that is kept in buffer for modeling (parameter N).)
+                trainSize: productDataSeriesLength, // TODO: Indicates that...  (The length of series from the begining used for training.)
+                horizon: 2, // TODO: Indicates that...  (The number of values to forecast.)
+                confidenceLevel: 0.95f, // TODO: Indicates that...  (The confidence level for forecasting.)
+                confidenceLowerBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceLowerBound), // TODO: Indicates that...  (The name of the confidence interval lower bound column. If not specified then confidence intervals will not be calculated.)
+                confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound)); // TODO: Indicates that we will predict the next 3 months of sales (The name of the confidence interval upper bound column. If not specified then confidence intervals will not be calculated.)
 
             // Train the forecasting model for the specified product's data series.
             ITransformer forecastTransformer = forecastEstimator.Fit(productDataSeries);
@@ -126,8 +127,11 @@ namespace eShopForecastModelsTrainer
             // Get the prediction; this will include the forecasted product units sold for the next 2 months since this the time period specified in the `horizon` parameter when the forecast estimator was originally created.
             var originalSalesPrediction = forecastEngine.Predict();
 
+
             // Compare the units of the first forecasted month to the actual units sold for the next month.
-            Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {lastMonthProductData.month + 1}, Year: {lastMonthProductData.year} " +  
+            var predictionMonth = lastMonthProductData.month == 12 ? 1 : lastMonthProductData.month + 1;
+            var predictionYear = predictionMonth < lastMonthProductData.month ? lastMonthProductData.year + 1 : lastMonthProductData.year;
+            Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {predictionMonth}, Year: {predictionYear} " +  
                 $"- Real Value (units): {lastMonthProductData.next}, Forecasted (units): {originalSalesPrediction.ForecastedProductUnits[0]}");
 
             // Get the first forecasted month's confidence interval bounds.
@@ -147,7 +151,9 @@ namespace eShopForecastModelsTrainer
             var updatedSalesPrediction = forecastEngine.Predict(newProductData, horizon: 1);
 
             // Get the units of the updated forecast.
-            Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {lastMonthProductData.month + 2}, Year: {lastMonthProductData.year}, " +
+            var predictionMonth2 = lastMonthProductData.month >= 11 ? (lastMonthProductData.month + 2) % 12 : lastMonthProductData.month + 2;
+            var predictionYear2 = predictionMonth2 < lastMonthProductData.month ? lastMonthProductData.year + 1 : lastMonthProductData.year;
+            Console.WriteLine($"Product: {lastMonthProductData.productId}, Month: {predictionMonth2}, Year: {predictionYear2}, " +
                 $"Forecasted (units): {updatedSalesPrediction.ForecastedProductUnits[0]}");
 
             // Get the updated forecast's confidence interval bounds.
