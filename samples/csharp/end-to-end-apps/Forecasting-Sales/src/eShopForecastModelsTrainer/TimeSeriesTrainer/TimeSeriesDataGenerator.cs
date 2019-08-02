@@ -9,7 +9,7 @@ namespace eShopForecastModelsTrainer
     {
         /// <summary>
         /// Supplements the data and returns the orignial list of months with addtional months
-        /// prepended to total a full 24 months.
+        /// prepended to total a full 36 months.
         /// </summary>
         /// <param name="singleProductSeries">The original months of product data.</param>
         /// <returns></returns>
@@ -61,7 +61,7 @@ namespace eShopForecastModelsTrainer
                 }
             }
 
-            return SupplementDataWithYear(supplementedProductSeries);
+            return SupplementDataWithYear(SupplementDataWithYear(supplementedProductSeries));
         }
 
         /// <summary>
@@ -73,16 +73,19 @@ namespace eShopForecastModelsTrainer
         /// <returns></returns>
         static IEnumerable<ProductData> SupplementDataWithYear(IEnumerable<ProductData> singleProductSeries, float growth = 0.1f)
         {
-            if (singleProductSeries.Count() != 12)
+            if (singleProductSeries.Count() < 12)
+            //if (singleProductSeries.Count() != 12)
             {
-                throw new NotImplementedException("fix this, currently only handles if there's already a full 12 months of data.");
+                throw new NotImplementedException("fix this, currently only handles if there's already a full 12 months or more of data.");
             }
 
             var supplementedProductSeries = new List<ProductData>();
 
             var growthMultiplier = 1 - growth;
 
-            foreach (var product in singleProductSeries)
+            var firstYear = singleProductSeries.Take(12);
+
+            foreach (var product in firstYear)
             {
                 var newUnits = MathF.Floor(product.units * growthMultiplier);
                 var newCount = new Random().Next((int)MathF.Floor(product.count * growthMultiplier), (int)product.count);

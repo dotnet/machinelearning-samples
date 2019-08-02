@@ -78,32 +78,24 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Training product forecasting Time Series model");
 
-            int productDataSeriesLength = mlContext.Data.CreateEnumerable<ProductData>(productDataView, false).Count();
-
-            var supplementedProductDataSeries = TimeSeriesDataGenerator.SupplementData (mlContext, productDataSeries);
-
-            Console.WriteLine();
-            Console.WriteLine(supplementedProductDataSeries.Count());
-            foreach (var m in supplementedProductDataSeries)
-            {
-                Console.WriteLine(m);
-            }
-            Console.WriteLine();
+            var supplementedProductDataSeries = TimeSeriesDataGenerator.SupplementData (mlContext, productDataView);
+            var supplementedProductDataSeriesLength = supplementedProductDataSeries.Count(); // 36
+            var supplementedProductDataView = mlContext.Data.LoadFromEnumerable(supplementedProductDataSeries, productDataView.Schema);
 
             // Create and add the forecast estimator to the pipeline.
             IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(ProductUnitTimeSeriesPrediction.ForecastedProductUnits), 
                 inputColumnName: nameof(ProductData.units), // This is the column being forecasted.
-                windowSize: 3, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
-                seriesLength: productDataSeriesLength, // TODO: Need clarification on what this should be set to; assuming product series length for now.
-                trainSize: productDataSeriesLength, // TODO: Need clarification on what this should be set to; assuming product series length for now.
+                windowSize: 12, // Window size is set to the time period represented in the product data cycle; our product cycle is based on 12 months, so this is set to a factor of 12, e.g. 3.
+                seriesLength: supplementedProductDataSeriesLength, // TODO: Need clarification on what this should be set to; assuming product series length for now.
+                trainSize: supplementedProductDataSeriesLength, // TODO: Need clarification on what this should be set to; assuming product series length for now.
                 horizon: 2, // Indicates the number of values to forecast; 2 indicates that the next 2 months of product units will be forecasted.
                 confidenceLevel: 0.95f, // TODO: Is this the same as prediction interval, where this indicates that we are 95% confidence that the forecasted value will fall within the interval range?
                 confidenceLowerBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceLowerBound), // TODO: See above comment.
                 confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound)); // TODO: See above comment.
 
             // Train the forecasting model for the specified product's data series.
-            ITransformer forecastTransformer = forecastEstimator.Fit(productDataView);
+            ITransformer forecastTransformer = forecastEstimator.Fit(supplementedProductDataView);
 
             // Create the forecast engine used for creating predictions.
             TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecastEngine = forecastTransformer.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
