@@ -32,9 +32,7 @@ namespace eShopForecastModelsTrainer
 
                 Console.WriteLine("=============== Forecast using Time Series SSA estimation ===============");
 
-                TimeSeriesProductForecaster.TrainAndSaveModel(mlContext, ProductDataPath); //TODO: This currently does prediction too, need to make this more consistent with the regression portion
-
-                TimeSeriesProductForecaster.TrainAndSaveModel(mlContext, ProductDataPath); //TODO: This currently does prediction too, need to make this more consistent with the regression portion
+                TimeSeriesModelHelper.PerformTimeSeriesProductForecasting(mlContext, ProductDataPath);
             }
             catch (Exception ex)
             {

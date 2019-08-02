@@ -80,7 +80,6 @@ namespace eShopForecastModelsTrainer
             // Build sample data
             ProductData dataSample = new ProductData()
             {
-                //productId = "263",
                 productId = 263,
                 month = 10,
                 year = 2017,
@@ -98,7 +97,6 @@ namespace eShopForecastModelsTrainer
 
             dataSample = new ProductData()
             {
-                //productId = "263",
                 productId = 263,
                 month = 11,
                 year = 2017,
@@ -120,7 +118,6 @@ namespace eShopForecastModelsTrainer
 
             dataSample = new ProductData()
             {
-                //productId = "988",
                 productId = 988,
                 month = 10,
                 year = 2017,
@@ -137,7 +134,6 @@ namespace eShopForecastModelsTrainer
 
             dataSample = new ProductData()
             {
-                //productId = "988",
                 productId = 988,
                 month = 11,
                 year = 2017,
