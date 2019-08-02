@@ -9,7 +9,7 @@ namespace CreditCardFraudDetection.Predictor
         static void Main(string[] args)
         {
             string assetsPath = GetAbsolutePath(@"../../../assets");
-            string trainOutput = GetAbsolutePath(@"../../../../CreditCardFraudDetection.Trainer\assets\output");
+            string trainOutput = GetAbsolutePath(@"../../../../CreditCardFraudDetection.Trainer/assets/output");
 
             CopyModelAndDatasetFromTrainingProject(trainOutput, assetsPath);
 

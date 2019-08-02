@@ -56,6 +56,16 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
+        public static void PrintAnomalyDetectionMetrics(string name, AnomalyDetectionMetrics metrics)
+        {
+            Console.WriteLine($"************************************************************");
+            Console.WriteLine($"*       Metrics for {name} anomaly detection model      ");
+            Console.WriteLine($"*-----------------------------------------------------------");
+            Console.WriteLine($"*       Area Under Curve:                       {metrics.AreaUnderRocCurve:P2}");
+            Console.WriteLine($"*       Detection rate at false positive count: {metrics.DetectionRateAtFalsePositiveCount}");
+            Console.WriteLine($"************************************************************");
+        }
+
         public static void PrintMultiClassClassificationMetrics(string name, MulticlassClassificationMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
