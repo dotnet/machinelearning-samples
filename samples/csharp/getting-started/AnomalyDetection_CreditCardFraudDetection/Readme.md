@@ -1,4 +1,4 @@
-# Fraud detection in credit cards based on anomaly (or outlier) detection and existing PCA-transformed dataset
+# Fraud detection in credit cards (based on anomaly/outlier detection)
 
 | ML.NET version | API type    | Status     | App Type         | Data type | Scenario        | ML Task           | Algorithms     |
 |----------------|-------------|------------|------------------|-----------|-----------------|-------------------|----------------|
@@ -41,7 +41,8 @@ More details on current and past projects on related topics are available on htt
 ## ML Task - [Anomaly Detection](https://en.wikipedia.org/wiki/Anomaly_detection)
 
 Anomaly (or outlier) detection is the identification of rare items, events or observations which raise suspicions by differing significantly from the majority of the data. Typically the anomalous items will translate to some kind of problem such as bank fraud, a structural defect, medical problems or errors in a text. 
-  
+
+If you would like to learn how to detect fraud using binary classification, visit the [Binary Classification Credit Card Fraud Detection sample](../BinaryClassification_CreditCardFraudDetection).  
 
 ## Solution
 
