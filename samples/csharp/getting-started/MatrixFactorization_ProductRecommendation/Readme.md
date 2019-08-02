@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|v1.2.0   | Dynamic API | Up-to-date | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
+|v1.2.0   | Dynamic API | Up-to-date | Console app | .txt files | Product Recommendation | Recommendation | Matrix Factorization|
 
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
@@ -33,9 +33,9 @@ https://snap.stanford.edu/data/amazon0302.html
 
 DataSet's Citation information can be found [here](/ProductRecommender/Data/DATASETS-CITATION.txt)
 
-## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
+## Algorithm - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
+The algorithm for this recommendation task is Matrix Factorization, which is a supervised machine learning algorithm performing collaborative filtering. 
 
 ## Solution
 
