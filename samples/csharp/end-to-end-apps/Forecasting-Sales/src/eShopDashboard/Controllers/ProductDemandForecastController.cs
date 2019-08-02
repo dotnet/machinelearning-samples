@@ -25,7 +25,7 @@ namespace eShopDashboard.Controllers
 
         [HttpGet]
         [Route("product/{productId}/unitdemandestimation")]
-        public IActionResult GetProductUnitDemandEstimation(float productId,
+        public IActionResult GetProductUnitDemandEstimation(string productId,
             [FromQuery]int year, [FromQuery]int month,
             [FromQuery]float units, [FromQuery]float avg,
             [FromQuery]int count, [FromQuery]float max,
