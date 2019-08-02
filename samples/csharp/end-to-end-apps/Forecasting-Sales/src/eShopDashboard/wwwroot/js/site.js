@@ -11,7 +11,7 @@ var full_months = ["",
     "January", "February", "March",
     "April", "May", "June", "July",
     "August", "September", "October",
-    "November", "December"]
+    "November", "December"];
 
 function onLoadProductForecasting() {
     setResponsivePlots();
@@ -81,7 +81,7 @@ function getProductData(product) {
                 // and call getForecast vs. getTimeSeriesForecast accordingly
                 getForecast(history[history.length - 1], product)
             ).done(function (forecast) {
-                plotLineChart(forecast, history, description, product.price)
+                plotLineChart(forecast, history, description, product.price);
             });
         });
 }
@@ -133,7 +133,7 @@ function plotLineChart(forecast, history, description, price) {
             showgrid: false,
             showline: false,
             zeroline: false,
-            range: [trace_real.x.length - 12, trace_real.x.length],
+            range: [trace_real.x.length - 12, trace_real.x.length]
         },
         yaxis: {
             showgrid: false,
@@ -148,7 +148,7 @@ function plotLineChart(forecast, history, description, price) {
             xanchor: "center",
             yanchor: "top",
             y: 1.2,
-            x: 0.85,
+            x: 0.85
         }
     };
 
@@ -157,7 +157,7 @@ function plotLineChart(forecast, history, description, price) {
 
 function TraceProductHistory(historyItems) {
     var y = $.map(historyItems, function (d) { return d.sales; });
-    var x = $.map(historyItems, function (d) { return `${months[d.month]}<br>${d.year}`;; });
+    var x = $.map(historyItems, function (d) { return `${months[d.month]}<br>${d.year}`; });
     var texts = $.map(historyItems, function (d) { return `${full_months[d.month]}<br><b>${d.sales.toCurrencyLocaleString()}</b>`; });
 
     return {
@@ -187,9 +187,9 @@ function TraceProductHistory(historyItems) {
             size: 10,
             line: {
                 color: "black",
-                width: 3,
+                width: 3
             }
-        },
+        }
     };
 }
 
@@ -211,7 +211,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
         },
         line: {
             shape: 'spline',
-            color: '#00A69C',
+            color: '#00A69C'
         },
         fill: 'tozeroy',
         fillcolor: '#00A69C',
@@ -221,7 +221,7 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
             size: 10,
             line: {
                 color: "black",
-                width: 3,
+                width: 3
             }
         }
     };
@@ -243,14 +243,14 @@ function TraceMean(labels, values, color) {
 }
 
 function nextMonth(predictor) {
-    if (predictor.month == 12)
+    if (predictor.month === 12)
         return `${months[1]}<br>${predictor.year + 1}`;
     else
         return `${months[predictor.month + 1]}<br>${predictor.year}`;
 }
 
 function nextFullMonth(predictor, includeYear = false) {
-    if (predictor.month == 12)
+    if (predictor.month === 12)
         return `${full_months[1]}`;
     else
         return `${full_months[predictor.month + 1]}${includeYear ? ' ' + predictor.year : ''}`;
@@ -307,7 +307,7 @@ function plotLineChartCountry(forecast, historyItems, country) {
             showgrid: false,
             showline: false,
             zeroline: false,
-            range: [trace_real.x.length - 12, trace_real.x.length],
+            range: [trace_real.x.length - 12, trace_real.x.length]
         },
         yaxis: {
             showgrid: false,
@@ -363,7 +363,7 @@ function getTraceCountryHistory(historyItems) {
                 color: "black",
                 width: 3
             }
-        },
+        }
     };
 }
 
@@ -385,7 +385,7 @@ function getTraceCountryForecast(labels, next_y_label, next_text, prev_text, val
         },
         line: {
             shape: 'spline',
-            color: '#00A69C',
+            color: '#00A69C'
         },
         fill: 'tozeroy',
         fillcolor: '#00A69C',
@@ -425,7 +425,7 @@ function showStatsLayers() {
 
 function populateForecastDashboard(country, historyItems, forecasting, units = false) {
     var lastyear = historyItems[historyItems.length - 1].year;
-    var values = historyItems.map(y => y.year == lastyear ? y.sales : 0);
+    var values = historyItems.map(y => y.year === lastyear ? y.sales : 0);
     var total = values.reduce((previous, current) => current += previous);
 
     $("#labelTotal").text(`${lastyear} sales`);
@@ -440,7 +440,7 @@ function populateHistoryTable(historyItems) {
     var table = '';
     var lastYear = '';
     for (i = 0; i < historyItems.length; i++) {
-        if (historyItems[i].year != lastYear) {
+        if (historyItems[i].year !== lastYear) {
             lastYear = historyItems[i].year;
             table += `<div class="col-11 border-bottom-highlight-table month font-weight-bold">${lastYear}</div>`;
         }
@@ -456,9 +456,9 @@ function refreshHeightSidebar() {
 Number.prototype.toCurrencyLocaleString = function toCurrencyLocaleString() {
     var currentLocale = navigator.languages ? navigator.languages[0] : navigator.language;
     return this.toLocaleString(currentLocale, { style: 'currency', currency: 'USD' });
-}
+};
 
 Number.prototype.toNumberLocaleString = function toNumberLocaleString() {
     var currentLocale = navigator.languages ? navigator.languages[0] : navigator.language;
     return this.toLocaleString(currentLocale, { useGrouping: true }) + " units";
-}
+};
