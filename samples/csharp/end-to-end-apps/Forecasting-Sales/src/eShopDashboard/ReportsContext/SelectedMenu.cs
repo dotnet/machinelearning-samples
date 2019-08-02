@@ -10,6 +10,7 @@ namespace Microsoft.eShopOnContainers.WebDashboardRazor.ReportsContext
     {
         Reports_Product,
         Reports_Country,
+        Reports_TimeSeries
     }
 
     public static class ViewDataHelpers

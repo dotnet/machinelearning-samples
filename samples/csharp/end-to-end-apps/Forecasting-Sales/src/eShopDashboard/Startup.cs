@@ -41,11 +41,15 @@ namespace eShopDashboard
             services.AddScoped<CatalogContextSetup>();
             services.AddScoped<OrderingContextSetup>();
 
-            services.AddPredictionEnginePool<ProductData, ProductUnitPrediction>()
+            services.AddPredictionEnginePool<ProductData, ProductUnitRegressionPrediction>()
                 .FromFile(Configuration["ProductMLModelPath"]);
             services.AddPredictionEnginePool<CountryData, CountrySalesPrediction>()
                 .FromFile(Configuration["CountryMLModelPath"]);
-            
+            services.AddPredictionEnginePool<ProductData, ProductUnitTimeSeriesPrediction>()
+                .FromFile(Configuration["988TimeSeriesMLModelPath"]);
+
+            // TODO: TimeSeries
+
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));
 
             services.AddMvc();
