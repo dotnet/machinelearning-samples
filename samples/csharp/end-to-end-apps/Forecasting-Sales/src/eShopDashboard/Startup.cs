@@ -45,10 +45,6 @@ namespace eShopDashboard
                 .FromFile(Configuration["ProductMLModelPath"]);
             services.AddPredictionEnginePool<CountryData, CountrySalesPrediction>()
                 .FromFile(Configuration["CountryMLModelPath"]);
-            services.AddPredictionEnginePool<ProductData, ProductUnitTimeSeriesPrediction>()
-                .FromFile(Configuration["988TimeSeriesMLModelPath"]);
-
-            // TODO: TimeSeries
 
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));
 
