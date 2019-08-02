@@ -74,11 +74,11 @@ namespace eShopForecastModelsTrainer
         /// <param name="mlContext">ML.NET context.</param>
         /// <param name="productDataSeries">ML.NET IDataView representing the loaded product data series.</param>
         /// <param name="outputModelPath">Trained model path.</param>
-        private static void TrainAndSaveModel(MLContext mlContext, IDataView productDataSeries, string outputModelPath)
+        private static void TrainAndSaveModel(MLContext mlContext, IDataView productDataView, string outputModelPath)
         {
             ConsoleWriteHeader("Training product forecasting Time Series model");
 
-            int productDataSeriesLength = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false).Count();
+            int productDataSeriesLength = mlContext.Data.CreateEnumerable<ProductData>(productDataView, false).Count();
 
             // Create and add the forecast estimator to the pipeline.
             IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
@@ -93,26 +93,26 @@ namespace eShopForecastModelsTrainer
                 confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound)); // TODO: See above comment.
 
             // Train the forecasting model for the specified product's data series.
-            ITransformer forecastTransformer = forecastEstimator.Fit(productDataSeries);
+            ITransformer forecastTransformer = forecastEstimator.Fit(productDataView);
 
             // Create the forecast engine used for creating predictions.
-            var forecastEngine = forecastTransformer.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
+            TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecastEngine = forecastTransformer.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
 
             // Save the forecasting model so that it can be loaded within an end-user app.
             forecastEngine.CheckPoint(mlContext, outputModelPath);
         }
 
         /// <summary>
-        /// Predict samples using saved model
+        /// Predict samples using saved model.
         /// </summary>
         /// <param name="mlContext">ML.NET context.</param>
         /// <param name="lastMonthProductData">The last month of product data in the monthly data series.</param>
         /// <param name="outputModelPath">Model file path</param>
         private static void TestPrediction(MLContext mlContext, ProductData lastMonthProductData, string outputModelPath)
         {
-            ConsoleWriteHeader("Testing Product Unit Sales Forecast Time Series model");
+            ConsoleWriteHeader("Testing product unit sales forecast Time Series model");
 
-            // Load the forecast engine that has been previously saved
+            // Load the forecast engine that has been previously saved.
             ITransformer forecaster;
             using (var file = File.OpenRead(outputModelPath))
             {
@@ -120,11 +120,11 @@ namespace eShopForecastModelsTrainer
             }
 
             // We must create a new prediction engine from the persisted model.
-            var forecastEngine = forecaster.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
+            TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecastEngine = forecaster.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
 
             // Get the prediction; this will include the forecasted product units sold for the next 2 months since this the time period specified in the `horizon` parameter when the forecast estimator was originally created.
             Console.WriteLine("\n** Original prediction **");
-            var originalSalesPrediction = forecastEngine.Predict();
+            ProductUnitTimeSeriesPrediction originalSalesPrediction = forecastEngine.Predict();
 
             // Compare the units of the first forecasted month to the actual units sold for the next month.
             var predictionMonth = lastMonthProductData.month == 12 ? 1 : lastMonthProductData.month + 1;
@@ -145,7 +145,10 @@ namespace eShopForecastModelsTrainer
             // Update the forecasting model with the next month's actual product data to get an updated prediction; this time, only forecast product sales for 1 month ahead.
             Console.WriteLine("** Updated prediction **");
             ProductData newProductData = SampleProductData.MonthlyData.Where(p => p.productId == lastMonthProductData.productId).Single();
-            var updatedSalesPrediction = forecastEngine.Predict(newProductData, horizon: 1);
+            ProductUnitTimeSeriesPrediction updatedSalesPrediction = forecastEngine.Predict(newProductData, horizon: 1);
+
+            // Save the updated forecasting model.
+            forecastEngine.CheckPoint(mlContext, outputModelPath);
 
             // Get the units of the updated forecast.
             predictionMonth = lastMonthProductData.month >= 11 ? (lastMonthProductData.month + 2) % 12 : lastMonthProductData.month + 2;
