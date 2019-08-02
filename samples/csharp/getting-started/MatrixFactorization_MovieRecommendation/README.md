@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0   | Dynamic API | Up-to-date | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
+| v1.2.0   | Dynamic API | Up-to-date | Console app | .csv files | Movie Recommendation | Recommendation | Matrix Factorization |
 
 In this sample, you can see how to use ML.NET to build a movie recommendation engine. 
 
@@ -25,9 +25,9 @@ With ML.NET we support the following three recommendation scenarios, depending u
 The original data comes from MovieLens Dataset:
 http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
 
-## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
+## Algorithm - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
+The algorithm for this recommendation task is Matrix Factorization, which is a supervised machine learning algorithm performing collaborative filtering. 
 
 ## Solution
 
