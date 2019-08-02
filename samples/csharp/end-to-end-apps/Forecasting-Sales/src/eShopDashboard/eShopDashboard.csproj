@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
@@ -45,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="Forecast\ModelFiles\country_month_fastTreeTweedie.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Forecast\ModelFiles\product988_month_timeSeriesSSA.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Forecast\ModelFiles\product_month_fastTreeTweedie.zip">

@@ -61,6 +61,23 @@ function setUpProductDescriptionTypeahead(typeaheadSelector = "#remote .typeahea
         });
 }
 
+function manualProductSelection(data) {
+    updateProductInfo(data);
+
+    productId = product.id;
+    description = product.description;
+
+    getHistory(productId)
+        .done(function (history) {
+            if (history.length < 4) return;
+            $.when(
+                getTimeSeriesForcast(history[history.length - 1], product)
+            ).done(function (forecast) {
+                plotLineChart(forecast, history, description, product.price);
+            });
+        });
+}
+
 function updateProductInfo(data) {
     $("#product").removeClass("d-none");
     $("#productName").text(data.description);
