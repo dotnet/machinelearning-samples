@@ -26,13 +26,13 @@ namespace eShopForecastModelsTrainer
 
                 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
 
-                //ConsoleWriteHeader("Forecast using Regression model");
+                ConsoleWriteHeader("Forecast using Regression model");
 
-                //RegressionProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
-                //RegressionProductModelHelper.TestPrediction(mlContext);
+                RegressionProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
+                RegressionProductModelHelper.TestPrediction(mlContext);
 
-                //RegressionCountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
-                //RegressionCountryModelHelper.TestPrediction(mlContext);
+                RegressionCountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
+                RegressionCountryModelHelper.TestPrediction(mlContext);
 
                 ConsoleWriteHeader("Forecast using Time Series SSA estimation");
 

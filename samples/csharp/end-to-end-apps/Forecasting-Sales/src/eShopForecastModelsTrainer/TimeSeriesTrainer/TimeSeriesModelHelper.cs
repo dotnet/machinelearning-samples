@@ -17,16 +17,10 @@ namespace eShopForecastModelsTrainer
         /// <param name="dataPath">Input training data file path.</param>
         public static void PerformTimeSeriesProductForecasting(MLContext mlContext, string dataPath)
         {
-            Console.WriteLine("\n=============== Forecasting Product 1 ===============");
-
-            // Forecast units sold for product with Id == 263.
-            var productId = 263;
-            ForecastProductUnits(mlContext, productId, dataPath);
-
-            Console.WriteLine("=============== Forecasting Product 2 ===============");
+            Console.WriteLine("=============== Forecasting Product Units ===============");
 
             // Forecast units sold for product with Id == 988.
-            productId = 988;
+            var productId = 988;
             ForecastProductUnits(mlContext, productId, dataPath);
         }
 
