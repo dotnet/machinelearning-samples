@@ -57,25 +57,13 @@ function setUpProductDescriptionTypeahead(typeaheadSelector = "#remote .typeahea
         })
         .on('typeahead:selected', function (e, data) {
             updateProductInfo(data);
-            getProductData(data);
+            getProductData(data, e.currentTarget.baseURI.split("/").pop());
         });
 }
 
 function manualProductSelection(product) {
     updateProductInfo(product);
-
-    productId = product.id;
-    description = product.description;
-
-    getHistory(productId)
-        .done(function (history) {
-            if (history.length < 4) return;
-            $.when(
-                getTimeSeriesForcast(history[history.length - 1], product)
-            ).done(function (forecast) {
-                plotLineChart(forecast, history, description, product.price);
-            });
-        });
+    getProductData(product, "TimeSeries");
 }
 
 function updateProductInfo(data) {
@@ -85,7 +73,7 @@ function updateProductInfo(data) {
     $("#productImage").attr("src", data.pictureUri).attr("alt", data.description);   
 }
 
-function getProductData(product) {
+function getProductData(product, page) {
     productId = product.id;
     description = product.description;
 
@@ -93,26 +81,20 @@ function getProductData(product) {
         .done(function (history) {
             if (history.length < 4) return;
             $.when(
-                // TODO: TimeSeries
-                // Need to figure out which page I'm on (Product vs. TimeSeries)
-                // and call getForecast vs. getTimeSeriesForecast accordingly
-                getForecast(history[history.length - 1], product)
+                getForecast(history[history.length - 1], page)
             ).done(function (forecast) {
                 plotLineChart(forecast, history, description, product.price);
             });
         });
 }
 
-function getForecast(st, pr) {
-    // next,productId,year,month,units,avg,count,max,min,prev
-    var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&count=${st.count}&prev=${st.prev}&units=${st.units}`;
-    return $.getJSON(`${apiUri.forecasting}/product/${st.productId}/unitdemandestimation${surl}`);
-}
-
-function getTimeSeriesForcast(st, pr) {
-    // next,productId,year,month,units,avg,count,max,min,prev
-    var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&count=${st.count}&prev=${st.prev}&units=${st.units}`;
-    return $.getJSON(`${apiUri.timeseriesforcasting}/product/${st.productId}/unittimeseriesestimation${surl}`);
+function getForecast(st, page) {
+    if (page === "TimeSeries") {
+        return $.getJSON(`${apiUri.timeseriesforcasting}/product/${st.productId}/unittimeseriesestimation`);
+    } else {
+        var surl = `?month=${st.month}&year=${st.year}&avg=${st.avg}&max=${st.max}&min=${st.min}&count=${st.count}&prev=${st.prev}&units=${st.units}`;
+        return $.getJSON(`${apiUri.forecasting}/product/${st.productId}/unitdemandestimation${surl}`);
+    }
 }
 
 function getHistory(productId) {

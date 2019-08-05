@@ -1,15 +1,11 @@
-﻿using CommonHelpers;
-using eShopDashboard.Forecast;
+﻿using eShopDashboard.Forecast;
 using eShopDashboard.Settings;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.ML.Transforms.TimeSeries;
 using Microsoft.ML;
 using System.Linq;
-using System.IO;
-using Microsoft.IdentityModel.Protocols;
-using System;
+
 
 namespace eShopDashboard.Controllers
 {
@@ -28,13 +24,8 @@ namespace eShopDashboard.Controllers
 
         [HttpGet]
         [Route("product/{productId}/unittimeseriesestimation")]
-        public IActionResult GetProductUnitDemandEstimation(float productId,
-            [FromQuery]int year, [FromQuery]int month,
-            [FromQuery]float units, [FromQuery]float avg,
-            [FromQuery]int count, [FromQuery]float max,
-            [FromQuery]float min, [FromQuery]float prev)
+        public IActionResult GetProductUnitDemandEstimation(float productId)
         {
-
             // As the time series transformer is stateful, we're not using the prediction engine pool
             ITransformer forecaster;
             using (var file = System.IO.File.OpenRead(ModelPath))
@@ -45,7 +36,7 @@ namespace eShopDashboard.Controllers
             // We must create a new prediction engine from the persisted model.
             TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecastEngine = forecaster.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
 
-            //Predict
+            // Predict
             var nextMonthUnitDemandEstimation = forecastEngine.Predict();
 
             return Ok(nextMonthUnitDemandEstimation.ForecastedProductUnits.First());
