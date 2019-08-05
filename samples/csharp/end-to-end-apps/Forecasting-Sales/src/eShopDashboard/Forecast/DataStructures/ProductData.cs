@@ -5,8 +5,7 @@
     /// </summary>
     public class ProductData
     {
-        // next,productId,year,month,units,avg,count,max,min,prev
-        public ProductData(string productId, int year, int month, float units, float avg, 
+        public ProductData(float productId, int year, int month, float units, float avg, 
             int count, float max, float min, float prev)
         {
             this.productId = productId;
@@ -22,7 +21,7 @@
 
         public float next;
 
-        public string productId;
+        public float productId;
 
         public float year;
         public float month;
@@ -33,5 +32,4 @@
         public float min;
         public float prev;
     }
-
 }

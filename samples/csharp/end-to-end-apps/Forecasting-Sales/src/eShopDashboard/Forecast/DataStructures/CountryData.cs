@@ -5,7 +5,6 @@
     /// </summary>
     public class CountryData
     {
-        // next,country,year,month,max,min,std,count,sales,med,prev
         public CountryData(string country, int year, int month, float max, float min, float std, int count, float sales, float med, float prev)
         {
             this.country = country;
