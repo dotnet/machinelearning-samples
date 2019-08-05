@@ -1,8 +1,8 @@
 # eShopDashboardML - Sales forecasting 
 
-| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression, Time Series | FastTreeTweedie Regression, Single Spectrum Analysis |
+| ML.NET version | API type    | Status     | App Type                             | Data type                 | Scenario       | ML Task                 | Algorithms                                           |
+|----------------|-------------|------------|--------------------------------------|---------------------------|----------------|-------------------------|------------------------------------------------------|
+| v1.2.0         | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression, Time Series | FastTreeTweedie Regression, Single Spectrum Analysis |
 
 
 eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
@@ -126,7 +126,8 @@ var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, ha
 
 ```
 
-In the following steps, we will build the pipeline transformations, specify which trainer/algorithm to use, evaluate the models, and test their predictions.  This is where the steps start to differ between the **Regression** and **Time Series** samples - the remainder of this walkthrough each of these algorithms separately.
+In the following steps, we will build the pipeline transformations, specify which trainer/algorithm to use, evaluate the models, and test their predictions.  This is where the steps start to differ between the [**Regression**](#2-regression-create-the-pipeline) and [**Time Series**](#6-time-series-create-the-pipeline) samples - the remainder of this walkthrough each of these algorithms separately.
+
 
 #### 2. Regression: Create the Pipeline
 
@@ -282,7 +283,7 @@ TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecas
 forecastEngine.CheckPoint(mlContext, outputModelPath);
 ```
 
-You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model.  **Time Series** is different because it requires that the model's state to be continously updated with new observed values as predictions are made.  As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis.  This will be shown in further detail in a later step of this sample.  For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
+You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model.  **Time Series** is different because it requires that the model's state to be continuously updated with new observed values as predictions are made.  As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis.  This will be shown in further detail in a later step of this sample.  For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
 
 #### 9. Time Series: Test the Prediction
 
@@ -339,7 +340,7 @@ ProductUnitTimeSeriesPrediction updatedSalesPrediction = forecastEngine.Predict(
  forecastEngine.CheckPoint(mlContext, outputModelPath);
 ```
 
-//TODO: Need clarification on how to evaluate the accuracy of this model; there is the confidence level, but any other mechanism besides that?
+// TODO: Need clarification on how to evaluate the accuracy of this model; there is the confidence level, but any other mechanism besides that?
 
 ## Citation
 eShopDashboardML dataset is based on a public Online Retail Dataset from **UCI**: http://archive.ics.uci.edu/ml/datasets/online+retail
