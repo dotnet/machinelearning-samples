@@ -1,5 +1,5 @@
-using CommonHelpers;
-using eShopDashboard.Forecast;
+using Common;
+using eShopForecast;
 using eShopDashboard.Infrastructure.Data.Catalog;
 using eShopDashboard.Infrastructure.Data.Ordering;
 using eShopDashboard.Infrastructure.Setup;

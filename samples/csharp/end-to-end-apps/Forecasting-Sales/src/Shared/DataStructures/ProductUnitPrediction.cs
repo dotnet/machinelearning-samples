@@ -1,4 +1,4 @@
-﻿namespace eShopDashboard.Forecast
+﻿namespace eShopForecast
 {
     /// <summary>
     /// This is the output of the scored regression model, the prediction.

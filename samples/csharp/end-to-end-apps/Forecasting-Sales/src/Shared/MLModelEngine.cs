@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.ML;
 
-namespace CommonHelpers
+namespace Common
 {
     public class MLModelEngine<TData, TPrediction> 
                         where TData : class

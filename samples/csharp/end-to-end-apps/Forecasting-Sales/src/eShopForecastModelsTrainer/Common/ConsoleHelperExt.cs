@@ -42,7 +42,5 @@ namespace eShopForecastModelsTrainer
                 Console.WriteLine(line);
             }
         }
-
     }
-
 }

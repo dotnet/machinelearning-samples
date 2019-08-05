@@ -1,5 +1,5 @@
-﻿using CommonHelpers;
-using eShopDashboard.Forecast;
+﻿using Common;
+using eShopForecast;
 using eShopDashboard.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -38,7 +38,19 @@ namespace eShopDashboard.Controllers
                                                     [FromQuery]float sales, [FromQuery]float std)
         {
             // Build country sample
-            var countrySample = new CountryData(country, year, month, max, min, std, count, sales, med, prev);
+            var countrySample = new CountryData()
+            {
+                country = country,
+                year = year,
+                month = month,
+                max = max,
+                min = min,
+                std = std,
+                count = count,
+                sales = sales,
+                med = med,
+                prev = prev
+            };
 
             this.logger.LogInformation($"Start predicting");
             //Measure execution time

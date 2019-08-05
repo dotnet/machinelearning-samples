@@ -1,7 +1,6 @@
-﻿
-using Microsoft.ML.Data;
+﻿using Microsoft.ML.Data;
 
-namespace eShopForecastModelsTrainer
+namespace eShopForecast
 {
     public class ProductData
     {
@@ -42,19 +41,5 @@ namespace eShopForecastModelsTrainer
         {
             return $"ProductData [ productId: {productId}, year: {year}, month: {month:00}, next: {next:0000}, units: {units:0000}, avg: {avg:000}, count: {count:00}, max: {max:000}, min: {min}, prev: {prev:0000} ]";
         }
-    }
-
-    public class ProductUnitRegressionPrediction
-    {
-        public float Score;
-    }
-
-    public class ProductUnitTimeSeriesPrediction
-    {
-        public float[] ForecastedProductUnits { get; set; }
-
-        public float[] ConfidenceLowerBound { get; set; }
-
-        public float[] ConfidenceUpperBound { get; set; }
     }
 }

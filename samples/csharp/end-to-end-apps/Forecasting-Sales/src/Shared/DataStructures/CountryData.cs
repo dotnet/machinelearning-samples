@@ -1,11 +1,9 @@
-﻿
-using Microsoft.ML.Data;
+﻿using Microsoft.ML.Data;
 
-namespace eShopForecastModelsTrainer
+namespace eShopForecast
 {
     public class CountryData
     {
-        // next,country,year,month,max,min,std,count,sales,med,prev
         [LoadColumn(0)]
         public float next;
 
@@ -43,10 +41,5 @@ namespace eShopForecastModelsTrainer
         {
             return $"CountryData [next: {next}, country: {country}, year: {year}, month: {month}, max: {max}, min: {min}, std: {std}, count: {count}, sales: {sales}, med: {med}, prev: {prev}]";
         }
-    }
-
-    public class CountrySalesPrediction
-    {
-        public float Score;
     }
 }

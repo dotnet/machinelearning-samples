@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace CommonHelpers
+namespace Common
 {
     public class ObjectPool<T>
     {        

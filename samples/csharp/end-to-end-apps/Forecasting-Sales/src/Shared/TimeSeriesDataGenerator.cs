@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace eShopForecastModelsTrainer
+namespace eShopForecast
 {
-    class TimeSeriesDataGenerator
+    public class TimeSeriesDataGenerator
     {
         /// <summary>
         /// Supplements the data and returns the orignial list of months with addtional months
@@ -13,7 +13,7 @@ namespace eShopForecastModelsTrainer
         /// </summary>
         /// <param name="singleProductSeries">The original months of product data.</param>
         /// <returns></returns>
-        public static IEnumerable<ProductData> SupplementData (MLContext mlContext, IDataView productDataSeries)
+        public static IEnumerable<ProductData> SupplementData(MLContext mlContext, IDataView productDataSeries)
         {
             var singleProductSeries = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false);
 
@@ -74,7 +74,6 @@ namespace eShopForecastModelsTrainer
         static IEnumerable<ProductData> SupplementDataWithYear(IEnumerable<ProductData> singleProductSeries, float growth = 0.1f)
         {
             if (singleProductSeries.Count() < 12)
-            //if (singleProductSeries.Count() != 12)
             {
                 throw new NotImplementedException("fix this, currently only handles if there's already a full 12 months or more of data.");
             }

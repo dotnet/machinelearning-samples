@@ -1,5 +1,5 @@
-﻿using CommonHelpers;
-using eShopDashboard.Forecast;
+﻿using Common;
+using eShopForecast;
 using eShopDashboard.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;
@@ -32,7 +32,18 @@ namespace eShopDashboard.Controllers
             [FromQuery]float min, [FromQuery]float prev)
         {
             // Build product sample
-            var inputExample = new ProductData(productId, year, month, units, avg, count, max, min, prev);
+            var inputExample = new ProductData()
+            {
+                productId = productId,
+                year = year,
+                month = month,
+                units = units,
+                avg = avg,
+                count = count,
+                max = max,
+                min = min,
+                prev = prev
+            };
           
             ProductUnitRegressionPrediction nextMonthUnitDemandEstimation = null;
 

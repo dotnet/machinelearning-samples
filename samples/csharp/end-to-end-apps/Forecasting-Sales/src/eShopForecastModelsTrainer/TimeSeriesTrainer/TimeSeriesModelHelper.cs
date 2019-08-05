@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using eShopForecast;
 using eShopForecastModelsTrainer.Data;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;

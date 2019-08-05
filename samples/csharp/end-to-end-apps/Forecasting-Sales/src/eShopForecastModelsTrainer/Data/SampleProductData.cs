@@ -1,4 +1,6 @@
-﻿namespace eShopForecastModelsTrainer.Data
+﻿using eShopForecast;
+
+namespace eShopForecastModelsTrainer.Data
 {
     public static class SampleProductData
     {
