@@ -59,13 +59,13 @@ The sample shows two different ML tasks and algorithms that can be used for fore
 -  **Regression** using FastTreeTweedie Regression
 -  **Time Series** using Single Spectrum Analysis
 
-The **Regression** ML task is a supervised machine learning task that is used to predict the value of the **next** period (in this case the sales prediction) from a set of related features/variables.  **Regression** works best with linear data.
+The **Regression** ML task is a supervised machine learning task that is used to predict the value of the **next** period (in this case the sales prediction) from a set of related features/variables. **Regression** works best with linear data.
 
-The **Time Series** ML task is an estimation technique that can be used to forecast **multiple** periods in the future.  **Time Series** works well in scenarios that involve non-linear data where trends and patterns are difficult to distinguish.
+The **Time Series** ML task is an estimation technique that can be used to forecast **multiple** periods in the future. **Time Series** works well in scenarios that involve non-linear data where trends and patterns are difficult to distinguish.
 
 ### Solution
 
-To solve this problem, first we will build the ML models by training each model on existing data.  Next, we will evaluate how good it is.  Finally, we will consume the model to predict sales.
+To solve this problem, first we will build the ML models by training each model on existing data. Next, we will evaluate how good it is. Finally, we will consume the model to predict sales.
 
 Note that the **Regression** sample implements two independent models to forecast linear data:
 - Model to predict product's demand forecast for the next period (month)
@@ -79,7 +79,7 @@ When learning/researching the samples, you can focus choose to focus on one of t
 
 #### 1. Load the Dataset
 
-Both the **Regression** and **Time Series** samples start by loading data using **TextLoader**.  To use **TextLoader**, we must specify the type of the class that represents the data schema.  Our class type is **ProductData**.    
+Both the **Regression** and **Time Series** samples start by loading data using **TextLoader**. To use **TextLoader**, we must specify the type of the class that represents the data schema. Our class type is **ProductData**. 
 
 ```csharp
  public class ProductData
@@ -126,7 +126,7 @@ var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, ha
 
 ```
 
-In the following steps, we will build the pipeline transformations, specify which trainer/algorithm to use, evaluate the models, and test their predictions.  This is where the steps start to differ between the [**Regression**](#2-regression-create-the-pipeline) and [**Time Series**](#6-time-series-create-the-pipeline) samples - the remainder of this walkthrough each of these algorithms separately.
+In the following steps, we will build the pipeline transformations, specify which trainer/algorithm to use, evaluate the models, and test their predictions. This is where the steps start to differ between the [**Regression**](#2-regression-create-the-pipeline) and [**Time Series**](#6-time-series-create-the-pipeline) samples - the remainder of this walkthrough looks at each of these algorithms separately.
 
 
 #### 2. Regression: Create the Pipeline
@@ -161,7 +161,7 @@ var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFe
 
 #### 3. Regression: Evaluate the Model
 
-In this case, the **Regression** model is evaluated before training the model with a cross-validation approach.  This is to obtain metrics that indicate the accuracy of the model. 
+In this case, the **Regression** model is evaluated before training the model with a cross-validation approach. This is to obtain metrics that indicate the accuracy of the model. 
 
 ```csharp
 var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
@@ -187,9 +187,9 @@ using (var file = File.OpenWrite(outputModelPath))
 
 #### 5. Regression: Test the Prediction
 
-To create a prediction, load the **Regression** model from the **.zip** file.  
+To create a prediction, load the **Regression** model from the **.zip** file. 
 
-This sample uses the last month of a product's sample data to predict the unit sales in the next month.  
+This sample uses the last month of a product's sample data to predict the unit sales in the next month. 
 
 ```csharp
 ITransformer trainedModel;
@@ -228,14 +228,14 @@ This step shows how to create the pipeline that will later be used for training 
 
 Specifically, the **Single Spectrum Analysis (SSA)** trainer is the algorithm that is used. This algorithm uses the following parameters:
 - **outputColumnName**: This is the name of the column that will be used to store predictions. The column must be a vector of type **Single**. In a later step, we define a class named **ProductUnitTimeSeriesPrediction** that contains this output column.
-- **inputColumnName**: This is the name of the column that is being predicted/forecasted. The column contains a value at a timestamp in the time series and must be of type **Single**.  In our sample, we are predicting/forecasting product **units**.
-- **windowSize**:  This parameter is used to define a sliding window of time that is used by the algorithm to decompose the time series data into trend, seasonal, or noise components. Typically, you should start with a window size that is representative of the business cycle in your scenario.  In our sample, the product data is based on a 12 month cycle so we will select a window size that is a multiple of 12.  
+- **inputColumnName**: This is the name of the column that is being predicted/forecasted. The column contains a value at a timestamp in the time series and must be of type **Single**. In our sample, we are predicting/forecasting product **units**.
+- **windowSize**:  This parameter is used to define a sliding window of time that is used by the algorithm to decompose the time series data into trend, seasonal, or noise components. Typically, you should start with a window size that is representative of the business cycle in your scenario. In our sample, the product data is based on a 12 month cycle so we will select a window size that is a multiple of 12. 
 - **seriesLength**: TODO - Need guidance
 - **trainSize**: TODO - Need guidance
-- **horizon**: This parameter indicates the number of time periods to predict/forecast.  In our sample, we specify 2 to indicate that the next 2 months of product units will be predicated/forecasted.
-- **confidenceLevel**: This parameter indicates the likelihood the prediction/forecast value will fall within the specified interval bounds.  TODO - Need to confirm this is correct.  Typically, .95 is an acceptable starting point.
-- **confidenceLowerBoundColumn**: This is the name of the column that will be used to store the **lower** confidence interval bound for each forecasted value.  The **ProductUnitTimeSeriesPrediction** class also contains this output column.
-- **confidenceUpperBoundColumn**: This is the name of the column that will be used to store the **upper** confidence interval bound for each forecasted value.  The **ProductUnitTimeSeriesPrediction** class also contains this output column.
+- **horizon**: This parameter indicates the number of time periods to predict/forecast. In our sample, we specify 2 to indicate that the next 2 months of product units will be predicated/forecasted.
+- **confidenceLevel**: This parameter indicates the likelihood the prediction/forecast value will fall within the specified interval bounds. TODO - Need to confirm this is correct. Typically, .95 is an acceptable starting point.
+- **confidenceLowerBoundColumn**: This is the name of the column that will be used to store the **lower** confidence interval bound for each forecasted value. The **ProductUnitTimeSeriesPrediction** class also contains this output column.
+- **confidenceUpperBoundColumn**: This is the name of the column that will be used to store the **upper** confidence interval bound for each forecasted value. The **ProductUnitTimeSeriesPrediction** class also contains this output column.
 
 Specifically, we add the following trainer to the pipeline:
 
@@ -283,11 +283,11 @@ TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecas
 forecastEngine.CheckPoint(mlContext, outputModelPath);
 ```
 
-You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model.  **Time Series** is different because it requires that the model's state to be continuously updated with new observed values as predictions are made.  As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis.  This will be shown in further detail in a later step of this sample.  For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
+You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model. **Time Series** is different because it requires that the model's state to be continuously updated with new observed values as predictions are made. As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis. This will be shown in further detail in a later step of this sample. For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
 
 #### 9. Time Series: Test the Prediction
 
-To get a prediction, load the **Time Series** model from the **.zip** file and create a new **TimeSeriesPredictionEngine**.  After this, we can get a prediction.
+To get a prediction, load the **Time Series** model from the **.zip** file and create a new **TimeSeriesPredictionEngine**. After this, we can get a prediction.
 
 ```csharp
 // Load the forecast engine that has been previously saved.
@@ -320,16 +320,16 @@ Remember that when we created the SSA forecasting trainer using the **ForecastBy
 - **horizon**: 2
 - **confidenceLevel**: .95f
 
-As a result of this, when we call the **Predict** method using the loaded model, the **ForecastedProductUnits** vector will contain **two** forecasted values.  Similarly, the **ConfidenceLowerBound** and **ConfidenceUpperBound** vectors will each contain **two** values based on the specified **confidenceLevel**.
+As a result of this, when we call the **Predict** method using the loaded model, the **ForecastedProductUnits** vector will contain **two** forecasted values. Similarly, the **ConfidenceLowerBound** and **ConfidenceUpperBound** vectors will each contain **two** values based on the specified **confidenceLevel**.
 
 You may notice that the **Predict** method has several overloads that accept the following parameters:
 - **horizon**
 - **confidenceLevel**
 - **ProductData example**
 
-This allows you to specify new values for **horizon** and **confidenceLevel** each time that you do a prediction. Also, you can pass in new observed **ProductData** values for the time series using the **example** parameter.  
+This allows you to specify new values for **horizon** and **confidenceLevel** each time that you do a prediction. Also, you can pass in new observed **ProductData** values for the time series using the **example** parameter. 
 
-When calling **Predict** with new observed **ProductData** values, this updates the model state with these data points in the time series.  You may then choose to save this model to disk by calling the **CheckPoint** method.
+When calling **Predict** with new observed **ProductData** values, this updates the model state with these data points in the time series. You may then choose to save this model to disk by calling the **CheckPoint** method.
 
 This is also seen in our sample:
 
