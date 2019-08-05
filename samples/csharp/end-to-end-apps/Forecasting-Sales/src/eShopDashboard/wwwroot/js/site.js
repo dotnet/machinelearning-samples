@@ -61,8 +61,8 @@ function setUpProductDescriptionTypeahead(typeaheadSelector = "#remote .typeahea
         });
 }
 
-function manualProductSelection(data) {
-    updateProductInfo(data);
+function manualProductSelection(product) {
+    updateProductInfo(product);
 
     productId = product.id;
     description = product.description;
