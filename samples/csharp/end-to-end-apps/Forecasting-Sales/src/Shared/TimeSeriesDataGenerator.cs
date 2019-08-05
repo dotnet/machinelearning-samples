@@ -1,5 +1,6 @@
 ﻿using Microsoft.ML;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,13 +11,17 @@ namespace eShopForecast
         /// <summary>
         /// Supplements the data and returns the orignial list of months with addtional months
         /// prepended to total a full 36 months.
-        /// </summary>
-        /// <param name="singleProductSeries">The original months of product data.</param>
-        /// <returns></returns>
         public static IEnumerable<ProductData> SupplementData(MLContext mlContext, IDataView productDataSeries)
         {
-            var singleProductSeries = mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false);
+            return SupplementData(mlContext, mlContext.Data.CreateEnumerable<ProductData>(productDataSeries, false));
+        }
 
+
+        /// <summary>
+        /// Supplements the data and returns the orignial list of months with addtional months
+        /// prepended to total a full 36 months.
+        public static IEnumerable<ProductData> SupplementData(MLContext mlContext, IEnumerable<ProductData> singleProductSeries)
+        {
             var supplementedProductSeries = new List<ProductData>(singleProductSeries);
 
             // Get the first month in series

@@ -61,11 +61,6 @@ function setUpProductDescriptionTypeahead(typeaheadSelector = "#remote .typeahea
         });
 }
 
-function manualProductSelection(product) {
-    updateProductInfo(product);
-    getProductData(product, "TimeSeries");
-}
-
 function updateProductInfo(data) {
     $("#product").removeClass("d-none");
     $("#productName").text(data.description);

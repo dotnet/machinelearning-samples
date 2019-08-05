@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using eShopDashboard.Infrastructure.Data.Ordering;
+using eShopForecast;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -69,6 +70,18 @@ namespace eShopDashboard.Queries
                 .GroupBy(k => k.ProductId, g => new { g.Year, g.Month }, (k, g) => new { ProductId = k, count = g.Count() })
                 .Cast<dynamic>()
                 .ToArrayAsync();
+        }
+
+        public async Task<IEnumerable<ProductData>> GetProductDataAsync(string productId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var productHistory = await connection.QueryAsync<ProductData>(OrderingQueriesText.ProductHistory(productId), new { productId });
+                    
+                return productHistory.Where(p => p.next != 0 && p.prev != 0);
+            }
         }
     }
 }

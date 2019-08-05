@@ -48,9 +48,6 @@
     <None Update="Forecast\ModelFiles\country_month_fastTreeTweedie.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Forecast\ModelFiles\product988_month_timeSeriesSSA.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Forecast\ModelFiles\product_month_fastTreeTweedie.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
