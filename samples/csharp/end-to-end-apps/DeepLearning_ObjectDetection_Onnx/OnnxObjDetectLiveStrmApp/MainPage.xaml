@@ -10,6 +10,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <Controls:CameraPreview x:Name="CameraPreview" Grid.Row="0" />
+        <Canvas x:Name="CameraCanvas" Grid.Row="0" />
+        <TextBlock x:Name="ObjectBlockDescription" Grid.Row="1" />
     </Grid>
 </Page>
