@@ -22,9 +22,9 @@ namespace CreditCardFraudDetection.Common.DataModels
             // There is currently an issue where PredictedLabel is always set to true
             // Due to this issue, we'll manually choose the treshold that will indicate an anomaly
             // Issue: https://github.com/dotnet/machinelearning/issues/3990
-            Console.WriteLine($"Predicted Label: {Score > 0.2f}  (Score: {Score})");
+            //Console.WriteLine($"Predicted Label: {Score > 0.2f}  (Score: {Score})");
 
-            //Console.WriteLine($"Predicted Label: {PredictedLabel}  (Score: {Score})");
+            Console.WriteLine($"Predicted Label: {PredictedLabel}  (Score: {Score})");
         }
     }
 }
