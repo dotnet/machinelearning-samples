@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0         | Dynamic API | Up-to-date | Console app | .csv files | Shampoo  sales Spike detection| Time Series - Anomaly Detection | IID Spike Detection and IID Change point Detection |
+| v1.3.1         | Dynamic API | Up-to-date | Console app | .csv files | Shampoo  sales Spike detection| Time Series - Anomaly Detection | IID Spike Detection and IID Change point Detection |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect **spikes** and **Change points** in shampoo sales. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
 
