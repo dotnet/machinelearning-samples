@@ -1,9 +1,7 @@
 ﻿using Microsoft.ML.Transforms.Image;
 using System.Drawing;
-using Windows.Graphics.Imaging;
-using Windows.Media;
 
-namespace OnnxObjectDetectionLiveStreamApp
+namespace OnnxObjectDetection
 {
     public class ImageInputData
     {

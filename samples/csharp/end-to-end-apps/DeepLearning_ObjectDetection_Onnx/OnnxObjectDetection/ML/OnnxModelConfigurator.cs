@@ -3,7 +3,7 @@ using Microsoft.ML.Transforms.Image;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OnnxObjectDetectionLiveStreamApp.MLModel
+namespace OnnxObjectDetection
 {
     public class OnnxModelConfigurator
     {

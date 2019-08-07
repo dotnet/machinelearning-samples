@@ -122,12 +122,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ML\DataModels\ImageInputData.cs" />
-    <Compile Include="ML\DataModels\ImageObjectPrediction.cs" />
-    <Compile Include="ML\OnnxModelConfigurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="YoloParse\DimensionsBase.cs" />
-    <Compile Include="YoloParse\YoloBoundingBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -176,6 +171,12 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>5.1.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OnnxObjectDetection\OnnxObjectDetection.csproj">
+      <Project>{7b159949-6d64-41b2-a30f-1952fa8eba3e}</Project>
+      <Name>OnnxObjectDetection</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

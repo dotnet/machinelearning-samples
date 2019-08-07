@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace OnnxObjectDetectionLiveStreamApp
+namespace OnnxObjectDetection
 {
     public class ImageObjectPrediction
     {

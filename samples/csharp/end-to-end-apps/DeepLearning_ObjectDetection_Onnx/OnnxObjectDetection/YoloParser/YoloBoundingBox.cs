@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace OnnxObjectDetectionLiveStreamApp
+namespace OnnxObjectDetection
 {
     public class BoundingBoxDimensions : DimensionsBase { }
 

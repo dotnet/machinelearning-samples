@@ -1,4 +1,4 @@
-﻿namespace OnnxObjectDetectionLiveStreamApp
+﻿namespace OnnxObjectDetection
 {
     public class DimensionsBase
     {
