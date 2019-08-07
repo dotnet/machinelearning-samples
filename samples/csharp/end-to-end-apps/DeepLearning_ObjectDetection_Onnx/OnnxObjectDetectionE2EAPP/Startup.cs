@@ -9,7 +9,7 @@ using Microsoft.Extensions.ML;
 using OnnxObjectDetectionE2EAPP.Services;
 using System.IO;
 using OnnxObjectDetectionE2EAPP.Utilities;
-using OnnxObjectDetectionE2EAPP.MLModel;
+using OnnxObjectDetection;
 
 namespace OnnxObjectDetectionE2EAPP
 {

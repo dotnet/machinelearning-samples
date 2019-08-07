@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using OnnxObjectDetection;
 
 namespace OnnxObjectDetectionE2EAPP
 {

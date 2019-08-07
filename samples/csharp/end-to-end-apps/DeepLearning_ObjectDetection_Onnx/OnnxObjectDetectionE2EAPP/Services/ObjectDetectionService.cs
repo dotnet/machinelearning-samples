@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using OnnxObjectDetectionE2EAPP.MLModel;
+using OnnxObjectDetection;
 
 namespace OnnxObjectDetectionE2EAPP.Services
 {
