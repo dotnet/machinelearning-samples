@@ -100,6 +100,8 @@ namespace OnnxObjectDetectionLiveStreamApp
             VideoFrame inputFrame = VideoFrame.CreateWithSoftwareBitmap(softBitmap);
 
             ImageInputData frame = new ImageInputData();
+            //frame.Image = softBitmap; TODO: There is a mismatch of types between SoftwareBitmap and 
+            //System.Drawing.Bitmap; however, when creating\saving the model, i get an ML.NET exception if the ImageInputData uses anything other than System.Drawing.Bitmap.
             DetectObjectsUsingModel(frame);
             
             frameCount++;
