@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,13 +14,23 @@ using System.Windows.Shapes;
 namespace OnnxObjectDetectionStreamingApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for TestDrawing.xaml
     /// </summary>
-    public partial class MainWindow : NavigationWindow
+    public partial class TestDrawing : Page
     {
-        public MainWindow()
+        public TestDrawing()
         {
             InitializeComponent();
+
+            var rect = new Rectangle
+            {
+                Stroke = new SolidColorBrush(Colors.Red),
+                Fill = new SolidColorBrush(Colors.Transparent),
+                Width = 200,
+                Height = 200
+            };
+
+            DrawingCanvas.Children.Add(rect);
         }
     }
 }
