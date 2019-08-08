@@ -151,6 +151,8 @@ namespace OnnxObjectDetectionStreamingApp
                 width = (uint)originalWidth * width / OnnxModelConfigurator.ImageSettings.imageWidth;
                 height = (uint)originalHeight * height / OnnxModelConfigurator.ImageSettings.imageHeight;
 
+                var boxColor = ConvertColor(box.BoxColor);
+
                 var description = $"{box.Label} ({(box.Confidence * 100).ToString("0")}%)";
 
                 var objBox = new Rectangle
@@ -158,7 +160,7 @@ namespace OnnxObjectDetectionStreamingApp
                     Width = width,
                     Height = height,
                     Fill = new SolidColorBrush(Colors.Transparent),
-                    Stroke = new SolidColorBrush(Colors.Green),
+                    Stroke = new SolidColorBrush(boxColor),
                     StrokeThickness = 2.0,
                     Margin = new Thickness(x, y, 0, 0)
                 };
@@ -177,7 +179,7 @@ namespace OnnxObjectDetectionStreamingApp
                 {
                     Width = 134,
                     Height = 29,
-                    Fill = new SolidColorBrush(Colors.Green),
+                    Fill = new SolidColorBrush(boxColor),
                     Margin = new Thickness(x, y, 0, 0)
                 };
 
@@ -198,6 +200,11 @@ namespace OnnxObjectDetectionStreamingApp
                 return true;
             }
             return false;
+        }
+
+        private System.Windows.Media.Color ConvertColor(System.Drawing.Color drawingColor)
+        {
+            return System.Windows.Media.Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
         }
     }
 }
