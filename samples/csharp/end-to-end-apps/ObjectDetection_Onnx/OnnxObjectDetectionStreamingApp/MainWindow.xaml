@@ -5,15 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OnnxObjectDetectionStreamingApp"
         mc:Ignorable="d"
-        
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="480" Width="640">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="132"/>
-        </Grid.RowDefinitions>
-        <MediaElement x:Name="WebCamMedia" Grid.RowSpan="1" LoadedBehavior="Manual" />
-        <Image x:Name="WebCamImage" HorizontalAlignment="Left" Height="100" Margin="175,33.96,0,0" Grid.Row="2" VerticalAlignment="Top" Width="100"/>
+        <Image x:Name="WebCamImage" />
     </Grid>
 </Window>
