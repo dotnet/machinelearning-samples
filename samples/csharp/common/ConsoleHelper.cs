@@ -223,13 +223,21 @@ namespace Common
                                                         .Take(numberOfRows).ToList();
 
             // print to console the peeked rows
+
+            int currentRow = 0;
             someColumnData.ForEach(row => {
+                                            currentRow++;
                                             String concatColumn = String.Empty;
                                             foreach (float f in row)
                                             {
                                                 concatColumn += f.ToString();                                              
                                             }
+
+                                            Console.WriteLine();
+                                            string rowMsg = string.Format("**** Row {0} with '{1}' field value ****", currentRow, columnName);
+                                            Console.WriteLine(rowMsg);
                                             Console.WriteLine(concatColumn);
+                                            Console.WriteLine();
                                           });
         }
 
