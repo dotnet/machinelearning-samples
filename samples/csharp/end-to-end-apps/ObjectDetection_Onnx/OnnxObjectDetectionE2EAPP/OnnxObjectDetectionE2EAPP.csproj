@@ -44,9 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ML\OnnxModel\TinyYolo2_model.onnx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="ML\MLNETModel\ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

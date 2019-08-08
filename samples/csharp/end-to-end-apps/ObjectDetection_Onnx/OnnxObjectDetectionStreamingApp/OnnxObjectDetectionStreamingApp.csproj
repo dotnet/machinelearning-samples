@@ -18,10 +18,4 @@
     <ProjectReference Include="..\OnnxObjectDetection\OnnxObjectDetection.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Assets\TinyYolo2_model.onnx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

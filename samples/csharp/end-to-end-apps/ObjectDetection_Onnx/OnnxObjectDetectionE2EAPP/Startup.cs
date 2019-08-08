@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OnnxObjectDetectionE2EAPP.Infrastructure;
 using Microsoft.Extensions.ML;
+using OnnxObjectDetectionE2EAPP.Infrastructure;
 using OnnxObjectDetectionE2EAPP.Services;
-using System.IO;
 using OnnxObjectDetectionE2EAPP.Utilities;
 using OnnxObjectDetection;
 
@@ -21,8 +20,8 @@ namespace OnnxObjectDetectionE2EAPP
         {
             Configuration = configuration;
 
-            _onnxModelFilePath = GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
-            _mlnetModelFilePath = GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
+            _onnxModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
+            _mlnetModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
 
             OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(_onnxModelFilePath);
 
@@ -67,14 +66,5 @@ namespace OnnxObjectDetectionE2EAPP
 
             app.UseMvc();
         }       
-
-        public static string GetAbsolutePath(string relativePath)
-        {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-            string assemblyFolderPath = _dataRoot.Directory.FullName;
-
-            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
-            return fullPath;
-        }
     }
 }

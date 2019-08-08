@@ -49,10 +49,11 @@ namespace OnnxObjectDetectionStreamingApp
             var onnxModel = "TinyYolo2_model.onnx";
             var mlNetModelFile = "TinyYoloModel.zip";
 
-            var assetsUri = Path.Combine(Environment.CurrentDirectory, @"Assets");
+            //var assetsUri = Path.Combine(Environment.CurrentDirectory, @"Assets");
+            var modelDirectory = Path.Combine(Environment.CurrentDirectory, @"ML\OnnxModel");
 
-            var onnxPath = Path.Combine(assetsUri, onnxModel);
-            var modelPath = Path.Combine(assetsUri, mlNetModelFile);
+            var onnxPath = Path.Combine(modelDirectory, onnxModel);
+            var modelPath = Path.Combine(modelDirectory, mlNetModelFile);
 
             OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(onnxPath);
             onnxModelConfigurator.SaveMLNetModel(modelPath);
