@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.TensorFlow" Version="$(MicrosoftMLPreviewVersion)" />
+    <PackageReference Include="Microsoft.ML.TensorFlow" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
 
 </Project>
