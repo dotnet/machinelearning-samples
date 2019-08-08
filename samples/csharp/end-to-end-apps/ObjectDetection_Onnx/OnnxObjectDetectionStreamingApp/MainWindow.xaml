@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="480" Width="640">
     <Grid>
-        <Image x:Name="WebCamImage" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Image x:Name="WebCamImage" Grid.Row="0" />
+        <Canvas x:Name="WebCamCanvas" Grid.Row="0" />
+        <TextBlock x:Name="ObjectBlockDescription" Grid.Row="1" />
     </Grid>
 </Window>

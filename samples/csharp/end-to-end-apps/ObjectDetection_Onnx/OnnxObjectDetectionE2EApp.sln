@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnnxObjectDetectionE2EAPP", "OnnxObjectDetectionE2EAPP\OnnxObjectDetectionE2EAPP.csproj", "{4A91FD3C-80FC-40E9-9A0B-0F832B313C24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnnxObjDetectLiveStrmApp", "OnnxObjDetectLiveStrmApp\OnnxObjDetectLiveStrmApp.csproj", "{6778C039-BBF9-4B19-95C0-983A337006E5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnnxObjectDetection", "OnnxObjectDetection\OnnxObjectDetection.csproj", "{7B159949-6D64-41B2-A30F-1952FA8EBA3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnnxObjectDetectionStreamingApp", "OnnxObjectDetectionStreamingApp\OnnxObjectDetectionStreamingApp.csproj", "{30411590-5517-4E40-8AC6-88E916B66B09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnnxObjectDetectionStreamingApp", "OnnxObjectDetectionStreamingApp\OnnxObjectDetectionStreamingApp.csproj", "{30411590-5517-4E40-8AC6-88E916B66B09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,32 +43,6 @@ Global
 		{4A91FD3C-80FC-40E9-9A0B-0F832B313C24}.Release|x64.Build.0 = Release|Any CPU
 		{4A91FD3C-80FC-40E9-9A0B-0F832B313C24}.Release|x86.ActiveCfg = Release|Any CPU
 		{4A91FD3C-80FC-40E9-9A0B-0F832B313C24}.Release|x86.Build.0 = Release|Any CPU
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|ARM.ActiveCfg = Debug|ARM
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|ARM.Build.0 = Debug|ARM
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|ARM.Deploy.0 = Debug|ARM
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|ARM64.Build.0 = Debug|ARM64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|x64.ActiveCfg = Debug|x64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|x64.Build.0 = Debug|x64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|x64.Deploy.0 = Debug|x64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|x86.ActiveCfg = Debug|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|x86.Build.0 = Debug|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Debug|x86.Deploy.0 = Debug|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|Any CPU.ActiveCfg = Release|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|ARM.ActiveCfg = Release|ARM
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|ARM.Build.0 = Release|ARM
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|ARM.Deploy.0 = Release|ARM
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|ARM64.ActiveCfg = Release|ARM64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|ARM64.Build.0 = Release|ARM64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|ARM64.Deploy.0 = Release|ARM64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|x64.ActiveCfg = Release|x64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|x64.Build.0 = Release|x64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|x64.Deploy.0 = Release|x64
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|x86.ActiveCfg = Release|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|x86.Build.0 = Release|x86
-		{6778C039-BBF9-4B19-95C0-983A337006E5}.Release|x86.Deploy.0 = Release|x86
 		{7B159949-6D64-41B2-A30F-1952FA8EBA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B159949-6D64-41B2-A30F-1952FA8EBA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B159949-6D64-41B2-A30F-1952FA8EBA3E}.Debug|ARM.ActiveCfg = Debug|Any CPU
