@@ -1,8 +1,8 @@
 # Object Detection - Asp.Net cpre Web/Service Sample
 
-| ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
+| ML.NET version | API type    | Status     | App Type    | Data type   | Scenario         | ML Task       | Algorithms            |
+|----------------|-------------|------------|-------------|-------------|------------------|---------------|-----------------------|
+| v1.3.1         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | Tiny Yolo2 ONNX model |
 
 ## Problem 
 Object detection is one of the classical problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. 
@@ -18,10 +18,10 @@ Alternatively you can try uploading your own images as shown below.
 ![](./docs/Screenshots/FileUpload.gif)
  
 ## DataSet
-There are two data sources: the `tsv` file and the image files.  The [tsv file](./OnnxObjectDetectionE2EAPP/TestImages/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
+There are two data sources: the `tsv` file and the image files.  The [tsv file](./OnnxObjectDetectionWeb/TestImages/tags.tsv) contains two columns: the first one is defined as `ImagePath` and the second one is the `Label` corresponding to the image. As you can observe, the file does not have a header row, and looks like this:
 
 
-The images are located in the [TestImages](./OnnxObjectDetectionE2EAPP/TestImages) folder. These images have been downloaded from internet.
+The images are located in the [TestImages](./OnnxObjectDetectionWeb/TestImages) folder. These images have been downloaded from internet.
 
 For example, below are urls from which the iamges downloaded from:  
 
@@ -124,7 +124,7 @@ var model = pipeline.Fit(dataView);
 
 After the model is configured, we need to save the model, load the saved model and the pass the image to the model to detect objects.
 When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by `YoloOutputParser` class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. 
-```
+```csharp
  var probs = model.Predict(imageInputData).PredictedLabels;
  IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
  filteredBoxes = _parser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
@@ -133,7 +133,7 @@ When obtaining the prediction, we get an array of floats in the property `Predic
 # Draw bounding boxes around detected objects in Image.
 
 The final step is we draw the bounding boxes around the objects using Paint API and return the image to the browser and it is displayed on the browser
-
+```csharp
 var img = _objectDetectionService.DrawBoundingBox(imageFilePath);
 
 using (MemoryStream m = new MemoryStream())
@@ -146,7 +146,7 @@ using (MemoryStream m = new MemoryStream())
    var result = new Result { imageString = base64String };
    return result;
 }
-
+```
 **Note** The Tiny Yolo2 model is not having much accuracy compare to full YOLO2 model. As this is a sample program we are using Tiny version of Yolo model i.e Tiny_Yolo2
 
 
