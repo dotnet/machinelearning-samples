@@ -61,7 +61,7 @@ namespace Common
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*       Metrics for {name} anomaly detection model      ");
             Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"*       Area Under Curve:                       {metrics.AreaUnderRocCurve:P2}");
+            Console.WriteLine($"*       Area Under ROC Curve:                       {metrics.AreaUnderRocCurve:P2}");
             Console.WriteLine($"*       Detection rate at false positive count: {metrics.DetectionRateAtFalsePositiveCount}");
             Console.WriteLine($"************************************************************");
         }

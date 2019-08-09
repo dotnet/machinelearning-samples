@@ -33,9 +33,9 @@ https://snap.stanford.edu/data/amazon0302.html
 
 DataSet's Citation information can be found [here](/ProductRecommender/Data/DATASETS-CITATION.txt)
 
-## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
+## Algorithm - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
+The algorithm for this recommendation task is Matrix Factorization, which is a supervised machine learning algorithm performing collaborative filtering. 
 
 ## Solution
 

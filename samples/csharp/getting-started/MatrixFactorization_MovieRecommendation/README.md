@@ -25,9 +25,9 @@ With ML.NET we support the following three recommendation scenarios, depending u
 The original data comes from MovieLens Dataset:
 http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
 
-## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
+## Algorithm - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
+The algorithm for this recommendation task is Matrix Factorization, which is a supervised machine learning algorithm performing collaborative filtering. 
 
 ## Solution
 
