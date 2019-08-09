@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0          | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v1.3.1          | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 

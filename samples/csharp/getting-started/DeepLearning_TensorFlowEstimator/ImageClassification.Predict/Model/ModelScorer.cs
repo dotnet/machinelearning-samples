@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using ImageClassification.ImageData;
+using ImageClassification.DataModels;
 using System.IO;
 using Microsoft.ML;
 using static ImageClassification.Model.ConsoleHelpers;
@@ -31,9 +31,9 @@ namespace ImageClassification.Model
             ITransformer loadedModel = mlContext.Model.Load(modelLocation,out var modelInputSchema);
 
             // Make prediction function (input = ImageNetData, output = ImageNetPrediction)
-            var predictor = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(loadedModel);
+            var predictor = mlContext.Model.CreatePredictionEngine<ImageDataForScoring, ImagePrediction>(loadedModel);
             // Read csv file into List<ImageNetData>
-            var imageListToPredict = ImageNetData.ReadFromCsv(dataLocation, imagesFolder).ToList();
+            var imageListToPredict = ImageDataForScoring.ReadFromCsv(dataLocation, imagesFolder).ToList();
 
             ConsoleWriteHeader("Making classifications");
             // There is a bug (https://github.com/dotnet/machinelearning/issues/1138), 

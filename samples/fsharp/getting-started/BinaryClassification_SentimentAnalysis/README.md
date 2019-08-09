@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Binary classification | Linear Classification |
+| v1.3.1           | Dynamic API | README.md updated | Console app | .tsv files | Sentiment Analysis | Two-class  classification | Linear Classification |
 
 ------------------------------------
 

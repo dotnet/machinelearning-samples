@@ -2,8 +2,11 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using ImageClassification.ImageData;
+using ImageClassification.DataModels;
 using static ImageClassification.Model.ConsoleHelpers;
+using Common;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ImageClassification.Model
 {
@@ -11,10 +14,10 @@ namespace ImageClassification.Model
     {
         private readonly string dataLocation;
         private readonly string imagesFolder;
-        private readonly string inputModelLocation;
-        private readonly string outputModelLocation;
+        private readonly string inputTensorFlowModelFilePath;
+        private readonly string outputMlNetModelFilePath;
         private readonly MLContext mlContext;
-        private static string LabelTokey = nameof(LabelTokey);
+        private static string LabelAsKey = nameof(LabelAsKey);
         private static string ImageReal = nameof(ImageReal);
         private static string PredictedLabelValue = nameof(PredictedLabelValue);
 
@@ -22,12 +25,12 @@ namespace ImageClassification.Model
         {
             this.dataLocation = dataLocation;
             this.imagesFolder = imagesFolder;
-            this.inputModelLocation = inputModelLocation;
-            this.outputModelLocation = outputModelLocation;
+            this.inputTensorFlowModelFilePath = inputModelLocation;
+            this.outputMlNetModelFilePath = outputModelLocation;
             mlContext = new MLContext(seed: 1);
         }
 
-        private struct ImageNetSettings
+        private struct ImageSettingsForTFModel
         {
             public const int imageHeight = 224;
             public const int imageWidth = 224;
@@ -38,55 +41,67 @@ namespace ImageClassification.Model
 
         public void BuildAndTrain()
         {
-            var featurizerModelLocation = inputModelLocation;
-
             ConsoleWriteHeader("Read model");
-            Console.WriteLine($"Model location: {featurizerModelLocation}");
+            Console.WriteLine($"Model location: {inputTensorFlowModelFilePath}");
             Console.WriteLine($"Images folder: {imagesFolder}");
             Console.WriteLine($"Training file: {dataLocation}");
-            Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight}), image mean: {ImageNetSettings.mean}");
+            Console.WriteLine($"Default parameters: image size=({ImageSettingsForTFModel.imageWidth},{ImageSettingsForTFModel.imageHeight}), image mean: {ImageSettingsForTFModel.mean}");
 
+            // 1. Load images information (filenames and labels) in IDataView
+            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
 
+            // 2. Load images in-memory while applying image transformations 
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelAsKey, inputColumnName: "Label")
+                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "image_object", imageFolder: imagesFolder, inputColumnName: nameof(DataModels.ImageData.ImageFileName)))
+                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image_object_resized", imageWidth: ImageSettingsForTFModel.imageWidth, imageHeight: ImageSettingsForTFModel.imageHeight, inputColumnName: "image_object"))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", inputColumnName: "image_object_resized", interleavePixelColors: ImageSettingsForTFModel.channelsLast, offsetImage: ImageSettingsForTFModel.mean))
+                            .Append(mlContext.Model.LoadTensorFlowModel(inputTensorFlowModelFilePath).
+                                 ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2_pre_activation" }, inputColumnNames: new[] { "input" }, addBatchDimensionInput: true));
+                                // Input and output column names have to coincide with the input and output tensor names of the TensorFlow model
+                                // You can check out those tensor names by opening the Tensorflow .pb model with a visual tool like Netron: https://github.com/lutzroeder/netron
+                                // TF .pb model --> Softmax node --> INPUTS --> input --> id: "input" 
+                                // TF .pb model --> input node --> INPUTS --> logits --> id: "softmax2_pre_activation" 
 
-            var data = mlContext.Data.LoadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: false);
+            // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations 
+            ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 2);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "softmax2_pre_activation", trainingDataView, dataProcessPipeline, 2);
 
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:"Label")
-                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "input", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath)))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "input", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "input"))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", interleavePixelColors: ImageNetSettings.channelsLast, offsetImage: ImageNetSettings.mean))
-                            .Append(mlContext.Model.LoadTensorFlowModel(featurizerModelLocation).
-                                 ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2_pre_activation" }, inputColumnNames: new[] { "input" }, addBatchDimensionInput: true))
-                            .Append(mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName:LabelTokey, featureColumnName:"softmax2_pre_activation"))
-                            .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue,"PredictedLabel"))
-                            .AppendCacheCheckpoint(mlContext);
+            // 3. Set the training algorithm and convert back the key to the categorical values                            
+            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "softmax2_pre_activation");
+            var trainingPipeline = dataProcessPipeline.Append(trainer)
+                                                      .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));                                                      
 
-           
-            // Train the model
-            ConsoleWriteHeader("Training classification model");
-            ITransformer model = pipeline.Fit(data);
+            // 4. Train the model
+            ConsoleWriteHeader("Training the classification model");
+            ITransformer model = trainingPipeline.Fit(trainingDataView);
 
-            // Process the training data through the model
+            // 5. Make bulk predictions and calculate quality metrics
+            ConsoleWriteHeader("Create Predictions and Evaluate the model quality");
+            //TO DO: 
+            // Accuracy is currently 1 because we're testing/evaluating with the same image-set used for training...
+            // Use a larger image-set and seggregate a training set and a test set so test images have not been used for training
+            IDataView predictionsDataView = model.Transform(trainingDataView);
+
             // This is an optional step, but it's useful for debugging issues
-            var trainData = model.Transform(data);
-            var loadedModelOutputColumnNames = trainData.Schema
+            var loadedModelOutputColumnNames = predictionsDataView.Schema
                 .Where(col => !col.IsHidden).Select(col => col.Name);
-            var trainData2 = mlContext.Data.CreateEnumerable<ImageNetPipeline>(trainData, false, true).ToList();
-            trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
-            // Get some performance metric on the model using training data            
+            // 5.1 Show the predictions
+            List<ImageWithPipelineFeatures> predictions = mlContext.Data.CreateEnumerable<ImageWithPipelineFeatures>(predictionsDataView, false, true).ToList();
+            predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImageFileName, pred.PredictedLabelValue, pred.Score.Max()));
+
+            // 5.2 Show the performance metrics for the multi-class classification            
             var classificationContext = mlContext.MulticlassClassification;
             ConsoleWriteHeader("Classification metrics");
-            var metrics = classificationContext.Evaluate(trainData, labelColumnName: LabelTokey, predictedLabelColumnName: "PredictedLabel");
-            Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
-            Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
+            var metrics = classificationContext.Evaluate(predictionsDataView, labelColumnName: LabelAsKey, predictedLabelColumnName: "PredictedLabel");
+            ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
-            // Save the model to assets/outputs
+            // 6. Save the model to assets/outputs
             ConsoleWriteHeader("Save model to local file");
-            ModelHelpers.DeleteAssets(outputModelLocation);
+            ModelHelpers.DeleteAssets(outputMlNetModelFilePath);
 
-            mlContext.Model.Save(model, trainData.Schema, outputModelLocation);
-
-            Console.WriteLine($"Model saved: {outputModelLocation}");
+            mlContext.Model.Save(model, predictionsDataView.Schema, outputMlNetModelFilePath);
+            Console.WriteLine($"Model saved: {outputMlNetModelFilePath}");
         }
 
     }

@@ -5,7 +5,7 @@
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Up-to-date | Blazor / ASP.NET Core 3.0 Preview 6 | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
+| v1.3.1           | Up-to-date | Blazor / ASP.NET Core 3.0 Preview 6 | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
 
 # Goal
 

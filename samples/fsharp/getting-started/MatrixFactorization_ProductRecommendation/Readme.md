@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|v1.2.0   | Dynamic API | Up-to-date | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
+|v1.3.1   | Dynamic API | Up-to-date | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
 
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
