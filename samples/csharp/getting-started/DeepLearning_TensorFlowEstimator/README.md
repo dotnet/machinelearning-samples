@@ -44,7 +44,7 @@ Building the model includes the following steps:
 Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageNetData. 
 
 ```csharp
-public class ImageNetData
+public class ImageDataForScoring
     {
         [LoadColumn(0)]
         public string ImagePath;
@@ -52,11 +52,11 @@ public class ImageNetData
         [LoadColumn(1)]
         public string Label;
 
-        public static IEnumerable<ImageNetData> ReadFromCsv(string file, string folder)
+        public static IEnumerable<ImageDataForScoring> ReadFromCsv(string file, string folder)
         {
             return File.ReadAllLines(file)
              .Select(x => x.Split('\t'))
-             .Select(x => new ImageNetData()
+             .Select(x => new ImageDataForScoring()
              {
                  ImagePath = Path.Combine(folder,x[0]),
                  Label = x[1],
@@ -67,27 +67,30 @@ public class ImageNetData
 Load the training data using Text loader
 
 ```csharp
-var data = mlContext.Data.LoadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: false);
+IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
 ```
 
 The following step is to define the estimator pipe. Usually, when dealing with deep neural networks, you must adapt the images to the format expected by the network. This is the reason images are resized and then transformed (mainly, pixel values are normalized across all R,G,B channels).
 
 ```csharp
-var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:"Label")
-                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "input", imageFolder: imagesFolder, inputColumnName: nameof(ImageNetData.ImagePath)))
-                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "input", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "input"))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", interleavePixelColors: ImageNetSettings.channelsLast, offsetImage: ImageNetSettings.mean))
-                            .Append(mlContext.Model.LoadTensorFlowModel(featurizerModelLocation).
-                                 ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2_pre_activation" }, inputColumnNames: new[] { "input" }, addBatchDimensionInput: true))
-                            .Append(mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName:LabelTokey, featureColumnName:"softmax2_pre_activation"))
-                            .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue,"PredictedLabel"))
-                            .AppendCacheCheckpoint(mlContext);
+var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelAsKey, inputColumnName: "Label")
+                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "image_object", imageFolder: imagesFolder, inputColumnName: nameof(DataModels.ImageData.ImageFileName)))
+                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image_object_resized", imageWidth: ImageSettingsForTFModel.imageWidth, imageHeight: ImageSettingsForTFModel.imageHeight, inputColumnName: "image_object"))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", inputColumnName: "image_object_resized", interleavePixelColors: ImageSettingsForTFModel.channelsLast, offsetImage: ImageSettingsForTFModel.mean))
+                            .Append(mlContext.Model.LoadTensorFlowModel(inputTensorFlowModelFilePath)
+                            .ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2_pre_activation" }, inputColumnNames: new[] { "input" }, addBatchDimensionInput: true));
+                                 
+var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "softmax2_pre_activation");
+
+var trainingPipeline = dataProcessPipeline
+                            .Append(trainer)
+                            .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));
 ```
 
 ### 2. Train model
 In order to begin the training execute `Fit` on the built pipeline:
 ```csharp 
-  ITransformer model = pipeline.Fit(data);
+  ITransformer model = trainingPipeline.Fit(trainingDataView);
 ```
 As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
 
@@ -97,14 +100,13 @@ As a reference, In the following screenshot, you can check the DataView used to 
 After the training, we evaluate the model using the training data. The `Evaluate` function needs a `IDataView` as parameter, so we apply `Transform` to the model, and then take the `AsDynamic` value.
 ```csharp
 ConsoleWriteHeader("Classification metrics");
-            var metrics = classificationContext.Evaluate(trainData, labelColumnName: LabelTokey, predictedLabelColumnName: "PredictedLabel");
-            Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
-            Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
+            var metrics = classificationContext.Evaluate(predictionsDataView, labelColumnName: LabelAsKey, predictedLabelColumnName: "PredictedLabel");
+            ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 ```
 
 Finally, we save the model:
 ```csharp
-mlContext.Model.Save(model, trainData.Schema, outputModelLocation);
+mlContext.Model.Save(model, predictionsDataView.Schema, outputMlNetModelFilePath);
 ```
 
 #### Model training
@@ -121,8 +123,8 @@ ITransformer loadedModel = mlContext.Model.Load(modelLocation,out var modelInput
 
 Then, we proceed to create a predictor function, and make predictions:
 ```csharp
-var predictor = mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(loadedModel);
-var imageListToPredict = ImageNetData.ReadFromCsv(dataLocation, imagesFolder).ToList();
+var predictor = mlContext.Model.CreatePredictionEngine<ImageDataForScoring, ImagePrediction>(loadedModel);
+var imageListToPredict = ImageDataForScoring.ReadFromCsv(dataLocation, imagesFolder).ToList();
 imageListToPredict
                 .Select(td => new { td, pred = predictor.Predict(td) })
                 .Select(pr => (pr.td.ImagePath, pr.pred.PredictedLabelValue, pr.pred.Score))
