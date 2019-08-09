@@ -3,16 +3,19 @@ using OnnxObjectDetection;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
-namespace OnnxObjectDetectionStreamingApp
+namespace OnnxObjectDetectionApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -20,100 +23,99 @@ namespace OnnxObjectDetectionStreamingApp
     public partial class MainWindow : System.Windows.Window
     {
 
-        private Mat frame;
+        //private Mat frame;
         private VideoCapture capture;
 
-        private ITransformer model;
-        private readonly MLContext mlContext = new MLContext();
+        private CancellationTokenSource cameraCaptureCancellationTokenSource;
+
+        //private readonly MLContext mlContext = new MLContext();
         private readonly YoloOutputParser yoloParser = new YoloOutputParser();
         private PredictionEngine<ImageInputData, ImageObjectPrediction> predictionEngine;
-       
 
-        private int frameCount = 0;
-        private bool isCameraRunning = false;
-
-        private readonly int skipFrames = 0; // if performance is really bad, we may want to send every nth frame to the model
-
-        private Thread camera;
 
         public MainWindow()
         {
             InitializeComponent();
 
             LoadModel();
-            CaptureCamera();
         }
- 
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            StartCameraCapture();
+        }
+
+        protected override void OnDeactivated(EventArgs e)
+        {
+            base.OnDeactivated(e);
+
+            StopCameraCapture();
+        }
+
         private void LoadModel()
         {
             var onnxModel = "TinyYolo2_model.onnx";
-            var mlNetModelFile = "TinyYoloModel.zip";
 
-            //var assetsUri = Path.Combine(Environment.CurrentDirectory, @"Assets");
             var modelDirectory = Path.Combine(Environment.CurrentDirectory, @"ML\OnnxModel");
 
             var onnxPath = Path.Combine(modelDirectory, onnxModel);
-            var modelPath = Path.Combine(modelDirectory, mlNetModelFile);
 
-            OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(onnxPath);
-            onnxModelConfigurator.SaveMLNetModel(modelPath);
+            var onnxModelConfigurator = new OnnxModelConfigurator(onnxPath);
 
-            model = mlContext.Model.Load(modelPath, out _);
-
-            predictionEngine = mlContext.Model.CreatePredictionEngine<ImageInputData, ImageObjectPrediction>(model);
+            predictionEngine = onnxModelConfigurator.GetMlNetPredictionEngine();
         }
 
-        private void CaptureCamera()
+        private void StartCameraCapture()
         {
-            camera = new Thread(new ThreadStart(CaptureCameraCallback));
-            camera.Start();
-            isCameraRunning = true;
+            cameraCaptureCancellationTokenSource = new CancellationTokenSource();
+
+            Task.Run(() => CaptureCamera(cameraCaptureCancellationTokenSource.Token), cameraCaptureCancellationTokenSource.Token) ;
         }
 
-        private void CaptureCameraCallback()
+        private void StopCameraCapture()
         {
-            frame = new Mat();
-            capture = new VideoCapture(0);
+            cameraCaptureCancellationTokenSource?.Cancel();
+        }
+
+        private async Task CaptureCamera(CancellationToken token)
+        {
+            if (capture == null)
+                capture = new VideoCapture(0);
+
             capture.Open(0);
 
             if (capture.IsOpened())
             {
-                while (isCameraRunning)
+                while (!token.IsCancellationRequested)
                 {
-                    capture.Read(frame);
+                    using MemoryStream memoryStream = capture.RetrieveMat().Flip(FlipMode.Y).ToMemoryStream();
 
-                    if (CheckSkipFrame())
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        // TODO: Kill after user closes the app window or it throws an exception here
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            using MemoryStream memoryStream = frame.ToMemoryStream();
+                        var imageSource = new BitmapImage();
 
-                            var imageSource = new BitmapImage();
+                        imageSource.BeginInit();
+                        imageSource.CacheOption = BitmapCacheOption.OnLoad;
+                        imageSource.StreamSource = memoryStream;
+                        imageSource.EndInit();
 
-                            imageSource.BeginInit();
-                            imageSource.CacheOption = BitmapCacheOption.OnLoad;
-                            imageSource.StreamSource = memoryStream;
-                            imageSource.EndInit();
+                        WebCamImage.Source = imageSource;
+                    });
 
-                            WebCamImage.Source = imageSource;
+                    var bitmapImage = new Bitmap(memoryStream);
 
-                            var bitmapImage = new Bitmap(memoryStream);
-
-                            ParseWebCamFrame(bitmapImage);
-                        });
-                    }
+                    await ParseWebCamFrame(bitmapImage);
                 }
+
+                capture.Release();
             }
         }
 
-        async void ParseWebCamFrame(Bitmap bitmap)
+        async Task ParseWebCamFrame(Bitmap bitmap)
         {
-            if (model == null) //TODO: Need to do better than this to make sure that the model has been created first
-                return;
-
-            var originalHeight = bitmap.Height;
-            var originalWidth = bitmap.Width;
+            if (predictionEngine == null) return;
 
             var frame = new ImageInputData { Image = bitmap };
 
@@ -121,8 +123,8 @@ namespace OnnxObjectDetectionStreamingApp
 
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                DrawOverlays(filteredBoxes, originalHeight, originalWidth);
-            }, System.Windows.Threading.DispatcherPriority.Render);
+                DrawOverlays(filteredBoxes, (int)WebCamImage.ActualHeight, (int)WebCamImage.ActualWidth);
+            });
         }
 
         public IList<YoloBoundingBox> DetectObjectsUsingModel(ImageInputData imageInputData)
@@ -152,7 +154,7 @@ namespace OnnxObjectDetectionStreamingApp
                 width = (uint)originalWidth * width / OnnxModelConfigurator.ImageSettings.imageWidth;
                 height = (uint)originalHeight * height / OnnxModelConfigurator.ImageSettings.imageHeight;
 
-                var boxColor = ConvertColor(box.BoxColor);
+                var boxColor = box.BoxColor.ToMediaColor();
 
                 var description = $"{box.Label} ({(box.Confidence * 100).ToString("0")}%)";
 
@@ -189,21 +191,11 @@ namespace OnnxObjectDetectionStreamingApp
                 WebCamCanvas.Children.Add(objBox);
             }
         }
+    }
 
-        private bool CheckSkipFrame()
-        {
-            if (skipFrames == 0)
-                return true;
-
-            if (++frameCount == skipFrames)
-            {
-                frameCount = 0;
-                return true;
-            }
-            return false;
-        }
-
-        private System.Windows.Media.Color ConvertColor(System.Drawing.Color drawingColor)
+    internal static class ColorExtensions
+    {
+        internal static System.Windows.Media.Color ToMediaColor(this System.Drawing.Color drawingColor)
         {
             return System.Windows.Media.Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
         }

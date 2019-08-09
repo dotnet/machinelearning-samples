@@ -49,6 +49,11 @@ namespace OnnxObjectDetection
             return mlNetModel;
         }
 
+        public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictionEngine()
+        {
+            return _mlContext.Model.CreatePredictionEngine<ImageInputData, ImageObjectPrediction>(_mlModel);
+        }
+
         public void SaveMLNetModel(string mlnetModelFilePath)
         {
             // Save/persist the model to a .ZIP file to be loaded by the PredictionEnginePool
