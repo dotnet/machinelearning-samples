@@ -100,8 +100,9 @@ As a reference, In the following screenshot, you can check the DataView used to 
 After the training, we evaluate the model using the training data. The `Evaluate` function needs a `IDataView` as parameter, so we apply `Transform` to the model, and then take the `AsDynamic` value.
 ```csharp
 ConsoleWriteHeader("Classification metrics");
-            var metrics = classificationContext.Evaluate(predictionsDataView, labelColumnName: LabelAsKey, predictedLabelColumnName: "PredictedLabel");
-            ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
+var metrics = classificationContext
+                .Evaluate(predictionsDataView, labelColumnName: LabelAsKey, predictedLabelColumnName: "PredictedLabel");
+ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 ```
 
 Finally, we save the model:
