@@ -155,6 +155,12 @@ phases:
 - phase: ObjectDetectionConsoleApp
   queue: Hosted VS2017
   steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk'
+    inputs:
+      version: 3.0.x
+      includePreviewVersions: true
+      installationPath: $(Agent.ToolsDirectory)/dotnet
   - task: DotNetCoreCLI@2
     displayName: Build Object Detection (Onnx Scorer)
     inputs:
