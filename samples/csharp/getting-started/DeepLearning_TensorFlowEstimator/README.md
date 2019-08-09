@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Dynamic API | Up-to-date | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
+| v1.3.1           | Dynamic API | Up-to-date | Console app | .tsv + image files | Image classification | Featurization + Classification  | Deep neural network + LbfgsMaximumEntropy |
 
 ## Problem 
 Image classification is a common problem which has been solved quite a while using Machine Learning techniques. In this sample, we will review an approach that mixes new techniques (deep learning) and old school (LbfgsMaximumEntropy) techniques.
@@ -39,7 +39,7 @@ Building the model includes the following steps:
 * Loading the tsv file
 * Image loading and transformation (resize and normalize pixel values, as required by the deep neural network)
 * Image *featurization* using the deep neural network
-* Image classification using SDCA
+* Image classification using LbfgsMaximumEntropy
 
 Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageNetData. 
 
@@ -92,7 +92,7 @@ In order to begin the training execute `Fit` on the built pipeline:
 ```csharp 
   ITransformer model = trainingPipeline.Fit(trainingDataView);
 ```
-As a reference, In the following screenshot, you can check the DataView used to train the SDCA; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
+As a reference, In the following screenshot, you can check the DataView used to train the LbfgsMaximumEntropy; this DataView includes the property named `softmax2_pre_activation` (also known as *image features*), which content is produced by the `ApplyTensorFlowGraph` function.  
 
 ![](./docs/train_debug.png)
 
