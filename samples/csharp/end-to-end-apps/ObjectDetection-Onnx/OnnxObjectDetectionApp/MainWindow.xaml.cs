@@ -82,7 +82,7 @@ namespace OnnxObjectDetectionApp
         private async Task CaptureCamera(CancellationToken token)
         {
             if (capture == null)
-                capture = new VideoCapture(0);
+                capture = new VideoCapture(CaptureDevice.DShow);
 
             capture.Open(0);
 
