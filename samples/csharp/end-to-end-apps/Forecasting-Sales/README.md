@@ -73,7 +73,7 @@ Note that the **Regression** sample implements two independent models to forecas
 
 The **Time Series** sample currently implements the product's demand forecast for the next **two** periods (months). The **Time Series** sample uses the same products as in the **Regression** sample so that you can compare the forecasts from the two algorithms.
 
-When learning/researching the samples, you can focus choose to focus on one of the algorithms/scenarios/models.
+When learning/researching the samples, you can focus choose to focus specifically on regression or time series.
 
 ![Build -> Train -> Evaluate -> Consume](docs/images/modelpipeline.png)
 
