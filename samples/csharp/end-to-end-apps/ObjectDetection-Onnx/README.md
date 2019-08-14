@@ -1,8 +1,8 @@
 # Object Detection - ASP.NET Core Web & WPF Desktop Sample
 
-| ML.NET version | API type    | Status     | App Type    | Data type   | Scenario         | ML Task       | Algorithms            |
-|----------------|-------------|------------|-------------|-------------|------------------|---------------|-----------------------|
-| v1.3.1         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | Tiny Yolo2 ONNX model |
+| ML.NET version | API type    | Status     | App Type    | Data type   | Scenario         | ML Task       | Algorithms             |
+|----------------|-------------|------------|-------------|-------------|------------------|---------------|------------------------|
+| v1.3.1         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | Tiny YOLOv2 ONNX model |
 
 ## Problem
 
@@ -25,13 +25,13 @@ Alternatively you can try uploading your own images as shown below.
 
 ## Pre-trained model
 
-There are multiple pre-trained models for identifying multiple objects in the images. Both the **WPF app** and the **Web app** use the pre-trained model, **Tiny Yolo2** in [**ONNX**](http://onnx.ai/) format. This model is a real-time neural network for object detection that detects 20 different classes. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
+There are multiple pre-trained models for identifying multiple objects in the images. Both the **WPF app** and the **Web app** use the pre-trained model, **Tiny YOLOv2** in [**ONNX**](http://onnx.ai/) format. This model is a real-time neural network for object detection that detects 20 different classes. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
 
 The Open Neural Network eXchange i.e [ONNX](http://onnx.ai/) is an open format to represent deep learning models. With ONNX, developers can move models between state-of-the-art tools and choose the combination that is best for them. ONNX is developed and supported by a community of partners, including Microsoft.
 
-The model is downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/tiny_yolov2) which is a is a collection of pre-trained, state-of-the-art models in the ONNX format.
+The model is downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2) which is a is a collection of pre-trained, state-of-the-art models in the ONNX format.
 
-The Tiny YOLO2 model was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. Below are the model's prerequisites.
+The Tiny YOLOv2 model was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. Below are the model's prerequisites.
 
 ### Model input and output
 
@@ -89,16 +89,21 @@ var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimat
                 .Append(_mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModelFilePath, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
 ```
 
-You also need to inspect the neural network to get the names of the input and output nodes. To do this, you can use tools like [Netron](https://github.com/lutzroeder/netron), which is automatically installed with [Model Builder](https://visualstudio.microsoft.com/downloads/ai-tools-vs/), a VS extension to make ML more approachable.
-These names are used later when we define the estimation pipeline: in the case of the Tiny Yolo2 network, the input tensor is named **'image'** and the output is named **'grid.'**
+You also need to inspect the neural network to get the **names** of the **input** and **output** nodes, which are used later when we defining the estimation pipeline. To do this, you can use tools like [Netron](https://github.com/lutzroeder/netron), a GUI visualizer for neural networks, deep learning, and machine learning models.
 
-We'll use these to define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
+Below is an example of what we'd see upon opening this sample's Tiny YOLOv2 model with Netron:
+
+![Output from inspecting the Tiny YOLOv2 model with Netron](./docs/Netron/netron.PNG)
+
+From the Netron output above, we can see that our Tiny YOLOv2 network's input tensor is named **'image'** and its output is named **'grid.'**
+
+We'll use these to define the **input** and **output** parameters of the Tiny YOLOv2 Onnx Model.
 
 ```csharp
 public struct TinyYoloModelSettings
 {
-    // To check Tiny Yolo2 Model input and output parameter names,
-    // you can use tools like Netron, which is installed by Visual Studio AI Tools
+    // To check Tiny YOLOv2 Model input and output parameter names,
+    // you can use tools like Netron: https://github.com/lutzroeder/netron
 
     // Input tensor name
     public const string ModelInput = "image";
@@ -107,8 +112,6 @@ public struct TinyYoloModelSettings
     public const string ModelOutput = "grid";
 }
 ```
-
-![inspecting neural network with netron](./docs/Netron/netron.PNG)
 
 Create the model by fitting the DataView.
 
@@ -193,4 +196,4 @@ foreach (var box in filteredBoxes)
 
 ## Note on accuracy
 
-Tiny YOLO2 is significantly less accurate than the full YOLO2 model, but the tiny version is sufficient for this sample app.
+Tiny YOLOv2 is significantly less accurate than the full YOLOv2 model, but the tiny version is sufficient for this sample app.

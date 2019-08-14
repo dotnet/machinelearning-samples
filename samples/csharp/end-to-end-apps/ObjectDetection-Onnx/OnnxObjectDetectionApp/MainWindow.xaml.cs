@@ -17,58 +17,45 @@ using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace OnnxObjectDetectionApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-
         private VideoCapture capture;
-
         private CancellationTokenSource cameraCaptureCancellationTokenSource;
 
         private readonly YoloOutputParser yoloParser = new YoloOutputParser();
         private PredictionEngine<ImageInputData, ImageObjectPrediction> predictionEngine;
 
-
         public MainWindow()
         {
             InitializeComponent();
-
             LoadModel();
         }
 
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
-
             StartCameraCapture();
         }
 
         protected override void OnDeactivated(EventArgs e)
         {
             base.OnDeactivated(e);
-
             StopCameraCapture();
         }
 
         private void LoadModel()
         {
             var onnxModel = "TinyYolo2_model.onnx";
-
             var modelDirectory = Path.Combine(Environment.CurrentDirectory, @"ML\OnnxModel");
-
             var onnxPath = Path.Combine(modelDirectory, onnxModel);
 
             var onnxModelConfigurator = new OnnxModelConfigurator(onnxPath);
-
             predictionEngine = onnxModelConfigurator.GetMlNetPredictionEngine();
         }
 
         private void StartCameraCapture()
         {
             cameraCaptureCancellationTokenSource = new CancellationTokenSource();
-
             Task.Run(() => CaptureCamera(cameraCaptureCancellationTokenSource.Token), cameraCaptureCancellationTokenSource.Token) ;
         }
 
@@ -113,10 +100,10 @@ namespace OnnxObjectDetectionApp
 
         async Task ParseWebCamFrame(Bitmap bitmap)
         {
-            if (predictionEngine == null) return;
+            if (predictionEngine == null)
+                return;
 
             var frame = new ImageInputData { Image = bitmap };
-
             var filteredBoxes = DetectObjectsUsingModel(frame);
 
             await Application.Current.Dispatcher.InvokeAsync(() =>

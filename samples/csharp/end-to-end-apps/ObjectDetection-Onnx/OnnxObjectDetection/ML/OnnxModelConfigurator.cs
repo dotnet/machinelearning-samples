@@ -13,7 +13,8 @@ namespace OnnxObjectDetection
         public OnnxModelConfigurator(string onnxModelFilePath)
         {
             _mlContext = new MLContext();
-            // Model creation and pipeline definition for images needs to run just once, so calling it from the constructor:
+            // Model creation and pipeline definition for images needs to run just once,
+            // so calling it from the constructor:
             _mlModel = SetupMlNetModel(onnxModelFilePath);
         }
 
@@ -25,14 +26,13 @@ namespace OnnxObjectDetection
 
         public struct TinyYoloModelSettings
         {
-            // for checking TIny yolo2 Model input and  output  parameter names,
-            // you can use tools like Netron, 
-            // which is installed by Visual Studio AI Tools
+            // To check Tiny Yolo2 Model input and output parameter names,
+            // you can use tools like Netron: https://github.com/lutzroeder/netron
 
-            // input tensor name
+            // Input tensor name
             public const string ModelInput = "image";
 
-            // output tensor name
+            // Output tensor name
             public const string ModelOutput = "grid";
         }
 
@@ -61,4 +61,3 @@ namespace OnnxObjectDetection
         }
     }
 }
-
