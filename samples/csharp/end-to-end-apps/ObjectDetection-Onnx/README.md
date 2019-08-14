@@ -103,7 +103,7 @@ public struct TinyYoloModelSettings
     // Input tensor name
     public const string ModelInput = "image";
 
-    // output tensor name
+    // Output tensor name
     public const string ModelOutput = "grid";
 }
 ```
