@@ -158,7 +158,7 @@ var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFe
 
 ```
 
-#### 3. Regression: Evaluate the Model
+#### 2. Regression: Evaluate the Model
 
 In this case, the **Regression** model is evaluated before training the model with a cross-validation approach. This is to obtain metrics that indicate the accuracy of the model. 
 
