@@ -90,7 +90,7 @@ var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimat
 ```
 
 You also need to inspect the neural network to get the names of the input and output nodes. To do this, you can use tools like [Netron](https://github.com/lutzroeder/netron), which is automatically installed with [Model Builder](https://visualstudio.microsoft.com/downloads/ai-tools-vs/), a VS extension to make ML more approachable.
-These names are used later when we define the estimation pipeline: in the case of the Tiny Yolo2 network, the input tensor is named **'image'** and the output is named **'grid'**.
+These names are used later when we define the estimation pipeline: in the case of the Tiny Yolo2 network, the input tensor is named **'image'** and the output is named **'grid.'**
 
 We'll use these to define the **input** and **output** parameters of the Tiny Yolo2 Onnx Model.
 
