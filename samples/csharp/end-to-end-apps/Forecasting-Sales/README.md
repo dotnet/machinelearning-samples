@@ -269,7 +269,7 @@ Next, we train the model using the data series for the specified product.
 ITransformer forecastTransformer = forecastEstimator.Fit(productDataView);
 ```
 
-#### 8. Time Series: Save the Model
+#### 3. Time Series: Save the Model
 
 To save the model, we first must create the **TimeSeriesPredictionEngine** which is used for both getting predictions and saving the model.
 
