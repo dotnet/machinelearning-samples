@@ -6,7 +6,7 @@ namespace ImageClassification.DataModels
 {
     public class ImageWithPipelineFeatures
     {
-        public string ImageFileName;
+        public string ImagePath;
         public string Label;
         public string PredictedLabelValue;
         public float[] Score;

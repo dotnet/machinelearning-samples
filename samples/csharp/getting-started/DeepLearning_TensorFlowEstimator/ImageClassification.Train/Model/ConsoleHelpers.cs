@@ -44,7 +44,7 @@ namespace ImageClassification.Model
             }
         }
 
-        public static void ConsoleWriteImagePrediction(string ImagePath, string PredictedLabel, float Probability)
+        public static void ConsoleWriteImagePrediction(string ImagePath, string Label, string PredictedLabel, float Probability)
         {
             var defaultForeground = Console.ForegroundColor;
             var labelColor = ConsoleColor.Magenta;
@@ -53,6 +53,10 @@ namespace ImageClassification.Model
             Console.Write("ImagePath: ");
             Console.ForegroundColor = labelColor;
             Console.Write($"{Path.GetFileName(ImagePath)}");
+            Console.ForegroundColor = defaultForeground;
+            Console.Write(" original labeled as ");
+            Console.ForegroundColor = labelColor;
+            Console.Write(Label);
             Console.ForegroundColor = defaultForeground;
             Console.Write(" predicted as ");
             Console.ForegroundColor = labelColor;

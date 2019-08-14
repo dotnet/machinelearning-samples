@@ -16,7 +16,7 @@ namespace ImageClassification.DataModels
             var defaultForeground = Console.ForegroundColor;
             var labelColor = ConsoleColor.Green;
 
-            Console.Write($"ImagePath: {ImageFileName} predicted as ");
+            Console.Write($"ImagePath: {ImagePath} predicted as ");
             Console.ForegroundColor = labelColor;
             Console.Write(Label);
             Console.ForegroundColor = defaultForeground;

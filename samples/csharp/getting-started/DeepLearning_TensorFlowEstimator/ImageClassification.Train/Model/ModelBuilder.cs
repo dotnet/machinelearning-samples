@@ -7,6 +7,7 @@ using static ImageClassification.Model.ConsoleHelpers;
 using Common;
 using System.Collections;
 using System.Collections.Generic;
+using static Microsoft.ML.DataOperationsCatalog;
 
 namespace ImageClassification.Model
 {
@@ -39,7 +40,7 @@ namespace ImageClassification.Model
             public const bool channelsLast = true;
         }
 
-        public void BuildAndTrain()
+        public void BuildAndTrain(IEnumerable<ImageData> imagesWithLabels)
         {
             ConsoleWriteHeader("Read model");
             Console.WriteLine($"Model location: {inputTensorFlowModelFilePath}");
@@ -48,11 +49,21 @@ namespace ImageClassification.Model
             Console.WriteLine($"Default parameters: image size=({ImageSettingsForTFModel.imageWidth},{ImageSettingsForTFModel.imageHeight}), image mean: {ImageSettingsForTFModel.mean}");
 
             // 1. Load images information (filenames and labels) in IDataView
-            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
+
+            IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(imagesWithLabels);
+            //IDataView fullImagesDataset = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
+
+            IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
+
+            // Split the data 80:20 into train and test sets, train and evaluate.
+            TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
+            IDataView trainDataView = trainTestData.TrainSet;
+            IDataView testDataView = trainTestData.TestSet;
+
 
             // 2. Load images in-memory while applying image transformations 
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelAsKey, inputColumnName: "Label")
-                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "image_object", imageFolder: imagesFolder, inputColumnName: nameof(DataModels.ImageData.ImageFileName)))
+                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "image_object", imageFolder: imagesFolder, inputColumnName: nameof(DataModels.ImageData.ImagePath)))
                             .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image_object_resized", imageWidth: ImageSettingsForTFModel.imageWidth, imageHeight: ImageSettingsForTFModel.imageHeight, inputColumnName: "image_object"))
                             .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", inputColumnName: "image_object_resized", interleavePixelColors: ImageSettingsForTFModel.channelsLast, offsetImage: ImageSettingsForTFModel.mean))
                             .Append(mlContext.Model.LoadTensorFlowModel(inputTensorFlowModelFilePath).
@@ -63,32 +74,38 @@ namespace ImageClassification.Model
                                 // TF .pb model --> input node --> INPUTS --> logits --> id: "softmax2_pre_activation" 
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations 
-            ConsoleHelper.PeekDataViewInConsole(mlContext, trainingDataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "softmax2_pre_activation", trainingDataView, dataProcessPipeline, 2);
+            ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessPipeline, 2);
+            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "softmax2_pre_activation", trainDataView, dataProcessPipeline, 2);
 
             // 3. Set the training algorithm and convert back the key to the categorical values                            
             var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "softmax2_pre_activation");
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-                                                      .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));                                                      
+                                                      .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));
 
             // 4. Train the model
-            ConsoleWriteHeader("Training the classification model");
-            ITransformer model = trainingPipeline.Fit(trainingDataView);
+            // Measuring training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            ConsoleWriteHeader("Training the ML.NET classification model");
+            ITransformer model = trainingPipeline.Fit(trainDataView);
+
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+
+            Console.WriteLine("Training with transfer learning took: " + (elapsedMs / 1000).ToString() + " seconds");
 
             // 5. Make bulk predictions and calculate quality metrics
             ConsoleWriteHeader("Create Predictions and Evaluate the model quality");
-            //TO DO: 
-            // Accuracy is currently 1 because we're testing/evaluating with the same image-set used for training...
-            // Use a larger image-set and seggregate a training set and a test set so test images have not been used for training
-            IDataView predictionsDataView = model.Transform(trainingDataView);
-
+            IDataView predictionsDataView = model.Transform(testDataView);
+           
             // This is an optional step, but it's useful for debugging issues
             var loadedModelOutputColumnNames = predictionsDataView.Schema
                 .Where(col => !col.IsHidden).Select(col => col.Name);
 
             // 5.1 Show the predictions
+            ConsoleWriteHeader("*** Showing all the predictions ***");
             List<ImageWithPipelineFeatures> predictions = mlContext.Data.CreateEnumerable<ImageWithPipelineFeatures>(predictionsDataView, false, true).ToList();
-            predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImageFileName, pred.PredictedLabelValue, pred.Score.Max()));
+            predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImagePath, pred.Label, pred.PredictedLabelValue, pred.Score.Max()));
 
             // 5.2 Show the performance metrics for the multi-class classification            
             var classificationContext = mlContext.MulticlassClassification;
