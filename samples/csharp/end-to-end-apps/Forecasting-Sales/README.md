@@ -221,6 +221,7 @@ Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 
 
 ```
 
+### Time Series
 #### 6. Time Series: Create the Pipeline
 
 This step shows how to create the pipeline that will later be used for training the **Time Series** model.
