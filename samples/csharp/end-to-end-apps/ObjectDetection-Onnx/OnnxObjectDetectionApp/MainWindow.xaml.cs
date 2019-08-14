@@ -27,7 +27,6 @@ namespace OnnxObjectDetectionApp
 
         private CancellationTokenSource cameraCaptureCancellationTokenSource;
 
-        //private readonly MLContext mlContext = new MLContext();
         private readonly YoloOutputParser yoloParser = new YoloOutputParser();
         private PredictionEngine<ImageInputData, ImageObjectPrediction> predictionEngine;
 
