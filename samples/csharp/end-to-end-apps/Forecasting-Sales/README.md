@@ -59,7 +59,7 @@ The sample shows two different ML tasks and algorithms that can be used for fore
 -  **Regression** using FastTreeTweedie Regression
 -  **Time Series** using Single Spectrum Analysis
 
-The **Regression** ML task is a supervised machine learning task that is used to predict the value of the **next** period (in this case the sales prediction) from a set of related features/variables. **Regression** works best with linear data.
+**Regression** is a supervised machine learning task that is used to predict the value of the **next** period (in this case, the sales prediction) from a set of related features/variables. **Regression** works best with linear data.
 
 The **Time Series** ML task is an estimation technique that can be used to forecast **multiple** periods in the future. **Time Series** works well in scenarios that involve non-linear data where trends and patterns are difficult to distinguish.
 
