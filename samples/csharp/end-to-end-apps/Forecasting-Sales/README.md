@@ -167,7 +167,7 @@ var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDat
             
 ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 ```
-#### 4. Regression: Train the Model
+#### 3. Regression: Train the Model
 
 After building the pipeline, we train the **Regression** forecast model by fitting or using the training data with the selected algorithm. In this step, the model is built, trained and returned as an object:
 
