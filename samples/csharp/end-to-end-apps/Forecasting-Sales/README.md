@@ -21,7 +21,7 @@ The app is also using a SQL Server database for regular product catalog and orde
 
 If you want to use a real SQL Server or Azure SQL Database, you just need to change the connection string in the app.
 
-When you run the app, it opens the webpage with a search box says "Type a product". You can type for any product say "bottle". Then a list of products related to keyword "bottle" will show in autocomplete suggestions. Once you select any product then the sales forecast of that product will be shown as below.
+When you run the app, it opens the webpage with a search box says "Type a product." You can type for any product, i.e. "bottle." Then a list of products related to keyword "bottle" will show in autocomplete suggestions. Once you select any product, then the sales forecast of that product will be shown as below.
 
 Here's a sample screenshot of the web app and one of the forecast predictions:
 
