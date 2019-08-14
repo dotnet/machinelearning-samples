@@ -21,9 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="assets\inputs\images\full-image-set\" />
-    <Folder Include="assets\inputs\images\test-image-set\" />
-    <Folder Include="assets\inputs\images\train-image-set\" />
     <Folder Include="Common\" />
   </ItemGroup>
 
