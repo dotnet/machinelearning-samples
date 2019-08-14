@@ -118,7 +118,7 @@ var model = pipeline.Fit(dataView);
 
 ## Load model and create PredictionEngine
 
-After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and the pass the image to the engine to detect objects using the model.
+After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and then pass the image to the engine to detect objects using the model.
 This is one place that the **Web** app and the **WPF** app differ slightly.  The **Web** app uses a `PredicitonEnginePool` to efficiently manage and provide the service with a `PredictionEngine` to use to make predictions.
 
 ```csharp
