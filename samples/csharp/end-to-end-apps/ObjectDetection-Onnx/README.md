@@ -141,7 +141,7 @@ public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictio
 
 ## Detect objects in the image
 
-When obtaining the prediction, we get an `float` array of size **21125** in the `PredictedLabels` property. This is the 125x13x13 output of the model discussed earlier. We then use the `YoloOutputParser` class to interpret and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 with high confidence.
+When obtaining the prediction, we get an `float` array of size **21125** in the `PredictedLabels` property. This is the 125x13x13 output of the model discussed earlier. We then use the `YoloOutputParser` class to interpret and return a number of bounding boxes for each image. Again, these boxes are filtered so that we retrieve only 5 with high confidence.
 
 ```csharp
 var labels = predictionEngine.Predict(imageInputData).PredictedLabels;
