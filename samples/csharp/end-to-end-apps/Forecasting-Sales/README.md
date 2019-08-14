@@ -85,7 +85,6 @@ Both the **Regression** and **Time Series** samples start by loading data using 
  public class ProductData
     {
         // The index of column in LoadColumn(int index) should be matched with the position of columns in the underlying data file.
-
         // The next column is used by the Regression algorithm as the Label (e.g. the value that is being predicted by the Regression model).
         [LoadColumn(0)]
         public float next;
