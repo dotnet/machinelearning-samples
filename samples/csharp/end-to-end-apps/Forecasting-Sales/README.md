@@ -285,7 +285,7 @@ forecastEngine.CheckPoint(mlContext, outputModelPath);
 
 You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model. **Time Series** is different because it requires that the model's state to be continuously updated with new observed values as predictions are made. As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis. This will be shown in further detail in a later step of this sample. For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
 
-#### 9. Time Series: Test the Prediction
+#### 4. Time Series: Test the Prediction
 
 To get a prediction, load the **Time Series** model from the **.zip** file and create a new **TimeSeriesPredictionEngine**. After this, we can get a prediction.
 
