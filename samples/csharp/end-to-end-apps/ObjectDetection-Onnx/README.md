@@ -97,7 +97,7 @@ We'll use these to define the **input** and **output** parameters of the Tiny Yo
 ```csharp
 public struct TinyYoloModelSettings
 {
-    // for checking TIny yolo2 Model input and output parameter names,
+    // To check Tiny Yolo2 Model input and output parameter names,
     // you can use tools like Netron, which is installed by Visual Studio AI Tools
 
     // input tensor name
