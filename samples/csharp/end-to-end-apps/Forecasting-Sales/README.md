@@ -77,7 +77,7 @@ When learning/researching the samples, you can focus choose to focus specificall
 
 ![Build -> Train -> Evaluate -> Consume](docs/images/modelpipeline.png)
 
-#### 1. Load the Dataset
+#### Load the Dataset
 
 Both the **Regression** and **Time Series** samples start by loading data using **TextLoader**. To use **TextLoader**, we must specify the type of the class that represents the data schema. Our class type is **ProductData**. 
 
