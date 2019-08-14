@@ -55,7 +55,7 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 
 ### The solution contains three projects
 
-- [**OnnxObjectDetection**](./OnnxObjectDetection) is a .NET Standard library used by both the WPF app and the Web app.  It contains most of the logic for running images trough the model and parsing the resulting prediction.  This project also contains the Onnx model file.  With the exception of drawing the labels bounding boxes on the image/screen, all of the following code snippets are contained in this project.
+- [**OnnxObjectDetection**](./OnnxObjectDetection) is a .NET Standard library used by both the WPF app and the Web app.  It contains most of the logic for running images through the model and parsing the resulting prediction.  This project also contains the Onnx model file.  With the exception of drawing the labels bounding boxes on the image/screen, all of the following code snippets are contained in this project.
 - [**OnnxObjectDetectionWeb**](./OnnxObjectDetectionWeb) contains an ASP.NET Core Web App that that contains both **Razor UI pages** and an **API controller** to process and render images.
 - [**OnnxObjectDetectionApp**](./OnnxObjectDetectionApp) contains an .NET CORE WPF Desktop App that uses [OpenCvSharp](https://github.com/shimat/opencvsharp) to capture the video from the devices webcam.
 
