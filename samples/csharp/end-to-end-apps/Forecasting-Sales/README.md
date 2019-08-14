@@ -253,7 +253,7 @@ Specifically, we add the following trainer to the pipeline:
         confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound));
 ```
 
-#### 7. Time Series: Train the Model
+#### 2. Time Series: Train the Model
 
 Before training the **Time Series** model, we first must filter the loaded dataset to select the data series for the specific product that will be used for forecasting sales.
 
