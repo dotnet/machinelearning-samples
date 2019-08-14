@@ -128,7 +128,7 @@ var trainingDataView = mlContext.Data.LoadFromTextFile<ProductData>(dataPath, ha
 In the following steps, we will build the pipeline transformations, specify which trainer/algorithm to use, evaluate the models, and test their predictions. This is where the steps start to differ between the [**Regression**](#2-regression-create-the-pipeline) and [**Time Series**](#6-time-series-create-the-pipeline) samples - the remainder of this walkthrough looks at each of these algorithms separately.
 
 
-#### 2. Regression: Create the Pipeline
+#### 1. Regression: Create the Pipeline
 
 This step shows how to create the pipeline that will later be used for building and training the **Regression** model.
 
