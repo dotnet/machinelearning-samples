@@ -23,7 +23,6 @@ namespace OnnxObjectDetectionApp
     public partial class MainWindow : System.Windows.Window
     {
 
-        //private Mat frame;
         private VideoCapture capture;
 
         private CancellationTokenSource cameraCaptureCancellationTokenSource;
