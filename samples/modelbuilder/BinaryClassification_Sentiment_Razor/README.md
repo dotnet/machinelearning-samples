@@ -15,10 +15,10 @@ Here's a screenshot of the app while running:
 
 ![Blazor App running](./Images/web-app.png)
 
-From ML.NET perspective, the goal is to **optimize the ML.NET model executions in the server** by sharing the ML.NET objects used for predictions across Http requests and being able to implement very simple code to be used by the user when predicting, like the following line of code that you could write on any ASP.NET Core controller's method or custom service class:
+From ML.NET perspective, the goal is to **optimize the ML.NET model executions in the server** by sharing the ML.NET objects used for predictions across Http requests and being able to implement very simple code to be used by the user when predicting, like the following line of code that you could write on any ASP.NET Core handler method or custom service class:
 
 ```csharp
-SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
+ModelOutput prediction = _predictionEnginePool.Predict(input);
 ```
 
 As simple as a single line. The object _predictionEnginePool will be injected in the controller's constructor or into you custom class. 
