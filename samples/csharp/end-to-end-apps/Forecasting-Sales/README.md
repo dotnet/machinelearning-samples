@@ -51,7 +51,7 @@ To solve this problem, two independent ML models are built that take the followi
 
 [Explanation of Dataset](docs/Details-of-Dataset.md) - Goto this link for detailed information on dataset.
 
-### ML Tasks - [Regression](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#regression) and Time Series
+### ML Tasks - Regression and Time Series
 
 The sample shows two different ML tasks and algorithms that can be used for forecasting:
 
