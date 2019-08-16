@@ -144,7 +144,7 @@ ML.NET AutoML API is basically a set of libraries packaged as a NuGet package yo
 
 # Additional ML.NET Community Samples
 
-In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community shocased in this separated page:
+In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community showcased in this separated page:
 [ML.NET Community Samples](https://github.com/dotnet/machinelearning-samples/blob/master/docs/COMMUNITY-SAMPLES.md)
 
 Those Community Samples are not maintained by Microsoft but by their owners.
