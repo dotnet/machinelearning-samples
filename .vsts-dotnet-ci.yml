@@ -110,7 +110,7 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build eShopDashboardML (Regression)
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\Regression-SalesForecast\eShopDashboardML.sln'
+      projects: '.\samples\csharp\end-to-end-apps\Forecasting-Sales\eShopDashboardML.sln'
 
 - phase: MovieRecommenderE2E
   queue: Hosted VS2017

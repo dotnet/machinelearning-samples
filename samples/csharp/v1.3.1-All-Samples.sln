@@ -59,9 +59,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxiFarePrediction", "getti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectDetection", "getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetectionConsoleApp\ObjectDetection.csproj", "{951A296C-EC5B-49EC-91DF-E1652B14BFAE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopDashboard", "end-to-end-apps\Regression-SalesForecast\src\eShopDashboard\eShopDashboard.csproj", "{EF0B8B59-6114-4F69-9191-54192D176755}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopDashboard", "end-to-end-apps\Forecasting-Sales\src\eShopDashboard\eShopDashboard.csproj", "{EF0B8B59-6114-4F69-9191-54192D176755}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopForecastModelsTrainer", "end-to-end-apps\Regression-SalesForecast\src\eShopForecastModelsTrainer\eShopForecastModelsTrainer.csproj", "{D80D5DBC-ACB8-4137-8F6C-FF82948C8752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopForecastModelsTrainer", "end-to-end-apps\Forecasting-Sales\src\eShopForecastModelsTrainer\eShopForecastModelsTrainer.csproj", "{D80D5DBC-ACB8-4137-8F6C-FF82948C8752}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubIssuesLabeler.Solution", "GitHubIssuesLabeler.Solution", "{8A89D367-7DA3-44F5-BE84-060C8E0F4508}"
 EndProject
@@ -101,7 +101,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeDetection", "getting-s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeartDiseaseDetection", "getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection\HeartDiseaseDetection\HeartDiseaseDetection.csproj", "{369C9044-8DDF-4E32-8B4E-BBFB583FA395}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelpers", "end-to-end-apps\Regression-SalesForecast\src\CommonHelper\CommonHelpers.csproj", "{212AEE3D-E008-4EC5-9DC4-EAF6A162A0ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelpers", "end-to-end-apps\Forecasting-Sales\src\CommonHelper\CommonHelpers.csproj", "{212AEE3D-E008-4EC5-9DC4-EAF6A162A0ED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ObjectDetectionE2E.Solution", "ObjectDetectionE2E.Solution", "{9F1B2D3E-F193-4D27-A1B8-7EEB16AC61B9}"
 EndProject
