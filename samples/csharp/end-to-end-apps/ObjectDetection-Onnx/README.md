@@ -6,16 +6,16 @@
 
 ## Problem
 
-Object detection is one of the classic problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain.
+Object detection is one of the classic problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain.  In this sample, we'll use a pre-trained model.
 
 ## How the sample works
 
 This sample consists of two separate apps:
 
-- An ASP.NET Core Web App that allows the user to upload or select an image.  The WebApp then runs the image through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected.
-- A WPF Core desktop app that renders a live-stream of the devices web cam, runs the video frames through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected in real-time.
+- An ASP.NET Core Web App that allows the user to upload or select an image.  The Web app then runs the image through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected.
+- A WPF Core desktop app that renders a live-stream of the device's web cam, runs the video frames through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected in real-time.
 
-The WebApp shows the images listed on the right, and each image may be selected to process. Once the image is processed, it is drawn in the middle of the screen with labeled bounding boxes around each detected object as shown below.
+The Web app shows the images listed on the right, and each image may be selected to process. Once the image is processed, it is drawn in the middle of the screen with labeled bounding boxes around each detected object as shown below.
 
 ![Animated image showing object detection web sample](./docs/Screenshots/ObjectDetection.gif)
 
@@ -75,7 +75,7 @@ public class ImageInputData
 
 ### ML.NET: Configure the model
 
-The first step is to create an empty DataView as we just need schema of data while configuring up model.
+The first step is to create an empty DataView since we need schema of the data while configuring the model.
 
 ```csharp
 var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
@@ -89,7 +89,7 @@ var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimat
                 .Append(_mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModelFilePath, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
 ```
 
-You also need to inspect the neural network to get the **names** of the **input** and **output** nodes, which are used later when we defining the estimation pipeline. To do this, you can use tools like [Netron](https://github.com/lutzroeder/netron), a GUI visualizer for neural networks, deep learning, and machine learning models.
+You also need to inspect the neural network to get the **names** of the **input** and **output** nodes, which are used later when we define the estimation pipeline. To do this, you can use tools like [Netron](https://github.com/lutzroeder/netron), a GUI visualizer for neural networks, deep learning, and machine learning models.
 
 Below is an example of what we'd see upon opening this sample's Tiny YOLOv2 model with Netron:
 
@@ -124,7 +124,7 @@ var model = pipeline.Fit(dataView);
 After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and then pass the image to the engine to detect objects using the model.
 This is one place that the **Web** app and the **WPF** app differ slightly.  
 
-The **Web** app uses a `PredicitonEnginePool` to efficiently manage and provide the service with a `PredictionEngine` to use to make predictions.
+The **Web** app uses a `PredictionEnginePool` to efficiently manage and provide the service with a `PredictionEngine` to use to make predictions.  Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects
 
 ```csharp
 public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPrediction> predictionEngine)
@@ -133,7 +133,7 @@ public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPr
 }
 ```
 
-Whereas the **WPF** desktop app creates a single `PredictionEngine` and caches locally to be used for each frame prediction.
+Whereas the **WPF** desktop app creates a single `PredictionEngine` and caches locally to be used for each frame prediction.  And the key point to clarify is that the calling code that instantiates the `PredictionEngine` is responsible for handling the caching (as compared to the `PredictionEnginePool`).
 
 ```csharp
 public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictionEngine()
@@ -144,7 +144,7 @@ public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictio
 
 ## Detect objects in the image
 
-When obtaining the prediction, we get an `float` array of size **21125** in the `PredictedLabels` property. This is the 125x13x13 output of the model discussed earlier. We then use the `YoloOutputParser` class to interpret and return a number of bounding boxes for each image. Again, these boxes are filtered so that we retrieve only 5 with high confidence.
+When obtaining the prediction, we get a `float` array of size **21125** in the `PredictedLabels` property. This is the 125x13x13 output of the model discussed earlier. We then use the `YoloOutputParser` class to interpret and return a number of bounding boxes for each image. Again, these boxes are filtered so that we retrieve only 5 with high confidence.
 
 ```csharp
 var labels = predictionEngine.Predict(imageInputData).PredictedLabels;

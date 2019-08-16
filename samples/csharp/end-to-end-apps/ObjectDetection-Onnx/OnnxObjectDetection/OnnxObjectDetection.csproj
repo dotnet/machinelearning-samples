@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <None Update="ML\OnnxModel\TinyYolo2_model.onnx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
