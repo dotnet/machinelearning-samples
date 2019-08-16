@@ -1,0 +1,23 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h2>Live Sentiment</h2>
+
+    <p><textarea id="Message" cols="45" placeholder="Type any text like a short product review"></textarea></p>
+
+    <div class="sentiment">
+        <h4>Your sentiment is...</h4>
+        <p>😡🙁😐😃😍</p>
+
+        <div class="marker">
+            <div id="markerPosition" style="left: 50%;">
+                <div>▲</div>
+                <label id="markerValue">50.0%</label>
+            </div>
+        </div>
+    </div>
+</div>

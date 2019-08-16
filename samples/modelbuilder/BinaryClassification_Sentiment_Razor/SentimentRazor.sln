@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.779
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentRazor", "SentimentAnalysisRazorPages\SentimentRazor.csproj", "{DD291E26-3494-4D4F-88A6-B5DD34ECB8FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentRazorML.Model", "SentimentRazorML.Model\SentimentRazorML.Model.csproj", "{CD60ED3E-6B6A-41C7-8D24-71788F0F31F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentRazorML.ConsoleApp", "SentimentRazorML.ConsoleApp\SentimentRazorML.ConsoleApp.csproj", "{B07BB52B-9E8E-4AE8-B3CC-9B412C884A32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD291E26-3494-4D4F-88A6-B5DD34ECB8FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD291E26-3494-4D4F-88A6-B5DD34ECB8FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD291E26-3494-4D4F-88A6-B5DD34ECB8FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD291E26-3494-4D4F-88A6-B5DD34ECB8FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD60ED3E-6B6A-41C7-8D24-71788F0F31F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD60ED3E-6B6A-41C7-8D24-71788F0F31F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD60ED3E-6B6A-41C7-8D24-71788F0F31F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD60ED3E-6B6A-41C7-8D24-71788F0F31F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B07BB52B-9E8E-4AE8-B3CC-9B412C884A32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B07BB52B-9E8E-4AE8-B3CC-9B412C884A32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B07BB52B-9E8E-4AE8-B3CC-9B412C884A32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B07BB52B-9E8E-4AE8-B3CC-9B412C884A32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17515FD9-FD1E-4F18-AEBA-C76830108EFE}
+	EndGlobalSection
+EndGlobal
