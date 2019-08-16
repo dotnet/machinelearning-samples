@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopDashboard", "src\eShop
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopForecastModelsTrainer", "src\eShopForecastModelsTrainer\eShopForecastModelsTrainer.csproj", "{5AB1C510-FEF6-4930-AE05-D16AF802084D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestObjectPoolingConsoleApp", "src\TestObjectPoolingConsoleApp\TestObjectPoolingConsoleApp.csproj", "{CF3DE8C7-81D6-4B2B-A2F0-82D15701F10A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{BAE5D60B-7632-44BA-9785-9716DCA9D84A}"
 EndProject
 Global
@@ -27,10 +25,6 @@ Global
 		{5AB1C510-FEF6-4930-AE05-D16AF802084D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AB1C510-FEF6-4930-AE05-D16AF802084D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AB1C510-FEF6-4930-AE05-D16AF802084D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF3DE8C7-81D6-4B2B-A2F0-82D15701F10A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF3DE8C7-81D6-4B2B-A2F0-82D15701F10A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF3DE8C7-81D6-4B2B-A2F0-82D15701F10A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF3DE8C7-81D6-4B2B-A2F0-82D15701F10A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BAE5D60B-7632-44BA-9785-9716DCA9D84A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BAE5D60B-7632-44BA-9785-9716DCA9D84A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAE5D60B-7632-44BA-9785-9716DCA9D84A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,7 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{29DB8569-F5D6-4190-9DF4-8D18CA0AABA8} = {F395612F-24C7-4666-90B2-62E417033B4B}
 		{5AB1C510-FEF6-4930-AE05-D16AF802084D} = {F395612F-24C7-4666-90B2-62E417033B4B}
-		{CF3DE8C7-81D6-4B2B-A2F0-82D15701F10A} = {F395612F-24C7-4666-90B2-62E417033B4B}
 		{BAE5D60B-7632-44BA-9785-9716DCA9D84A} = {F395612F-24C7-4666-90B2-62E417033B4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
