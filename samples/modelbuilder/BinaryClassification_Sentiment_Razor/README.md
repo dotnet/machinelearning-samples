@@ -13,7 +13,7 @@ The goal is to be able to make **SENTIMENT ANALYSIS** prediction/detection of wh
 
 Here's a screenshot of the app while running:
 
-![Blazor App running](./Images/app.png)
+![Blazor App running](./Images/web-app.png)
 
 From ML.NET perspective, the goal is to **optimize the ML.NET model executions in the server** by sharing the ML.NET objects used for predictions across Http requests and being able to implement very simple code to be used by the user when predicting, like the following line of code that you could write on any ASP.NET Core controller's method or custom service class:
 
