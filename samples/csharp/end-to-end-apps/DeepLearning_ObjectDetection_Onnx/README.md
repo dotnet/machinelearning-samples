@@ -23,7 +23,7 @@ There are two data sources: the `tsv` file and the image files.  The [tsv file](
 
 The images are located in the [TestImages](./OnnxObjectDetectionE2EAPP/TestImages) folder. These images have been downloaded from internet.
 
-For example, below are urls from which the iamges downloaded from:  
+For example, below are urls from which the images downloaded from:  
 
 https://github.com/simo23/tinyYOLOv2/blob/master/dog.jpg
 
