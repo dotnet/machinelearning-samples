@@ -1,5 +1,4 @@
-﻿using Common;
-using eShopForecast;
+﻿using eShopForecast;
 using eShopDashboard.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;

@@ -49,15 +49,15 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </tr>
   <tr>
     <td align="middle"><img src="images/price-prediction.png" alt="Price Prediction chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Price Prediction<br><a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a></b></td>
-    <td align="middle"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sales ForeCasting<br><a href="samples/csharp/end-to-end-apps/Regression-SalesForecast">C#</a><br><br></b></td>
+    <td align="middle"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sales Forecasting (Regression)<br><a href="samples/csharp/end-to-end-apps/Forecasting-Sales">C#</a><br><br></b></td>
     <td align="middle"><img src="images/demand-prediction.png" alt="Demand Prediction chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Demand Prediction<br><a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/Regression_BikeSharingDemand">F#</a></b></td>
   </tr>
   <tr>
-    <td align="middle" colspan="3">Clustering</td>
+    <td align="middle" colspan="3">Time Series Forecasting</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/customer-segmentation.png" alt="Customer Segmentation chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Customer Segmentation<br><a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_CustomerSegmentation">F#</a></b></td>
-    <td align="middle"><img src="images/clustering.png" alt="IRIS Flowers chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>IRIS Flowers clustering<br><a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a></b></td>
+    <td align="middle"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sales Forecasting (Time Series)<br><a href="samples/csharp/end-to-end-apps/Forecasting-Sales">C#</a><br><br></b></td>
+    <td></td>
     <td></td>
   </tr>
   <tr>
@@ -69,6 +69,14 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Power Anomaly Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_PowerMeterReadings">C#</a><b></td>
       <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Credit Card Fraud Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection">C#</a><b></td>
   </tr> 
+  <tr>
+    <td align="middle" colspan="3">Clustering</td>
+  </tr>
+  <tr>
+    <td align="middle"><img src="images/customer-segmentation.png" alt="Customer Segmentation chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Customer Segmentation<br><a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_CustomerSegmentation">F#</a></b></td>
+    <td align="middle"><img src="images/clustering.png" alt="IRIS Flowers chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>IRIS Flowers clustering<br><a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a></b></td>
+    <td></td>
+  </tr>
   <tr>
     <td align="middle" colspan="3">Ranking</td>
   </tr>
