@@ -231,8 +231,8 @@ Specifically, the **Single Spectrum Analysis (SSA)** trainer is the algorithm th
 - **outputColumnName**: This is the name of the column that will be used to store predictions. The column must be a vector of type **Single**. In a later step, we define a class named **ProductUnitTimeSeriesPrediction** that contains this output column.
 - **inputColumnName**: This is the name of the column that is being predicted/forecasted. The column contains a value at a timestamp in the time series and must be of type **Single**. In our sample, we are predicting/forecasting product **units**.
 - **windowSize**:  This parameter is used to define a sliding window of time that is used by the algorithm to decompose the time series data into trend, seasonal, or noise components. Typically, you should start with a window size that is representative of the business cycle in your scenario. In our sample, the product data is based on a 12 month cycle so we will select a window size that is a multiple of 12.
-- **seriesLength**: TODO - Need guidance
-- **trainSize**: TODO - Need guidance
+- **seriesLength**: TODO - Need specific description
+- **trainSize**: TODO - Need specific description
 - **horizon**: This parameter indicates the number of time periods to predict/forecast. In our sample, we specify 2 to indicate that the next 2 months of product units will be predicated/forecasted.
 - **confidenceLevel**: This parameter indicates the likelihood the prediction/forecast value will fall within the specified interval bounds. TODO - Need to confirm this is correct. Typically, .95 is an acceptable starting point.
 - **confidenceLowerBoundColumn**: This is the name of the column that will be used to store the **lower** confidence interval bound for each forecasted value. The **ProductUnitTimeSeriesPrediction** class also contains this output column.
