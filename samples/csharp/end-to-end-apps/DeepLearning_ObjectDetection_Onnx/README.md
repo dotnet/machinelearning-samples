@@ -133,7 +133,7 @@ When obtaining the prediction, we get an array of floats in the property `Predic
 # Draw bounding boxes around detected objects in Image.
 
 The final step is we draw the bounding boxes around the objects using Paint API and return the image to the browser and it is displayed on the browser
-
+```
 var img = _objectDetectionService.DrawBoundingBox(imageFilePath);
 
 using (MemoryStream m = new MemoryStream())
@@ -146,7 +146,7 @@ using (MemoryStream m = new MemoryStream())
    var result = new Result { imageString = base64String };
    return result;
 }
-
+```
 **Note** The Tiny Yolo2 model is not having much accuracy compare to full YOLO2 model. As this is a sample program we are using Tiny version of Yolo model i.e Tiny_Yolo2
 
 
