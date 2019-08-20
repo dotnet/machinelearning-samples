@@ -41,23 +41,23 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </tr>
   <tr>
     <td align="middle"><img src="images/product-recommendation.png" alt="Product Recommender chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Product Recommendation<br><a href="samples/csharp/getting-started/MatrixFactorization_ProductRecommendation">C#</a></h4></td>
-    <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart" ><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Movie Recommender<b><br><a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a></b></td>
-    <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Movie Recommender (E2E app)<br><a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a></b></td>
+    <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart" ><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Movie Recommender <br>(Matrix Factorization)<b><br><a href="samples/csharp/getting-started/MatrixFactorization_MovieRecommendation">C#</a></b></td>
+    <td align="middle"><img src="images/movie-recommendation.png" alt="Movie Recommender chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Movie Recommender <br>(Field Aware Factorization Machines)<br><a href="samples/csharp/end-to-end-apps/Recommendation-MovieRecommender">C#</a></b></td>
   </tr>
   <tr>
     <td align="middle" colspan="3">Regression</td>
   </tr>
   <tr>
     <td align="middle"><img src="images/price-prediction.png" alt="Price Prediction chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Price Prediction<br><a href="samples/csharp/getting-started/Regression_TaxiFarePrediction">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Regression_TaxiFarePrediction">F#</a></b></td>
-    <td align="middle"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sales ForeCasting<br><a href="samples/csharp/end-to-end-apps/Regression-SalesForecast">C#</a><br><br></b></td>
+    <td align="middle"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sales Forecasting (Regression)<br><a href="samples/csharp/end-to-end-apps/Forecasting-Sales">C#</a><br><br></b></td>
     <td align="middle"><img src="images/demand-prediction.png" alt="Demand Prediction chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Demand Prediction<br><a href="samples/csharp/getting-started/Regression_BikeSharingDemand">C#</a> &nbsp;&nbsp;&nbsp;<a href="samples/fsharp/getting-started/Regression_BikeSharingDemand">F#</a></b></td>
   </tr>
   <tr>
-    <td align="middle" colspan="3">Clustering</td>
+    <td align="middle" colspan="3">Time Series Forecasting</td>
   </tr>
   <tr>
-    <td align="middle"><img src="images/customer-segmentation.png" alt="Customer Segmentation chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Customer Segmentation<br><a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_CustomerSegmentation">F#</a></b></td>
-    <td align="middle"><img src="images/clustering.png" alt="IRIS Flowers chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>IRIS Flowers clustering<br><a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a></b></td>
+    <td align="middle"><br><img src="images/sales-forcasting.png" alt="Sales ForeCasting chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sales Forecasting (Time Series)<br><a href="samples/csharp/end-to-end-apps/Forecasting-Sales">C#</a><br><br></b></td>
+    <td></td>
     <td></td>
   </tr>
   <tr>
@@ -67,8 +67,16 @@ The official ML.NET samples are divided in multiple categories depending on the 
     <td align="middle"><img src="images/spike-detection.png" alt="Spike detection chart"><br><br><b>Sales Spike Detection<br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon">&nbsp;<a href="samples/csharp/getting-started/AnomalyDetection_Sales">C#</a>&nbsp&nbsp;&nbsp;&nbsp;&nbsp;
       <img src="images/app-type-e2e-black.png" alt="End-to-end app icon">&nbsp;<a href="samples/csharp/end-to-end-apps/AnomalyDetection-Sales">C#</a><b></td>
     <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Power Anomaly Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_PowerMeterReadings">C#</a><b></td>
-     <td></td>
+      <td align="middle"><img src="images/anomaly-detection.png" alt="Power Anomaly detection chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Credit Card Fraud Detection<br><a href="samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection">C#</a><b></td>
   </tr> 
+  <tr>
+    <td align="middle" colspan="3">Clustering</td>
+  </tr>
+  <tr>
+    <td align="middle"><img src="images/customer-segmentation.png" alt="Customer Segmentation chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Customer Segmentation<br><a href="samples/csharp/getting-started/Clustering_CustomerSegmentation">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_CustomerSegmentation">F#</a></b></td>
+    <td align="middle"><img src="images/clustering.png" alt="IRIS Flowers chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>IRIS Flowers clustering<br><a href="samples/csharp/getting-started/Clustering_Iris">C#</a> &nbsp; &nbsp; <a href="samples/fsharp/getting-started/Clustering_Iris">F#</a></b></td>
+    <td></td>
+  </tr>
   <tr>
     <td align="middle" colspan="3">Ranking</td>
   </tr>
@@ -144,7 +152,7 @@ ML.NET AutoML API is basically a set of libraries packaged as a NuGet package yo
 
 # Additional ML.NET Community Samples
 
-In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community shocased in this separated page:
+In addition to the ML.NET samples provided by Microsoft, we're also highlighting samples created by the community showcased in this separated page:
 [ML.NET Community Samples](https://github.com/dotnet/machinelearning-samples/blob/master/docs/COMMUNITY-SAMPLES.md)
 
 Those Community Samples are not maintained by Microsoft but by their owners.

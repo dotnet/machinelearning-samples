@@ -1,13 +1,10 @@
-# Fraud detection in credit cards based on binary classification and existing PCA-transformed dataset
+# Fraud detection in credit cards (binary classification)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.3.1           | Dynamic API | Up-to-date | Two console apps | .csv file | Fraud Detection | Two-class classification | FastTree Binary Classification |
 
 In this introductory sample, you'll see how to use ML.NET to predict a credit card fraud. In the world of machine learning, this type of prediction is known as binary classification.
-
-## API version: Dynamic and Estimators-based API
-It is important to note that this sample uses the dynamic API with Estimators.
 
 ## Problem
 This problem is centered around predicting if credit card transaction (with its related info/variables) is a fraud or no. 
@@ -34,7 +31,9 @@ More details on current and past projects on related topics are available on htt
 
 ## ML Task - [Binary Classification](https://en.wikipedia.org/wiki/Binary_classification)
 
-Binary or binomial classification is the task of classifying the elements of a given set into two groups (predicting which group each one belongs to) on the basis of a classification rule. Contexts requiring a decision as to whether or not an item has some qualitative property, some specified characteristic
+Binary or binomial classification is the task of classifying the elements of a given set into two groups (predicting which group each one belongs to) on the basis of a classification rule. Contexts requiring a decision as to whether or not an item has some qualitative property, some specified characteristic.
+
+If you would like to learn how to detect fraud using anomaly detection, visit the [Anomaly Detection Credit Card Fraud Detection sample](../AnomalyDetection_CreditCardFraudDetection).
   
 ## Solution
 
