@@ -108,12 +108,12 @@ The official ML.NET samples are divided in multiple categories depending on the 
   </tr>
   <tr>
   <td align="middle"><img src="images/web.png" alt="web image" ><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Scalable Model on WebAPI<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg">C#</a><b></td>
-  
-  <td align="middle"><img src="images/database.png" alt="Database chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Training model with Database<br><a href="samples/csharp/getting-started/DatabaseIntegration">C#</a><b></td>
+  <td align="middle"><img src="images/azure-functions-40.png" alt="Azure functions logo"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Sentiment Analysis with Azure Functions<br><a href="samples/csharp/end-to-end-apps/ScalableMLModelOnAzureFunction">C#</a><b></td>
   <td align="middle"><img src="images/smile.png" alt="Database chart"><br><img src="images/app-type-e2e-black.png" alt="End-to-end app icon"><br><b>Scalable Blazor web app<br><a href="samples/csharp/end-to-end-apps/ScalableSentimentAnalysisBlazorWebApp">C#</a><b></td>
 </tr>
 <tr>
   <td align="middle"><img src="images/large-data-set.png" alt="large file chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Large Datasets<br><a href="samples/csharp/getting-started/LargeDatasets">C#</a><b></td>
+    <td align="middle"><img src="images/database.png" alt="Database chart"><br><img src="images/app-type-getting-started-term-cursor.png" alt="Getting started icon"><br><b>Training model with Database<br><a href="samples/csharp/getting-started/DatabaseIntegration">C#</a><b></td>
   </tr>
 </table>
 
