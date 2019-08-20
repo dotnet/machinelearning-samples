@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace OnnxObjectDetectionE2EAPP.Infrastructure
+namespace OnnxObjectDetectionWeb.Infrastructure
 {
     public static class ImageValidationExtensions
     {

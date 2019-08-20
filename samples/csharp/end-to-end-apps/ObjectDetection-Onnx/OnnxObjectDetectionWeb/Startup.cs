@@ -5,12 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using OnnxObjectDetectionE2EAPP.Infrastructure;
-using OnnxObjectDetectionE2EAPP.Services;
-using OnnxObjectDetectionE2EAPP.Utilities;
+using OnnxObjectDetectionWeb.Infrastructure;
+using OnnxObjectDetectionWeb.Services;
+using OnnxObjectDetectionWeb.Utilities;
 using OnnxObjectDetection;
 
-namespace OnnxObjectDetectionE2EAPP
+namespace OnnxObjectDetectionWeb
 {
     public class Startup
     {

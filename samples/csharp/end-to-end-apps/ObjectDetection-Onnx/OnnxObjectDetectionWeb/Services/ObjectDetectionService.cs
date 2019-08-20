@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using OnnxObjectDetection;
 
-namespace OnnxObjectDetectionE2EAPP.Services
+namespace OnnxObjectDetectionWeb.Services
 {
     public interface IObjectDetectionService
     {

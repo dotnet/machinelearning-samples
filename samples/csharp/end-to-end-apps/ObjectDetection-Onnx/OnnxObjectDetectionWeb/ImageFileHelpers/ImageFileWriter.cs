@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 
-namespace OnnxObjectDetectionE2EAPP.Infrastructure
+namespace OnnxObjectDetectionWeb.Infrastructure
 {
     /// <summary>
     /// Interface to use in DI/IoC

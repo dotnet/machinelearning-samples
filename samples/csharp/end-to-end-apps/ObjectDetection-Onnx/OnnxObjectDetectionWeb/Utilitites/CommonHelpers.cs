@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace OnnxObjectDetectionE2EAPP.Utilities
+namespace OnnxObjectDetectionWeb.Utilities
 {
     public static class CommonHelpers
     {
