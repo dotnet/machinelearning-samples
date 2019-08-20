@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ML\OnnxModel\TinyYolo2_model.onnx">
+    <None Update="ML\OnnxModels\TinyYolo2_model.onnx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
