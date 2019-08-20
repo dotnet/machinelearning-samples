@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.ML;
+﻿using Microsoft.ML;
 using Microsoft.ML.Transforms.Image;
-using OnnxObjectDetectionE2EAPP.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace OnnxObjectDetectionE2EAPP.MLModel
+namespace OnnxObjectDetection
 {
     public class OnnxModelConfigurator
     {
@@ -16,7 +13,8 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
         public OnnxModelConfigurator(string onnxModelFilePath)
         {
             _mlContext = new MLContext();
-            // Model creation and pipeline definition for images needs to run just once, so calling it from the constructor:
+            // Model creation and pipeline definition for images needs to run just once,
+            // so calling it from the constructor:
             _mlModel = SetupMlNetModel(onnxModelFilePath);
         }
 
@@ -28,14 +26,13 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
 
         public struct TinyYoloModelSettings
         {
-            // for checking TIny yolo2 Model input and  output  parameter names,
-            //you can use tools like Netron, 
-            // which is installed by Visual Studio AI Tools
+            // To check Tiny Yolo2 Model input and output parameter names,
+            // you can use tools like Netron: https://github.com/lutzroeder/netron
 
-            // input tensor name
+            // Input tensor name
             public const string ModelInput = "image";
 
-            // output tensor name
+            // Output tensor name
             public const string ModelOutput = "grid";
         }
 
@@ -52,6 +49,11 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
             return mlNetModel;
         }
 
+        public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictionEngine()
+        {
+            return _mlContext.Model.CreatePredictionEngine<ImageInputData, ImageObjectPrediction>(_mlModel);
+        }
+
         public void SaveMLNetModel(string mlnetModelFilePath)
         {
             // Save/persist the model to a .ZIP file to be loaded by the PredictionEnginePool
@@ -59,4 +61,3 @@ namespace OnnxObjectDetectionE2EAPP.MLModel
         }
     }
 }
-

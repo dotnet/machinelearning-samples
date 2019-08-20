@@ -163,10 +163,16 @@ phases:
 - phase: ObjectDetectionE2EAPP
   queue: Hosted VS2017
   steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core 3.0'
+    inputs:
+      version: 3.0.x
+      includePreviewVersions: true
+      installationPath: $(Agent.ToolsDirectory)/dotnet
   - task: DotNetCoreCLI@2
     displayName: Build Object Detection E2E (Onnx Scorer)
     inputs:
-      projects: '.\samples\csharp\end-to-end-apps\DeepLearning_ObjectDetection_Onnx\OnnxObjectDetectionE2EApp.sln'
+      projects: '.\samples\csharp\end-to-end-apps\ObjectDetection-Onnx\OnnxObjectDetection.sln'
 
 - phase: SalesSpikeChangeDetectionE2E
   queue: Hosted VS2017

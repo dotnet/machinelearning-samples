@@ -3,21 +3,37 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace OnnxObjectDetectionE2EAPP
+namespace OnnxObjectDetection
 {
-    class YoloOutputParser
+    public class YoloOutputParser
     {
         class CellDimensions : DimensionsBase { }
-
+        
+        // The number of rows in the grid the image is divided into.
         public const int ROW_COUNT = 13;
+        
+        // The number of columns in the grid the image is divided into.
         public const int COL_COUNT = 13;
+
+        // The total number of values contained in one cell of the grid.
         public const int CHANNEL_COUNT = 125;
+
+        // The number of bounding boxes in a cell.
         public const int BOXES_PER_CELL = 5;
+
+        // The number of features contained within a box (x,y,height,width,confidence).
         public const int BOX_INFO_FEATURE_COUNT = 5;
+
+        // The number of class predictions contained in each bounding box.
         public const int CLASS_COUNT = 20;
+
+        // The width of one cell in the image grid.
         public const float CELL_WIDTH = 32;
+
+        // The height of one cell in the image grid.
         public const float CELL_HEIGHT = 32;
 
+        // The starting position of the current cell in the grid.
         private int channelStride = ROW_COUNT * COL_COUNT;
 
         private float[] anchors = new float[]
@@ -58,12 +74,14 @@ namespace OnnxObjectDetectionE2EAPP
             Color.DarkTurquoise
         };
 
+        // Applies the sigmoid function that outputs a number between 0 and 1.
         private float Sigmoid(float value)
         {
             var k = (float)Math.Exp(value);
             return k / (1.0f + k);
         }
 
+        // Normalizes an input vector into a probability distribution.
         private float[] Softmax(float[] values)
         {
             var maxVal = values.Max();
@@ -73,6 +91,7 @@ namespace OnnxObjectDetectionE2EAPP
             return exp.Select(v => (float)(v / sumExp)).ToArray();
         }
 
+        // Maps elements in the one-dimensional model output to the corresponding position in a 125 x 13 x 13 tensor.
         private int GetOffset(int x, int y, int channel)
         {
             // YOLO outputs a tensor that has a shape of 125x13x13, which 
@@ -82,6 +101,7 @@ namespace OnnxObjectDetectionE2EAPP
             return (channel * this.channelStride) + (y * COL_COUNT) + x;
         }
 
+        // Extracts the bounding box dimensions using the GetOffset method from the model output.
         private BoundingBoxDimensions ExtractBoundingBoxDimensions(float[] modelOutput, int x, int y, int channel)
         {
             return new BoundingBoxDimensions
@@ -93,11 +113,14 @@ namespace OnnxObjectDetectionE2EAPP
             };
         }
 
+        // Extracts the confidence value which states how sure the model is that it has detected an object 
+        // and uses the Sigmoid function to turn it into a percentage.
         private float GetConfidence(float[] modelOutput, int x, int y, int channel)
         {
             return Sigmoid(modelOutput[GetOffset(x, y, channel + 4)]);
         }
 
+        // Uses the bounding box dimensions and maps them onto its respective cell within the image.
         private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions)
         {
             return new CellDimensions
@@ -109,6 +132,8 @@ namespace OnnxObjectDetectionE2EAPP
             };
         }
 
+        // Extracts the class predictions for the bounding box from the model output using the GetOffset 
+        // method and turns them into a probability distribution using the Softmax method.
         public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
         {
             float[] predictedClasses = new float[CLASS_COUNT];
@@ -120,6 +145,7 @@ namespace OnnxObjectDetectionE2EAPP
             return Softmax(predictedClasses);
         }
 
+        // Selects the class from the list of predicted classes with the highest probability.
         private ValueTuple<int, float> GetTopResult(float[] predictedClasses)
         {
             return predictedClasses
@@ -128,6 +154,7 @@ namespace OnnxObjectDetectionE2EAPP
                 .First();
         }
 
+        // Filters overlapping bounding boxes with lower probabilities.
         private float IntersectionOverUnion(RectangleF boundingBoxA, RectangleF boundingBoxB)
         {
             var areaA = boundingBoxA.Width * boundingBoxA.Height;

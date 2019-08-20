@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using OnnxObjectDetectionE2EAPP.Infrastructure;
 using OnnxObjectDetectionE2EAPP.Services;
 using OnnxObjectDetectionE2EAPP.Utilities;
+using OnnxObjectDetection;
 
 namespace OnnxObjectDetectionE2EAPP.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace OnnxObjectDetectionE2EAPP
+﻿namespace OnnxObjectDetection
 {
     public class DimensionsBase
     {

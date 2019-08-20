@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace OnnxObjectDetectionE2EAPP
+namespace OnnxObjectDetection
 {
     public class BoundingBoxDimensions : DimensionsBase { }
 

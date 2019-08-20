@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>07b5f177-2aea-4405-8e78-4121f2a881ff</UserSecretsId>
   </PropertyGroup>
 
@@ -30,18 +29,18 @@
  
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
+  </ItemGroup>
+ 
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnnxObjectDetection\OnnxObjectDetection.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ML\OnnxModel\TinyYolo2_model.onnx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="ML\MLNETModel\ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

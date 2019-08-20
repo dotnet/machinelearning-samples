@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OnnxObjectDetectionE2EAPP.Infrastructure;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
+using OnnxObjectDetectionE2EAPP.Infrastructure;
 using OnnxObjectDetectionE2EAPP.Services;
-using System.IO;
 using OnnxObjectDetectionE2EAPP.Utilities;
-using OnnxObjectDetectionE2EAPP.MLModel;
+using OnnxObjectDetection;
 
 namespace OnnxObjectDetectionE2EAPP
 {
@@ -21,8 +20,8 @@ namespace OnnxObjectDetectionE2EAPP
         {
             Configuration = configuration;
 
-            _onnxModelFilePath = GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
-            _mlnetModelFilePath = GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
+            _onnxModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
+            _mlnetModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
 
             OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(_onnxModelFilePath);
 
@@ -40,8 +39,9 @@ namespace OnnxObjectDetectionE2EAPP
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddControllers();
+            services.AddRazorPages();
 
             services.AddPredictionEnginePool<ImageInputData, ImageObjectPrediction>().
                 FromFile(_mlnetModelFilePath);
@@ -51,9 +51,9 @@ namespace OnnxObjectDetectionE2EAPP
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == Environments.Development)
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -65,16 +65,11 @@ namespace OnnxObjectDetectionE2EAPP
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+            });
         }       
-
-        public static string GetAbsolutePath(string relativePath)
-        {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-            string assemblyFolderPath = _dataRoot.Directory.FullName;
-
-            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
-            return fullPath;
-        }
     }
 }

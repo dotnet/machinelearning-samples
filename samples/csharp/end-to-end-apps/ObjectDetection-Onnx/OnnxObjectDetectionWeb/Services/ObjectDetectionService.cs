@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using OnnxObjectDetectionE2EAPP.MLModel;
+using OnnxObjectDetection;
 
 namespace OnnxObjectDetectionE2EAPP.Services
 {
@@ -15,20 +15,20 @@ namespace OnnxObjectDetectionE2EAPP.Services
 
     public class ObjectDetectionService : IObjectDetectionService
     {
-        private readonly YoloOutputParser _parser = new YoloOutputParser();
         IList<YoloBoundingBox> filteredBoxes;
-        private readonly PredictionEnginePool<ImageInputData, ImageObjectPrediction> model;
+        private readonly YoloOutputParser yoloParser = new YoloOutputParser();
+        private readonly PredictionEnginePool<ImageInputData, ImageObjectPrediction> predictionEngine;
 
-        public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPrediction> model)
+        public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPrediction> predictionEngine)
         {
-            this.model = model;
+            this.predictionEngine = predictionEngine;
         }
 
         public void DetectObjectsUsingModel(ImageInputData imageInputData)
         {
-            var probs = model.Predict(imageInputData).PredictedLabels;
-            IList<YoloBoundingBox> boundingBoxes = _parser.ParseOutputs(probs);
-            filteredBoxes = _parser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
+            var probs = predictionEngine.Predict(imageInputData).PredictedLabels;
+            IList<YoloBoundingBox> boundingBoxes = yoloParser.ParseOutputs(probs);
+            filteredBoxes = yoloParser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
         }
 
         public Image DrawBoundingBox(string imageFilePath)

@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace OnnxObjectDetectionE2EAPP
+namespace OnnxObjectDetection
 {
     public class ImageObjectPrediction
     {
