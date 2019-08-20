@@ -1,4 +1,4 @@
-# Taxi Fare Prediction
+# Model Explainability for the Taxi Fare Prediction (Regression)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
