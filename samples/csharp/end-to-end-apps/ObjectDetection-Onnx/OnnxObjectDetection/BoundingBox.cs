@@ -2,9 +2,17 @@
 
 namespace OnnxObjectDetection
 {
+    public class DimensionsBase
+    {
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Height { get; set; }
+        public float Width { get; set; }
+    }
+
     public class BoundingBoxDimensions : DimensionsBase { }
 
-    public class YoloBoundingBox
+    public class BoundingBox
     {
         public BoundingBoxDimensions Dimensions { get; set; }
 
@@ -18,5 +26,7 @@ namespace OnnxObjectDetection
         }
 
         public Color BoxColor { get; set; }
+
+        public string Description => $"{Label} ({(Confidence * 100).ToString("0")}%)";
     }
 }

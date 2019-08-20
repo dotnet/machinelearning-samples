@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace OnnxObjectDetection
 {
-    public class YoloOutputParser
+    public class OnnxOutputParser
     {
         class CellDimensions : DimensionsBase { }
         
@@ -16,7 +16,8 @@ namespace OnnxObjectDetection
         public const int COL_COUNT = 13;
 
         // The total number of values contained in one cell of the grid.
-        public const int CHANNEL_COUNT = 125;
+        // CHANNEL_COUNT = (CLASS_COUNT + BOX_INFO_FEATURE_COUNT) * BOXES_PER_CELL
+        // public const int CHANNEL_COUNT = 125;
 
         // The number of bounding boxes in a cell.
         public const int BOXES_PER_CELL = 5;
@@ -24,55 +25,41 @@ namespace OnnxObjectDetection
         // The number of features contained within a box (x,y,height,width,confidence).
         public const int BOX_INFO_FEATURE_COUNT = 5;
 
-        // The number of class predictions contained in each bounding box.
-        public const int CLASS_COUNT = 20;
+        // The starting position of the current cell in the grid.
+        private readonly int channelStride = ROW_COUNT * COL_COUNT;
 
         // The width of one cell in the image grid.
-        public const float CELL_WIDTH = 32;
+        // i.e. input image width (416) / COL_COUNT = 32
+        private readonly float cellWidth = ImageSettings.imageWidth / COL_COUNT;
 
         // The height of one cell in the image grid.
-        public const float CELL_HEIGHT = 32;
+        // i.e. input image height (416) / ROW_COUNT = 32
+        private readonly float cellHeight = ImageSettings.imageHeight / ROW_COUNT;
 
-        // The starting position of the current cell in the grid.
-        private int channelStride = ROW_COUNT * COL_COUNT;
+        // The number of class predictions contained in each bounding box.
+        // For example if your object detection model can detect 11 different
+        // objects, then the classCount = 11
+        private readonly int classCount;
 
-        private float[] anchors = new float[]
+        private readonly float[] anchors;
+        private readonly string[] labels;
+
+        private static readonly Color[] classColors = new Color[]
         {
-            1.08F, 1.19F, 3.42F, 4.41F, 6.63F, 11.38F, 9.42F, 5.11F, 16.62F, 10.52F
-        };
-
-        private string[] labels = new string[]
-        {
-            "aeroplane", "bicycle", "bird", "boat", "bottle",
-            "bus", "car", "cat", "chair", "cow",
-            "diningtable", "dog", "horse", "motorbike", "person",
-            "pottedplant", "sheep", "sofa", "train", "tvmonitor"
-        };
-
-        private static Color[] classColors = new Color[]
-        {
-            Color.Khaki,
-            Color.Fuchsia,
-            Color.Silver,
-            Color.RoyalBlue,
-            Color.Green,
-            Color.DarkOrange,
-            Color.Purple,
-            Color.Gold,
-            Color.Red,
-            Color.Aquamarine,
-            Color.Lime,
-            Color.AliceBlue,
-            Color.Sienna,
-            Color.Orchid,
-            Color.Tan,
-            Color.LightPink,
-            Color.Yellow,
-            Color.HotPink,
-            Color.OliveDrab,
-            Color.SandyBrown,
+            Color.Khaki, Color.Fuchsia, Color.Silver, Color.RoyalBlue,
+            Color.Green, Color.DarkOrange, Color.Purple, Color.Gold,
+            Color.Red, Color.Aquamarine, Color.Lime, Color.AliceBlue,
+            Color.Sienna, Color.Orchid, Color.Tan, Color.LightPink,
+            Color.Yellow, Color.HotPink, Color.OliveDrab, Color.SandyBrown,
             Color.DarkTurquoise
         };
+
+        public OnnxOutputParser(IOnnxModel onnxModel)
+        {
+            labels = onnxModel.Labels;
+            anchors = onnxModel.Anchors;
+            classCount = onnxModel.Labels.Length;
+        }
 
         // Applies the sigmoid function that outputs a number between 0 and 1.
         private float Sigmoid(float value)
@@ -94,11 +81,11 @@ namespace OnnxObjectDetection
         // Maps elements in the one-dimensional model output to the corresponding position in a 125 x 13 x 13 tensor.
         private int GetOffset(int x, int y, int channel)
         {
-            // YOLO outputs a tensor that has a shape of 125x13x13, which 
+            // Onnx outputs a tensor that has a shape of 125x13x13, which 
             // WinML flattens into a 1D array.  To access a specific channel 
             // for a given (x,y) cell position, we need to calculate an offset
             // into the array
-            return (channel * this.channelStride) + (y * COL_COUNT) + x;
+            return (channel * channelStride) + (y * COL_COUNT) + x;
         }
 
         // Extracts the bounding box dimensions using the GetOffset method from the model output.
@@ -125,10 +112,10 @@ namespace OnnxObjectDetection
         {
             return new CellDimensions
             {
-                X = ((float)x + Sigmoid(boxDimensions.X)) * CELL_WIDTH,
-                Y = ((float)y + Sigmoid(boxDimensions.Y)) * CELL_HEIGHT,
-                Width = (float)Math.Exp(boxDimensions.Width) * CELL_WIDTH * anchors[box * 2],
-                Height = (float)Math.Exp(boxDimensions.Height) * CELL_HEIGHT * anchors[box * 2 + 1],
+                X = (x + Sigmoid(boxDimensions.X)) * cellWidth,
+                Y = (y + Sigmoid(boxDimensions.Y)) * cellHeight,
+                Width = (float)Math.Exp(boxDimensions.Width) * cellWidth * anchors[box * 2],
+                Height = (float)Math.Exp(boxDimensions.Height) * cellHeight * anchors[box * 2 + 1],
             };
         }
 
@@ -136,9 +123,9 @@ namespace OnnxObjectDetection
         // method and turns them into a probability distribution using the Softmax method.
         public float[] ExtractClasses(float[] modelOutput, int x, int y, int channel)
         {
-            float[] predictedClasses = new float[CLASS_COUNT];
+            float[] predictedClasses = new float[classCount];
             int predictedClassOffset = channel + BOX_INFO_FEATURE_COUNT;
-            for (int predictedClass = 0; predictedClass < CLASS_COUNT; predictedClass++)
+            for (int predictedClass = 0; predictedClass < classCount; predictedClass++)
             {
                 predictedClasses[predictedClass] = modelOutput[GetOffset(x, y, predictedClass + predictedClassOffset)];
             }
@@ -177,9 +164,9 @@ namespace OnnxObjectDetection
             return intersectionArea / (areaA + areaB - intersectionArea);
         }
 
-        public IList<YoloBoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3F)
+        public IList<BoundingBox> ParseOutputs(float[] yoloModelOutputs, float threshold = .3f)
         {
-            var boxes = new List<YoloBoundingBox>();
+            var boxes = new List<BoundingBox>();
 
             for (int row = 0; row < ROW_COUNT; row++)
             {
@@ -187,7 +174,7 @@ namespace OnnxObjectDetection
                 {
                     for (int box = 0; box < BOXES_PER_CELL; box++)
                     {
-                        var channel = (box * (CLASS_COUNT + BOX_INFO_FEATURE_COUNT));
+                        var channel = (box * (classCount + BOX_INFO_FEATURE_COUNT));
 
                         BoundingBoxDimensions boundingBoxDimensions = ExtractBoundingBoxDimensions(yoloModelOutputs, row, column, channel);
 
@@ -206,7 +193,7 @@ namespace OnnxObjectDetection
                         if (topScore < threshold)
                             continue;
 
-                        boxes.Add(new YoloBoundingBox()
+                        boxes.Add(new BoundingBox()
                         {
                             Dimensions = new BoundingBoxDimensions
                             {
@@ -217,7 +204,7 @@ namespace OnnxObjectDetection
                             },
                             Confidence = topScore,
                             Label = labels[topResultIndex],
-                            BoxColor = classColors[topResultIndex]
+                            BoxColor = topResultIndex < classColors.Length ? classColors[topResultIndex] : classColors[topResultIndex % classColors.Length]
                         });
                     }
                 }
@@ -225,7 +212,7 @@ namespace OnnxObjectDetection
             return boxes;
         }
 
-        public IList<YoloBoundingBox> FilterBoundingBoxes(IList<YoloBoundingBox> boxes, int limit, float threshold)
+        public IList<BoundingBox> FilterBoundingBoxes(IList<BoundingBox> boxes, int limit, float threshold)
         {
             var activeCount = boxes.Count;
             var isActiveBoxes = new bool[boxes.Count];
@@ -237,7 +224,7 @@ namespace OnnxObjectDetection
                                 .OrderByDescending(b => b.Box.Confidence)
                                 .ToList();
 
-            var results = new List<YoloBoundingBox>();
+            var results = new List<BoundingBox>();
 
             for (int i = 0; i < boxes.Count; i++)
             {

@@ -3,10 +3,9 @@ using OnnxObjectDetection;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,8 +21,11 @@ namespace OnnxObjectDetectionApp
         private VideoCapture capture;
         private CancellationTokenSource cameraCaptureCancellationTokenSource;
 
-        private readonly YoloOutputParser yoloParser = new YoloOutputParser();
-        private PredictionEngine<ImageInputData, ImageObjectPrediction> predictionEngine;
+        private OnnxOutputParser outputParser;
+        private PredictionEngine<ImageInputData, TinyYoloPrediction> tinyYoloPredictionEngine;
+        private PredictionEngine<ImageInputData, CustomVisionPrediction> customVisionPredictionEngine;
+
+        private static readonly string modelsDirectory = Path.Combine(Environment.CurrentDirectory, @"ML\OnnxModels");
 
         public MainWindow()
         {
@@ -45,12 +47,26 @@ namespace OnnxObjectDetectionApp
 
         private void LoadModel()
         {
-            var onnxModel = "TinyYolo2_model.onnx";
-            var modelDirectory = Path.Combine(Environment.CurrentDirectory, @"ML\OnnxModel");
-            var onnxPath = Path.Combine(modelDirectory, onnxModel);
+            // Check for an Onnx model exported from Custom Vision
+            var customVisionExport = Directory.GetFiles(modelsDirectory, "*.zip").FirstOrDefault();
 
-            var onnxModelConfigurator = new OnnxModelConfigurator(onnxPath);
-            predictionEngine = onnxModelConfigurator.GetMlNetPredictionEngine();
+            // If there is one, use it.
+            if (customVisionExport != null)
+            {
+                var customVisionModel = new CustomVisionModel(customVisionExport);
+                var modelConfigurator = new OnnxModelConfigurator(customVisionModel);
+
+                outputParser = new OnnxOutputParser(customVisionModel);
+                customVisionPredictionEngine = modelConfigurator.GetMlNetPredictionEngine<CustomVisionPrediction>();
+            }
+            else // Otherwise default to Tiny Yolo Onnx model
+            {
+                var tinyYoloModel = new TinyYoloModel(Path.Combine(modelsDirectory, "TinyYolo2_model.onnx"));
+                var modelConfigurator = new OnnxModelConfigurator(tinyYoloModel);
+
+                outputParser = new OnnxOutputParser(tinyYoloModel);
+                tinyYoloPredictionEngine = modelConfigurator.GetMlNetPredictionEngine<TinyYoloPrediction>();
+            }
         }
 
         private void StartCameraCapture()
@@ -59,10 +75,7 @@ namespace OnnxObjectDetectionApp
             Task.Run(() => CaptureCamera(cameraCaptureCancellationTokenSource.Token), cameraCaptureCancellationTokenSource.Token) ;
         }
 
-        private void StopCameraCapture()
-        {
-            cameraCaptureCancellationTokenSource?.Cancel();
-        }
+        private void StopCameraCapture() => cameraCaptureCancellationTokenSource?.Cancel();
 
         private async Task CaptureCamera(CancellationToken token)
         {
@@ -91,57 +104,57 @@ namespace OnnxObjectDetectionApp
 
                     var bitmapImage = new Bitmap(memoryStream);
 
-                    await ParseWebCamFrame(bitmapImage);
+                    await ParseWebCamFrame(bitmapImage, token);
                 }
 
                 capture.Release();
             }
         }
 
-        async Task ParseWebCamFrame(Bitmap bitmap)
+        async Task ParseWebCamFrame(Bitmap bitmap, CancellationToken token)
         {
-            if (predictionEngine == null)
+            if (customVisionPredictionEngine == null && tinyYoloPredictionEngine == null)
                 return;
 
             var frame = new ImageInputData { Image = bitmap };
             var filteredBoxes = DetectObjectsUsingModel(frame);
 
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            if (!token.IsCancellationRequested)
             {
-                DrawOverlays(filteredBoxes, (int)WebCamImage.ActualHeight, (int)WebCamImage.ActualWidth);
-            });
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    DrawOverlays(filteredBoxes, WebCamImage.ActualHeight, WebCamImage.ActualWidth);
+                });
+            }
         }
 
-        public IList<YoloBoundingBox> DetectObjectsUsingModel(ImageInputData imageInputData)
+        public IList<BoundingBox> DetectObjectsUsingModel(ImageInputData imageInputData)
         {
-            var labels = predictionEngine.Predict(imageInputData).PredictedLabels;
-            var boundingBoxes = yoloParser.ParseOutputs(labels);
-            var filteredBoxes = yoloParser.FilterBoundingBoxes(boundingBoxes, 5, 0.5f);
-
+            var labels = customVisionPredictionEngine?.Predict(imageInputData).PredictedLabels ?? tinyYoloPredictionEngine?.Predict(imageInputData).PredictedLabels;
+            var boundingBoxes = outputParser.ParseOutputs(labels);
+            var filteredBoxes = outputParser.FilterBoundingBoxes(boundingBoxes, 5, 0.5f);
             return filteredBoxes;
         }
         
-        private void DrawOverlays(IList<YoloBoundingBox> filteredBoxes, int originalHeight, int originalWidth)
+        private void DrawOverlays(IList<BoundingBox> filteredBoxes, double originalHeight, double originalWidth)
         {
             WebCamCanvas.Children.Clear();
 
             foreach (var box in filteredBoxes)
             {
                 // process output boxes
-                var x = (uint)Math.Max(box.Dimensions.X, 0);
-                var y = (uint)Math.Max(box.Dimensions.Y, 0);
-                var width = (uint)Math.Min(originalWidth - x, box.Dimensions.Width);
-                var height = (uint)Math.Min(originalHeight - y, box.Dimensions.Height);
+                double x = Math.Max(box.Dimensions.X, 0);
+                double y = Math.Max(box.Dimensions.Y, 0);
+                double width = Math.Min(originalWidth - x, box.Dimensions.Width);
+                double height = Math.Min(originalHeight - y, box.Dimensions.Height);
 
                 // fit to current image size
-                x = (uint)originalWidth * x / OnnxModelConfigurator.ImageSettings.imageWidth;
-                y = (uint)originalHeight * y / OnnxModelConfigurator.ImageSettings.imageHeight;
-                width = (uint)originalWidth * width / OnnxModelConfigurator.ImageSettings.imageWidth;
-                height = (uint)originalHeight * height / OnnxModelConfigurator.ImageSettings.imageHeight;
+                x = originalWidth * x / ImageSettings.imageWidth;
+                y = originalHeight * y / ImageSettings.imageHeight;
+                width = originalWidth * width / ImageSettings.imageWidth;
+                height = originalHeight * height / ImageSettings.imageHeight;
 
                 var boxColor = box.BoxColor.ToMediaColor();
-
-                var description = $"{box.Label} ({(box.Confidence * 100).ToString("0")}%)";
 
                 var objBox = new Rectangle
                 {
@@ -156,7 +169,7 @@ namespace OnnxObjectDetectionApp
                 var objDescription = new TextBlock
                 {
                     Margin = new Thickness(x + 4, y + 4, 0, 0),
-                    Text = description,
+                    Text = box.Description,
                     FontWeight = FontWeights.Bold,
                     Width = 126,
                     Height = 21,

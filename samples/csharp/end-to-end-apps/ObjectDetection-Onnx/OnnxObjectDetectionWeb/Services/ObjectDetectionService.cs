@@ -15,11 +15,11 @@ namespace OnnxObjectDetectionWeb.Services
 
     public class ObjectDetectionService : IObjectDetectionService
     {
-        IList<YoloBoundingBox> filteredBoxes;
-        private readonly YoloOutputParser yoloParser = new YoloOutputParser();
-        private readonly PredictionEnginePool<ImageInputData, ImageObjectPrediction> predictionEngine;
+        IList<BoundingBox> filteredBoxes;
+        private readonly OnnxOutputParser outputParser = new OnnxOutputParser(new TinyYoloModel(null));
+        private readonly PredictionEnginePool<ImageInputData, TinyYoloPrediction> predictionEngine;
 
-        public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPrediction> predictionEngine)
+        public ObjectDetectionService(PredictionEnginePool<ImageInputData, TinyYoloPrediction> predictionEngine)
         {
             this.predictionEngine = predictionEngine;
         }
@@ -27,8 +27,8 @@ namespace OnnxObjectDetectionWeb.Services
         public void DetectObjectsUsingModel(ImageInputData imageInputData)
         {
             var probs = predictionEngine.Predict(imageInputData).PredictedLabels;
-            IList<YoloBoundingBox> boundingBoxes = yoloParser.ParseOutputs(probs);
-            filteredBoxes = yoloParser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
+            IList<BoundingBox> boundingBoxes = outputParser.ParseOutputs(probs);
+            filteredBoxes = outputParser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
         }
 
         public Image DrawBoundingBox(string imageFilePath)
@@ -45,12 +45,10 @@ namespace OnnxObjectDetectionWeb.Services
                 var height = (uint)Math.Min(originalHeight - y, box.Dimensions.Height);
 
                 // fit to current image size
-                x = (uint)originalWidth * x / OnnxModelConfigurator.ImageSettings.imageWidth;
-                y = (uint)originalHeight * y / OnnxModelConfigurator.ImageSettings.imageHeight;
-                width = (uint)originalWidth * width / OnnxModelConfigurator.ImageSettings.imageWidth;
-                height = (uint)originalHeight * height / OnnxModelConfigurator.ImageSettings.imageHeight;
-
-                string text = $"{box.Label} ({(box.Confidence * 100).ToString("0")}%)";
+                x = (uint)originalWidth * x / ImageSettings.imageWidth;
+                y = (uint)originalHeight * y / ImageSettings.imageHeight;
+                width = (uint)originalWidth * width / ImageSettings.imageWidth;
+                height = (uint)originalHeight * height / ImageSettings.imageHeight;
 
                 using (Graphics thumbnailGraphic = Graphics.FromImage(image))
                 {
@@ -60,7 +58,7 @@ namespace OnnxObjectDetectionWeb.Services
 
                     // Define Text Options
                     Font drawFont = new Font("Arial", 12, FontStyle.Bold);
-                    SizeF size = thumbnailGraphic.MeasureString(text, drawFont);
+                    SizeF size = thumbnailGraphic.MeasureString(box.Description, drawFont);
                     SolidBrush fontBrush = new SolidBrush(Color.Black);
                     Point atPoint = new Point((int)x, (int)y - (int)size.Height - 1);
 
@@ -70,7 +68,7 @@ namespace OnnxObjectDetectionWeb.Services
 
                     // Draw text on image 
                     thumbnailGraphic.FillRectangle(colorBrush, (int)x, (int)(y - size.Height - 1), (int)size.Width, (int)size.Height);
-                    thumbnailGraphic.DrawString(text, drawFont, fontBrush, atPoint);
+                    thumbnailGraphic.DrawString(box.Description, drawFont, fontBrush, atPoint);
 
                     // Draw bounding box on image
                     thumbnailGraphic.DrawRectangle(pen, x, y, width, height);

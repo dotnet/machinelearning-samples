@@ -16,6 +16,7 @@ namespace OnnxObjectDetectionWeb
     {
         private readonly string _onnxModelFilePath;
         private readonly string _mlnetModelFilePath;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,7 +24,7 @@ namespace OnnxObjectDetectionWeb
             _onnxModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
             _mlnetModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
 
-            OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(_onnxModelFilePath);
+            var onnxModelConfigurator = new OnnxModelConfigurator(new TinyYoloModel(_onnxModelFilePath));
 
             onnxModelConfigurator.SaveMLNetModel(_mlnetModelFilePath);
         }
@@ -43,7 +44,7 @@ namespace OnnxObjectDetectionWeb
             services.AddControllers();
             services.AddRazorPages();
 
-            services.AddPredictionEnginePool<ImageInputData, ImageObjectPrediction>().
+            services.AddPredictionEnginePool<ImageInputData, TinyYoloPrediction>().
                 FromFile(_mlnetModelFilePath);
 
             services.AddTransient<IImageFileWriter, ImageFileWriter>();
