@@ -9,7 +9,7 @@ namespace ImageClassification.DataModels
     public class ImageDataForScoring
     {
         [LoadColumn(0)]
-        public string ImagePath;
+        public string ImageFileName;
 
         [LoadColumn(1)]
         public string Label;
@@ -20,7 +20,7 @@ namespace ImageClassification.DataModels
              .Select(x => x.Split('\t'))
              .Select(x => new ImageDataForScoring()
              {
-                 ImagePath = Path.Combine(folder,x[0])
+                 ImageFileName = Path.Combine(folder,x[0])
              });
         }
     }
