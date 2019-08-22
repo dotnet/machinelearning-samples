@@ -26,7 +26,7 @@ namespace DatabaseLoaderConsoleApp
 
             // localdb SQL database connection string using a filepath to attach the database file into localdb
             string dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlLocalDb", "Criteo-100k-rows.mdf");
-            string connectionString = $"Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Integrated Security = True";
+            string connectionString = $"Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Database=Criteo-100k-rows;Integrated Security = True";
 
             // localdb SQL database connection string for 'localdb default location' (usually files located at /Users/YourUser/)
             //string connectionString2 = @"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=Criteo-100k-rows;Integrated Security=True;Pooling=False";
