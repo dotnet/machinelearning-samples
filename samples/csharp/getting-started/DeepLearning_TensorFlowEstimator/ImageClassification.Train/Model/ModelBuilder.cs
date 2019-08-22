@@ -75,7 +75,7 @@ namespace ImageClassification.Model
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations 
             ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessPipeline, 2);
-            ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "softmax2_pre_activation", trainDataView, dataProcessPipeline, 2);
+            //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "softmax2_pre_activation", trainDataView, dataProcessPipeline, 2);
 
             // 3. Set the training algorithm and convert back the key to the categorical values                            
             var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "softmax2_pre_activation");
