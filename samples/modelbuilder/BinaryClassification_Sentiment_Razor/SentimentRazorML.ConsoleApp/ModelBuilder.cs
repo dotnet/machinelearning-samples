@@ -16,7 +16,7 @@ namespace SentimentRazorML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Downloads\wikipedia-detox-250-line-data.tsv";
+        private static string TRAIN_DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Downloads\trainingdata.tsv";
         private static string MODEL_FILEPATH = @"../../../../SentimentRazorML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
@@ -49,13 +49,11 @@ namespace SentimentRazorML.ConsoleApp
         public static IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations 
-            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("SentimentText_tf", "SentimentText")
-                                      .Append(mlContext.Transforms.CopyColumns("Features", "SentimentText_tf"))
-                                      .Append(mlContext.Transforms.NormalizeMinMax("Features", "Features"))
-                                      .AppendCacheCheckpoint(mlContext);
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("comment_tf", "comment")
+                                      .Append(mlContext.Transforms.CopyColumns("Features", "comment_tf"));
 
             // Set the training algorithm 
-            var trainer = mlContext.BinaryClassification.Trainers.AveragedPerceptron(labelColumnName: "Sentiment", numberOfIterations: 10, featureColumnName: "Features");
+            var trainer = mlContext.BinaryClassification.Trainers.LightGbm(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             return trainingPipeline;
@@ -76,7 +74,7 @@ namespace SentimentRazorML.ConsoleApp
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.BinaryClassification.CrossValidateNonCalibrated(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "Sentiment");
+            var crossValidationResults = mlContext.BinaryClassification.CrossValidateNonCalibrated(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "Label");
             PrintBinaryClassificationFoldsAverageMetrics(crossValidationResults);
         }
         private static void SaveModel(MLContext mlContext, ITransformer mlModel, string modelRelativePath, DataViewSchema modelInputSchema)

@@ -10,12 +10,12 @@ namespace SentimentRazorML.Model.DataModels
 {
     public class ModelInput
     {
-        [ColumnName("Sentiment"), LoadColumn(0)]
-        public bool Sentiment { get; set; }
+        [ColumnName("Label"), LoadColumn(0)]
+        public bool Label { get; set; }
 
 
-        [ColumnName("SentimentText"), LoadColumn(1)]
-        public string SentimentText { get; set; }
+        [ColumnName("comment"), LoadColumn(1)]
+        public string Comment { get; set; }
 
 
     }

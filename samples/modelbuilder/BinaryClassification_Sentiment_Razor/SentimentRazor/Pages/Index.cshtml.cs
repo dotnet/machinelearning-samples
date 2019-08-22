@@ -25,10 +25,12 @@ namespace SentimentAnalysisRazorPages.Pages
 
         public IActionResult OnGetAnalyzeSentiment([FromQuery] string text)
         {
-            var input = new ModelInput { SentimentText = text };
+            var input = new ModelInput { Comment = text };
             var prediction = _predictionEnginePool.Predict(input);
-            float percentage = 100 * (1.0f / (1.0f + (float)Math.Exp(-prediction.Score)));
-            return Content(percentage.ToString("0.0"));
+            var sentiment = Convert.ToBoolean(prediction.Prediction) ? "Positive" : "Negative";
+            return Content(sentiment);
+            
+            //return Content(percentage.ToString("0.0"));
         }
     }
 }

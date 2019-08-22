@@ -19,7 +19,7 @@ namespace SentimentRazorML.ConsoleApp
         private const string MODEL_FILEPATH = @"MLModel.zip";
 
         //Dataset to use for predictions 
-        private const string DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Downloads\wikipedia-detox-250-line-data.tsv";
+        private const string DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Downloads\trainingdata.tsv";
 
         static void Main(string[] args)
         {
@@ -37,7 +37,7 @@ namespace SentimentRazorML.ConsoleApp
             // Try a single prediction
             ModelOutput predictionResult = predEngine.Predict(sampleData);
 
-            Console.WriteLine($"Single Prediction --> Actual value: {sampleData.Sentiment} | Predicted value: {predictionResult.Prediction}");
+            Console.WriteLine($"Single Prediction --> Actual value: {sampleData.Label} | Predicted value: {predictionResult.Prediction}");
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();

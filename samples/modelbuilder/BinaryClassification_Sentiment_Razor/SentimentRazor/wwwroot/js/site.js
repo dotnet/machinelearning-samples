@@ -9,8 +9,8 @@ function getSentiment(userInput) {
         })
 }
 
-function updateMarker(sentiment) {
-    $("#markerPosition").attr("style", `left:${sentiment}%`);
+function updateMarker(markerPosition, sentiment) {
+    $("#markerPosition").attr("style", `left:${markerPosition}%`);
     $("#markerValue").text(sentiment);
 }
 
@@ -20,8 +20,18 @@ function updateSentiment() {
 
     getSentiment(userInput)
         .then((sentiment) => {
-            updateMarker(sentiment);
+            switch (sentiment) {
+                case "Positive":
+                    updateMarker(110.0,sentiment);
+                    break;
+                case "Negative":
+                    updateMarker(-10.0,sentiment);
+                    break;
+                default:
+                    updateMarker(50.0, "Neutral");
+            }
+            //updateMarker(sentiment);
         });
 }
 
-$("#Message").on('input paste', updateSentiment)
+$("#Message").on('change paste', updateSentiment)
