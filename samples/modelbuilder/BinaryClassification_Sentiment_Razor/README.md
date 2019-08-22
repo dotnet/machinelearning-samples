@@ -9,7 +9,7 @@
 
 # Goal
 
-The goal is to be able to make **SENTIMENT ANALYSIS** prediction/detection of what the user is writing in a very **UI interactive app** in the client side and running an **ML.NET model**(Sentiment analysis based on binary-classification) built with Model Builder in the server side.
+The goal is to be able to make **SENTIMENT ANALYSIS** prediction/detection of what the user is writing in a very **UI interactive app** in the client side and running an **ML.NET model** (Sentiment analysis based on binary-classification) built with Model Builder in the server side.
 
 Here's a screenshot of the app while running:
 
