@@ -55,7 +55,7 @@ namespace ImageClassification.Train
                 IDataView trainDataView = mlContext.Data.LoadFromEnumerable(trainImages);
 
                 //Load seggregated test-image-set 
-                IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);
+                IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: testImagesetFolderPath, useFolderNameasLabel: true);
                 IDataView testDataView = mlContext.Data.LoadFromEnumerable(testImages);
 
 
