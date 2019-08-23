@@ -56,8 +56,15 @@ namespace ImageClassification.Predict
                     ImagePath = imagesToPredict.First().ImagePath
                 };
 
+                // Measuring Predict() time
+                var watchForPredictFunction = System.Diagnostics.Stopwatch.StartNew();
+
                 var prediction = predictionEngine.Predict(imageToPredict);
-                
+
+                watchForPredictFunction.Stop();
+                long elapsedMsForPredictFunction = watchForPredictFunction.ElapsedMilliseconds;
+                Console.WriteLine("Only .Predict() took: " + (elapsedMsForPredictFunction).ToString() + " miliseconds");
+
                 var index = prediction.PredictedLabel;
 
                 Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], " +
