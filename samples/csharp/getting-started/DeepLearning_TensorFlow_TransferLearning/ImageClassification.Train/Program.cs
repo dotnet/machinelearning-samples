@@ -112,7 +112,7 @@ namespace ImageClassification.Train
             var predictionEngine = mlContext.Model
                 .CreatePredictionEngine<ImageData, ImagePrediction>(trainedModel);
 
-            IEnumerable<ImageData> testImages = LoadImagesFromDirectory(imagesForPredictions, false);
+            IEnumerable<ImageData> testImages = LoadImagesFromDirectory(imagesForPredictions, true);
             ImageData imageToPredict = new ImageData
             {
                 ImagePath = testImages.First().ImagePath

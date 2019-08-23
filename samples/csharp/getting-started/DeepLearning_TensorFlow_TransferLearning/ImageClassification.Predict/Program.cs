@@ -39,7 +39,7 @@ namespace ImageClassification.Predict
                 long elapsedMsForCreatingPredictionEngine = watchForCreatePredictionEngine.ElapsedMilliseconds;
                 Console.WriteLine("Creating PredEngine took: " + (elapsedMsForCreatingPredictionEngine).ToString() + " miliseconds");
 
-                IEnumerable<ImageData> imagesToPredict = LoadImagesFromDirectory(imagesForPredictions, false);
+                IEnumerable<ImageData> imagesToPredict = LoadImagesFromDirectory(imagesForPredictions, true);
 
                 // Measuring PREDICTION execution time
                 var watchForE2EPrediction = System.Diagnostics.Stopwatch.StartNew();
