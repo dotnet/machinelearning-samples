@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="assets\outputs\**" />
+    <EmbeddedResource Remove="assets\outputs\**" />
+    <None Remove="assets\outputs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview-28007-0" />
+    <PackageReference Include="Microsoft.ML.Dnn" Version="0.16.0-preview-28007-0" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0-preview-28007-0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\inputs\images-for-predictions\" />
+    <Folder Include="assets\inputs\MLNETModel\" />
+    <Folder Include="DataModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets\inputs\images-for-predictions\BlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\gamer_chair_01.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\green-office-chair-test.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair_leaked.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\north_west_us_green_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\north_west_us_wooden_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\plain_black_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\plain_white_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\usa_flag_game_watching_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
