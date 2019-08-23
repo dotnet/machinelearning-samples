@@ -18,9 +18,6 @@ namespace SentimentRazorML.ConsoleApp
         //Machine Learning model to load and use for predictions
         private const string MODEL_FILEPATH = @"MLModel.zip";
 
-        //Dataset to use for predictions 
-        private const string DATA_FILEPATH = @"yelp_labelled_columns.tsv";
-
         static void Main(string[] args)
         {
             MLContext mlContext = new MLContext();
@@ -32,7 +29,7 @@ namespace SentimentRazorML.ConsoleApp
             var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
 
             // Create sample data to do a single prediction with it 
-            ModelInput sampleData = CreateSingleDataSample(mlContext, GetAbsolutePath(DATA_FILEPATH));
+            ModelInput sampleData = CreateSingleDataSample(mlContext);
 
             // Try a single prediction
             ModelOutput predictionResult = predEngine.Predict(sampleData);
@@ -45,19 +42,16 @@ namespace SentimentRazorML.ConsoleApp
 
         // Method to load single row of data to try a single prediction
         // You can change this code and create your own sample data here (Hardcoded or from any source)
-        private static ModelInput CreateSingleDataSample(MLContext mlContext, string dataFilePath)
+        private static ModelInput CreateSingleDataSample(MLContext mlContext)
         {
-            // Read dataset to get a single row for trying a prediction          
-            IDataView dataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-                                            path: dataFilePath,
-                                            hasHeader: true,
-                                            separatorChar: '\t',
-                                            allowQuoting: true,
-                                            allowSparse: false);
 
-            // Here (ModelInput object) you could provide new test data, hardcoded or from the end-user application, instead of the row from the file.
-            ModelInput sampleForPrediction = mlContext.Data.CreateEnumerable<ModelInput>(dataView, false)
-                                                                        .First();
+            // Here (ModelInput object) you could provide new test data, hardcoded or from the end-user application.
+            ModelInput sampleForPrediction = new ModelInput
+            {
+                Comment= "Wow... Loved this place.",
+                Sentiment=true
+            };
+
             return sampleForPrediction;
         }
 

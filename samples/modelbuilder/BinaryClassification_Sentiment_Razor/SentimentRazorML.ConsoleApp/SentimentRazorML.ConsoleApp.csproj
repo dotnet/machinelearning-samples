@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,10 +9,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SentimentRazorML.Model\SentimentRazorML.Model.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="yelp_labelled_columns.tsv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
