@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ImageClassification.DataModels;
 using Microsoft.ML;
+using Microsoft.ML.Data;
 
 namespace ImageClassification.Predict
 {
@@ -16,7 +17,8 @@ namespace ImageClassification.Predict
             string assetsPath = GetAbsolutePath(assetsRelativePath);
            
             string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions");
-            var imageClassifierModelZipFilePath = Path.Combine(assetsPath, "inputs", "imageClassifierModel.zip");
+
+            var imageClassifierModelZipFilePath = Path.Combine(assetsPath, "inputs", "MLNETModel", "imageClassifier.zip");
 
             try
             {
@@ -27,27 +29,68 @@ namespace ImageClassification.Predict
                 // Load the model
                 ITransformer loadedModel = mlContext.Model.Load(imageClassifierModelZipFilePath, out var modelInputSchema);
 
-                // Make prediction engine (input = ImageNetData, output = ImageNetPrediction)
+                // Measuring Create Prediction Engine time
+                var watchForCreatePredictionEngine = System.Diagnostics.Stopwatch.StartNew();
+
+                // Create prediction engine to try a single prediction (input = ImageData, output = ImagePrediction)
                 var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(loadedModel);
 
-                IEnumerable<ImageData> testImages = LoadImagesFromDirectory(imagesForPredictions, false);
-                var prediction = predictionEngine.Predict(testImages.First());
+                watchForCreatePredictionEngine.Stop();
+                long elapsedMsForCreatingPredictionEngine = watchForCreatePredictionEngine.ElapsedMilliseconds;
+                Console.WriteLine("Creating PredEngine took: " + (elapsedMsForCreatingPredictionEngine).ToString() + " miliseconds");
 
-                Console.WriteLine($"Scores : [{string.Join(",", prediction.Score)}], " +
-                    $"Predicted Label : {prediction.PredictedLabel}");
+                IEnumerable<ImageData> imagesToPredict = LoadImagesFromDirectory(imagesForPredictions, false);
 
-                //imageListToPredict
-                //    .Select(td => new { td, pred = predictor.Predict(td) })
-                //    .Select(pr => (pr.td.ImagePath, pr.pred.PredictedLabelValue, pr.pred.Score))
-                //    .ToList()
-                //    .ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath, pr.PredictedLabelValue, pr.Score.Max()));
+                // Measuring PREDICTION execution time
+                var watchForE2EPrediction = System.Diagnostics.Stopwatch.StartNew();
 
+                // Obtain the original label names to map through the predicted label-index
+                VBuffer<ReadOnlyMemory<char>> keys = default;
+                predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
+                var originalLabels = keys.DenseValues().ToArray();
+
+                //Predict the first image in the folder
+                //
+                ImageData imageToPredict = new ImageData
+                {
+                    ImagePath = imagesToPredict.First().ImagePath
+                };
+
+                var prediction = predictionEngine.Predict(imageToPredict);
+                
+                var index = prediction.PredictedLabel;
+
+                Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], " +
+                                  $"Scores : [{string.Join(",", prediction.Score)}], " +
+                                  $"Predicted Label : {originalLabels[index]}");
+
+                watchForE2EPrediction.Stop();
+                long elapsedMsForE2EPrediction = watchForE2EPrediction.ElapsedMilliseconds;
+                Console.WriteLine("Prediction execution took: " + (elapsedMsForE2EPrediction).ToString() + " miliseconds");
+
+                //////
+
+                //Predict all images in the folder
+                //
+                Console.WriteLine("");
+                Console.WriteLine("Predicting several images...");
+
+                foreach (ImageData currentImageToPredict in imagesToPredict)
+                {
+                    var currentPrediction = predictionEngine.Predict(currentImageToPredict);
+                    var currentIndex = currentPrediction.PredictedLabel;
+                    Console.WriteLine($"ImageFile : [{Path.GetFileName(currentImageToPredict.ImagePath)}], " +
+                                      $"Scores : [{string.Join(",", currentPrediction.Score)}], " +
+                                      $"Predicted Label : {originalLabels[currentIndex]}");
+                }
+                //////
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
 
+            Console.WriteLine("Press any key to end the app..");
             Console.ReadKey();
         }
 
@@ -76,15 +119,12 @@ namespace ImageClassification.Predict
                     }
                 }
 
-                //Return the Dataset with labels
-                for (int index = 0; index < files.Length; index++)
+                yield return new ImageData()
                 {
-                    yield return new ImageData()
-                    {
-                        ImagePath = file,
-                        Label = label
-                    };
-                }
+                    ImagePath = file,
+                    Label = label
+                };
+
             }
         }
 

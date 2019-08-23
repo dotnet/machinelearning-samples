@@ -20,6 +20,8 @@ namespace ImageClassification.Train
             string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
+            var outputMlNetModelFilePath = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
+
             string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
 
             //Download the image set and unzip
@@ -89,6 +91,10 @@ namespace ImageClassification.Train
                 EvaluateModel(mlContext, testDataView, trainedModel);
 
                 TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
+
+                // Save the model to assets/outputs
+                mlContext.Model.Save(trainedModel, trainDataView.Schema, outputMlNetModelFilePath);
+                Console.WriteLine($"Model saved to: {outputMlNetModelFilePath}");
 
             }
             catch (Exception ex)
