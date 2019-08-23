@@ -22,10 +22,10 @@ function updateSentiment() {
         .then((sentiment) => {
             switch (sentiment) {
                 case "Positive":
-                    updateMarker(110.0,sentiment);
+                    updateMarker(100.0,sentiment);
                     break;
                 case "Negative":
-                    updateMarker(-10.0,sentiment);
+                    updateMarker(0.0,sentiment);
                     break;
                 default:
                     updateMarker(50.0, "Neutral");
