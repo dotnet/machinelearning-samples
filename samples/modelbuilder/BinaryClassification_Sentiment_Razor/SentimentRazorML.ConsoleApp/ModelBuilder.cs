@@ -7,7 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using SentimentRazorML.Model.DataModels;
@@ -16,15 +19,18 @@ namespace SentimentRazorML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Development\Notebooks\data\yelp_labelled_columns.tsv";
+        private static string TRAIN_DATA_FILEPATH = @"yelp_labelled_columns.tsv";
         private static string MODEL_FILEPATH = @"../../../../SentimentRazorML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext(seed: 1);
 
-        public static void CreateModel()
+        public static async Task CreateModel()
         {
+            // Download Data
+            await DownloadData();
+
             // Load Data
             IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
                                             path: TRAIN_DATA_FILEPATH,
@@ -44,6 +50,34 @@ namespace SentimentRazorML.ConsoleApp
 
             // Save model
             SaveModel(mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
+        }
+
+        private static async Task DownloadData()
+        {
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetStreamAsync("https://archive.ics.uci.edu/ml/machine-learning-databases/00331/sentiment%20labelled%20sentences.zip");
+
+                using (var archive = new ZipArchive(response))
+                {
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (entry.Name.Contains("yelp_labelled"))
+                        {
+                            using (var sr = new StreamReader(entry.Open()))
+                            {
+                                var data = await sr.ReadToEndAsync();
+
+                                using (var sw = new StreamWriter(GetAbsolutePath(TRAIN_DATA_FILEPATH)))
+                                {
+                                    sw.Write("Comment\tSentiment\n");
+                                    sw.Write(data);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public static IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)

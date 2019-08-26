@@ -25,13 +25,13 @@ function updateSentiment() {
                     updateMarker(100.0,sentiment);
                     break;
                 case "Negative":
-                    updateMarker(0.0,sentiment);
+                    updateMarker(-10.0,sentiment);
                     break;
                 default:
-                    updateMarker(50.0, "Neutral");
+                    updateMarker(35.0, "Neutral");
             }
             //updateMarker(sentiment);
         });
 }
 
-$("#Message").on('change paste', updateSentiment)
+$("#Message").on('change input paste', updateSentiment)

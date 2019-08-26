@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.ML;
 using SentimentRazorML.Model.DataModels;
 
@@ -18,12 +19,12 @@ namespace SentimentRazorML.ConsoleApp
         //Machine Learning model to load and use for predictions
         private const string MODEL_FILEPATH = @"MLModel.zip";
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             MLContext mlContext = new MLContext();
 
             // Training code used by ML.NET CLI and AutoML to generate the model
-            //ModelBuilder.CreateModel();
+            //await ModelBuilder.CreateModel();
 
             ITransformer mlModel = mlContext.Model.Load(GetAbsolutePath(MODEL_FILEPATH), out DataViewSchema inputSchema);
             var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
