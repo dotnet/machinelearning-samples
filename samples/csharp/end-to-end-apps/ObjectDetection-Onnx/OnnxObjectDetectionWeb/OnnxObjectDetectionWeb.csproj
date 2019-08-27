@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ML\MLNETModel\ReadMe.txt">
+    <None Update="ML\MLNETModel\Readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ImagesTemp\Readme.txt">

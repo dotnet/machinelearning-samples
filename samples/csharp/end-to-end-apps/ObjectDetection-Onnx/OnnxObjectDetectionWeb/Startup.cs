@@ -5,17 +5,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using OnnxObjectDetectionE2EAPP.Infrastructure;
-using OnnxObjectDetectionE2EAPP.Services;
-using OnnxObjectDetectionE2EAPP.Utilities;
+using OnnxObjectDetectionWeb.Infrastructure;
+using OnnxObjectDetectionWeb.Services;
+using OnnxObjectDetectionWeb.Utilities;
 using OnnxObjectDetection;
 
-namespace OnnxObjectDetectionE2EAPP
+namespace OnnxObjectDetectionWeb
 {
     public class Startup
     {
         private readonly string _onnxModelFilePath;
         private readonly string _mlnetModelFilePath;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,7 +24,7 @@ namespace OnnxObjectDetectionE2EAPP
             _onnxModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
             _mlnetModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
 
-            OnnxModelConfigurator onnxModelConfigurator = new OnnxModelConfigurator(_onnxModelFilePath);
+            var onnxModelConfigurator = new OnnxModelConfigurator(new TinyYoloModel(_onnxModelFilePath));
 
             onnxModelConfigurator.SaveMLNetModel(_mlnetModelFilePath);
         }
@@ -43,7 +44,7 @@ namespace OnnxObjectDetectionE2EAPP
             services.AddControllers();
             services.AddRazorPages();
 
-            services.AddPredictionEnginePool<ImageInputData, ImageObjectPrediction>().
+            services.AddPredictionEnginePool<ImageInputData, TinyYoloPrediction>().
                 FromFile(_mlnetModelFilePath);
 
             services.AddTransient<IImageFileWriter, ImageFileWriter>();

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace OnnxObjectDetectionE2EAPP
+namespace OnnxObjectDetectionWeb
 {
     public class Program
     {
