@@ -32,75 +32,72 @@ namespace ImageClassification.Train
 
             string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
 
-            try
-            {
-                MLContext mlContext = new MLContext(seed: 1);
+            MLContext mlContext = new MLContext(seed: 1);
 
-                //Load single full image-set
-                //
-                //IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameasLabel: true);
-                //IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
-                //
-                //IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
-                //
-                // Split the data 80:20 into train and test sets, train and evaluate.
-                //TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
-                //IDataView trainDataView = trainTestData.TrainSet;
-                //IDataView testDataView = trainTestData.TestSet;
-                //
+            // (Alternative 1)
+            //Load single full image-set that will be automatically split
+            //
+            IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameasLabel: true);
+            IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
 
-                //Load seggregated train-image-set 
-                //
-                IEnumerable<ImageData> trainImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);
-                IDataView trainDataView = mlContext.Data.LoadFromEnumerable(trainImages);
+            IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
-                //Load seggregated test-image-set 
-                IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: testImagesetFolderPath, useFolderNameasLabel: true);
-                IDataView testDataView = mlContext.Data.LoadFromEnumerable(testImages);
+            //Split the data 75:25 into train and test sets, train and evaluate.
+            TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
+            IDataView trainDataView = trainTestData.TrainSet;
+            IDataView testDataView = trainTestData.TestSet;
+            //
 
+            // (Alternative 2)
+            ////Load manually split/seggregated train/test image sets 
+            ////
+            //IEnumerable<ImageData> trainImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);
+            //IDataView trainDataView = mlContext.Data.LoadFromEnumerable(trainImages);
+            //
+            ////Load seggregated test-image-set 
+            //IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: testImagesetFolderPath, useFolderNameasLabel: true);
+            //IDataView testDataView = mlContext.Data.LoadFromEnumerable(testImages);
+            ////
 
-                var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:"LabelAsKey", inputColumnName:"Label")
-                    .Append(mlContext.Transforms.LoadImages("ImageObject", null, "ImagePath"))
-                    .Append(mlContext.Transforms.ResizeImages("Image",
-                        inputColumnName: "ImageObject", imageWidth: 299,
-                        imageHeight: 299))
-                    .Append(mlContext.Transforms.ExtractPixels("Image",
-                        interleavePixelColors: true))
-                    .Append(mlContext.Model.ImageClassification("Image", "LabelAsKey",
-                            arch: DnnEstimator.Architecture.InceptionV3,
-                            epoch: 1200,               //An epoch is one learning cycle where the learner sees the whole training data set.
-                            batchSize: 100,          // batchSize sets then number of images to feed the model at a time
-                            learningRate: 0.000001f, //Good for hundreds of images: 0.000001f
-                            statisticsCallback: (epoch, accuracy, crossEntropy) => Console.WriteLine(
-                                                                                        $"Training-cycle: {epoch}, " +
-                                                                                        $"Accuracy: {accuracy * 100}%, " +
-                                                                                        $"Cross-Entropy: {crossEntropy}")));
+            //Prepare the Validation set to be used by the internal TensorFlow training process
+            IDataView transformedValidationDataView = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey",
+                                                                            inputColumnName: "Label",
+                                                                            keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
+                                                        .Fit(testDataView)
+                                                        .Transform(testDataView);
 
-                Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
+            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey", 
+                                                                            inputColumnName: "Label",
+                                                                            keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
+                .Append(mlContext.Model.ImageClassification("ImagePath", "LabelAsKey",
+                                arch: ImageClassificationEstimator.Architecture.InceptionV3,
+                                epoch: 20, //An epoch is one learning cycle where the learner sees the whole training data set.
+                                batchSize: 10, // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.
+                                learningRate: 0.01f,
+                                metricsCallback: (metrics) => Console.WriteLine(metrics),
+                                validationSet: transformedValidationDataView,
+                                reuseTrainSetBottleneckCachedValues: false,
+                                reuseValidationSetBottleneckCachedValues: false));
 
-                // Measuring training time
-                var watch = System.Diagnostics.Stopwatch.StartNew();
+            Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
 
-                ITransformer trainedModel = pipeline.Fit(trainDataView);
+            // Measuring training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                watch.Stop();
-                long elapsedMs = watch.ElapsedMilliseconds;
-                Console.WriteLine("Training with transfer learning took: " + (elapsedMs / 1000).ToString() + " seconds");
+            ITransformer trainedModel = pipeline.Fit(trainDataView);
 
-                // Get the metrics
-                EvaluateModel(mlContext, testDataView, trainedModel);
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Training with transfer learning took: " + (elapsedMs / 1000).ToString() + " seconds");
 
-                TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
+            // Get the metrics
+            EvaluateModel(mlContext, testDataView, trainedModel);
 
-                // Save the model to assets/outputs
-                mlContext.Model.Save(trainedModel, trainDataView.Schema, outputMlNetModelFilePath);
-                Console.WriteLine($"Model saved to: {outputMlNetModelFilePath}");
+            TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            // Save the model to assets/outputs
+            mlContext.Model.Save(trainedModel, trainDataView.Schema, outputMlNetModelFilePath);
+            Console.WriteLine($"Model saved to: {outputMlNetModelFilePath}");
 
             Console.WriteLine("Press any key to finish");
             Console.ReadKey();
@@ -149,9 +146,6 @@ namespace ImageClassification.Train
 
             var metrics = mlContext.MulticlassClassification.Evaluate(predictionsDataView, labelColumnName:"LabelAsKey", predictedLabelColumnName: "PredictedLabel");
             ConsoleHelper.PrintMultiClassClassificationMetrics("TensorFlow DNN Transfer Learning", metrics);
-
-            Console.WriteLine($"Micro-accuracy: {metrics.MicroAccuracy}," +
-                              $"macro-accuracy = {metrics.MacroAccuracy}");
 
             watch2.Stop();
             long elapsed2Ms = watch2.ElapsedMilliseconds;
@@ -208,23 +202,23 @@ namespace ImageClassification.Train
         {
             // get a set of images to teach the network about the new classes
 
+            //SINGLE SMALL FLOWERS IMAGESET (200 files)
+            string fileName = "flower_photos_small_set.zip";
+            string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+            Web.Download(url, imagesDownloadFolder, fileName);
+            Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
+
             //SINGLE FULL FLOWERS IMAGESET (3,600 files)
             //string fileName = "flower_photos.tgz";
             //string url = $"http://download.tensorflow.org/example_images/{fileName}";
             //Web.Download(url, imagesDownloadFolder, fileName);
             //Compress.ExtractTGZ(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
-            //SINGLE SMALL FLOWERS IMAGESET (200 files)
-            //string fileName = "flower_photos_small_set.zip";
-            //string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+            //MANUALLY SPLIT TRAIN/TEST DATASETS (FROM SMALL IMAGESET - 200 files)
+            //string fileName = "flower_photos_small_set_split.zip";
+            //string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set_split.zip?st=2019-08-23T00%3A03%3A25Z&se=2030-08-24T00%3A03%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=qROCaSGod0mCDP87xDmGCli3o8XyKUlUUimRGGVG9RE%3D";
             //Web.Download(url, imagesDownloadFolder, fileName);
             //Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
-
-            //SPLIT TRAIN/TEST DATASETS (FROM SMALL IMAGESET - 200 files)
-            string fileName = "flower_photos_small_set_split.zip";
-            string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set_split.zip?st=2019-08-23T00%3A03%3A25Z&se=2030-08-24T00%3A03%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=qROCaSGod0mCDP87xDmGCli3o8XyKUlUUimRGGVG9RE%3D";
-            Web.Download(url, imagesDownloadFolder, fileName);
-            Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
             return Path.GetFileNameWithoutExtension(fileName);
         }

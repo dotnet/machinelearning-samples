@@ -8,7 +8,7 @@ namespace ImageClassification.DataModels
     {
         public string ImagePath;
         public string Label;
-        public Int64 PredictedLabel;
+        public UInt32 PredictedLabel;
         //public string PredictedLabelValue;
         public float[] Score;
     }
