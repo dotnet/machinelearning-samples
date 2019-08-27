@@ -28,9 +28,8 @@ function updateSentiment() {
                     updateMarker(-10.0,sentiment);
                     break;
                 default:
-                    updateMarker(35.0, "Neutral");
+                    updateMarker(45.0, "Neutral");
             }
-            //updateMarker(sentiment);
         });
 }
 
