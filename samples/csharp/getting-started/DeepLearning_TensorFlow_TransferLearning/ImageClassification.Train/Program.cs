@@ -137,8 +137,8 @@ namespace ImageClassification.Train
             // Measuring time
             var watch2 = System.Diagnostics.Stopwatch.StartNew();
 
+            //Predict in bulk
             IDataView predictionsDataView = trainedModel.Transform(testDataset);
-            //var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
 
             // This is an optional step, but it's useful for debugging issues
             var loadedModelOutputColumnNames = predictionsDataView.Schema
@@ -159,7 +159,7 @@ namespace ImageClassification.Train
             predictionsDataView.Schema["LabelAsKey"].GetKeyValues(ref keys);
             var originalLabels = keys.DenseValues().ToArray();
 
-            List<ImageWithPipelineFeatures> predictions = mlContext.Data.CreateEnumerable<ImageWithPipelineFeatures>(predictionsDataView, false, true).ToList();
+            List<ImagePredictionEx> predictions = mlContext.Data.CreateEnumerable<ImagePredictionEx>(predictionsDataView, false, true).ToList();
             predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImagePath, pred.Label, (originalLabels[pred.PredictedLabel]).ToString(), pred.Score.Max()));
 
         }

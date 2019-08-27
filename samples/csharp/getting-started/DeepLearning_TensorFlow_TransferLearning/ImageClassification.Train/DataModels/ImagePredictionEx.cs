@@ -4,12 +4,11 @@ using System.Text;
 
 namespace ImageClassification.DataModels
 {
-    public class ImageWithPipelineFeatures
+    public class ImagePredictionEx
     {
         public string ImagePath;
         public string Label;
         public UInt32 PredictedLabel;
-        //public string PredictedLabelValue;
         public float[] Score;
     }
 }
