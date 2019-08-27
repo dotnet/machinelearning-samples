@@ -27,6 +27,7 @@ namespace ImageClassification.ModelScorer
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(" ");
             Console.WriteLine("Press any key to finish.");
+            Console.ForegroundColor = defaultColor;
             Console.ReadKey();
         }
 
