@@ -261,18 +261,3 @@ namespace ImageClassification.Train
     }
 }
 
-
-// IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
-
-//IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
-//shuffledFullImagesDataset = mlContext.Transforms.Conversion.MapValueToKey("Label")
-//    .Fit(shuffledFullImagesDataset)
-//    .Transform(shuffledFullImagesDataset);
-
-//fullImagesDataset = mlContext.Transforms.Conversion.MapValueToKey("Label")
-//    .Fit(fullImagesDataset)
-//    .Transform(fullImagesDataset);
-
-
-//.Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName:"PredictedLabelValue", 
-//                                                      inputColumnName:"PredictedLabel"));
