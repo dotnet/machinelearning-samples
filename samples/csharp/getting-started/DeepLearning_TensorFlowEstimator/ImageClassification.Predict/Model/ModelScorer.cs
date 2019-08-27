@@ -42,9 +42,9 @@ namespace ImageClassification.Model
             // from the predictor
             imageListToPredict
                 .Select(td => new { td, pred = predictor.Predict(td) })
-                .Select(pr => (pr.td.ImagePath, pr.pred.PredictedLabelValue, pr.pred.Score))
+                .Select(pr => (pr.td.ImageFileName, pr.pred.PredictedLabelValue, pr.pred.Score))
                 .ToList()
-                .ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath, pr.PredictedLabelValue, pr.Score.Max()));
+                .ForEach(pr => ConsoleWriteImagePrediction(pr.ImageFileName, pr.PredictedLabelValue, pr.Score.Max()));
         }
     }
 }
