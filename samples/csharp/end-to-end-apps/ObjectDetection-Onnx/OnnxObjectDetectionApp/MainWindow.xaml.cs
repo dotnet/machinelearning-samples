@@ -128,7 +128,7 @@ namespace OnnxObjectDetectionApp
             }
         }
 
-        public IList<BoundingBox> DetectObjectsUsingModel(ImageInputData imageInputData)
+        public List<BoundingBox> DetectObjectsUsingModel(ImageInputData imageInputData)
         {
             var labels = customVisionPredictionEngine?.Predict(imageInputData).PredictedLabels ?? tinyYoloPredictionEngine?.Predict(imageInputData).PredictedLabels;
             var boundingBoxes = outputParser.ParseOutputs(labels);
@@ -136,7 +136,7 @@ namespace OnnxObjectDetectionApp
             return filteredBoxes;
         }
         
-        private void DrawOverlays(IList<BoundingBox> filteredBoxes, double originalHeight, double originalWidth)
+        private void DrawOverlays(List<BoundingBox> filteredBoxes, double originalHeight, double originalWidth)
         {
             WebCamCanvas.Children.Clear();
 

@@ -15,7 +15,7 @@ namespace OnnxObjectDetectionWeb.Services
 
     public class ObjectDetectionService : IObjectDetectionService
     {
-        IList<BoundingBox> filteredBoxes;
+        List<BoundingBox> filteredBoxes;
         private readonly OnnxOutputParser outputParser = new OnnxOutputParser(new TinyYoloModel(null));
         private readonly PredictionEnginePool<ImageInputData, TinyYoloPrediction> predictionEngine;
 
@@ -27,7 +27,7 @@ namespace OnnxObjectDetectionWeb.Services
         public void DetectObjectsUsingModel(ImageInputData imageInputData)
         {
             var probs = predictionEngine.Predict(imageInputData).PredictedLabels;
-            IList<BoundingBox> boundingBoxes = outputParser.ParseOutputs(probs);
+            List<BoundingBox> boundingBoxes = outputParser.ParseOutputs(probs);
             filteredBoxes = outputParser.FilterBoundingBoxes(boundingBoxes, 5, .5F);
         }
 
