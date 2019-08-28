@@ -9,7 +9,7 @@ namespace ImageClassification.DataModels
     public class ImageData
     {
         [LoadColumn(0)]
-        public string ImageFileName;
+        public string ImagePath;
 
         [LoadColumn(1)]
         public string Label;
