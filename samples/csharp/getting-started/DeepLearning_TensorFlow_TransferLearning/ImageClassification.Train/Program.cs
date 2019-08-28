@@ -76,8 +76,8 @@ namespace ImageClassification.Train
                                 learningRate: 0.01f,
                                 metricsCallback: (metrics) => Console.WriteLine(metrics),
                                 validationSet: transformedValidationDataView,
-                                reuseTrainSetBottleneckCachedValues: false,
-                                reuseValidationSetBottleneckCachedValues: false));
+                                reuseTrainSetBottleneckCachedValues: true,
+                                reuseValidationSetBottleneckCachedValues: true));
 
             Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
 

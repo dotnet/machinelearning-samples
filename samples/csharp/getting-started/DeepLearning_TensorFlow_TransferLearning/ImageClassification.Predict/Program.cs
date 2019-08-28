@@ -56,6 +56,8 @@ namespace ImageClassification.Predict
                     ImagePath = imagesToPredict.First().ImagePath
                 };
 
+                var prediction0 = predictionEngine.Predict(imageToPredict);
+
                 // Measuring Predict() time
                 var watchForPredictFunction = System.Diagnostics.Stopwatch.StartNew();
 

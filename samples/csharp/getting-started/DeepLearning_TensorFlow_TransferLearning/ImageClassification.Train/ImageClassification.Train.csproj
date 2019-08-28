@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="assets\inputs\images\" />
     <Folder Include="assets\outputs\" />
   </ItemGroup>
