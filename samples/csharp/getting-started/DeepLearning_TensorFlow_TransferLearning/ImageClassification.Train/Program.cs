@@ -57,9 +57,9 @@ namespace ImageClassification.Train
                                                                             inputColumnName: "Label",
                                                                             keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
                         .Append(mlContext.Model.ImageClassification("ImagePath", "LabelAsKey",
-                                        arch: ImageClassificationEstimator.Architecture.InceptionV3,
-                                        epoch: 20,     //An epoch is one learning cycle where the learner sees the whole training data set.
-                                        batchSize: 10, // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
+                                        arch: ImageClassificationEstimator.Architecture.ResnetV2101,
+                                        epoch: 100,     //An epoch is one learning cycle where the learner sees the whole training data set.
+                                        batchSize: 100, // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
                                         metricsCallback: (metrics) => Console.WriteLine(metrics)));
                                         //OPTIONAL (*1*) validationSet: transformedValidationDataView));
 
