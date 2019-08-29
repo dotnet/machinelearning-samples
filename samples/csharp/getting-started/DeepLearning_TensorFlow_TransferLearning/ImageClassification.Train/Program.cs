@@ -25,23 +25,21 @@ namespace ImageClassification.Train
 
             string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
 
-            //Download the image set and unzip
+            // 1. Download the image set and unzip
             string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
             string fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
 
             MLContext mlContext = new MLContext(seed: 1);
 
-            //Load single full image-set that will be automatically split
+            // 2. Load the initial full image-set into an IDataView and shuffle so it'll be better balanced
             IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameasLabel: true);
             IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
-
             IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
-            //Split the data 80:20 into train and test sets, train and evaluate.
+            // 3. Split the data 80:20 into train and test sets, train and evaluate.
             TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
             IDataView trainDataView = trainTestData.TrainSet;
             IDataView testDataView = trainTestData.TestSet;
-            //
 
             //// OPTIONAL (*1*)  
             // Prepare the Validation set to be used by the internal TensorFlow training process
@@ -53,26 +51,28 @@ namespace ImageClassification.Train
             //                                            .Transform(testDataView);
             ////
 
+            // 4. Define the model's training pipeline 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey", 
                                                                             inputColumnName: "Label",
                                                                             keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
                         .Append(mlContext.Model.ImageClassification("ImagePath", "LabelAsKey",
                                         arch: ImageClassificationEstimator.Architecture.ResnetV2101,
                                         epoch: 100,     //An epoch is one learning cycle where the learner sees the whole training data set.
-                                        batchSize: 100, // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
+                                        batchSize: 30,  // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
                                         metricsCallback: (metrics) => Console.WriteLine(metrics)));
                                         //OPTIONAL (*1*) validationSet: transformedValidationDataView));
 
+            // 4. Train/create the ML model
             Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
-
             ITransformer trainedModel = pipeline.Fit(trainDataView);
 
-            // Get the metrics
+            // 5. Get the quality metrics (accuracy, etc.)
             EvaluateModel(mlContext, testDataView, trainedModel);
 
+            // 6. Try a single prediction simulating an end-user app
             TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
 
-            // Save the model to assets/outputs
+            // 7. Save the model to assets/outputs (You get ML.NET .zip model file and TensorFlow .pb model file)
             mlContext.Model.Save(trainedModel, trainDataView.Schema, outputMlNetModelFilePath);
             Console.WriteLine($"Model saved to: {outputMlNetModelFilePath}");
 
