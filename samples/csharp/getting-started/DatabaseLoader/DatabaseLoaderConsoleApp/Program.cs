@@ -29,13 +29,13 @@ namespace DatabaseLoaderConsoleApp
             string connectionString = $"Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Database=Criteo-100k-rows;Integrated Security = True";
 
             // localdb SQL database connection string for 'localdb default location' (usually files located at /Users/YourUser/)
-            //string connectionString2 = @"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=Criteo-100k-rows;Integrated Security=True;Pooling=False";
+            //string connectionString = @"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=YOUR_DATABASE;Integrated Security=True;Pooling=False";
             //
             //Sample on-premises SQL Server Database (Integrated security)
             //string connectionString = @"Data Source=YOUR_SERVER;Initial Catalog=YOUR_DATABASE;Integrated Security=True;Pooling=False";
             //
             //Sample Azure SQL Database connection string
-            //string connectionString = @"Server=tcp:yourserver.database.windows.net,1433; Initial Catalog = YOUR_DATABASE; Persist Security Info = False; User ID = YOUR_USER; Password = YOUR_PASSWORD; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30; ";
+            //string connectionString = @"Server=tcp:yourserver.database.windows.net,1433; Initial Catalog = YOUR_DATABASE; Persist Security Info = False; User ID = YOUR_USER; Password = YOUR_PASSWORD; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 60; ConnectRetryCount = 5; ConnectRetryInterval = 10;";
 
             string commandText = "SELECT * from URLClicks";
 
@@ -142,7 +142,7 @@ namespace DatabaseLoaderConsoleApp
             watch2.Stop();
             Console.WriteLine("Elapsed time for evaluating the model = {0} seconds", watch2.ElapsedMilliseconds / 1000);
 
-            ConsoleHelper.PrintBinaryClassificationMetrics("====Evaluation Metrics for Large datasets stored in Database====", metrics);
+            ConsoleHelper.PrintBinaryClassificationMetrics("==== Evaluation Metrics training from a Database ====", metrics);
 
             // 
             Console.WriteLine("Trying a single prediction:");
