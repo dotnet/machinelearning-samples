@@ -44,23 +44,23 @@ namespace ImageClassification.Train
             //// OPTIONAL (*1*)  
             // Prepare the Validation set to be used by the internal TensorFlow training process
             // This step is optional but needed if you want to get validation performed while training in TensorFlow
-            //IDataView transformedValidationDataView = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey",
-            //                                                                inputColumnName: "Label",
-            //                                                                keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
-            //                                            .Fit(testDataView)
-            //                                            .Transform(testDataView);
-            ////
+            IDataView transformedValidationDataView = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey",
+                                                                            inputColumnName: "Label",
+                                                                            keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
+                                                        .Fit(testDataView)
+                                                        .Transform(testDataView);
 
             // 4. Define the model's training pipeline 
             var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey", 
                                                                             inputColumnName: "Label",
                                                                             keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
                         .Append(mlContext.Model.ImageClassification("ImagePath", "LabelAsKey",
-                                        arch: ImageClassificationEstimator.Architecture.ResnetV2101,
+                                        arch: ImageClassificationEstimator.Architecture.InceptionV3,
                                         epoch: 100,     //An epoch is one learning cycle where the learner sees the whole training data set.
                                         batchSize: 30,  // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
-                                        metricsCallback: (metrics) => Console.WriteLine(metrics)));
-                                        //OPTIONAL (*1*) validationSet: transformedValidationDataView));
+                                        metricsCallback: (metrics) => Console.WriteLine(metrics),
+                                        //OPTIONAL (*1*) 
+                                        validationSet: transformedValidationDataView));
 
             // 4. Train/create the ML model
             Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
@@ -175,12 +175,6 @@ namespace ImageClassification.Train
             //string url = $"http://download.tensorflow.org/example_images/{fileName}";
             //Web.Download(url, imagesDownloadFolder, fileName);
             //Compress.ExtractTGZ(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
-
-            //MANUALLY SPLIT TRAIN/TEST DATASETS (FROM SMALL IMAGESET - 200 files)
-            //string fileName = "flower_photos_small_set_split.zip";
-            //string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set_split.zip?st=2019-08-23T00%3A03%3A25Z&se=2030-08-24T00%3A03%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=qROCaSGod0mCDP87xDmGCli3o8XyKUlUUimRGGVG9RE%3D";
-            //Web.Download(url, imagesDownloadFolder, fileName);
-            //Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
             return Path.GetFileNameWithoutExtension(fileName);
         }
