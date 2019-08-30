@@ -2,10 +2,12 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.2.0           | Dynamic API | Up-to-date | Console app | .tsv + image files | Image classification | featurization + classification  | deep neural network + SDCA |
+| v1.4-Preview           | Dynamic API | Up-to-date | Console app | Image files | Image classification | Image classification with model retrain based on transfer learning  | InceptionV3 or ResNet |
 
 ## Problem 
-Image classification is a common problem which has been solved quite a while using Machine Learning techniques. In this sample, we will review an approach that mixes new techniques (deep learning) and old school (LbfgsMaximumEntropy) techniques.
+Image classification is a common problem within the Deep Learning subject. This sample shows how to create your own custom image classifier by training your model based on transfer learning which is basically retraining a pre-trained model (architecture such as InceptionV3 or ResNet) so you get a custom model trained on your own images.
+
+****** (CDLTLL-current-point) ******
 
 In this model, we use the [Inception model](https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip) as a *featurizer* (the model is already stored in the [assets folder](./ImageClassification.Train/assets/inputs/inception/) ). This means that the model will process input images through the neural network, and then it will use the output of the tensor which precedes the classification. This tensor contains the *image features*, which allows to identify an image.
 
