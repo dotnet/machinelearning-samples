@@ -19,9 +19,6 @@ namespace DatabaseLoaderConsoleApp
     {  
         public static void Main()
         {
-            // Just need to register a data provider once per application
-            DbProviderFactories.RegisterFactory("System.Data.SqlClient", typeof(System.Data.SqlClient.SqlClientFactory));
-
             var mlContext = new MLContext();
 
             // localdb SQL database connection string using a filepath to attach the database file into localdb
@@ -40,20 +37,10 @@ namespace DatabaseLoaderConsoleApp
             string commandText = "SELECT * from URLClicks";
 
             DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<UrlClick>();
-
-            // (OPTIONAL code for debugging)
-            //
-            // Console.WriteLine("Show all registered Provider Invariant Names: ");
-            // IEnumerable providerInvariantNames = DbProviderFactories.GetProviderInvariantNames();
-            // foreach (string providerName in providerInvariantNames)
-            // {
-            //     Console.WriteLine($"{providerName} data provider");
-            // }
-
-            Console.WriteLine("Using 'System.Data.SqlClient' data provider to access database for training...");
-            DbProviderFactory providerFactory = DbProviderFactories.GetFactory("System.Data.SqlClient");
             
-            DatabaseSource dbSource = new DatabaseSource(providerFactory, connectionString, commandText);
+            DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, 
+                                                         connectionString, 
+                                                         commandText);
             
             IDataView dataView = loader.Load(dbSource);
 
