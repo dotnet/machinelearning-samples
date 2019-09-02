@@ -1,10 +1,14 @@
-# Using a relational database as a data source for training and validating a model
-This sample demonstrates how to use a database as a data source for an ML.NET pipeline by using an IEnumerable. Since the database is treated as any other datasource, it is possible to query the database and use the resulting data for training and prediction scenarios.
+# Using LoadFromEnumerable and Entity Framework with a relational database as a data source for training and validating a model
+This sample demonstrates how to use a database as a data source for an ML.NET pipeline by using an IEnumerable. Since a database is treated as any other datasource, it is possible to query the database and use the resulting data for training and prediction scenarios.
+
+**Update (Sept. 2nd 2019): If you want to load data from a relational database, there's a simpler approach in ML.NET by using the DatabaseLoader. Check the [DatabaseLoader sample](/samples/csharp/getting-started/DatabaseLoader)**. 
+
+Note that you could also implement a similar aproach using **LoadFromEnumerable** but using a **No-SQL** database or any other data source instead a relational database. However, this example is using a relational database being accessed by Entity Framework.
 
 ## Problem
 Enterprise users have a need to use their existing data set that is in their company's database to train and predict with ML.NET. 
 
-Even when in most cases data needs to be clean-up and prepared before training a machine learning model, many enterprises are more familiar with relational databases and SQL statements for transforming and preparing data and prefer to have centralized and secured data into database servers instead of working with exported plain text files.
+Even when in most cases data needs to be clean-up and prepared before training a machine learning model, many enterprises are very familiar with databases for transforming and preparing data and prefer to have centralized and secured data into database servers instead of working with exported plain text files.
 
 ## Out of scope
 
