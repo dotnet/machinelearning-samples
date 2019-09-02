@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Train", "ImageClassification.Train\ImageClassification.Train.csproj", "{4C963C3B-DFC9-4236-BA85-C8C71D27CE3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Predict", "ImageClassification.Predict\ImageClassification.Predict.csproj", "{313629B6-3560-4633-9775-3A9869EB4692}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C963C3B-DFC9-4236-BA85-C8C71D27CE3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C963C3B-DFC9-4236-BA85-C8C71D27CE3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C963C3B-DFC9-4236-BA85-C8C71D27CE3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C963C3B-DFC9-4236-BA85-C8C71D27CE3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313629B6-3560-4633-9775-3A9869EB4692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313629B6-3560-4633-9775-3A9869EB4692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313629B6-3560-4633-9775-3A9869EB4692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313629B6-3560-4633-9775-3A9869EB4692}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {641A6425-D190-4C6C-9088-18296CA71937}
+	EndGlobalSection
+EndGlobal
