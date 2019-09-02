@@ -7,57 +7,40 @@ namespace OnnxObjectDetection
 {
     public class OnnxModelConfigurator
     {
-        private readonly MLContext _mlContext;
-        private readonly ITransformer _mlModel;
+        private readonly MLContext mlContext;
+        private readonly ITransformer mlModel;
 
-        public OnnxModelConfigurator(string onnxModelFilePath)
+        public OnnxModelConfigurator(IOnnxModel onnxModel)
         {
-            _mlContext = new MLContext();
+            mlContext = new MLContext();
             // Model creation and pipeline definition for images needs to run just once,
             // so calling it from the constructor:
-            _mlModel = SetupMlNetModel(onnxModelFilePath);
+            mlModel = SetupMlNetModel(onnxModel);
         }
 
-        public struct ImageSettings
+        private ITransformer SetupMlNetModel(IOnnxModel onnxModel)
         {
-            public const int imageHeight = 416;
-            public const int imageWidth = 416;
-        }
+            var dataView = mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
 
-        public struct TinyYoloModelSettings
-        {
-            // To check Tiny Yolo2 Model input and output parameter names,
-            // you can use tools like Netron: https://github.com/lutzroeder/netron
-
-            // Input tensor name
-            public const string ModelInput = "image";
-
-            // Output tensor name
-            public const string ModelOutput = "grid";
-        }
-
-        public ITransformer SetupMlNetModel(string onnxModelFilePath)
-        {
-            var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
-
-            var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
-                            .Append(_mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
-                            .Append(_mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModelFilePath, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
+            var pipeline = mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: onnxModel.ModelInput, imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: onnxModel.ModelInput))
+                            .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModel.ModelPath, outputColumnName: onnxModel.ModelOutput, inputColumnName: onnxModel.ModelInput));
 
             var mlNetModel = pipeline.Fit(dataView);
 
             return mlNetModel;
         }
 
-        public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictionEngine()
+        public PredictionEngine<ImageInputData, T> GetMlNetPredictionEngine<T>()
+            where T : class, IOnnxObjectPrediction, new()
         {
-            return _mlContext.Model.CreatePredictionEngine<ImageInputData, ImageObjectPrediction>(_mlModel);
+            return mlContext.Model.CreatePredictionEngine<ImageInputData, T>(mlModel);
         }
 
         public void SaveMLNetModel(string mlnetModelFilePath)
         {
             // Save/persist the model to a .ZIP file to be loaded by the PredictionEnginePool
-            _mlContext.Model.Save(_mlModel, null, mlnetModelFilePath);
+            mlContext.Model.Save(mlModel, null, mlnetModelFilePath);
         }
     }
 }

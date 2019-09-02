@@ -1,19 +1,19 @@
 # Object Detection - ASP.NET Core Web & WPF Desktop Sample
 
-| ML.NET version | API type    | Status     | App Type    | Data type   | Scenario         | ML Task       | Algorithms             |
-|----------------|-------------|------------|-------------|-------------|------------------|---------------|------------------------|
-| v1.3.1         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | Tiny YOLOv2 ONNX model |
+| ML.NET version | API type    | Status     | App Type    | Data type   | Scenario         | ML Task       | Algorithms                        |
+|----------------|-------------|------------|-------------|-------------|------------------|---------------|-----------------------------------|
+| v1.3.1         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | ONNX: Tiny YOLOv2 & Custom Vision |
 
 ## Problem
 
-Object detection is one of the classic problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain.  In this sample, we'll use a pre-trained model.
+Object detection is one of the classic problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain.  This sample uses a pre-trained model by default, but you can also add your own model exported from [Custom Vision](https://www.customvision.a).
 
 ## How the sample works
 
 This sample consists of two separate apps:
 
-- An ASP.NET Core Web App that allows the user to upload or select an image.  The Web app then runs the image through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected.
-- A WPF Core desktop app that renders a live-stream of the device's web cam, runs the video frames through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected in real-time.
+- A **WPF Core desktop app** that renders a live-stream of the device's web cam, runs the video frames through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected in real-time.
+- An **ASP.NET Core Web app** that allows the user to upload or select an image.  The Web app then runs the image through an object detection model using ML.NET, and paints bounding boxes with labels indicating the objects detected.
 
 The Web app shows the images listed on the right, and each image may be selected to process. Once the image is processed, it is drawn in the middle of the screen with labeled bounding boxes around each detected object as shown below.
 
@@ -23,28 +23,102 @@ Alternatively you can try uploading your own images as shown below.
 
 ![Animated image showing object detection web sample](./docs/Screenshots/FileUpload.gif)
 
-## Pre-trained model
-
-There are multiple pre-trained models for identifying multiple objects in the images. Both the **WPF app** and the **Web app** use the pre-trained model, **Tiny YOLOv2** in [**ONNX**](http://onnx.ai/) format. This model is a real-time neural network for object detection that detects 20 different classes. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
+## ONNX
 
 The Open Neural Network eXchange i.e [ONNX](http://onnx.ai/) is an open format to represent deep learning models. With ONNX, developers can move models between state-of-the-art tools and choose the combination that is best for them. ONNX is developed and supported by a community of partners, including Microsoft.
 
-The model is downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2) which is a is a collection of pre-trained, state-of-the-art models in the ONNX format.
+## Pre-trained models
 
-The Tiny YOLOv2 model was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. Below are the model's prerequisites.
+There are multiple pre-trained models for identifying multiple objects in the images. Both the **WPF app** and the **Web app** default to use the pre-trained model, **Tiny YOLOv2**, downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2); a collection of pre-trained, state-of-the-art models in the ONNX format. **Tiny YOLOv2** is a real-time neural network for object detection that detects [20 different classes](./OnnxObjectDetection/ML/DataModels/TinyYoloModel.cs#L10-L6) and was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
 
-### Model input and output
+## Custom Vision models
 
-- **Input:** An image of the shape (3x416x416)  
-- **Output:** An (1x125x13x13) array
+This sample defaults to use the pre-trained Tiny YOLOv2 model described above.  However it was also written to support ONNX models exported from Microsoft [Custom Vision](https://www.customvision.a).
 
-### Pre-processing steps
+### To use your own model, use the following steps
 
-Resize the input image to an (3x416x416) array of type `float32`.
+1. [Create and train](https://docs.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/get-started-build-detector) an object detector with the Custom Vision. To export the model, make sure to select a **compact** domain such as **General (compact)**. To export an existing object detector, convert the domain to compact by selecting the gear icon at the top right. In _**Settings**_, choose a compact model, save, and train your project.  
+2. [Export your model](https://docs.microsoft.com/azure/cognitive-services/custom-vision-service/export-your-model) by going to the _**Performance**_ tab. Select an iteration trained with a compact domain, an "Export" button will appear. Select _Export_, _ONNX_, _ONNX1.2_, and then _Export_. Once the file is ready, select the *Download* button.
+3. The export will a zip file containing several files, including some sample code, a list of labels, and the ONNX model.  Drop the .zip file into the [**OnnxModels**](./OnnxObjectDetection/ML/OnnxModels) folder in the [OnnxObjectDetection](./OnnxObjectDetection) project.
+4. In Solutions Explorer, right-click the [OnnxModels](./OnnxObjectDetection/ML/OnnxModels) folder and select _Add Existing Item_. Select the .zip file you just added.
+5. In Solutions Explorer, select the .zip file from the [OnnxModels](./OnnxObjectDetection/ML/OnnxModels) folder. Change the following properties for the file:
+    - _Build Action -> Content_
+    - _Copy to Output Directory -> Copy if newer_
 
-### Post-processing steps
+Now when you build and run the app, it will used your model instead of the Tiny YOLOv2 model.
 
-The output is a (125x13x13) tensor where 13x13 is the number of grid cells that the image gets divided into. Each grid cell corresponds to 125 channels, made up of the 5 bounding boxes predicted by the grid cell and the 25 data elements that describe each bounding box (5x25=125). For more information on how to derive the final bounding boxes and their corresponding confidence scores, refer to this [post](http://machinethink.net/blog/object-detection-with-yolo/).
+## Model input and output
+
+In order to parse the prediction output of the ONNL model, we need to understand the format (or shape) of the input and output tensors.  To do this, we'll start by using [Netron](https://lutzroeder.github.io/netron/), a GUI visualizer for neural networks and machine learning models, to inspect the model.
+
+Below is an example of what we'd see upon opening this sample's Tiny YOLOv2 model with Netron:
+
+![Output from inspecting the Tiny YOLOv2 model with Netron](./docs/Netron/TinyYolo2_model_onnx.png)
+
+From the output above, we can see the Tiny YOLOv2 model has the following input/output formats:
+
+### Input: 'image' 3x416x416
+
+The first thing to notice is that the **input tensor's name** is **'image'**.  We'll need this name later when we define **input** parameter of the estimation pipeline.
+
+We can also see that the or **shape of the input tensor** is **3x416x416**.  This tells that the bitmap image passed into the model should be 416 high x 416 wide. The '3' indicates the image(s) should be in BGR format; the first 3 'channels' are blue, green, and red, respectively.
+
+### Output: 'data' 125x13x13
+
+As with the input tensor, we can see **output's name** is **'data'**.  Again, we'll make note of that for when we define the **output** parameter of the estimation pipeline.
+
+We can also see that the **shape of the output tensor** is **125x13x13**.
+
+The '13x13' portion of 125x13x13 means that the image is divided up into a 13x13 grid of 'cells' (13 columns x 13 rows). And because we know that the input image is 416x416, we can deduce that each of these 'cells' are 32 high x 32 wide (416/13=32)
+
+```
+   ├──────────────── 416 ─────────────────┤
+   ┌──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐ ┬     416/13=32
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │          ┌──┐
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │          └──┘
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │         32x32
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+13 ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ 416
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   ├──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┼──┤ │
+   └──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┘ ┴
+                      13
+```
+
+What about the 125? The '125' tells us that, for each of the grid cells, there are 125 'channels' (or pieces of data) returned by the model as a prediction output for that individual cell.
+
+To understand why there are 125 channels, we first we need to understand that the model doesn't predict arbitrary boundary boxes for an object. Instead each cell is responsible for predicting 5 predetermined boundary boxes. These 5 boxes are calculated based on the offsets to each of the `anchor` boxes below:
+
+```
+┌───────────────────┐
+│       ┌───┐       │
+│ ┌─────┼───┼─────┐ │
+│ │  ┌──┼───┼──┐  │ │
+│ │  │  │┌─┐│  │  │ │
+│ │  │  │└─┘│  │  │ │
+│ │  └──┼───┼──┘  │ │
+│ └─────┼───┼─────┘ │
+│       └───┘       │
+└───────────────────┘
+```
+
+So for each individual cell, the model returns 5 predictions (one for each anchor, represented by the box shapes above), and each prediction includes the following 25 parameters:
+
+- 4 parameters indicating boundary box's location (x, y, width, height)
+- 1 parameter for the box's confidence score (or objectness)
+- 20 class probabilities (one probability score per class indicating the likeliness of the object being that class)
+
+5 boxes x 25 parameters = 125 'channels'
+
+_Note, if the model were trained to detect a different number of classes this value would be different. For example, a model that was able to detect only 3 different classes would have an output format of 40x13x13:_
+
+- _(x, y, width, height, objectness) + 3 class probabilities = 8 parameters_
+- _5 boxes x 8 parameters = 40 'channels'_
 
 ## Solution
 
@@ -55,65 +129,57 @@ The output is a (125x13x13) tensor where 13x13 is the number of grid cells that 
 
 ### The solution contains three projects
 
-- [**OnnxObjectDetection**](./OnnxObjectDetection) is a .NET Standard library used by both the WPF app and the Web app.  It contains most of the logic for running images through the model and parsing the resulting prediction.  This project also contains the Onnx model file.  With the exception of drawing the labels bounding boxes on the image/screen, all of the following code snippets are contained in this project.
+- [**OnnxObjectDetection**](./OnnxObjectDetection) is a .NET Standard library used by both the WPF app and the Web app.  It contains most of the logic for running images through the model and parsing the resulting prediction.  This project also contains the ONNX model file.  With the exception of drawing the labels bounding boxes on the image/screen, all of the following code snippets are contained in this project.
 - [**OnnxObjectDetectionWeb**](./OnnxObjectDetectionWeb) contains an ASP.NET Core Web App that that contains both **Razor UI pages** and an **API controller** to process and render images.
-- [**OnnxObjectDetectionApp**](./OnnxObjectDetectionApp) contains an .NET CORE WPF Desktop App that uses [OpenCvSharp](https://github.com/shimat/opencvsharp) to capture the video from the devices webcam.
+- [**OnnxObjectDetectionApp**](./OnnxObjectDetectionApp) contains an .NET CORE WPF Desktop App that uses [OpenCvSharp](https://github.com/shimat/opencvsharp) to capture the video from the device's webcam.
 
 ## Code Walkthrough
 
 _This sample differs from the [getting-started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) in that here we load/process the images **in-memory** whereas the getting-started sample loads the images from a **file**._
 
-Create a class that defines the data schema to use while loading data into an `IDataView`. ML.NET supports the `Bitmap` type for images, so we'll specify `Bitmap` property decorated with the `ImageTypeAttribute`, as shown below.
+Create a class that defines the data schema to use while loading data into an `IDataView`. ML.NET supports the `Bitmap` type for images, so we'll specify `Bitmap` property decorated with the `ImageTypeAttribute` and pass in the height and width dimensions we got by [inspecting the model](#model-input-and-output), as shown below.
 
 ```csharp
+public struct ImageSettings
+{
+    public const int imageHeight = 416;
+    public const int imageWidth = 416;
+}
+
 public class ImageInputData
 {
-    [ImageType(416, 416)]
+    [ImageType(ImageSettings.imageHeight, ImageSettings.imageWidth)]
     public Bitmap Image { get; set; }
 }
 ```
 
 ### ML.NET: Configure the model
 
-The first step is to create an empty DataView since we need schema of the data while configuring the model.
+The first step is to create an empty `DataView` to obtain the schema of the data to use when configuring the model.
 
 ```csharp
 var dataView = _mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
 ```
 
-The second step is to define the estimator pipeline. Usually when dealing with deep neural networks, you must adapt the images to the format expected by the network. For this reason, the code below resizes and transforms the images (pixel values are normalized across all R,G,B channels).
+The second step is to define the estimator pipeline. Usually when dealing with deep neural networks, you must adapt the images to the format expected by the network.  For this reason, the code below resizes and transforms the images (pixel values are normalized across all R,G,B channels).
 
 ```csharp
-var pipeline = _mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image", imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
-                .Append(_mlContext.Transforms.ExtractPixels(outputColumnName: "image"))
-                .Append(_mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModelFilePath, outputColumnNames: new[] { TinyYoloModelSettings.ModelOutput }, inputColumnNames: new[] { TinyYoloModelSettings.ModelInput }));
+var pipeline = mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: onnxModel.ModelInput, imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
+                .Append(mlContext.Transforms.ExtractPixels(outputColumnName: onnxModel.ModelInput))
+                .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModel.ModelPath, outputColumnName: onnxModel.ModelOutput, inputColumnName: onnxModel.ModelInput));
 ```
 
-You also need to inspect the neural network to get the **names** of the **input** and **output** nodes, which are used later when we define the estimation pipeline. To do this, you can use tools like [Netron](https://github.com/lutzroeder/netron), a GUI visualizer for neural networks, deep learning, and machine learning models.
-
-Below is an example of what we'd see upon opening this sample's Tiny YOLOv2 model with Netron:
-
-![Output from inspecting the Tiny YOLOv2 model with Netron](./docs/Netron/netron.PNG)
-
-From the Netron output above, we can see that our Tiny YOLOv2 network's input tensor is named **'image'** and its output is named **'grid.'**
-
-We'll use these to define the **input** and **output** parameters of the Tiny YOLOv2 Onnx Model.
+Next, we'll use the input and output tensor names we got by [inspecting the model](#model-input-and-output) to define the **input** and **output** parameters of the Tiny YOLOv2 Onnx Model.
 
 ```csharp
 public struct TinyYoloModelSettings
 {
-    // To check Tiny YOLOv2 Model input and output parameter names,
-    // you can use tools like Netron: https://github.com/lutzroeder/netron
-
-    // Input tensor name
     public const string ModelInput = "image";
-
-    // Output tensor name
     public const string ModelOutput = "grid";
 }
 ```
 
-Create the model by fitting the DataView.
+Last, create the model by fitting the `DataView`.
 
 ```csharp
 var model = pipeline.Fit(dataView);
@@ -121,13 +187,12 @@ var model = pipeline.Fit(dataView);
 
 ## Load model and create PredictionEngine
 
-After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and then pass the image to the engine to detect objects using the model.
-This is one place that the **Web** app and the **WPF** app differ slightly.  
+After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and then pass the image to the engine to detect objects using the model. This is one place that the **Web** app and the **WPF** app differ slightly.  
 
-The **Web** app uses a `PredictionEnginePool` to efficiently manage and provide the service with a `PredictionEngine` to use to make predictions.  Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects
+The **Web** app uses a `PredictionEnginePool` to efficiently manage and provide the service with a `PredictionEngine` to use to make predictions.  Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
 ```csharp
-public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPrediction> predictionEngine)
+public ObjectDetectionService(PredictionEnginePool<ImageInputData, TinyYoloPrediction> predictionEngine)
 {
     this.predictionEngine = predictionEngine;
 }
@@ -136,20 +201,20 @@ public ObjectDetectionService(PredictionEnginePool<ImageInputData, ImageObjectPr
 Whereas the **WPF** desktop app creates a single `PredictionEngine` and caches locally to be used for each frame prediction.  And the key point to clarify is that the calling code that instantiates the `PredictionEngine` is responsible for handling the caching (as compared to the `PredictionEnginePool`).
 
 ```csharp
-public PredictionEngine<ImageInputData, ImageObjectPrediction> GetMlNetPredictionEngine()
+public PredictionEngine<ImageInputData, TinyYoloPrediction> GetMlNetPredictionEngine()
 {
-    return _mlContext.Model.CreatePredictionEngine<ImageInputData, ImageObjectPrediction>(_mlModel);
+    return mlModel.Model.CreatePredictionEngine<ImageInputData, TinyYoloPrediction>(mlModel);
 }
 ```
 
 ## Detect objects in the image
 
-When obtaining the prediction, we get a `float` array of size **21125** in the `PredictedLabels` property. This is the 125x13x13 output of the model discussed earlier. We then use the `YoloOutputParser` class to interpret and return a number of bounding boxes for each image. Again, these boxes are filtered so that we retrieve only 5 with high confidence.
+When obtaining the prediction, we get a `float` array of size **21125** in the `PredictedLabels` property. This is the 125x13x13 output of the model [discussed earlier](#output-data-125x13x13). We then use the [`OnnxOutputParser`](./OnnxObjectDetection/OnnxOutputParser.cs) class to interpret and return a number of bounding boxes for each image. Again, these boxes are filtered so that we retrieve only 5 with high confidence.
 
 ```csharp
-var labels = predictionEngine.Predict(imageInputData).PredictedLabels;
-var boundingBoxes = yoloParser.ParseOutputs(labels);
-var filteredBoxes = yoloParser.FilterBoundingBoxes(boundingBoxes, 5, 0.5f);
+var labels = tinyYoloPredictionEngine?.Predict(imageInputData).PredictedLabels;
+var boundingBoxes = outputParser.ParseOutputs(labels);
+var filteredBoxes = outputParser.FilterBoundingBoxes(boundingBoxes, 5, 0.5f);
 ```
 
 ## Draw bounding boxes around detected objects in Image
