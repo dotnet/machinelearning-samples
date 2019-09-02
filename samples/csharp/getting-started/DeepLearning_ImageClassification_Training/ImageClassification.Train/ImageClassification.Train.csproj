@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="assets\inputs\images\" />
-    <Folder Include="assets\outputs\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -530,6 +529,9 @@
     <None Update="assets\inputs\images\dandelion\98992760_53ed1d26a9.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+    <None Update="assets\inputs\images\README.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
     <None Update="assets\inputs\images\roses\102501987_3cdb8e5394_n.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
@@ -888,6 +890,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="assets\inputs\images\tulips\65347450_53658c63bd_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\outputs\README.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
