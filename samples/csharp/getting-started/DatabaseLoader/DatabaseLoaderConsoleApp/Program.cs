@@ -25,13 +25,13 @@ namespace DatabaseLoaderConsoleApp
             string dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlLocalDb", "Criteo-100k-rows.mdf");
             string connectionString = $"Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Database=Criteo-100k-rows;Integrated Security = True";
 
-            // localdb SQL database connection string for 'localdb default location' (usually files located at /Users/YourUser/)
+            // ConnString Example: localdb SQL database connection string for 'localdb default location' (usually files located at /Users/YourUser/)
             //string connectionString = @"Data Source=(localdb)\MSSQLLocalDb;Initial Catalog=YOUR_DATABASE;Integrated Security=True;Pooling=False";
             //
-            //Sample on-premises SQL Server Database (Integrated security)
+            // ConnString Example: on-premises SQL Server Database (Integrated security)
             //string connectionString = @"Data Source=YOUR_SERVER;Initial Catalog=YOUR_DATABASE;Integrated Security=True;Pooling=False";
             //
-            //Sample Azure SQL Database connection string
+            // ConnString Example:  Azure SQL Database connection string
             //string connectionString = @"Server=tcp:yourserver.database.windows.net,1433; Initial Catalog = YOUR_DATABASE; Persist Security Info = False; User ID = YOUR_USER; Password = YOUR_PASSWORD; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 60; ConnectRetryCount = 5; ConnectRetryInterval = 10;";
 
             string commandText = "SELECT * from URLClicks";
@@ -102,9 +102,6 @@ namespace DatabaseLoaderConsoleApp
                             "Cat26Encoded", "Cat27Encoded", "Cat28Encoded", "Cat29Encoded", "Cat30Encoded", "Cat31Encoded",
                             "Cat32Encoded", "Cat33Encoded", "Cat34Encoded", "Cat35Encoded", "Cat36Encoded", "Cat37Encoded",
                             "Cat38Encoded", "Cat39Encoded"));
-
-            //Only for debugging with low number of rows
-            //ConsoleHelper.PeekDataViewInConsole(mlContext, trainTestData.TrainSet, finalTransformerPipeLine, 2);
 
             // Apply the ML algorithm
             var trainingPipeLine = finalTransformerPipeLine.Append(mlContext.BinaryClassification.Trainers.FieldAwareFactorizationMachine(labelColumnName: "Label", featureColumnName: "Features"));
