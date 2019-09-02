@@ -1,4 +1,4 @@
-# Image Classification Model Training (Based on TensorFlow transfer learning)
+# Image Classification Model Training - Preferred API (Based on native TensorFlow transfer learning)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
