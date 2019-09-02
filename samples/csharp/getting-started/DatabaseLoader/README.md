@@ -1,11 +1,11 @@
 
 # Sample using DatabaseLoader for training an ML model directly against data in a SQL Server database (Or any relational database)
 
-![](https://devblogs.microsoft.com/dotnet/wp-content/uploads/sites/10/2019/08/database-loader-illustration-300x181.png)
-
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v0.16-Preview          | Dynamic API | up-to-date | Console app | SQL Server database or any relational database | IDataView from DB | Any | Any |
+
+![](https://devblogs.microsoft.com/dotnet/wp-content/uploads/sites/10/2019/08/database-loader-illustration-300x181.png)
 
 This sample shows you how you can use the native database loader ro directly train an ML model against relational databases. This loader supports any relational database provider supported by System.Data in .NET Core or .NET Framework, meaning that you can use any RDBMS such as SQL Server, Azure SQL Database, Oracle, SQLite, PostgreSQL, MySQL, Progress, IBM DB2, etc.
 
