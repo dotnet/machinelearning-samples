@@ -34,13 +34,7 @@ namespace ImageClassification.Predict
 
                 IEnumerable<ImageData> imagesToPredict = LoadImagesFromDirectory(imagesForPredictions, true);
 
-                // Obtain the original label names to map through the predicted label-index
-                VBuffer<ReadOnlyMemory<char>> keys = default;
-                predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
-                var originalLabels = keys.DenseValues().ToArray();
-
                 //Predict the first image in the folder
-                //
                 ImageData imageToPredict = new ImageData
                 {
                     ImagePath = imagesToPredict.First().ImagePath
@@ -49,6 +43,11 @@ namespace ImageClassification.Predict
                 var prediction = predictionEngine.Predict(imageToPredict);
 
                 var index = prediction.PredictedLabel;
+
+                // Obtain the original label names to map through the predicted label-index
+                VBuffer<ReadOnlyMemory<char>> keys = default;
+                predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
+                var originalLabels = keys.DenseValues().ToArray();
 
                 Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], " +
                                   $"Scores : [{string.Join(",", prediction.Score)}], " +
