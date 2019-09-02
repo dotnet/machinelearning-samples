@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.ML.LightGBM" Version="1.4.0-preview" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="1.4.0-preview" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
-    <PackageReference Include="TinyCsvParser" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
