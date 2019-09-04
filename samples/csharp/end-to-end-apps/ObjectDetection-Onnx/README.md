@@ -262,3 +262,32 @@ foreach (var box in filteredBoxes)
 ## Note on accuracy
 
 Tiny YOLOv2 is significantly less accurate than the full YOLOv2 model, but the tiny version is sufficient for this sample app.
+
+## Troubleshooting (Web Application)
+
+When deploying this application on Azure via App Service, you may encounter some common issues.
+
+1. Application returning 5xx code
+
+    1. One reason why you may get a 5xx code after deploying the application is the platform. The web application only runs on 64-bit architectures. In Azure, change the **Platform** setting in the your respective App Service located in the **Settings > Configuration > General Settings** menu.
+
+    1. Another reason for a 5xx code after deploying the application is the target framework for the web application is .NET Core 3.0, which is currently in preview. You can either revert the application and the referenced project to .NET Core 2.x or add an extension to your App Service. 
+
+        - To add .NET Core 3.0 support in the Azure Portal, select the **Add** button in the **Development Tools > Extensions** section of your respective App Service. 
+        - Then, select **Choose Extension** and select **ASP.NET Core 3.0 (x64) Runtime** from the list of extensions and accept the Legal Terms to proceed with adding the extension to your App Service. 
+
+1. Relative paths
+
+    Paths work slightly differently when working locally versus on Azure. If you manage to successfully deploy your application but clicking on one of the pre-loaded images or uploading your own image does not work, try changing the relative paths. To do so, in the *Controllers/ObjectDetectionController.cs* file, change the of `_imagesTmpFolder` inside the constructor.
+
+    ```csharp
+    _imagesTmpFolder = CommonHelpers.GetAbsolutePath(@"ImagesTemp");
+    ```
+
+    Do the same for the `imageFileRelativePath` inside the `Get` action.
+
+    ```csharp
+    string imageFileRelativePath = @"assets" + url;
+    ```
+
+    Alternatively, you can set a condition depending on the environment (dev/prod) whether to use the local version of the path or the one preferred by Azure.
