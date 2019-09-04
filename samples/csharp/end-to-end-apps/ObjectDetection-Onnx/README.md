@@ -262,3 +262,27 @@ foreach (var box in filteredBoxes)
 ## Note on accuracy
 
 Tiny YOLOv2 is significantly less accurate than the full YOLOv2 model, but the tiny version is sufficient for this sample app.
+
+## Troubleshooting (Web Application)
+
+When deploying this application on Azure via App Service, you may encounter some common issues.
+
+1. Application returning 5xx code
+
+    One reason why you may get a 5xx code after deploying the application is the platform. The web application only runs on 64-bit architectures. In Azure, change the **Platform** setting in the your respective App Service located in the **Settings > Configuration > General Settings** menu.
+
+1. Relative paths
+
+    Paths work slightly differently when working locally versus on Azure. If you manage to successfully deploy your application but clicking on one of the pre-loaded images or uploading your own image does not work, try changing the relative paths. To do so, in the *Controllers/ObjectDetectionController.cs* file, change the of `_imagesTmpFolder` inside the constructor.
+
+    ```csharp
+    _imagesTmpFolder = CommonHelpers.GetAbsolutePath(@"ImagesTemp");
+    ```
+
+    Do the same for the `imageFileRelativePath` inside the `Get` action.
+
+    ```csharp
+    string imageFileRelativePath = @"assets" + url;
+    ```
+
+    Alternatively, you can set a condition depending on the environment (dev/prod) whether to use the local version of the path or the one preferred by Azure.
