@@ -7,6 +7,12 @@
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.3.1           | Up-to-date | ASP.NET Core 2.2 WebAPI | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
 
+**IMPORTANT NOTE: This sample uses an older approach by implementing all the 'plumbing' related to the PredictionEngine Object Pool. This custom implementation is no longer required since the release of the PredictionEnginePool API provided since May 2019.
+Check this other sample for the preferred and much simpler approach:**
+
+https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg
+
+---
 
 **This posts explains how to optimize your code when running an ML.NET model on an ASP.NET Core WebAPI service.** The code would be very similar when running it on an ASP.NET Core MVC or Razor web app, too.
 
