@@ -20,9 +20,6 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Data\countries.stats.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Data\products.stats.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

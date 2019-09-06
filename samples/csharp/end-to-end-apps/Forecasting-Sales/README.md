@@ -38,7 +38,7 @@ Learn how to set up the sample's environment in Visual Studio along with further
 
 ### Problem
 
-This problem is centered around country and product forecasting based on previous sales.
+This problem is centered around product forecasting based on previous sales.
 
 ### DataSet
 
@@ -47,7 +47,6 @@ To solve this problem, two independent ML models are built that take the followi
 | Data Set            | Columns                                                            |
 |---------------------|--------------------------------------------------------------------|
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev    |
-| **country stats**   | next, country, year, month, max, min, std, count, sales, med, prev |
 
 [Explanation of Dataset](docs/Details-of-Dataset.md) - Goto this link for detailed information on dataset.
 
@@ -66,10 +65,7 @@ The sample shows two different ML tasks and algorithms that can be used for fore
 
 To solve this problem, first we will build the ML models by training each model on existing data. Next, we will evaluate how good it is. Finally, we will consume the model to predict sales.
 
-Note that the **Regression** sample implements two independent models to forecast linear data:
-
-- Model to predict product's demand forecast for the next period (month)
-- Model to predict country's sales forecast for the next period (month)
+Note that the **Regression** sample implements a model to forecast linear data.  Specifically, the model predicts the product's demand forecast for the next period (month).
 
 The **Time Series** sample currently implements the product's demand forecast for the next **two** periods (months). The **Time Series** sample uses the same products as in the **Regression** sample so that you can compare the forecasts from the two algorithms.
 
@@ -142,19 +138,17 @@ Specifically, we do the following transformations:
 
 You can load the dataset either before or after designing the pipeline. Although this step is just configuration, it is lazy and won't be loaded until training the model in the next step.
 
-[Model build and train](./src/eShopForecastModelsTrainer/RegressionTrainer/RegressionProductModelHelper.cs)
+[Model build and train](./src/eShopForecastModelsTrainer/RegressionTrainer/RegressionModelHelper.cs)
 
 ```csharp
-var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
+var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: "Label", featureColumnName: "Features");
 
-var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(CountryData.year),
-                                nameof(CountryData.month), nameof(CountryData.max), nameof(CountryData.min),
-                                nameof(CountryData.std), nameof(CountryData.count), nameof(CountryData.sales),
-                                nameof(CountryData.med), nameof(CountryData.prev))
-                    .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(CountryData.country)))
-                    .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
-                    .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(CountryData.next)))
-                    .Append(trainer);
+var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
+    nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(ProductData.productId)))
+        .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
+        .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(ProductData.next)))
+        .Append(trainer);
 ```
 
 #### 2. Regression: Evaluate the Model
@@ -197,14 +191,14 @@ using (var stream = File.OpenRead(outputModelPath))
     trainedModel = mlContext.Model.Load(stream,out var modelInputSchema);
 }
 
-var predictionEngine = mlContext.Model.CreatePredictionEngine<CountryData, CountrySalesPrediction>(trainedModel);
+var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitRegressionPrediction>(trainedModel);
 
 Console.WriteLine("** Testing Product 1 **");
 
 // Build sample data
 ProductData dataSample = new ProductData()
 {
-    productId = "263",
+    productId = 263,
     month = 10,
     year = 2017,
     avg = 91,
@@ -215,8 +209,8 @@ ProductData dataSample = new ProductData()
     units = 910
 };
 
-// Predict the next period/month forecast to the one provided
-ProductUnitPrediction prediction = predictionEngine.Predict(dataSample);
+// Predict the nextperiod/month forecast to the one provided
+ProductUnitRegressionPrediction prediction = predictionEngine.Predict(dataSample);
 Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
 ```
 

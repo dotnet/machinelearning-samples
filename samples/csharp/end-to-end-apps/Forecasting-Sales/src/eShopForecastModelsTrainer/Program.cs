@@ -31,9 +31,6 @@ namespace eShopForecastModelsTrainer
                 RegressionProductModelHelper.TrainAndSaveModel(mlContext, ProductDataPath);
                 RegressionProductModelHelper.TestPrediction(mlContext);
 
-                RegressionCountryModelHelper.TrainAndSaveModel(mlContext, CountryDataPath);
-                RegressionCountryModelHelper.TestPrediction(mlContext);
-
                 ConsoleWriteHeader("Forecast using Time Series SSA estimation");
 
                 TimeSeriesModelHelper.PerformTimeSeriesProductForecasting(mlContext, ProductDataPath);
