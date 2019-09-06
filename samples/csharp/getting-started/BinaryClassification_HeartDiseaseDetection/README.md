@@ -13,7 +13,8 @@ This database contains 76 attributes, but all published experiments refer to usi
 Citation for this dataset is available at [DataSets-Citation](./HeartDiseaseDetection/Data/DATASETS-CITATION.txt)
 
 ## Problem
-This problem is centered around predicting the presence of heart disease based on 14 attributes. To solve this problem, we will build an ML model that takes as inputs 4 parameters: 
+This problem is centered around predicting the presence of heart disease based on 14 attributes. To solve this problem, we will build an ML model that takes as inputs 14 columns, 13 are feature columns (also called independent variables) plus the 'Label' column which is what you want to predict and in this case is named 'num': 
+
 Attribute Information:
 
 * (age) - Age
