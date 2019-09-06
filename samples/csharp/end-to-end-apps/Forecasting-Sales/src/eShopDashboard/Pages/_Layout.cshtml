@@ -51,12 +51,6 @@
                                     <span>Product</span>
                                 </a>
                             </li>
-                            <li class="nav-item pt-md-2 pb-md-4 @(selectedMenu==SelectedMenu.Reports_Country ? "selected" : String.Empty)">
-                                <a class="nav-link px-1 py-0 text-nowrap" asp-page="/Reports/Countries">
-                                    <i class="eshop-icon icon-country d-none d-md-inline-block" title="Country"></i>
-                                    <span>Country</span>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -115,7 +109,6 @@
             catalog: "/api/catalog",
             ordering: "/api/ordering",
             forecasting: "/api/productdemandforecast",
-            countrysalesforecast: "/api/countrysalesforecast",
             timeseriesforcasting: "/api/producttimeseriesforecast"
         };
 

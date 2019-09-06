@@ -9,7 +9,6 @@ namespace Microsoft.eShopOnContainers.WebDashboardRazor.ReportsContext
     public enum SelectedMenu
     {
         Reports_Product,
-        Reports_Country,
         Reports_TimeSeries
     }
 

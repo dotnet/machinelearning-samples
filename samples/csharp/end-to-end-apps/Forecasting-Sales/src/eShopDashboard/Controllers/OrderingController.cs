@@ -20,30 +20,6 @@ namespace eShopDashboard.Controllers
             _queries = queries;
         }
 
-        [HttpGet("country/{country}/history")]
-        public async Task<IActionResult> CountryHistory(string country)
-        {
-            if (country.IsBlank()) return BadRequest();
-
-            IEnumerable<dynamic> items = await _queries.GetCountryHistoryAsync(country);
-
-            return Ok(items);
-        }
-
-        [HttpGet("country/stats")]
-        public async Task<IActionResult> CountryStats()
-        {
-            IEnumerable<dynamic> items = await _queries.GetCountryStatsAsync();
-
-            var typedOrderItems = items
-                .Select(c => new { c.next, c.country, c.year, c.month, c.max, c.min, c.std, c.count, c.sales, c.med, c.prev})
-                .ToList();
-
-            var csvFile = File(Encoding.UTF8.GetBytes(typedOrderItems.FormatAsCSV()), "text/csv");
-            csvFile.FileDownloadName = "countries.stats.csv";
-            return csvFile;
-        }
-
         [HttpGet("product/{productId}/history")]
         public async Task<IActionResult> ProductHistory(string productId)
         {

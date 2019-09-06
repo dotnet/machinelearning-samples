@@ -42,8 +42,6 @@ namespace eShopDashboard
 
             services.AddPredictionEnginePool<ProductData, ProductUnitRegressionPrediction>()
                 .FromFile(Configuration["ProductMLModelPath"]);
-            services.AddPredictionEnginePool<CountryData, CountrySalesPrediction>()
-                .FromFile(Configuration["CountryMLModelPath"]);
 
             services.Configure<CatalogSettings>(Configuration.GetSection("CatalogSettings"));
 

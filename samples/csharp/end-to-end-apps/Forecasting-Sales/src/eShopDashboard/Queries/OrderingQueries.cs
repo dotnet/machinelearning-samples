@@ -20,16 +20,6 @@ namespace eShopDashboard.Queries
             _connectionString = _orderingContext.Database.GetDbConnection().ConnectionString;
         }
 
-        public async Task<IEnumerable<dynamic>> GetCountryHistoryAsync(string country)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                return await connection.QueryAsync<dynamic>(OrderingQueriesText.CountryHistory(country), new { country });
-            }
-        }
-
         public async Task<IEnumerable<dynamic>> GetProductHistoryAsync(string productId)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -45,13 +35,6 @@ namespace eShopDashboard.Queries
             var productHistory = await GetProductHistoryAsync(productId);
 
             return productHistory.Where(p => p.next != null && p.prev != null);
-        }
-
-        public async Task<IEnumerable<dynamic>> GetCountryStatsAsync()
-        {
-            var countryStats = await GetCountryHistoryAsync(null);
-
-            return countryStats.Where(p => p.next != null && p.prev != null);
         }
 
         public async Task<IEnumerable<dynamic>> GetProductStatsAsync()
