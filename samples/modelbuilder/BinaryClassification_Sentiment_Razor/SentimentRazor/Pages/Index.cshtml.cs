@@ -25,12 +25,10 @@ namespace SentimentAnalysisRazorPages.Pages
 
         public IActionResult OnGetAnalyzeSentiment([FromQuery] string text)
         {
-            var input = new ModelInput { Comment = text };
+            var input = new ModelInput { SentimentText = text };
             var prediction = _predictionEnginePool.Predict(input);
-            var sentiment = Convert.ToBoolean(prediction.Prediction) ? "Positive" : "Negative";
+            var sentiment = Convert.ToBoolean(prediction.Prediction) ? "Toxic" : "Not Toxic";
             return Content(sentiment);
-            
-            //return Content(percentage.ToString("0.0"));
         }
     }
 }
