@@ -28,7 +28,7 @@ namespace SentimentRazorML.ConsoleApp
 
         public static async Task CreateModel()
         {
-            // Dowload Data
+            // Download Data
             await DownloadData();
 
             // Load Data
