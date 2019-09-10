@@ -25,6 +25,7 @@ namespace SentimentAnalysisRazorPages.Pages
 
         public IActionResult OnGetAnalyzeSentiment([FromQuery] string text)
         {
+            if (String.IsNullOrEmpty(text)) return Content("Neutral");
             var input = new ModelInput { SentimentText = text };
             var prediction = _predictionEnginePool.Predict(input);
             var sentiment = Convert.ToBoolean(prediction.Prediction) ? "Toxic" : "Not Toxic";
