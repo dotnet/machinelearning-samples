@@ -41,7 +41,7 @@ In this solution, both the *SentimentRazoML.ConsoleApp* and *SentimentRazoML.Mod
 
 ### The web application
 
-Users interact with the application through a Razor Pages web application. In a text box on the main page of the application, a user enters a comment which triggers a handler on the page's model to use the input to predict the sentiment of the commend using the trained model. 
+Users interact with the application through a Razor Pages website. In a text box on the main page of the application, a user enters a comment which triggers a handler on the page's model to use the input to predict the sentiment of the comment using the trained model. 
 
 #### Challenges
 
