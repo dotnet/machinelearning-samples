@@ -40,7 +40,7 @@ namespace SentimentAnalysisRazorPages
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddPredictionEnginePool<ModelInput, ModelOutput>()
-                    .FromFile(modelName: "SentimentModel", filePath:_modelPath, watchForChanges:true);
+                    .FromFile(_modelPath);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
