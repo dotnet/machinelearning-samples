@@ -63,7 +63,7 @@ var prediction = _predictionEnginePool.Predict(input);
 
 ## Try a different dataset
 
-If you want to try out the model with a dataset that produces better results such as the UCI Sentiment Labeled Sentences dataset, you can make the following adjustments. 
+If you want to try out the application with a dataset that produces better results such as the UCI Sentiment Labeled Sentences dataset, you can make the following adjustments. 
 
 ### Get the data
 
