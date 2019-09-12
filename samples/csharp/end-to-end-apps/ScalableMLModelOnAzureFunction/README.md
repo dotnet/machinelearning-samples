@@ -7,6 +7,7 @@ This sample highlights dependency injection in conjunction with the **.NET Core 
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.3.1           | Up-to-date | Azure Functions | Single data sample | Sentiment Analysis | Binary   Classification | Linear Classification |
 
+For a detailed explanation of how to build this application, see the accompanying [how-to guide](https://docs.microsoft.com/en-us/dotnet/machine-learning/how-to-guides/serve-model-serverless-azure-functions-ml-net) on the Microsoft Docs site.
 
 # Goal
 
