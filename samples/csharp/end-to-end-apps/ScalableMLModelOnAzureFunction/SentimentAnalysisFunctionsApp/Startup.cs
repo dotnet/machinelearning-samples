@@ -11,7 +11,7 @@ namespace SentimentAnalysisFunctionsApp
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddPredictionEnginePool<SentimentData, SentimentPrediction>()
-                .FromFile("MLModels/sentiment_model.zip");
+                .FromFile(modelName: "SentimentModel", filePath:"MLModels/sentiment_model.zip", watchForChanges: true);
         }
     }
 }
