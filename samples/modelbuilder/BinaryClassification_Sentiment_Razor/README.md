@@ -52,8 +52,11 @@ A challenge when making a single prediction with an ML.NET model in multi-thread
 For improved performance and thread safety, use the `PredictionEnginePool` service, which creates an `ObjectPool` of `PredictionEngine` objects for application use. To use it within your application, add the `Microsoft.Extensions.ML` NuGet package to your project and register the `PredictionEnginPool` as you would any other dependency inside the `Startup` class of the *SentimentRazoML* project. 
 
 ```csharp
-services.AddPredictionEnginePool<ModelInput, ModelOutput>().FromFile(_modelPath);
+services.AddPredictionEnginePool<ModelInput, ModelOutput>()
+        .FromFile(modelName: "SentimentModel", filePath:_modelPath, watchForChanges:true);
 ```
+
+Machine learning models are not static and are retrained and redeployed at periodic intervals. One way to get the latest version of the model into your application is to re-deploy the application. However, this means that you would need to account for downtime in your application. This may be undesirable especially when the machine learning components are not a mission-critical part of your application. Fortunately, the `PredictionEnginePool` service does that for you. In the example above, by setting the `watchForChanges` parameter to `true`, the `PredictionEnginePool` starts a `FileSystemWatcher` that listens to the file system change notifications and raises events when there is a change to the file. This prompts the `PredictionEnginePool` to automatically reload the model without having to redeploy the application. Similar functionality is available in the `FromUri` method, although the strategy used in that instance is polling. For models stored remotely, the `PredictionEnginePool` polls the remote location for changes every five minutes by default. Depending on your requirements, you can increase or decrease the polling time accordingly.
 
 Then, inside the handler or action where the prediction is to be made, call use `Predict` method like you would with a `PredictionEngine`.
 
