@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.ML;
@@ -19,7 +19,7 @@ namespace SentimentRazorML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"yelp_labelled_columns.tsv";
+        private static string TRAIN_DATA_FILEPATH = @"wikipedia-detox-250-line-data.tsv";
         private static string MODEL_FILEPATH = @"../../../../SentimentRazorML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
@@ -56,25 +56,15 @@ namespace SentimentRazorML.ConsoleApp
         {
             using (var client = new HttpClient())
             {
-                var response = await client.GetStreamAsync("https://archive.ics.uci.edu/ml/machine-learning-databases/00331/sentiment%20labelled%20sentences.zip");
+                var response = await client.GetStreamAsync("https://raw.githubusercontent.com/dotnet/machinelearning/master/test/data/wikipedia-detox-250-line-data.tsv");
 
-                using (var archive = new ZipArchive(response))
+                using (var sr = new StreamReader(response))
                 {
-                    foreach (var entry in archive.Entries)
-                    {
-                        if (entry.Name.Contains("yelp_labelled"))
-                        {
-                            using (var sr = new StreamReader(entry.Open()))
-                            {
-                                var data = await sr.ReadToEndAsync();
+                    var data = await sr.ReadToEndAsync();
 
-                                using (var sw = new StreamWriter(GetAbsolutePath(TRAIN_DATA_FILEPATH)))
-                                {
-                                    sw.Write("Comment\tSentiment\n");
-                                    sw.Write(data);
-                                }
-                            }
-                        }
+                    using (var sw = new StreamWriter(GetAbsolutePath(TRAIN_DATA_FILEPATH)))
+                    {
+                        sw.Write(data);
                     }
                 }
             }
@@ -83,13 +73,13 @@ namespace SentimentRazorML.ConsoleApp
         public static IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations 
-            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("Comment_tf", "Comment")
-                                      .Append(mlContext.Transforms.CopyColumns("Features", "Comment_tf"))
+            var dataProcessPipeline = mlContext.Transforms.Text.FeaturizeText("SentimentText_tf", "SentimentText")
+                                      .Append(mlContext.Transforms.CopyColumns("Features", "SentimentText_tf"))
                                       .Append(mlContext.Transforms.NormalizeMinMax("Features", "Features"))
                                       .AppendCacheCheckpoint(mlContext);
 
             // Set the training algorithm 
-            var trainer = mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Sentiment", featureColumnName: "Features");
+            var trainer = mlContext.BinaryClassification.Trainers.AveragedPerceptron(labelColumnName: "Sentiment", numberOfIterations: 10, featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
             return trainingPipeline;
