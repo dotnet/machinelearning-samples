@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using Common;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using PLplot;
 using TaxiFareRegression.DataStructures;
 
@@ -14,7 +16,7 @@ namespace TaxiFareRegression
 {
     internal static class Program
     {
-        private static string BaseRelativePath = @"../../../../";
+        private static string BaseRelativePath = @"../../../../TaxiFarePredictionConsoleApp";
         private static string BaseDataPath = Path.Combine(Path.GetFullPath(BaseRelativePath), "inputs");
 
         private static string TrainDataPath = Path.Combine(BaseDataPath, "taxi-fare-train.csv");
@@ -76,8 +78,11 @@ namespace TaxiFareRegression
             //The pipeline is trained on the dataset that has been loaded and transformed.
             Console.WriteLine("=============== Training the model ===============");
             var trainedModel = trainingPipeline.Fit(trainingDataView);
-
             ConsoleHelper.ConsoleWriteHeader("=============== End of training process ===============");
+
+            //Calculate and show the golbal Permutation Feature Importance (PFI)
+            //This is independent to the feature contribution calculator
+            CalculatePermutationFeatureImportance(mlContext, trainingDataView, trainedModel);
 
             // Append feature contribution calculator in the pipeline. This will be used
             // at prediction time for explainability. 
@@ -99,6 +104,46 @@ namespace TaxiFareRegression
             Console.WriteLine("The model is saved to {0}", ModelPath);
             
             return fccModel;
+        }
+
+        private static void CalculatePermutationFeatureImportance(MLContext mlContext, IDataView trainingDataView,
+                                                          ITransformer trainedModel)
+        {
+            // Make predictions (Transform the dataset)
+            IDataView transformedData = trainedModel.Transform(trainingDataView);
+
+            // Extract the trainer (last transformer in the model)
+            var singleTrainerModel = (trainedModel as TransformerChain<RegressionPredictionTransformer<LinearRegressionModelParameters>>).LastTransformer;
+            //var singleTrainerModel = mlModel.LastTransformer;
+
+            //Calculate Feature Permutation
+            ImmutableArray<RegressionMetricsStatistics> permutationMetrics =
+                                            mlContext
+                                                .Regression.PermutationFeatureImportance(predictionTransformer: singleTrainerModel,
+                                                                                         data: transformedData,
+                                                                                         labelColumnName: "Label",
+                                                                                         numberOfExamplesToUse: 100,                                                                                         permutationCount: 50);
+            Console.WriteLine("Feature\tPFI");
+
+            var columnNamesUsedInPFI = GetColumnNamesUsedForPFI(transformedData);
+
+            // Combine metrics with feature names and format for display.
+            //Show as ordered originally 
+            for (int i = 0; i < permutationMetrics.Length; i++)
+            {
+                Console.WriteLine($"{columnNamesUsedInPFI[i],-20}|\t{permutationMetrics[i].RSquared.Mean:F6}");
+            }
+        }
+
+        public static string[] GetColumnNamesUsedForPFI(IDataView dataView)
+        {
+            //Get the column names except "SamplingKeyColumn", "Features", "Score" column 
+
+            var featureColumnNames = dataView.Schema
+                    .Where(col => (col.Name != "SamplingKeyColumn") && (col.Name != "Features") && (col.Name != "Score"))
+                    .Select(col => col.Name);
+
+            return featureColumnNames.ToArray();
         }
 
         private static void TestSinglePrediction(MLContext mlContext)
@@ -320,6 +365,12 @@ namespace TaxiFareRegression
 
             return records;
         }
+    }
+
+    internal class FeatureImportance
+    {
+        public string Name { get; set; }
+        public double RSquaredMean { get; set; }
     }
 
 }
