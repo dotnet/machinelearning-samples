@@ -20,6 +20,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [IRIS Flowers Classifier - UWP APP](https://github.com/PaulaScholz/MLDotNetUWP) | IRIS Flower Species Prediction  | Multiclass Classification      | ML.Net 1.0.0  | Paula Scholz,PaulaScholz  | 
 | [Taco vs Burrito Image Classifier](https://github.com/sethjuarez/TacosML) | Taco vs Burrito Image Classifier  | Image Classification using TensorFlow -Transfer Learning | 1.0.0  | Seth Juarez,sethjuarez  | 
 | [Multiple ML.NET samples and demos](https://github.com/jeffprosise/ML.NET) | Multiple ML.NET samples and demos  | TensorFlow, AutoML, classification, Digit classification, etc. | 1.0.0  | by jeffprosise  | 
+| [Mushroom Classifier Using C# and ML.Net](https://github.com/deepak21188/Mushroom-Classification-using-C-Sharp-and-ML.Net) | App to classify the mushrooms whether they are edible or poisonouss  | Binary Classification | 1.3.1  | by deepak21188  | 
 
 
 
