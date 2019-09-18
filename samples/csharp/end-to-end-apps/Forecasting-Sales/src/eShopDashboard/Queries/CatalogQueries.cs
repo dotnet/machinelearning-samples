@@ -31,7 +31,7 @@ namespace eShopDashboard.Queries
 
         public async Task<IEnumerable<dynamic>> GetProductsByDescriptionAsync(string description)
         {
-            var itemList = await _context.CatalogItems
+         var itemList = await _context.CatalogItems
                 .Where(c => c.Description.Contains(description))
                 .Select(ci => new
                 {

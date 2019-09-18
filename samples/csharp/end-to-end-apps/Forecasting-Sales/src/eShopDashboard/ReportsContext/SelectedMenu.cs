@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Microsoft.eShopOnContainers.WebDashboardRazor.ReportsContext
 {
     public enum SelectedMenu
     {
-        Reports_Product,
-        Reports_TimeSeries
+        Reports_Regression,
+        Reports_TimeSeries,
+        Reports_Comparison
     }
 
     public static class ViewDataHelpers

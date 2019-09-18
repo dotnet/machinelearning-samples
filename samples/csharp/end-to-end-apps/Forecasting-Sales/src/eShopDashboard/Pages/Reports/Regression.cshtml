@@ -1,7 +1,7 @@
 ﻿@page
-@model eShopDashboard.Pages.Reports.TimeSeriesModel
+@model eShopDashboard.Pages.Reports.RegressionModel
 @{
-    ViewData["Title"] = "Product Sales Forecast (Time Series)";
+    ViewData["Title"] = "Product Sales Forecast (Regression)";
 }
 
 @if (Program.GetSeedingProgress() < 100)
@@ -83,5 +83,4 @@
         });
     </script>
 }
-
 
