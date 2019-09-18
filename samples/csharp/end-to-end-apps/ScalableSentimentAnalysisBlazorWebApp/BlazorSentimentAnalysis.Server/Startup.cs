@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
 using System.Linq;
-
 using Microsoft.Extensions.ML;
 using BlazorSentimentAnalysis.Server.ML.DataModels;
 
@@ -33,7 +31,6 @@ namespace BlazorSentimentAnalysis.Server
             });
 
             // Register the PredictionEnginePool as a service in the IoC container for DI
-            //
             services.AddPredictionEnginePool<SampleObservation, SamplePrediction>()
                     .FromFile(Configuration["MLModel:MLModelFilePath"]);
         }
