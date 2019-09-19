@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="SharpZipLib" Version="1.1.0" />
+    <PackageReference Include="SharpZipLib" Version="1.2.0" />
   </ItemGroup>
   
 </Project>
