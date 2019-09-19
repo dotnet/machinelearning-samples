@@ -24,8 +24,8 @@ namespace eShopDashboard.Controllers
         [HttpGet("productSetDetailsByDescription")]
         public async Task<IActionResult> SimilarProducts([FromQuery]string description)
         {
-            // Only show those products that have at least 24 months of data
-            const int minDepthOrderingThreshold = 24;
+            // Only show those products that have 34 months of data
+            const int minDepthOrderingThreshold = 34;
 
             if (string.IsNullOrEmpty(description))
                 return BadRequest();

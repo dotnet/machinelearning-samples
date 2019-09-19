@@ -93,7 +93,7 @@ namespace eShopDashboard.Infrastructure.Setup
             var generatedOrderItems = new List<OrderItem>();
 
             int progressCounter = 0;
-            int totalCounter = _orderDataArray.Count();
+            int totalCounter = _orderDataArray.Length;
 
             foreach (var order in _orderDataArray)
             {
@@ -148,7 +148,7 @@ namespace eShopDashboard.Infrastructure.Setup
             _orderDataArray = _orderDataArray.Concat(generatedOrders).ToArray();
             _orderItemDataArray = _orderItemDataArray.Concat(generatedOrderItems).ToArray();
 
-            return _orderDataArray.Count() + _orderItemDataArray.Count();
+            return _orderDataArray.Length + _orderItemDataArray.Length;
         }
 
         private int GetOrderItemsDataToLoad()
@@ -168,7 +168,7 @@ namespace eShopDashboard.Infrastructure.Setup
 
             _orderItemDataArray = loadResult.Select(r => r.Result).ToArray();
 
-            return _orderItemDataArray.Count();
+            return _orderItemDataArray.Length;
         }
 
         private int GetOrdersDataToLoad()
@@ -188,7 +188,7 @@ namespace eShopDashboard.Infrastructure.Setup
 
             _orderDataArray = loadResult.Select(r => r.Result).ToArray();
 
-            return _orderDataArray.Count();
+            return _orderDataArray.Length;
         }
 
         private async Task SeedOrderItemsAsync(IProgress<int> recordsProgressHandler)
