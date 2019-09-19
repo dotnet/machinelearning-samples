@@ -2,7 +2,10 @@
 {
     public static class OrderingQueriesText
     {
-        //Returns product data for those products that have at least 12 months of data.
+        //This query returns aggregated product data for those products that have at least 34 months of data.  Specifically, we're looking for 34 months because
+        //we're interested in only those products in the seeded database that have a full 12 months of data AND that have another 24 months of historical data that was generated - this is a total of 36 months of data.
+        //When this query runs, it automatically reduces the 36 momths of data down by 2 months in order to come up with the previous\next month values required for the regression model.  This is how
+        //it arrives at 34 months of data.
         public static string ProductHistory(string productId)
         {
             var sqlCommandText = $@"
@@ -51,7 +54,7 @@ select p2.productId
 			group by oi.ProductId, YEAR(CAST(oi.OrderDate as datetime)), MONTH(CAST(oi.OrderDate as datetime))
 		) as p2
 		Group By p2.productId
-		Having count(*) >= 12
+		Having count(*) >= 34
 ) as p2
 
 on p1.productId = p2.productId";

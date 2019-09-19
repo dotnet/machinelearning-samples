@@ -8,12 +8,12 @@ namespace eShopDashboard.Controllers
 {
     [Produces("application/json")]
     [Route("api/productdemandforecast")] 
-    public class ProductDemandForecastController : Controller
+    public class ProductRegressionForecastController : Controller
     {
         private readonly AppSettings appSettings;
         private readonly PredictionEnginePool<ProductData, ProductUnitRegressionPrediction> productSalesModel;
 
-        public ProductDemandForecastController(IOptionsSnapshot<AppSettings> appSettings,
+        public ProductRegressionForecastController(IOptionsSnapshot<AppSettings> appSettings,
                                                PredictionEnginePool<ProductData, ProductUnitRegressionPrediction> productSalesModel)
         {
             this.appSettings = appSettings.Value;

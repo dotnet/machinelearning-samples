@@ -193,25 +193,15 @@ using (var stream = File.OpenRead(outputModelPath))
 
 var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitRegressionPrediction>(trainedModel);
 
-Console.WriteLine("** Testing Product 1 **");
-
-// Build sample data
-ProductData dataSample = new ProductData()
-{
-    productId = 263,
-    month = 10,
-    year = 2017,
-    avg = 91,
-    max = 370,
-    min = 1,
-    count = 10,
-    prev = 1675,
-    units = 910
-};
+Console.WriteLine("** Testing Product **");
 
 // Predict the nextperiod/month forecast to the one provided
-ProductUnitRegressionPrediction prediction = predictionEngine.Predict(dataSample);
-Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
+ProductUnitRegressionPrediction prediction = predictionEngine.Predict(SampleProductData.MonthlyData[0]);
+Console.WriteLine($"Product: {SampleProductData.MonthlyData[0].productId}, month: {SampleProductData.MonthlyData[0].month + 1}, year: {SampleProductData.MonthlyData[0].year} - Real value (units): {SampleProductData.MonthlyData[0].next}, Forecast Prediction (units): {prediction.Score}");
+
+// Predicts the nextperiod/month forecast to the one provided
+prediction = predictionEngine.Predict(SampleProductData.MonthlyData[1]);
+Console.WriteLine($"Product: {SampleProductData.MonthlyData[1].productId}, month: {SampleProductData.MonthlyData[1].month + 1}, year: {SampleProductData.MonthlyData[1].year} - Forecast Prediction (units): {prediction.Score}");
 ```
 
 ### Time Series
@@ -230,8 +220,8 @@ Here are descriptions of the parameters:
 - **outputColumnName**: This is the name of the column that will be used to store predictions. The column must be a vector of type **Single**. In a later step, we define a class named **ProductUnitTimeSeriesPrediction** that contains this output column.
 - **inputColumnName**: This is the name of the column that is being predicted/forecasted. The column contains a value of a datapoint in the time series and must be of type **Single**. In our sample, we are predicting/forecasting product **units** which is our input column.
 - **windowSize**:  This is the most important parameter that you can use to tune the accuracy of the model for your scenario.  Specifically, this parameter is used to define a window of time that is used by the algorithm to decompose the time series data into seasonal/periodic and noise components. Typically, you should start with the largest window size that is representative of the seasonal/periodic business cycle for your scenario.  For example, if the business cycle is known to have both weekly and monthly (e.g. 30-day) seasonalities/periods and the data is collected daily, the window size in this case should be 30 to represent the largest window of time that exists in the business cycle.  If the same data also exhibits annual seasonality/periods (e.g. 365-day), but the scenario in which the model will be used is **not** interested in **annual** seasonality/periods, then the window size does **not** need to be 365.  In this sample, the product data is based on a 12 month cycle where data is collected monthly -- as a result, the window size used is 12.
-- **seriesLength**: TODO - Need description to understand how this is different than trainSize.
-- **trainSize**: This parameter specifies the total number of data points in the input time series, starting from the beginning.  Note that, after a model is created, it can be saved and updated with new data points that are collected.  Since the data series in this sample is for 36 months, -- the seriesLength used is 36.
+- **seriesLength**: This parameter specifies the number of data points that are used when performing a forecast.
+- **trainSize**: This parameter specifies the total number of data points in the input time series, starting from the beginning.  Note that, after a model is created, it can be saved and updated with new data points that are collected.
 - **horizon**: This parameter indicates the number of time periods to predict/forecast. In this sample, we specify 2 to indicate that the next 2 months of product units will be predicated/forecasted.
 - **confidenceLevel**: This parameter indicates the likelihood the real observed value will fall within the specified interval bounds. Typically, .95 is an acceptable starting point - this value should be between [0, 1).  Usually, the higher the confidence level, the wider the range that the interval bounds will be.  And conversely, the lower the confidence level, the narrower the interval bounds.
 - **confidenceLowerBoundColumn**: This is the name of the column that will be used to store the **lower** confidence interval bound for each forecasted value. The **ProductUnitTimeSeriesPrediction** class also contains this output column.
