@@ -54,9 +54,11 @@ The new **.NET Core Integration Package** implements Object Pooling of Predictio
 Basically, with this component, you register the `PredictionEnginePool` in a single line in the `Configure` method of the `Startup` class, like the following:
 
 ```csharp
-builder.Services.AddPredictionEnginePool<SentimentData, SentimentPrediction>()
-    .FromFile("MLModels/sentiment_model.zip");
+ builder.Services.AddPredictionEnginePool<SentimentData, SentimentPrediction>()
+	.FromFile(modelName: "SentimentAnalysisModel", filePath:"MLModels/sentiment_model.zip", watchForChanges: true);
 ```
+
+In the example above, by setting the `watchForChanges` parameter to `true`, the `PredictionEnginePool` starts a `FileSystemWatcher` that listens to the file system change notifications and raises events when there is a change to the file. This prompts the `PredictionEnginePool` to automatically reload the model without having to redeploy the application. The model is also given a name using the `modelName` parameter. In the event you have multiple models hosted in your application, this is a way of referencing them. 
 
 Then you just need to need to inject the `PredictionEnginePool` inside the respective Azure Function constructor:
 
@@ -72,7 +74,7 @@ public AnalyzeSentiment(PredictionEnginePool<SentimentData, SentimentPrediction>
 Once injected, you can call the `Predict` method from the injected `PredictionEnginePool` inside any Azure Function:
 
 ```csharp
-SentimentPrediction prediction = _predictionEnginePool.Predict(data);
+SentimentPrediction prediction = _predictionEnginePool.Predict(modelName: "SentimentAnalysisModel", example: data);
 ```
 
 For a much more detailed explanation of a PredictionEngine object pool comparable to the implementation done in the '.NET Core Integration Package', including design diagrams, read the following blog post:
@@ -80,3 +82,18 @@ For a much more detailed explanation of a PredictionEngine object pool comparabl
 [How to optimize and run ML.NET models on scalable ASP.NET Core WebAPIs or web apps](https://devblogs.microsoft.com/cesardelatorre/how-to-optimize-and-run-ml-net-models-on-scalable-asp-net-core-webapis-or-web-apps/)
 
 **NOTE:** You don't need to make the implementation explained in the blog post. Precisely that functionality is implemented for you in the .NET Integration Package. 
+
+## Test the application locally
+
+1. Run the application
+2. Open PowerShell and enter the code into the prompt where PORT is the port your application is running on. Typically the port is 7071.
+
+```csharp
+Invoke-RestMethod "http://localhost:<PORT>/api/AnalyzeSentiment" -Method Post -Body (@{SentimentText="This is a very bad steak"} | ConvertTo-Json) -ContentType "application/json"
+```
+
+If successful, the output should look similar to the text below:
+
+```text
+Negative
+```
