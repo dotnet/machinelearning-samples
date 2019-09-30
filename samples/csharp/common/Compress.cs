@@ -17,11 +17,11 @@ namespace Common
             // Use a 4K buffer. Any larger is a waste.    
             byte[] dataBuffer = new byte[4096];
 
-            using (System.IO.Stream fs = new FileStream(gzipFileName, FileMode.Open, FileAccess.Read))
+            using (Stream fs = new FileStream(gzipFileName, FileMode.Open, FileAccess.Read))
             {
-                using (GZipInputStream gzipStream = new GZipInputStream(fs))
+                using (var gzipStream = new GZipInputStream(fs))
                 {
-                    // Change this to your needs
+                    // Change this to your needs.
                     string fnOut = Path.Combine(targetDir, Path.GetFileNameWithoutExtension(gzipFileName));
 
                     using (FileStream fsOut = File.Create(fnOut))
@@ -37,7 +37,7 @@ namespace Common
             var flag = gzArchiveName.Split(Path.DirectorySeparatorChar).Last().Split('.').First() + ".bin";
             if (File.Exists(Path.Combine(destFolder, flag))) return;
 
-            Console.WriteLine($"Extracting.");
+            Console.WriteLine("Extracting.");
             var task = Task.Run(() =>
             {
                 ZipFile.ExtractToDirectory(gzArchiveName, destFolder);
@@ -59,7 +59,7 @@ namespace Common
             var flag = gzArchiveName.Split(Path.DirectorySeparatorChar).Last().Split('.').First() + ".bin";
             if (File.Exists(Path.Combine(destFolder, flag))) return;
 
-            Console.WriteLine($"Extracting.");
+            Console.WriteLine("Extracting.");
             var task = Task.Run(() =>
             {
                 using (var inStream = File.OpenRead(gzArchiveName))

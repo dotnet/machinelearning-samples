@@ -30,10 +30,10 @@ namespace eShopDashboard.Controllers
         [Route("product/{productId}/unittimeseriesestimation")]
         public async Task<IActionResult> GetProductUnitDemandEstimation(string productId)
         {
-            // Get product history
+            // Get product history.
             var productHistory = await _queries.GetProductDataAsync(productId);
 
-            // Supplement the history with synthetic data
+            // Supplement the history with synthetic data.
             var supplementedProductHistory = TimeSeriesDataGenerator.SupplementData(mlContext, productHistory);
             var supplementedProductHistoryLength = supplementedProductHistory.Count(); // 36
             var supplementedProductDataView = mlContext.Data.LoadFromEnumerable(supplementedProductHistory);
@@ -56,7 +56,7 @@ namespace eShopDashboard.Controllers
             // Create the forecast engine used for creating predictions.
             TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecastEngine = forecastTransformer.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
 
-            // Predict
+            // Predict.
             var nextMonthUnitDemandEstimation = forecastEngine.Predict();
 
             return Ok(nextMonthUnitDemandEstimation.ForecastedProductUnits.First());

@@ -26,11 +26,11 @@ namespace TaxiFareRegression
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
-            //Create ML Context with seed for repeteable/deterministic results
-            MLContext mlContext = new MLContext(seed: 0);
+            // Create ML Context with seed for repeteable/deterministic results.
+            var mlContext = new MLContext(seed: 0);
 
 
-            // Create, Train, Evaluate and Save a model
+            // Create, Train, Evaluate and Save a model.
             TrainModel(mlContext);
 
             // Make a single test prediction loding the model from .ZIP file
@@ -334,7 +334,7 @@ namespace TaxiFareRegression
 
         public static string GetAbsolutePath(string relativePath)
         {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);

@@ -24,8 +24,8 @@ namespace TensorFlowImageClassification
             _tensorFlowModelFilePath = GetAbsolutePath(Configuration["MLModel:TensorFlowModelFilePath"]);
 
             /////////////////////////////////////////////////////////////////
-            //Configure the ML.NET model for the pre-trained TensorFlow model
-            TensorFlowModelConfigurator tensorFlowModelConfigurator = new TensorFlowModelConfigurator(_tensorFlowModelFilePath);
+            //Configure the ML.NET model for the pre-trained TensorFlow model.
+            var tensorFlowModelConfigurator = new TensorFlowModelConfigurator(_tensorFlowModelFilePath);
             _mlnetModel = tensorFlowModelConfigurator.Model;
         }
 
@@ -44,7 +44,7 @@ namespace TensorFlowImageClassification
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             /////////////////////////////////////////////////////////////////////////////
-            // Register the PredictionEnginePool as a service in the IoC container for DI
+            // Register the PredictionEnginePool as a service in the IoC container for DI.
             //
             services.AddPredictionEnginePool<ImageInputData, ImageLabelPredictions>();
             services.AddOptions<PredictionEnginePoolOptions<ImageInputData, ImageLabelPredictions>>()
@@ -77,7 +77,7 @@ namespace TensorFlowImageClassification
 
         public static string GetAbsolutePath(string relativePath)
         {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
