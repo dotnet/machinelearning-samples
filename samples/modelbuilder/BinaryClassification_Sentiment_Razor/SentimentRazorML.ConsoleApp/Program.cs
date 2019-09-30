@@ -11,7 +11,7 @@ namespace SentimentRazorML.ConsoleApp
         static async Task Main(string[] args)
         {
             // // Training code used by ML.NET CLI and AutoML to generate the model
-            await ModelBuilder.CreateModel();
+            //await ModelBuilder.CreateModel();
 
             // Create single instance of sample data from first line of dataset for model input
             ModelInput sampleData = CreateSingleDataSample();
