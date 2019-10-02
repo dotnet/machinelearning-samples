@@ -51,10 +51,10 @@ namespace eShopForecastModelsTrainer
             var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
-            // Train the model
+            // Train the model.
             var model = trainingPipeline.Fit(trainingDataView);
 
-            // Save the model for later comsumption from end-user apps
+            // Save the model for later comsumption from end-user apps.
             mlContext.Model.Save(model, trainingDataView.Schema, outputModelPath);
         }
 
@@ -66,7 +66,7 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Testing Product Unit Sales Forecast Regression model");
 
-            // Read the model that has been previously saved by the method SaveModel
+            // Read the model that has been previously saved by the method SaveModel.
 
             ITransformer trainedModel;
             using (var stream = File.OpenRead(outputModelPath))
@@ -78,8 +78,8 @@ namespace eShopForecastModelsTrainer
 
             Console.WriteLine("** Testing Product 1 **");
 
-            // Build sample data
-            ProductData dataSample = new ProductData()
+            // Build sample data.
+            var dataSample = new ProductData()
             {
                 productId = 263,
                 month = 10,
@@ -92,7 +92,7 @@ namespace eShopForecastModelsTrainer
                 units = 910
             };
 
-            // Predict the nextperiod/month forecast to the one provided
+            // Predict the nextperiod/month forecast to the one provided.
             ProductUnitRegressionPrediction prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
 
@@ -109,7 +109,7 @@ namespace eShopForecastModelsTrainer
                 units = 551
             };
 
-            // Predicts the nextperiod/month forecast to the one provided
+            // Predicts the nextperiod/month forecast to the one provided.
             prediction = predictionEngine.Predict(dataSample);
             Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Forecast Prediction (units): {prediction.Score}");
 

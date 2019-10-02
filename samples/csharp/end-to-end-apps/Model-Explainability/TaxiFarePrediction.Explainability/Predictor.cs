@@ -23,7 +23,7 @@ namespace TaxiFareRegression.Explainability
 
             context = new MLContext();
 
-                model = context.Model.Load(_modelfile, out var inputSchema);
+            model = context.Model.Load(_modelfile, out var inputSchema);
 
             predictionEngine = context.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePredictionWithContribution>(model);
         }
@@ -31,14 +31,14 @@ namespace TaxiFareRegression.Explainability
         public List<DataStructures.TaxiFarePrediction> RunMultiplePredictions(int numberOfPredictions)
         {
 
-            //Load data as input for predictions
+            // Load data as input for predictions.
             IDataView inputDataForPredictions = context.Data.LoadFromTextFile<TaxiTrip>(_datasetFile, hasHeader: true, separatorChar: ',');
 
-            Console.WriteLine($"Predictions from saved model:");
+            Console.WriteLine("Predictions from saved model:");
 
             Console.WriteLine($"\n \n Test {numberOfPredictions} transactions, from the test datasource, that should be predicted as fraud (true):");
 
-            List<DataStructures.TaxiFarePrediction> transactionList = new List<DataStructures.TaxiFarePrediction>();
+            var transactionList = new List<DataStructures.TaxiFarePrediction>();
             TaxiTripFarePredictionWithContribution prediction;
             DataStructures.TaxiFarePrediction explainedPrediction;
 

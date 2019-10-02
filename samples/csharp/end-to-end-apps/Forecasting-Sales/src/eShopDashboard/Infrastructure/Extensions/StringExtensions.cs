@@ -24,7 +24,7 @@ namespace eShopDashboard.Infrastructure.Extensions
 
         public static string FormatAsCSV<T>(this IEnumerable<T> value) where T : class
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             var properties = typeof(T).GetProperties();
             stringBuilder.AppendLine(String.Join(",", properties.Select(p => p.Name)));
             foreach (var csvLine in value)

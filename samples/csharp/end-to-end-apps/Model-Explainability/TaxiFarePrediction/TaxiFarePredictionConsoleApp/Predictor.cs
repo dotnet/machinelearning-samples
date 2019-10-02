@@ -30,14 +30,14 @@ namespace TaxiFareRegression
         public List<TaxiFarePrediction> RunMultiplePredictions(int numberOfPredictions)
         {
 
-            //Load data as input for predictions
+            // Load data as input for predictions.
             IDataView inputDataForPredictions = context.Data.LoadFromTextFile<TaxiTrip>(_datasetFile, hasHeader: true, separatorChar: ',');
 
-            Console.WriteLine($"Predictions from saved model:");
+            Console.WriteLine("Predictions from saved model:");
 
             Console.WriteLine($"\n \n Test {numberOfPredictions} transactions, from the test datasource, that should be predicted as fraud (true):");
 
-            List<TaxiFarePrediction> transactionList = new List<TaxiFarePrediction>();
+            var transactionList = new List<TaxiFarePrediction>();
             TaxiTripFarePredictionWithContribution prediction;
             TaxiFarePrediction explainedPrediction;
 
