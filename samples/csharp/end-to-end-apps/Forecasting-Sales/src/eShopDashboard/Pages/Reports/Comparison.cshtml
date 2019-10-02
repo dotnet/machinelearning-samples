@@ -1,7 +1,7 @@
 ﻿@page
-@model eShopDashboard.Pages.Reports.ProductsModel
+@model eShopDashboard.Pages.Reports.ComparisonModel
 @{
-    ViewData["Title"] = "Product Sales Forecast";
+    ViewData["Title"] = "Product Sales Forecast Comparison";
 }
 
 @if (Program.GetSeedingProgress() < 100)
@@ -16,7 +16,7 @@
 </div>
 <div class="row my-4">
     <div class="col" id="remote">
-        <input class="typeahead w-100" type="text" placeholder="Type a product">
+        <input class="typeahead w-100" type="text" placeholder="Type a product, for example: 'bottle'">
     </div>
     <div class="w-100 mx-3 border-bottom-highlight"></div>
 </div>
@@ -63,9 +63,14 @@
                     </span>
                 </div>
                 <div class="mt-5">
-                    <span class="font-weight-bold">Forecast</span><br />
-                    <span id="labelForecast" class="text-nowrap" style="font-size: 13pt;"></span><br />
-                    <span id="valueForecast" class="font-weight-bold es-color" style="font-size: 26pt;"></span>
+                    <span class="font-weight-bold">Regression Forecast</span><br />
+                    <span id="labelRegressionForecast" class="text-nowrap" style="font-size: 13pt;"></span><br />
+                    <span id="valueRegressionForecast" class="font-weight-bold es-color" style="font-size: 26pt; color: #000080"></span>
+                </div>
+                <div class="mt-5">
+                    <span class="font-weight-bold">Time Series Forecast</span><br />
+                    <span id="labelTimeSeriesForecast" class="text-nowrap" style="font-size: 13pt;"></span><br />
+                    <span id="valueTimeSeriesForecast" class="font-weight-bold es-color" style="font-size: 26pt; color: #00A69C"></span>
                 </div>
             </div>
         </div>
@@ -83,4 +88,5 @@
         });
     </script>
 }
+
 

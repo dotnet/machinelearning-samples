@@ -7,7 +7,7 @@ namespace eShopDashboard.Pages
     {
         public IActionResult OnGet()
         {
-            return RedirectToPage("/Reports/Products");
+            return RedirectToPage("/Reports/Regression");
         }
     }
 }

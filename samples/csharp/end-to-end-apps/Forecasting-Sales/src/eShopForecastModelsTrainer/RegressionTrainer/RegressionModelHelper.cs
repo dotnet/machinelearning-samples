@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using static eShopForecastModelsTrainer.ConsoleHelperExt;
 using Common;
-using Microsoft.ML.Data;
+using eShopForecastModelsTrainer.Data;
 
 namespace eShopForecastModelsTrainer
 {
@@ -75,79 +75,15 @@ namespace eShopForecastModelsTrainer
             }
 
             var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitRegressionPrediction>(trainedModel);
+            Console.WriteLine("** Testing Product **");
 
-            Console.WriteLine("** Testing Product 1 **");
+            // Predict the nextperiod/month forecast to the one provided
+            ProductUnitRegressionPrediction prediction = predictionEngine.Predict(SampleProductData.MonthlyData[0]);
+            Console.WriteLine($"Product: {SampleProductData.MonthlyData[0].productId}, month: {SampleProductData.MonthlyData[0].month + 1}, year: {SampleProductData.MonthlyData[0].year} - Real value (units): {SampleProductData.MonthlyData[0].next}, Forecast Prediction (units): {prediction.Score}");
 
-            // Build sample data.
-            var dataSample = new ProductData()
-            {
-                productId = 263,
-                month = 10,
-                year = 2017,
-                avg = 91,
-                max = 370,
-                min = 1,
-                count = 10,
-                prev = 1675,
-                units = 910
-            };
-
-            // Predict the nextperiod/month forecast to the one provided.
-            ProductUnitRegressionPrediction prediction = predictionEngine.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
-
-            dataSample = new ProductData()
-            {
-                productId = 263,
-                month = 11,
-                year = 2017,
-                avg = 29,
-                max = 221,
-                min = 1,
-                count = 35,
-                prev = 910,
-                units = 551
-            };
-
-            // Predicts the nextperiod/month forecast to the one provided.
-            prediction = predictionEngine.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Forecast Prediction (units): {prediction.Score}");
-
-            Console.WriteLine(" ");
-
-            Console.WriteLine("** Testing Product 2 **");
-
-            dataSample = new ProductData()
-            {
-                productId = 988,
-                month = 10,
-                year = 2017,
-                avg = 43,
-                max = 220,
-                min = 1,
-                count = 25,
-                prev = 1036,
-                units = 1094
-            };
-
-            prediction = predictionEngine.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real Value (units): 1076, Forecasting (units): {prediction.Score}");
-
-            dataSample = new ProductData()
-            {
-                productId = 988,
-                month = 11,
-                year = 2017,
-                avg = 41,
-                max = 225,
-                min = 4,
-                count = 26,
-                prev = 1094,
-                units = 1076
-            };
-
-            prediction = predictionEngine.Predict(dataSample);
-            Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Forecasting (units): {prediction.Score}");
+            // Predicts the nextperiod/month forecast to the one provided
+            prediction = predictionEngine.Predict(SampleProductData.MonthlyData[1]);
+            Console.WriteLine($"Product: {SampleProductData.MonthlyData[1].productId}, month: {SampleProductData.MonthlyData[1].month + 1}, year: {SampleProductData.MonthlyData[1].year} - Forecast Prediction (units): {prediction.Score}");
         }
     }
 }

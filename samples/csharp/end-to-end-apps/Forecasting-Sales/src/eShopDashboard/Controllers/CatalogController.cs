@@ -24,7 +24,8 @@ namespace eShopDashboard.Controllers
         [HttpGet("productSetDetailsByDescription")]
         public async Task<IActionResult> SimilarProducts([FromQuery]string description)
         {
-            const int minDepthOrderingThreshold = 9;
+            // Only show those products that have 34 months of data
+            const int minDepthOrderingThreshold = 34;
 
             if (string.IsNullOrEmpty(description))
                 return BadRequest();
@@ -37,7 +38,7 @@ namespace eShopDashboard.Controllers
             var depth = await _orderingQueries.GetProductsHistoryDepthAsync(products);
 
             items = items.Join(depth, l => l.Id.ToString(), r => r.ProductId.ToString(), (l,r) => new {l,r})
-                .Where(j => j.r.count > minDepthOrderingThreshold)
+                .Where(j => j.r.count >= minDepthOrderingThreshold)
                 .Select(j => j.l);
 
             return Ok(items);

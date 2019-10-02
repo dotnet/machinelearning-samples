@@ -4,7 +4,7 @@
 |----------------|-------------|------------|--------------------------------------|---------------------------|----------------|-------------------------|------------------------------------------------------|
 | v1.3.1         | Dynamic API | Up-to-date | ASP.NET Core web app and Console app | SQL Server and .csv files | Sales forecast | Regression, Time Series | FastTreeTweedie Regression, Single Spectrum Analysis |
 
-eShopDashboardML is a web app with Sales Forecast predictions (per product and per country) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
+eShopDashboardML is a web app with Sales Forecast predictions (per product) using [Microsoft Machine Learning .NET (ML.NET)](https://github.com/dotnet/machinelearning).
 
 ## Overview
 
@@ -38,7 +38,7 @@ Learn how to set up the sample's environment in Visual Studio along with further
 
 ### Problem
 
-This problem is centered around country and product forecasting based on previous sales.
+This problem is centered around product forecasting based on previous sales.
 
 ### DataSet
 
@@ -47,7 +47,6 @@ To solve this problem, two independent ML models are built that take the followi
 | Data Set            | Columns                                                            |
 |---------------------|--------------------------------------------------------------------|
 | **products stats**  | next, productId, year, month, units, avg, count, max, min, prev    |
-| **country stats**   | next, country, year, month, max, min, std, count, sales, med, prev |
 
 [Explanation of Dataset](docs/Details-of-Dataset.md) - Goto this link for detailed information on dataset.
 
@@ -56,20 +55,17 @@ To solve this problem, two independent ML models are built that take the followi
 The sample shows two different ML tasks and algorithms that can be used for forecasting:
 
 - **Regression** using FastTreeTweedie Regression
-- **Time Series** using Single Spectrum Analysis
+- **Time Series** using Single Spectrum Analysis (SSA)
 
 **Regression** is a supervised machine learning task that is used to predict the value of the **next** period (in this case, the sales prediction) from a set of related features/variables. **Regression** works best with linear data.
 
-**Time Series** is an estimation technique that can be used to forecast **multiple** periods in the future. **Time Series** works well in scenarios that involve non-linear data where trends and patterns are difficult to distinguish.
+**Time Series** is an estimation technique that can be used to forecast **multiple** periods in the future. **Time Series** works well in scenarios that involve non-linear data where trends are difficult to distinguish.  This is because the SSA algorithm, which is used by **Time Series**, performs calculations to automatically identify seasonal/periodic patterns while filtering out meaningless noise in the data.  With a **Time Series** model, it's important to regularly update the state of the model with new observed data points to ensure the accuracy as new predictions are performed.  For this reason, a **Time Series** model is stateful.
 
 ### Solution
 
 To solve this problem, first we will build the ML models by training each model on existing data. Next, we will evaluate how good it is. Finally, we will consume the model to predict sales.
 
-Note that the **Regression** sample implements two independent models to forecast linear data:
-
-- Model to predict product's demand forecast for the next period (month)
-- Model to predict country's sales forecast for the next period (month)
+Note that the **Regression** sample implements a model to forecast linear data.  Specifically, the model predicts the product's demand forecast for the next period (month).
 
 The **Time Series** sample currently implements the product's demand forecast for the next **two** periods (months). The **Time Series** sample uses the same products as in the **Regression** sample so that you can compare the forecasts from the two algorithms.
 
@@ -142,19 +138,17 @@ Specifically, we do the following transformations:
 
 You can load the dataset either before or after designing the pipeline. Although this step is just configuration, it is lazy and won't be loaded until training the model in the next step.
 
-[Model build and train](./src/eShopForecastModelsTrainer/RegressionTrainer/RegressionProductModelHelper.cs)
+[Model build and train](./src/eShopForecastModelsTrainer/RegressionTrainer/RegressionModelHelper.cs)
 
 ```csharp
-var trainer = mlContext.Regression.Trainers.FastTreeTweedie("Label", "Features");
+var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: "Label", featureColumnName: "Features");
 
-var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(CountryData.year),
-                                nameof(CountryData.month), nameof(CountryData.max), nameof(CountryData.min),
-                                nameof(CountryData.std), nameof(CountryData.count), nameof(CountryData.sales),
-                                nameof(CountryData.med), nameof(CountryData.prev))
-                    .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(CountryData.country)))
-                    .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
-                    .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(CountryData.next)))
-                    .Append(trainer);
+var trainingPipeline = mlContext.Transforms.Concatenate(outputColumnName: "NumFeatures", nameof(ProductData.year), nameof(ProductData.month), nameof(ProductData.units), nameof(ProductData.avg), nameof(ProductData.count), 
+    nameof(ProductData.max), nameof(ProductData.min), nameof(ProductData.prev) )
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "CatFeatures", inputColumnName: nameof(ProductData.productId)))
+        .Append(mlContext.Transforms.Concatenate(outputColumnName: "Features", "NumFeatures", "CatFeatures"))
+        .Append(mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(ProductData.next)))
+        .Append(trainer);
 ```
 
 #### 2. Regression: Evaluate the Model
@@ -197,27 +191,17 @@ using (var stream = File.OpenRead(outputModelPath))
     trainedModel = mlContext.Model.Load(stream,out var modelInputSchema);
 }
 
-var predictionEngine = mlContext.Model.CreatePredictionEngine<CountryData, CountrySalesPrediction>(trainedModel);
+var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitRegressionPrediction>(trainedModel);
 
-Console.WriteLine("** Testing Product 1 **");
+Console.WriteLine("** Testing Product **");
 
-// Build sample data
-ProductData dataSample = new ProductData()
-{
-    productId = "263",
-    month = 10,
-    year = 2017,
-    avg = 91,
-    max = 370,
-    min = 1,
-    count = 10,
-    prev = 1675,
-    units = 910
-};
+// Predict the nextperiod/month forecast to the one provided
+ProductUnitRegressionPrediction prediction = predictionEngine.Predict(SampleProductData.MonthlyData[0]);
+Console.WriteLine($"Product: {SampleProductData.MonthlyData[0].productId}, month: {SampleProductData.MonthlyData[0].month + 1}, year: {SampleProductData.MonthlyData[0].year} - Real value (units): {SampleProductData.MonthlyData[0].next}, Forecast Prediction (units): {prediction.Score}");
 
-// Predict the next period/month forecast to the one provided
-ProductUnitPrediction prediction = predictionEngine.Predict(dataSample);
-Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 1}, year: {dataSample.year} - Real value (units): 551, Forecast Prediction (units): {prediction.Score}");
+// Predicts the nextperiod/month forecast to the one provided
+prediction = predictionEngine.Predict(SampleProductData.MonthlyData[1]);
+Console.WriteLine($"Product: {SampleProductData.MonthlyData[1].productId}, month: {SampleProductData.MonthlyData[1].month + 1}, year: {SampleProductData.MonthlyData[1].year} - Forecast Prediction (units): {prediction.Score}");
 ```
 
 ### Time Series
@@ -226,15 +210,20 @@ Console.WriteLine($"Product: {dataSample.productId}, month: {dataSample.month + 
 
 This step shows how to create the pipeline that will later be used for training the **Time Series** model.
 
-Specifically, the **Single Spectrum Analysis (SSA)** trainer is the algorithm that is used. This algorithm uses the following parameters:
+Specifically, the **Single Spectrum Analysis (SSA)** trainer is the algorithm that is used. Read further to understand the parameters required for this algorithm.  It's important to note that ML.NET enforces constraints for the values of **windowSize**, **seriesLength**, and **trainsize**:
+- **windowSize** must be at least 2.
+- **trainSize** must be greater than twice the window size.
+- **seriesLength** must be greater than the window size.
+
+Here are descriptions of the parameters:
 
 - **outputColumnName**: This is the name of the column that will be used to store predictions. The column must be a vector of type **Single**. In a later step, we define a class named **ProductUnitTimeSeriesPrediction** that contains this output column.
-- **inputColumnName**: This is the name of the column that is being predicted/forecasted. The column contains a value at a timestamp in the time series and must be of type **Single**. In our sample, we are predicting/forecasting product **units**.
-- **windowSize**:  This parameter is used to define a sliding window of time that is used by the algorithm to decompose the time series data into trend, seasonal, or noise components. Typically, you should start with a window size that is representative of the business cycle in your scenario. In our sample, the product data is based on a 12 month cycle so we will select a window size that is a multiple of 12.
-- **seriesLength**: TODO - Need specific description
-- **trainSize**: TODO - Need specific description
-- **horizon**: This parameter indicates the number of time periods to predict/forecast. In our sample, we specify 2 to indicate that the next 2 months of product units will be predicated/forecasted.
-- **confidenceLevel**: This parameter indicates the likelihood the prediction/forecast value will fall within the specified interval bounds. TODO - Need to confirm this is correct. Typically, .95 is an acceptable starting point.
+- **inputColumnName**: This is the name of the column that is being predicted/forecasted. The column contains a value of a datapoint in the time series and must be of type **Single**. In our sample, we are predicting/forecasting product **units** which is our input column.
+- **windowSize**:  This is the most important parameter that you can use to tune the accuracy of the model for your scenario.  Specifically, this parameter is used to define a window of time that is used by the algorithm to decompose the time series data into seasonal/periodic and noise components. Typically, you should start with the largest window size that is representative of the seasonal/periodic business cycle for your scenario.  For example, if the business cycle is known to have both weekly and monthly (e.g. 30-day) seasonalities/periods and the data is collected daily, the window size in this case should be 30 to represent the largest window of time that exists in the business cycle.  If the same data also exhibits annual seasonality/periods (e.g. 365-day), but the scenario in which the model will be used is **not** interested in **annual** seasonality/periods, then the window size does **not** need to be 365.  In this sample, the product data is based on a 12 month cycle where data is collected monthly -- as a result, the window size used is 12.
+- **seriesLength**: This parameter specifies the number of data points that are used when performing a forecast.
+- **trainSize**: This parameter specifies the total number of data points in the input time series, starting from the beginning.  Note that, after a model is created, it can be saved and updated with new data points that are collected.
+- **horizon**: This parameter indicates the number of time periods to predict/forecast. In this sample, we specify 2 to indicate that the next 2 months of product units will be predicated/forecasted.
+- **confidenceLevel**: This parameter indicates the likelihood the real observed value will fall within the specified interval bounds. Typically, .95 is an acceptable starting point - this value should be between [0, 1).  Usually, the higher the confidence level, the wider the range that the interval bounds will be.  And conversely, the lower the confidence level, the narrower the interval bounds.
 - **confidenceLowerBoundColumn**: This is the name of the column that will be used to store the **lower** confidence interval bound for each forecasted value. The **ProductUnitTimeSeriesPrediction** class also contains this output column.
 - **confidenceUpperBoundColumn**: This is the name of the column that will be used to store the **upper** confidence interval bound for each forecasted value. The **ProductUnitTimeSeriesPrediction** class also contains this output column.
 
@@ -245,7 +234,7 @@ Specifically, we add the following trainer to the pipeline:
 IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa(
     outputColumnName: nameof(ProductUnitTimeSeriesPrediction.ForecastedProductUnits),
     inputColumnName: nameof(ProductData.units),
-    windowSize: 3,
+    windowSize: 12,
     seriesLength: productDataSeriesLength,
     trainSize: productDataSeriesLength,
     horizon: 2,
@@ -254,27 +243,25 @@ IEstimator<ITransformer> forecastEstimator = mlContext.Forecasting.ForecastBySsa
     confidenceUpperBoundColumn: nameof(ProductUnitTimeSeriesPrediction.ConfidenceUpperBound));
 ```
 
-#### 2. Time Series: Train the Model
+#### 2. Time Series: Fit the Model
 
-Before training the **Time Series** model, we first must filter the loaded dataset to select the data series for the specific product that will be used for forecasting sales.
+Before fitting the **Time Series** model, we first must filter the loaded dataset to select the data series for the specific product that will be used for forecasting sales.
 
 ```csharp
 var productId = 988;
 IDataView productDataView = mlContext.Data.FilterRowsByColumn(allProductsDataView, nameof(ProductData.productId), productId, productId + 1);
 ```
 
-Next, we train the model using the data series for the specified product.
+Next, we fit the model to the data series for the specified product.
 
 ```csharp
-// Train the forecasting model for the specified product's data series.
+// Fit the forecasting model to the specified product's data series.
 ITransformer forecastTransformer = forecastEstimator.Fit(productDataView);
 ```
 
-#### 3. Time Series: Save the Model
+#### 3. Time Series: Create a CheckPoint of the Model
 
-To save the model, we first must create the **TimeSeriesPredictionEngine** which is used for both getting predictions and saving the model.
-
-The **Time Series** model is saved using the **CheckPoint** method which saves the model to a **.zip** file that can be consumed by any end-user application:
+To save the model, we first must create the **TimeSeriesPredictionEngine** which is used for both getting predictions and saving the model.  The **Time Series** model is saved using the **CheckPoint** method which saves the model to a **.zip** file that can be consumed by any end-user application.  You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model. **Time Series** is different because it requires that the model's state to be continuously updated with new observed values as predictions are made. As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis. This will be shown in further detail in a later step of this sample. For now, just remember that **Checkpoint** is used for saving and updating the **Time Series** model.
 
 ```csharp
 // Create the forecast engine used for creating predictions.
@@ -283,8 +270,6 @@ TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecas
 // Save the forecasting model so that it can be loaded within an end-user app.
 forecastEngine.CheckPoint(mlContext, outputModelPath);
 ```
-
-You may notice that this is different from the above **Regression** sample which instead used the **Save** method for saving the model. **Time Series** is different because it requires that the model's state to be continuously updated with new observed values as predictions are made. As a result, the **CheckPoint** method exists to update and save the model state on a reoccurring basis. This will be shown in further detail in a later step of this sample. For now, just remember that **Checkpoint** is used for saving the **Time Series** model.
 
 #### 4. Time Series: Test the Prediction
 
@@ -326,13 +311,9 @@ As a result of this, when we call the **Predict** method using the loaded model,
 
 You may notice that the **Predict** method has several overloads that accept the following parameters:
 
-- **horizon**
-- **confidenceLevel**
-- **ProductData example**
-
-This allows you to specify new values for **horizon** and **confidenceLevel** each time that you do a prediction. Also, you can pass in new observed **ProductData** values for the time series using the **example** parameter.
-
-When calling **Predict** with new observed **ProductData** values, this updates the model state with these data points in the time series. You may then choose to save this model to disk by calling the **CheckPoint** method.
+- **horizon**: Allows you to specify new value for **horizon** each time that you do a prediction.
+- **confidenceLevel**: Allows you to specify new value for **confidenceLevel** each time that you do a prediction.
+- **ProductData example**: Used to pass in a new observed **ProductData** data point for the time series via the **example** parameter.  Remember, that when calling **Predict** with new observed **ProductData** values, this updates the model state with these data points in the time series. You then need to save the updated model to disk by calling the **CheckPoint** method.
 
 This is also seen in our sample:
 
@@ -343,7 +324,7 @@ ProductUnitTimeSeriesPrediction updatedSalesPrediction = forecastEngine.Predict(
  forecastEngine.CheckPoint(mlContext, outputModelPath);
 ```
 
-// TODO: Need clarification on how to evaluate the accuracy of this model; there is the confidence level, but any other mechanism besides that?
+// TODO: To measure accuracy of the model, we need to compare real observed values against the forecasted values.  Refer to the following issue: https://github.com/dotnet/machinelearning/issues/4184.
 
 ## Citation
 

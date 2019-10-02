@@ -11,17 +11,18 @@ namespace eShopForecastModelsTrainer.Data
             MonthlyData = new ProductData[] {
                 new ProductData()
                 {
-                    productId = 263,
-                    month = 11,
+                    productId = 988,
+                    month = 10,
                     year = 2017,
-                    avg = 29,
-                    max = 221,
+                    avg = 43,
+                    max = 220,
                     min = 1,
-                    count = 35,
-                    prev = 910,
-                    units = 551
+                    count = 25,
+                    prev = 1036,
+                    next = 1076,
+                    units = 1094
                 },
-                 new ProductData()
+                new ProductData()
                 {
                     productId = 988,
                     month = 11,

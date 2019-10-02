@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SqlBatchInsert;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -44,7 +45,9 @@ namespace eShopDashboard.Infrastructure.Setup
 
             if (await _dbContext.Orders.AnyAsync()) return _status = new SeedingStatus(false);
 
-            int dataLinesCount = GetOrdersDataToLoad() + GetOrderItemsDataToLoad();
+            GetOrdersDataToLoad();
+            GetOrderItemsDataToLoad();
+            int dataLinesCount = GenerateHistoricalData();
 
             return _status = new SeedingStatus(dataLinesCount);
         }
@@ -74,6 +77,78 @@ namespace eShopDashboard.Infrastructure.Setup
 
             await SeedOrdersAsync(ordersProgressHandler);
             await SeedOrderItemsAsync(orderItemsProgressHandler);
+        }
+
+        private int GenerateHistoricalData()
+        {
+            //Generates an additional 24 months of historical data.
+
+            var _lastOrderId = _orderDataArray.OrderBy(o => o.Id).Select(o => o.Id).Last();
+            var newOrderId = _lastOrderId + 1;
+
+            var _lastOrderItemId = _orderItemDataArray.OrderBy(oi => oi.Id).Select(oi => oi.Id).Last();
+            var newOrderItemId = _lastOrderItemId + 1;
+
+            var generatedOrders = new List<Order>();
+            var generatedOrderItems = new List<OrderItem>();
+
+            int progressCounter = 0;
+            int totalCounter = _orderDataArray.Length;
+
+            foreach (var order in _orderDataArray)
+            {
+                _logger.LogInformation($@"----- Generating data { (int)decimal.Round(progressCounter /(decimal)totalCounter * 100)}%");
+                progressCounter++;
+
+                // Generate the same order for one year prior
+                var newOrder1 = new Order
+                {
+                    Id = newOrderId++,
+                    Description = $"Generated from order: {order.Id}",
+                    Address_Country = order.Address_Country,
+                    OrderDate = order.OrderDate.AddYears(-1)
+                };
+                generatedOrders.Add(newOrder1);
+
+                // Generate the same order for two years prior
+                var newOrder2 = new Order
+                {
+                    Id = newOrderId++,
+                    Description = $"Generated from order: {order.Id}",
+                    Address_Country = order.Address_Country,
+                    OrderDate = order.OrderDate.AddYears(-2)
+                };
+                generatedOrders.Add(newOrder2);
+
+                var orderItems = _orderItemDataArray.Where(oi => oi.OrderId == order.Id);
+                foreach (var orderItem in orderItems)
+                {
+                    generatedOrderItems.Add(new OrderItem
+                    {
+                        Id = newOrderItemId++,
+                        OrderId = newOrder1.Id,
+                        ProductName = orderItem.ProductName,
+                        ProductId = orderItem.ProductId,
+                        UnitPrice = orderItem.UnitPrice,
+                        Units = (int)(orderItem.Units * .5)
+                    });
+
+                    generatedOrderItems.Add(new OrderItem
+                    {
+                        Id = newOrderItemId++,
+                        OrderId = newOrder2.Id,
+                        ProductName = orderItem.ProductName,
+                        ProductId = orderItem.ProductId,
+                        UnitPrice = orderItem.UnitPrice,
+                        Units = (int)(orderItem.Units * .25)
+                    });
+                }
+            }
+
+            _orderDataArray = _orderDataArray.Concat(generatedOrders).ToArray();
+            _orderItemDataArray = _orderItemDataArray.Concat(generatedOrderItems).ToArray();
+
+            return _orderDataArray.Length + _orderItemDataArray.Length;
         }
 
         private int GetOrderItemsDataToLoad()
@@ -171,3 +246,4 @@ namespace eShopDashboard.Infrastructure.Setup
         }
     }
 }
+ 

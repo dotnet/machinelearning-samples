@@ -45,9 +45,6 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Forecast\ModelFiles\country_month_fastTreeTweedie.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Forecast\ModelFiles\product_month_fastTreeTweedie.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

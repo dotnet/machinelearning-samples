@@ -1,7 +1,7 @@
 ﻿@page
 @model eShopDashboard.Pages.Reports.TimeSeriesModel
 @{
-    ViewData["Title"] = "Time Series Sales Forecast";
+    ViewData["Title"] = "Product Sales Forecast (Time Series)";
 }
 
 @if (Program.GetSeedingProgress() < 100)
@@ -16,7 +16,7 @@
 </div>
 <div class="row my-4">
     <div class="col" id="remote">
-        <input class="typeahead w-100" type="text" placeholder="Type a product">
+        <input class="typeahead w-100" type="text" placeholder="Type a product, for example: 'bottle'">
     </div>
     <div class="w-100 mx-3 border-bottom-highlight"></div>
 </div>
