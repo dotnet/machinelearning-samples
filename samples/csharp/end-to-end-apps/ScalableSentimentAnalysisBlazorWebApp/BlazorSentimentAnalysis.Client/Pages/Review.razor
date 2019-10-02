@@ -3,22 +3,20 @@
 
 <h2>Live Sentiment</h2>
 
-<p><textarea oninput=@UpdateScoreAsync cols="45" placeholder="Type any text like a short product review"></textarea></p>
+<p><textarea @oninput="UpdateScoreAsync" cols="45" placeholder="Type any text like a short product review"></textarea></p>
 
 <HappinessScale Value=@happiness />
 
-@functions {
-    float happiness = 50; // 0=worst, 100=best
+@code {
+    [Parameter]
+    public float happiness { get; set; } = 50; // 0=worst, 100=best
 
-    async void UpdateScoreAsync(UIChangeEventArgs evt)
+    private async Task UpdateScoreAsync(ChangeEventArgs e)
     {
-        string targetText = (string)evt.Value;
+        string targetText = (string)e.Value;
 
-        //Make a real call to Sentiment service
+        // Make a real call to Sentiment service
         happiness = await PredictSentimentAsync(targetText);
-
-        // See issue https://github.com/aspnet/Blazor/issues/519.  This is needed otherwise the binding to happiness isn't updated after the async call for prediction.
-        StateHasChanged();
     }
 
     private async Task<float> PredictSentimentAsync(string targetText)
@@ -29,5 +27,4 @@
 
         return percentage;
     }
-
 }

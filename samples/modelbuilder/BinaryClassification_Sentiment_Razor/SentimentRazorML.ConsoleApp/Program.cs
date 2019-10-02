@@ -45,12 +45,10 @@ namespace SentimentRazorML.ConsoleApp
         // You can change this code and create your own sample data here (Hardcoded or from any source)
         private static ModelInput CreateSingleDataSample(MLContext mlContext)
         {
-
-            // Here (ModelInput object) you could provide new test data, hardcoded or from the end-user application.
+            // Here (ModelInput object) you could provide new test data, hardcoded or from the end-user application, instead of the row from the file.
             ModelInput sampleForPrediction = new ModelInput
             {
-                Comment= "Wow... Loved this place.",
-                Sentiment=true
+                SentimentText = "Model Builder is cool!"
             };
 
             return sampleForPrediction;

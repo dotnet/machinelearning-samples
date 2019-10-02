@@ -51,10 +51,10 @@ namespace eShopForecastModelsTrainer
             var crossValidationResults = mlContext.Regression.CrossValidate(data:trainingDataView, estimator:trainingPipeline, numberOfFolds: 6, labelColumnName: "Label");
             ConsoleHelper.PrintRegressionFoldsAverageMetrics(trainer.ToString(), crossValidationResults);
 
-            // Train the model
+            // Train the model.
             var model = trainingPipeline.Fit(trainingDataView);
 
-            // Save the model for later comsumption from end-user apps
+            // Save the model for later comsumption from end-user apps.
             mlContext.Model.Save(model, trainingDataView.Schema, outputModelPath);
         }
 
@@ -66,7 +66,7 @@ namespace eShopForecastModelsTrainer
         {
             ConsoleWriteHeader("Testing Product Unit Sales Forecast Regression model");
 
-            // Read the model that has been previously saved by the method SaveModel
+            // Read the model that has been previously saved by the method SaveModel.
 
             ITransformer trainedModel;
             using (var stream = File.OpenRead(outputModelPath))
@@ -75,7 +75,6 @@ namespace eShopForecastModelsTrainer
             }
 
             var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductData, ProductUnitRegressionPrediction>(trainedModel);
-
             Console.WriteLine("** Testing Product **");
 
             // Predict the nextperiod/month forecast to the one provided

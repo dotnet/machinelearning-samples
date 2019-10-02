@@ -3,9 +3,9 @@
 # SENTIMENT ANALYSIS: Blazor sample (ASP.NET Core 3.0 Preview) optimized for scalability and performance when running/scoring an ML.NET model (Using the new '.NET Core Integration Package for ML.NET')
 
 
-| ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
-|----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Up-to-date | Blazor / ASP.NET Core 3.0 Preview 6 | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
+| ML.NET version | Status     | App Type                  | Data type          | Scenario           | ML Task               | Algorithms            |
+|----------------|------------|---------------------------|--------------------|--------------------|-----------------------|-----------------------|
+| v1.3.1         | Up-to-date | Blazor / ASP.NET Core 3.0 | Single data sample | Sentiment Analysis | Binary Classification | Linear Classification |
 
 # Goal
 
@@ -21,7 +21,7 @@ From ML.NET perspective, the goal is to **optimize the ML.NET model executions i
 SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
 ```
 
-As simple as a single line. The object _predictionEnginePool will be injected in the controller's constructor or into you custom class. 
+As simple as a single line. The object _predictionEnginePool will be injected in the controller's constructor or into you custom class._ 
 
 Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
@@ -50,34 +50,30 @@ The problem running/scoring an ML.NET model in multi-threaded applications comes
 **'.NET Core Integration Package' NuGet**
 
 Package name: **Microsoft.Extensions.ML**
+Package version: 0.15.1
 
-Package version: 0.12-Preview 
-(Internally it uses ML.NET 1.0)
-
-Basically, with this component, you inject/use the PredictionEngine object pooling in a single line in your Startup.cs, like the following:
+Basically, with this component, you inject/use the `PredictionEngine` object pooling in a single line in your Startup.cs, like the following:
 
 ```CSharp
 services.AddPredictionEnginePool<SampleObservation, SamplePrediction>()
         .FromFile(Configuration["MLModel:MLModelFilePath"]);
-
 ```
 
-Then you just need to call the Predict() function from the injected PredictionEnginePool, like the following code you can implement on any controller:
+Then you just need to call the `Predict()` function from the injected `PredictionEnginePool`, like the following code you can implement on any controller:
 
 ```CSharp
 
 //Predict sentiment
 SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
-
 ```
 
 It is that simple.
 
-For a much more detailed explanation of a PredictionEngine Object Pool comparable to the implementation done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
+For a much more detailed explanation of a `PredictionEngine` Object Pool comparable to the implementation done in the new '.NET Core Integration Package', including design diagrams, read the following blog post:
 
 **Detailed Blog Post** for further documentation:
 
 [How to optimize and run ML.NET models on scalable ASP.NET Core WebAPIs or web apps](https://devblogs.microsoft.com/cesardelatorre/how-to-optimize-and-run-ml-net-models-on-scalable-asp-net-core-webapis-or-web-apps/)
 
-NOTE: YOU DON'T NEED TO MAKE THAT IMPLEMENTATION EXPLAINED IN THE BLOG POST.
-PRECISELY THAT IS IMPLEMENTED FOR YOU IN THE '.NET INTEGRATION PACKAGE'.
+NOTE: YOU DON'T NEED TO MAKE THE IMPLEMENTATION EXPLAINED IN THE BLOG POST.
+IT IS IMPLEMENTED FOR YOU IN THE '.NET INTEGRATION PACKAGE'.

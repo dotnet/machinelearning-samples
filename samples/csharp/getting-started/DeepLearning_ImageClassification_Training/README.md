@@ -48,9 +48,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 ### 1. Build Model
 
 Building the model includes the following steps:
-* Loading the image file (file paths in this case) into an IDataView
-* Image loading and transformation (resize and normalize pixel values, as required by the deep neural network)
-* Image *featurization* using the deep neural network
+* Loading the image files (file paths in this case) into an IDataView
 * Image classification using the ImageClassification estimator (high level API)
 
 Define the schema of data in a class type and refer that type while loading data. 

@@ -11,7 +11,7 @@ eShopDashboardML is a web app with Sales Forecast predictions (per product) usin
 This end-to-end sample app highlights the usage of ML.NET API by showing the following topics:
 
 1. How to train, build and generate ML models:
-   - Implemented as a [console app](src\eShopForecastModelsTrainer) using .NET Core.
+   - Implemented as a [console app](src/eShopForecastModelsTrainer) using .NET Core.
 2. How to predict upcoming months of sales forecasts by using the trained ML model:
    - Implemented as a single, monolithic [web app](src/eShopDashboard) using [ASP.NET Core Razor](https://docs.microsoft.com/aspnet/core/tutorials/razor-pages/).
 

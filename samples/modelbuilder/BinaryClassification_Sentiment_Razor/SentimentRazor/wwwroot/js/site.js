@@ -21,11 +21,11 @@ function updateSentiment() {
     getSentiment(userInput)
         .then((sentiment) => {
             switch (sentiment) {
-                case "Positive":
+                case "Not Toxic":
                     updateMarker(100.0,sentiment);
                     break;
-                case "Negative":
-                    updateMarker(-10.0,sentiment);
+                case "Toxic":
+                    updateMarker(0.0,sentiment);
                     break;
                 default:
                     updateMarker(45.0, "Neutral");

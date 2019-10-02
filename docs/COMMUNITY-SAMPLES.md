@@ -8,7 +8,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 |-------------------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------|-----------------------------|
 | [Photo-Search](https://github.com/Tak-Au/Photo-Search)  | Sample WPF app running an ONNX model which was previously built with Keras and exported to ONNX model format. | Deep Learning, Image classification | ML.NET v0.9 and .NET Core 3.0 | Kudos for Tak-Au      |
 | [ML.NET sample running on 'TRY .NET'](https://github.com/CESARDELATORRE/MLNET-WITH-TRYDOTNET-SAMPLE)  | This sample is compatible with [Try .NET](https://github.com/dotnet/try). | Binary Classification | Updated to ML.NET v1.2 | .NET team |
-| [ML.NET Custom Transform](https://github.com/endintiers/Unearth.Demo.MLCustomTransform)  | Show a custom transform implementation in ML.NET | Transform | Updated to ML.NET v0.9 | Kudos for endintiers |
+| [ML.NET Custom Transform](https://github.com/endintiers/Unearth.Demo.MLCustomTransform)  | Show a custom transform implementation in ML.NET | Transform | Updated to ML.NET v1.2 | Kudos for endintiers |
 | [Additional ML.NET Demos](https://github.com/jeffprosise/ML.NET)  | Multiple additional ML.NET demos/samples | Multiple ML tasks | ML.NET v1.0 | Kudos for jeffprosise      |
 | [VB.NET samples for ML.NET](https://github.com/Nukepayload2/machinelearning-samples/tree/master/samples/visualbasic)  | VB.NET samples, similar to some of the Getting Started samples, but implemented with VB.NET | Most in ML.NET | Updated to ML.NET v0.9 | Kudos for Nukepayload2      |
 | [ML.NET in visual desktop UWP app](https://github.com/XamlBrewer/UWP-MachineLearning-Sample)  | Demonstrates how to use ML.NET to implement some Machine Learning use cases in UWP. [Blog Post here](https://xamlbrewer.wordpress.com/2019/01/25/machine-learning-with-ml-net-in-uwp-clustering/) | Multiple ML tasks | 1.0.0 | Kudos for @diederikkrols  |
@@ -20,6 +20,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [IRIS Flowers Classifier - UWP APP](https://github.com/PaulaScholz/MLDotNetUWP) | IRIS Flower Species Prediction  | Multiclass Classification      | ML.Net 1.0.0  | Paula Scholz,PaulaScholz  | 
 | [Taco vs Burrito Image Classifier](https://github.com/sethjuarez/TacosML) | Taco vs Burrito Image Classifier  | Image Classification using TensorFlow -Transfer Learning | 1.0.0  | Seth Juarez,sethjuarez  | 
 | [Multiple ML.NET samples and demos](https://github.com/jeffprosise/ML.NET) | Multiple ML.NET samples and demos  | TensorFlow, AutoML, classification, Digit classification, etc. | 1.0.0  | by jeffprosise  | 
+| [Mushroom Classifier Using C# and ML.Net](https://github.com/deepak21188/Mushroom-Classification-using-C-Sharp-and-ML.Net) | App to classify the mushrooms whether they are edible or poisonouss  | Binary Classification | 1.3.1  | by deepak21188  | 
 
 
 

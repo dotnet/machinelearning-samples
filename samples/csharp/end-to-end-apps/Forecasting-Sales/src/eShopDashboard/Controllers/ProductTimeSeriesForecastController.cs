@@ -57,7 +57,7 @@ namespace eShopDashboard.Controllers
             // Create the forecast engine used for creating predictions.
             TimeSeriesPredictionEngine<ProductData, ProductUnitTimeSeriesPrediction> forecastEngine = forecastTransformer.CreateTimeSeriesEngine<ProductData, ProductUnitTimeSeriesPrediction>(mlContext);
 
-            // Predict
+            // Predict.
             var nextMonthUnitDemandEstimation = forecastEngine.Predict();
 
             return Ok(nextMonthUnitDemandEstimation.ForecastedProductUnits.First());

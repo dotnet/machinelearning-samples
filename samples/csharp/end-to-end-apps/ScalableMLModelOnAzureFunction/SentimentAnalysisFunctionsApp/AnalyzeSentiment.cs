@@ -35,7 +35,7 @@ namespace SentimentAnalysisFunctionsApp
             SentimentData data = JsonConvert.DeserializeObject<SentimentData>(requestBody);
 
             //Make Prediction
-            SentimentPrediction prediction = _predictionEnginePool.Predict(data);
+            SentimentPrediction prediction = _predictionEnginePool.Predict(modelName: "SentimentAnalysisModel", example: data);
 
             //Convert prediction to string
             string sentiment = Convert.ToBoolean(prediction.Prediction) ? "Positive" : "Negative";

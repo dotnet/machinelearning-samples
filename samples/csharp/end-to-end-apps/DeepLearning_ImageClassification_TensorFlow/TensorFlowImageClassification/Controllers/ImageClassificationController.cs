@@ -25,13 +25,13 @@ namespace TensorFlowImageClassification.Controllers
 
         public ImageClassificationController(PredictionEnginePool<ImageInputData, ImageLabelPredictions> predictionEnginePool, IConfiguration configuration, ILogger<ImageClassificationController> logger) //When using DI/IoC
         {
-            // Get the ML Model Engine injected, for scoring
+            // Get the ML Model Engine injected, for scoring.
             _predictionEnginePool = predictionEnginePool;
 
             Configuration = configuration;
             _labelsFilePath = GetAbsolutePath(Configuration["MLModel:LabelsFilePath"]);
 
-            //Get other injected dependencies
+            // Get other injected dependencies.
             _logger = logger;
         }
 
@@ -44,37 +44,37 @@ namespace TensorFlowImageClassification.Controllers
             if (imageFile.Length == 0)
                 return BadRequest();
 
-            MemoryStream imageMemoryStream = new MemoryStream();
+            var imageMemoryStream = new MemoryStream();
             await imageFile.CopyToAsync(imageMemoryStream);
 
-            //Check that the image is valid
+            // Check that the image is valid.
             byte[] imageData = imageMemoryStream.ToArray();
             if (!imageData.IsValidImage())
                 return StatusCode(StatusCodes.Status415UnsupportedMediaType);
 
-            //Convert to Image
+            // Convert to Image.
             Image image = Image.FromStream(imageMemoryStream);
 
-            //Convert to Bitmap
+            // Convert to Bitmap.
             Bitmap bitmapImage = (Bitmap)image;
 
-            _logger.LogInformation($"Start processing image...");
+            _logger.LogInformation("Start processing image...");
 
-            //Measure execution time
+            // Measure execution time.
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            //Set the specific image data into the ImageInputData type used in the DataView
-            ImageInputData imageInputData = new ImageInputData { Image = bitmapImage };
+            // Set the specific image data into the ImageInputData type used in the DataView.
+            var imageInputData = new ImageInputData { Image = bitmapImage };
 
-            //Predict code for provided image
+            // Predict code for provided image.
             ImageLabelPredictions imageLabelPredictions = _predictionEnginePool.Predict(imageInputData);
 
-            //Stop measuring time
+            // Stop measuring time.
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             _logger.LogInformation($"Image processed in {elapsedMs} miliseconds");
 
-            //Predict the image's label (The one with highest probability)
+            // Predict the image's label (The one with highest probability).
             ImagePredictedLabelWithProbability imageBestLabelPrediction
                                 = FindBestLabelWithProbability(imageLabelPredictions, imageInputData);
 
@@ -83,12 +83,12 @@ namespace TensorFlowImageClassification.Controllers
 
         private ImagePredictedLabelWithProbability FindBestLabelWithProbability(ImageLabelPredictions imageLabelPredictions, ImageInputData imageInputData)
         {
-            //Read TF model's labels (labels.txt) to classify the image across those labels
+            // Read TF model's labels (labels.txt) to classify the image across those labels.
             var labels = ReadLabels(_labelsFilePath);
 
             float[] probabilities = imageLabelPredictions.PredictedLabels;
 
-            //Set a single label as predicted or even none if probabilities were lower than 70%
+            // Set a single label as predicted or even none if probabilities were lower than 70%.
             var imageBestLabelPrediction = new ImagePredictedLabelWithProbability()
             {
                 ImageId = imageInputData.GetHashCode().ToString(), //This ID is not really needed, it could come from the application itself, etc.
@@ -117,7 +117,7 @@ namespace TensorFlowImageClassification.Controllers
 
         public static string GetAbsolutePath(string relativePath)
         {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);

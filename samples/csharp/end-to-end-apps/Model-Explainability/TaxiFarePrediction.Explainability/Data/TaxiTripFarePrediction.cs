@@ -22,7 +22,7 @@ namespace TaxiFareRegression.DataStructures
             VBuffer<ReadOnlyMemory<char>> slots = default;
             dataview.GetColumnOrNull("Features").Value.GetSlotNames(ref slots);
             var featureNames = slots.DenseValues().ToArray();
-            List<FeatureContribution> featureList = new List<FeatureContribution>();
+            var featureList = new List<FeatureContribution>();
             for (int i = 0; i < featureNames.Count(); i++)
             {
                 string featureName = featureNames[i].ToString();

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BlazorSentimentAnalysis.Server.ML.DataModels;
 using Microsoft.Extensions.ML;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BlazorSentimentAnalysis.Server.ML.DataModels;
 
 namespace BlazorSentimentAnalysis.Server.Controllers
 {
@@ -25,12 +21,12 @@ namespace BlazorSentimentAnalysis.Server.Controllers
         [Route("sentimentprediction")]
         public ActionResult<float> PredictSentiment([FromQuery]string sentimentText)
         {
-            string sampleText = sentimentText;
-
             // Predict sentiment using ML.NET model
-            SampleObservation sampleData = new SampleObservation() { Col0 = sentimentText };
-            //Predict sentiment
+            SampleObservation sampleData = new SampleObservation { Col0 = sentimentText };
+            
+            // Predict sentiment
             SamplePrediction prediction = _predictionEnginePool.Predict(sampleData);
+            
             float percentage = CalculatePercentage(prediction.Score);
 
             return percentage;

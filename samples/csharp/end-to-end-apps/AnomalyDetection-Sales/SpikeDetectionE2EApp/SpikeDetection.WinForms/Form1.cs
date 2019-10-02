@@ -29,43 +29,43 @@ namespace SpikeDetection.WinForms
             InitializeComponent();
         }
 
-        // Find file button
+        // Find file button.
         private void button1_Click(object sender, EventArgs e)
         {
-            // Open File Explorer
+            // Open File Explorer.
             DialogResult result = openFileExplorer.ShowDialog();
 
-            // Set text in file path textbox to file path from file explorer
+            // Set text in file path textbox to file path from file explorer.
             if (result == DialogResult.OK)
             {
                 filePathTextbox.Text = openFileExplorer.FileName;
             }
         }
 
-        // Go button
+        // Go button.
         private void button2_Click(object sender, EventArgs e)
         {
-            // Set filepath from text from filepath textbox
+            // Set filepath from text from filepath textbox.
             filePath = filePathTextbox.Text;
             
-            // Checkk if file exists
+            // Check if file exists.
             if (File.Exists(filePath))
             {
                 dict = new Dictionary<int, Tuple<string, string>>();
 
                 if (filePath != "")
                 {
-                    // Reset text in anomaly textbox
+                    // Reset text in anomaly textbox.
                     anomalyText.Text = "";
 
-                    // Display preview of dataset and graph
+                    // Display preview of dataset and graph.
                     displayDataTableAndGraph();
 
-                    // Load a trained model to detect anomalies and then mark them on the graph
+                    // Load a trained model to detect anomalies and then mark them on the graph.
                     detectAnomalies();
 
                 }
-                // If file path textbox is empty, prompt user to input file path
+                // If file path textbox is empty, prompt user to input file path.
                 else
                 {
                     MessageBox.Show("Please input file path.");
@@ -97,7 +97,7 @@ namespace SpikeDetection.WinForms
 
             foreach (string line in dataset.Skip(1))
             {
-                // Add next row of data
+                // Add next row of data.
                 dataCol = commaSeparatedRadio.Checked ? line.Split(',') : line.Split('\t');
                 dataTable.Rows.Add(dataCol);
 
@@ -107,17 +107,17 @@ namespace SpikeDetection.WinForms
                 a++;
             }
 
-            // Set data view preview source
+            // Set data view preview source.
             dataGridView1.DataSource = dataTable;
 
-            // Update y axis min and max values
-            double yMax = Convert.ToDouble(dataTable.Compute("max([" + yAxis + "])", string.Empty));
-            double yMin = Convert.ToDouble(dataTable.Compute("min([" + yAxis + "])", string.Empty));
+            // Update y axis min and max values.
+            double yMax = Convert.ToDouble(dataTable.Compute($"max([{yAxis}])", string.Empty));
+            double yMin = Convert.ToDouble(dataTable.Compute($"min([{yAxis}])", string.Empty));
 
-            // Set graph source
+            // Set graph source.
             graph.DataSource = dataTable;
 
-            // Set graph options
+            // Set graph options.
             graph.Series["Series1"].ChartType = SeriesChartType.Line;
 
             graph.Series["Series1"].XValueMember = xAxis;
@@ -139,14 +139,14 @@ namespace SpikeDetection.WinForms
 
         private void detectAnomalies()
         {
-            // Create MLContext to be shared across the model creation workflow objects 
+            // Create MLContext to be shared across the model creation workflow objects.
             var mlcontext = new MLContext();
 
             // STEP 1: Load the data into IDataView.
             IDataView dataView = mlcontext.Data.LoadFromTextFile<ProductSalesData>(path: filePath, hasHeader: true, separatorChar: commaSeparatedRadio.Checked ? ',' : '\t');
 
-            // Step 2: Load & use model
-            // Note -- The model is trained with the product-sales dataset in a separate console app (see AnomalyDetectionConsoleApp)            
+            // Step 2: Load & use model.
+            // Note -- The model is trained with the product-sales dataset in a separate console app (see AnomalyDetectionConsoleApp).
             if (spikeDet.Checked)
             {
                 if (File.Exists(spikeModelPath))
@@ -174,7 +174,7 @@ namespace SpikeDetection.WinForms
 
         public static string GetAbsolutePath(string relativePath)
         {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
@@ -186,37 +186,37 @@ namespace SpikeDetection.WinForms
         {
             ITransformer tansformedModel = mlcontext.Model.Load(modelPath, out var modelInputSchema);
             
-            // Step 3: Apply data transformation to create predictions
+            // Step 3: Apply data transformation to create predictions.
             IDataView transformedData = tansformedModel.Transform(dataView);
             var predictions = mlcontext.Data.CreateEnumerable<ProductSalesPrediction>(transformedData, reuseRowObject: false);
 
-            // Index key for dictionary (date, sales)
+            // Index key for dictionary (date, sales).
             int a = 0;
 
             foreach (var prediction in predictions)
             {
-                // Check if anomaly is predicted (indicated by an alert)
+                // Check if anomaly is predicted (indicated by an alert).
                 if (prediction.Prediction[0] == 1)
                 {
-                    // Get the date (year-month) where spike is detected
+                    // Get the date (year-month) where spike is detected.
                     var xAxisDate = dict[a].Item1;
-                    // Get the number of sales which was detected to be a spike
+                    // Get the number of sales which was detected to be a spike.
                     var yAxisSalesNum = dict[a].Item2;
 
                     // Add anomaly points to graph
-                    // and set point/marker options
+                    // and set point/marker options.
                     graph.Series["Series1"].Points[a].SetValueXY(a, yAxisSalesNum);
                     graph.Series["Series1"].Points[a].MarkerStyle = MarkerStyle.Star4;
                     graph.Series["Series1"].Points[a].MarkerSize = 10;
                     graph.Series["Series1"].Points[a].MarkerColor = color;
 
                     // Print out anomalies as text for user &
-                    // change color of text accordingly
+                    // change color of text accordingly.
                     string text = type + " detected in " + xAxisDate + ": " + yAxisSalesNum + "\n";
                     anomalyText.SelectionColor = color;
                     anomalyText.AppendText(text);
 
-                    // Change row color in table where anomalies occur
+                    // Change row color in table where anomalies occur.
                     DataGridViewRow row = dataGridView1.Rows[a];
                     row.DefaultCellStyle.BackColor = color;
                     row.DefaultCellStyle.ForeColor = Color.White;
