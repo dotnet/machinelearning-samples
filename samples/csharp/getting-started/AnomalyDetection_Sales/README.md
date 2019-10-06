@@ -8,7 +8,6 @@ In this introductory sample, you'll see how to use [ML.NET](https://www.microsof
 
 ## Problem
 We are having data on Product sales over 3 months period in which the sales are high and normal. we identify sudden spikes in Product sales so that we can use this spiked data to analyze trends in sales of Product. 
-We find the change point from 
 
 To solve this problem, we will build an ML model that takes as inputs: 
 * Date-Month
@@ -60,7 +59,7 @@ The process of building and training models is the same for spike detection and 
 
 ### 1. Build model
 
-Building a model includes: Building a model includes: 
+Building a model includes: 
 
 * Creating empty IDataView with just schema of dataset.
 
@@ -91,7 +90,7 @@ ITransformer tansformedModel = estimator.Fit(CreateEmptyDataView());
 ```
 
 ### 3. Consume model
-* We don't have evaulate step in TimeSeries Anomaly detection. We use the tansformed model to predict the anomalies in the data.  
+* We don't have evaluate step in TimeSeries Anomaly detection. We use the transformed model to predict the anomalies in the data.  
 
 * Load the data to predict from (`product-sales.csv`) to an IDataView and create predictions.
 
