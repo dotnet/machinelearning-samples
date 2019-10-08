@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="3.0.0-preview9.19457.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-rc1.19457.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="3.0.0-preview9.19465.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
