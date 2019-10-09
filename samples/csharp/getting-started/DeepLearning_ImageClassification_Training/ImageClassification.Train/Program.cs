@@ -69,12 +69,12 @@ namespace ImageClassification.Train
             // 5. Get the quality metrics (accuracy, etc.)
             EvaluateModel(mlContext, testDataView, trainedModel);
 
-            // 6. Try a single prediction simulating an end-user app
-            TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
-
-            // 7. Save the model to assets/outputs (You get ML.NET .zip model file and TensorFlow .pb model file)
+            // 6. Save the model to assets/outputs (You get ML.NET .zip model file and TensorFlow .pb model file)
             mlContext.Model.Save(trainedModel, trainDataView.Schema, outputMlNetModelFilePath);
             Console.WriteLine($"Model saved to: {outputMlNetModelFilePath}");
+
+            // 7. Try a single prediction simulating an end-user app
+            TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
 
             Console.WriteLine("Press any key to finish");
             Console.ReadKey();
