@@ -13,14 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview" />
-    <PackageReference Include="Microsoft.ML.Dnn" Version="0.16.0-preview" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0-preview" />
+    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview2" />
+    <PackageReference Include="Microsoft.ML.Dnn" Version="0.16.0-preview2" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0-preview2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="assets\inputs\images-for-predictions\" />
-    <Folder Include="DataModels\" />
   </ItemGroup>
 
   <ItemGroup>
