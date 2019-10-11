@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| Microsoft.ML.Dnn 0.16.0-preview | Dynamic API | Up-to-date | Console app | Image files | Image classification | Image classification with TensorFlow model retrain based on transfer learning  | InceptionV3 or ResNet |
+| Microsoft.ML.Dnn 0.16.0-preview2 | Dynamic API | Up-to-date | Console app | Image files | Image classification | Image classification with TensorFlow model retrain based on transfer learning  | InceptionV3 or ResNet |
 
 ## Problem 
 Image classification is a common problem within the Deep Learning subject. This sample shows how to create your own custom image classifier by training your model based on the transfer learning approach which is basically retraining a pre-trained model (architecture such as InceptionV3 or ResNet) so you get a custom model trained on your own images.
@@ -65,6 +65,19 @@ Here the data class type in this sample.
     }
 ```
 
+Since the API uses in-memory images so later on you'll be able to score the model with in-memory images, you need to define a class containing the image's bits in the type `byte[] Image`, like the following:
+
+```csharp
+public class InMemoryImageData
+{
+    public byte[] Image;
+
+    public string Label;
+
+    public string ImageFileName;
+}
+```
+
 Download the imageset and load its information by using the LoadImagesFromDirectory() and LoadFromEnumerable().
 
 ```csharp
@@ -77,15 +90,32 @@ MLContext mlContext = new MLContext(seed: 1);
 // 2. Load the initial full image-set into an IDataView and shuffle so it'll be better balanced
 IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameasLabel: true);
 IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
-IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
+IDataView shuffledFullImageFilePathsDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 ```
+Once it's loaded into the IDataView, the rows are shuffled so the dataset is better balanced before spliting into the training/test datasets.
 
-Once loaded into the IDataView, the rows are shuffled so the dataset is better balanced before spliting into the training/test datasets.
-
-Now, the dataset is split in two datasets, one for training and the second for testing/validating the quality of the mode.
+Now, this step is very important. Since we want the ML model to work with in-memory images, we need to load the images into the dataset and actually do it by calling fit() and transform().
+This step needs to be done in a initial and seggregated pipeline in the first place so the filepaths won't be used by the pipeline and model to create when training.  
 
 ```csharp
-// 3. Split the data 80:20 into train and test sets, train and evaluate.
+// 3. Load Images with in-memory type within the IDataView and Transform Labels to Keys (Categorical)
+IDataView shuffledFullImagesDataset = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey",
+                                                                                    inputColumnName: "Label",
+                                                                                    keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
+                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "Image",
+                                                                    imageFolder: fullImagesetFolderPath, 
+                                                                    useImageType: false,
+                                                                    inputColumnName: "ImagePath"))
+                            .Fit(shuffledFullImageFilePathsDataset)
+                            .Transform(shuffledFullImageFilePathsDataset);
+```
+
+In addition we also transformed the Labels to Keys (Categorical) before splitting the dataset. This is also important to do it before splitting if you don't want to deal/match the KeyOrdinality if transforming the labels in a second pipeline (the training pipeline).
+
+Now, let's split the dataset in two datasets, one for training and the second for testing/validating the quality of the mode.
+
+```csharp
+// 4. Split the data 80:20 into train and test sets, train and evaluate.
 TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
 IDataView trainDataView = trainTestData.TrainSet;
 IDataView testDataView = trainTestData.TestSet;
@@ -94,21 +124,24 @@ IDataView testDataView = trainTestData.TestSet;
 As the most important step, you define the model's training pipeline where you can see how easily you can train a new TensorFlow model which under the covers is based on transfer learning from a selected architecture (pre-trained model) such as *Inception v3* or *Resnet*.
 
 ```csharp
-var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelAsKey", 
-                                                                inputColumnName: "Label",
-                                                                keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue)
-            .Append(mlContext.Model.ImageClassification("ImagePath", "LabelAsKey",
-                            arch: ImageClassificationEstimator.Architecture.InceptionV3,
-                            epoch: 100,     
-                            batchSize: 30,                                
-                            metricsCallback: (metrics) => Console.WriteLine(metrics)));
+// 5. Define the model's training pipeline 
+var pipeline = mlContext.Model.ImageClassification(featuresColumnName:"Image", labelColumnName:"LabelAsKey",
+                            arch: ImageClassificationEstimator.Architecture.InceptionV3, // Just by changing/selecting InceptionV3 here instead of ResnetV2101 you can try a different architecture/pre-trained model. 
+                            epoch: 100,      //An epoch is one learning cycle where the learner sees the whole training data set.
+                            batchSize: 10,   //BatchSize sets the number of images to feed the model at a time.
+                            learningRate: 0.01f,
+                            metricsCallback: (metrics) => Console.WriteLine(metrics),
+                            validationSet: testDataView
+                            )
+        .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel", inputColumnName: "PredictedLabel"));
+
 ```
 
 The important line in the above code is the one using the `mlContext.Model.ImageClassification` classifier trainer which as you can see is a high level API where you just need to select the base pre-trained model to derive from, in this case [Inception v3](https://cloud.google.com/tpu/docs/inception-v3-advanced), but you can also select other pre-trained models such as [Resnet v2101](https://medium.com/@bakiiii/microsoft-presents-deep-residual-networks-d0ebd3fe5887). 
 
 Those pre-trained models or architectures are the culmination of many ideas developed by multiple researchers over the years and you can easily take advantage of it now.
 
-It is that simple, you don't even need to make image transformations (resize, normalizations, etc.). Depending on the selected architecture we need the required image transformations internaly so you simply need to use a single API.
+It is that simple, you don't even need to make image transformations (resize, normalizations, etc.). Depending on the selected architecture, the framework is doing the required image transformations under the covers so you simply need to use that single API.
 
 ### 2. Train model
 In order to begin the training process you run `Fit` on the built pipeline:
@@ -157,36 +190,44 @@ MLContext mlContext = new MLContext(seed: 1);
 ITransformer loadedModel = mlContext.Model.Load(imageClassifierModelZipFilePath, out var modelInputSchema);
 ```
 
-Then, your create a predictor engine object and finally make a few sample predictions by using the first image of the folder `assets/inputs//images-for-predictions` which has two images that were not used for training the model:
+Then, your create a predictor engine object and finally make a few sample predictions by using the first image of the folder `assets/inputs/images-for-predictions` which has just a few images that were not used when training the model.
+
+Note that now, when scoring, you only need the `InMemoryImageData` type which has the in-memory image.
+
+That image could also be coming thorugh any other channel instead of loading it from a file.
+For instance, the `ImageClassification.WebApp` in this same solution gets the image to use for the prediction through HTTP as an image provided by an end-user.
 
 ```csharp
-var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(loadedModel);
-
-IEnumerable<ImageData> imagesToPredict = LoadImagesFromDirectory(imagesForPredictions, true);
+var predictionEngine = mlContext.Model.CreatePredictionEngine<InMemoryImageData, ImagePrediction>(loadedModel);
 
 //Predict the first image in the folder
-ImageData imageToPredict = new ImageData
+IEnumerable<InMemoryImageData> imagesToPredict = LoadInMemoryImagesFromDirectory(
+                                                        imagesFolderPathForPredictions, false);
+
+InMemoryImageData imageToPredict = new InMemoryImageData
 {
-    ImagePath = imagesToPredict.First().ImagePath
+    Image = imagesToPredict.First().Image,
+    ImageFileName = imagesToPredict.First().ImageFileName
 };
 
 var prediction = predictionEngine.Predict(imageToPredict);
 
-var index = prediction.PredictedLabel;
+// Get the highest score and its index
+float maxScore = prediction.Score.Max();
 
-// Obtain the original label names to map through the predicted label-index
-VBuffer<ReadOnlyMemory<char>> keys = default;
-predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
-var originalLabels = keys.DenseValues().ToArray();
-
-Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], " +
-                    $"Scores : [{string.Join(",", prediction.Score)}], " +
-                    $"Predicted Label : {originalLabels[index]}");
+Console.WriteLine($"Image Filename : [{imageToPredict.ImageFileName}], " +
+                    $"Predicted Label : [{prediction.PredictedLabel}], " +
+                    $"Probability : [{maxScore}] " 
+                    );
 ```
 
-The prediction engine receives as parameter an object of type `ImageData` (containing 2 properties: `ImagePath` and `Label`). Then returns and object of type `ImagePrediction`, which holds the `PredictedLabel` (which is an index) and `Score` (*probability* value between 0 and 1) properties.
+The prediction engine receives as parameter an object of type `InMemoryImageData` (containing 2 properties: `Image` and `ImageFileName`). 
+The ImageFileName is not used byt the model. You simple have it there so you can print the filename out out when showing the prediction. The prediction is only using the image's bits in the `byte[] Image` field.
 
-Since the `PredictedLabel` is just the predicted label's index, you need to find out the predicted label's name from the original values that you can obtain with the `OutputSchema` API, then extract the label's name which is text.
+Then the model returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and all the `Scores` for all the classes/types of images. 
+
+Since the `PredictedLabel` is already a string it'll be shown in the console.
+About the score for the predicted label, we just need to take the highest score which is the probability for the predicted label.
 
 #### Run the "end-user-app" project to try predictions
 

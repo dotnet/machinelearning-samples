@@ -7,6 +7,8 @@ using ImageClassification.DataModels;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 
+using System.Linq;
+
 namespace ImageClassification.Predict
 {
     class Program
@@ -16,7 +18,7 @@ namespace ImageClassification.Predict
             string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
            
-            string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions");
+            string imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions");
 
             var imageClassifierModelZipFilePath = Path.Combine(assetsPath, "inputs", "MLNETModel", "imageClassifier.zip");
 
@@ -30,42 +32,74 @@ namespace ImageClassification.Predict
                 ITransformer loadedModel = mlContext.Model.Load(imageClassifierModelZipFilePath, out var modelInputSchema);
 
                 // Create prediction engine to try a single prediction (input = ImageData, output = ImagePrediction)
-                var predictionEngine = mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(loadedModel);
-
-                IEnumerable<ImageData> imagesToPredict = LoadImagesFromDirectory(imagesForPredictions, true);
+                var predictionEngine = mlContext.Model.CreatePredictionEngine<InMemoryImageData, ImagePrediction>(loadedModel);
 
                 //Predict the first image in the folder
-                ImageData imageToPredict = new ImageData
+                IEnumerable<InMemoryImageData> imagesToPredict = LoadInMemoryImagesFromDirectory(
+                                                                        imagesFolderPathForPredictions, false);
+
+
+
+                InMemoryImageData imageToPredict = new InMemoryImageData
                 {
-                    ImagePath = imagesToPredict.First().ImagePath
+                    Image = imagesToPredict.First().Image,
+                    ImageFileName = imagesToPredict.First().ImageFileName
                 };
 
                 var prediction = predictionEngine.Predict(imageToPredict);
 
-                var index = prediction.PredictedLabel;
+                // Get the highest score and its index
+                float maxScore = prediction.Score.Max();
 
-                // Obtain the original label names to map through the predicted label-index
+                ////////
+                // Double-check using the index
+                int maxIndex = prediction.Score.ToList().IndexOf(maxScore);
                 VBuffer<ReadOnlyMemory<char>> keys = default;
-                predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
-                var originalLabels = keys.DenseValues().ToArray();
+                predictionEngine.OutputSchema[4].GetKeyValues(ref keys);
+                var keysArray = keys.DenseValues().ToArray();              
+                var predictedLabelString = keysArray[maxIndex];
+                ////////
 
-                Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], " +
-                                  $"Scores : [{string.Join(",", prediction.Score)}], " +
-                                  $"Predicted Label : {originalLabels[index]}");
+                Console.WriteLine($"Image Filename : [{imageToPredict.ImageFileName}], " +
+                                  $"Predicted Label : [{prediction.PredictedLabel}], " +
+                                  $"Probability : [{maxScore}] " 
+                                  );
 
                 //Predict all images in the folder
                 //
                 Console.WriteLine("");
                 Console.WriteLine("Predicting several images...");
 
-                foreach (ImageData currentImageToPredict in imagesToPredict)
+                foreach (InMemoryImageData currentImageToPredict in imagesToPredict)
                 {
                     var currentPrediction = predictionEngine.Predict(currentImageToPredict);
-                    var currentIndex = currentPrediction.PredictedLabel;
-                    Console.WriteLine($"ImageFile : [{Path.GetFileName(currentImageToPredict.ImagePath)}], " +
-                                      $"Scores : [{string.Join(",", currentPrediction.Score)}], " +
-                                      $"Predicted Label : {originalLabels[currentIndex]}");
+
+                    Console.WriteLine($"Image Filename : [{currentImageToPredict.ImageFileName}], " +
+                                      $"Predicted Label : [{currentPrediction.PredictedLabel}], " +
+                                      $"Probability : [{currentPrediction.Score.Max()}] "
+                                     );
                 }
+
+                //Console.WriteLine("*** Showing all the predictions ***");
+                //// Find the original label names.
+                //VBuffer<ReadOnlyMemory<char>> keys = default;
+                //predictionsDataView.Schema["LabelAsKey"].GetKeyValues(ref keys);
+                //var originalLabels = keys.DenseValues().ToArray();
+
+                //List<ImagePredictionEx> predictions = mlContext.Data.CreateEnumerable<ImagePredictionEx>(predictionsDataView, false, true).ToList();
+                //predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImagePath, pred.Label, (originalLabels[pred.PredictedLabel]).ToString(), pred.Score.Max()));
+
+                // OTHER CASE:
+                // Find the original label names.
+                //VBuffer<ReadOnlyMemory<char>> keys = default;
+                //predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
+
+                //var originalLabels = keys.DenseValues().ToArray();
+                ////var index = prediction.PredictedLabel;
+
+                //Console.WriteLine($"In-Memory Image provided, " +
+                //                  $"Scores : [{string.Join(",", prediction.Score)}], " +
+                //                  $"Predicted Label : {prediction.PredictedLabel}");
 
             }
             catch (Exception ex)
@@ -77,18 +111,45 @@ namespace ImageClassification.Predict
             Console.ReadKey();
         }
 
-        public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder, bool useFolderNameasLabel = true)
+        //private int GetTopScoreIndex(float[] scores, int n)
+        //{
+        //    int i;
+        //    float first;
+        //    int index0 = 0;
+        //    if (n < 3)
+        //    {
+        //        Console.WriteLine("Invalid Input");
+        //        return 0;
+        //    }
+        //    first = 000;
+        //    for (i = 0; i < n; i++)
+        //    {
+        //        // If current element is  
+        //        // smaller than first 
+        //        if (scores[i] > first)
+        //        {
+        //            first = scores[i];
+        //        }
+        //    }
+        //    var scoresList = scores.ToList();
+        //    scoresList.
+        //    index0 = scoresList.IndexOf(first);
+
+        //    return index0;
+        //}
+
+        public static IEnumerable<InMemoryImageData> LoadInMemoryImagesFromDirectory(string folder,
+                                                                                     bool useFolderNameAsLabel = true)
         {
             var files = Directory.GetFiles(folder, "*",
                 searchOption: SearchOption.AllDirectories);
-
             foreach (var file in files)
             {
-                if ((Path.GetExtension(file) != ".jpg") && (Path.GetExtension(file) != ".png"))
-                    continue;
+                //if (Path.GetExtension(file) != ".jpg")
+                //    continue;
 
                 var label = Path.GetFileName(file);
-                if (useFolderNameasLabel)
+                if (useFolderNameAsLabel)
                     label = Directory.GetParent(file).Name;
                 else
                 {
@@ -102,10 +163,11 @@ namespace ImageClassification.Predict
                     }
                 }
 
-                yield return new ImageData()
+                yield return new InMemoryImageData()
                 {
-                    ImagePath = file,
-                    Label = label
+                    Image = File.ReadAllBytes(file),
+                    Label = label,
+                    ImageFileName = Path.GetFileName(file)
                 };
 
             }

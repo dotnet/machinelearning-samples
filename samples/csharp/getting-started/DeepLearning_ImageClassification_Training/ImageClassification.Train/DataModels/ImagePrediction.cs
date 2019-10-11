@@ -11,6 +11,6 @@ namespace ImageClassification.DataModels
         public float[] Score;
 
         [ColumnName("PredictedLabel")]
-        public UInt32 PredictedLabel;
+        public string PredictedLabel;
     }
 }
