@@ -61,7 +61,7 @@ namespace ImageClassification.Train
                                         metricsCallback: (metrics) => Console.WriteLine(metrics),
                                         validationSet: testDataView
                                         //disableEarlyStopping: true, //If true, it will run all the specified epochs. If false, when converging it'll stop training.
-                                        //reuseTrainSetBottleneckCachedValues: false
+                                        //reuseTrainSetBottleneckCachedValues: false //Use cache. Use it for fastest training if there are no changes in the dataset
                                         )
                     .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel", inputColumnName: "PredictedLabel"));
 
