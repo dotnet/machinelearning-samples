@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Predict
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.WebApp", "WebApp.Predict\ImageClassification.WebApp.csproj", "{7C563AB6-B777-4F5C-8662-AC8603D9D4DB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Shared", "ImageClassification.Shared\ImageClassification.Shared.csproj", "{A70F93E4-BC58-48AB-97BE-58C59D7D4EAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7C563AB6-B777-4F5C-8662-AC8603D9D4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C563AB6-B777-4F5C-8662-AC8603D9D4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C563AB6-B777-4F5C-8662-AC8603D9D4DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A70F93E4-BC58-48AB-97BE-58C59D7D4EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A70F93E4-BC58-48AB-97BE-58C59D7D4EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A70F93E4-BC58-48AB-97BE-58C59D7D4EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A70F93E4-BC58-48AB-97BE-58C59D7D4EAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
