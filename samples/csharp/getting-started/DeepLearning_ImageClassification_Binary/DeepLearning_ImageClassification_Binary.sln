@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29403.142
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepLearning_ImageClassification_Binary", "DeepLearning_ImageClassification_Binary\DeepLearning_ImageClassification_Binary.csproj", "{A660EF62-BC78-40D8-A8BC-D10B2E85783E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A660EF62-BC78-40D8-A8BC-D10B2E85783E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A660EF62-BC78-40D8-A8BC-D10B2E85783E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A660EF62-BC78-40D8-A8BC-D10B2E85783E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A660EF62-BC78-40D8-A8BC-D10B2E85783E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A225CBD-406C-4E68-B25C-075559605CC8}
+	EndGlobalSection
+EndGlobal
