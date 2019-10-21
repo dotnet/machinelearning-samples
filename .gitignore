@@ -246,11 +246,6 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 ServiceFabricBackup/
 
-# SQL Server files
-*.mdf
-*.ldf
-*.ndf
-
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout
@@ -330,10 +325,6 @@ ASALocalRun/
 *.binlog
 # Ignore external test datasets.
 /test/data/external/
-IrisClustersModel.zip
-SentimentModel.zip
-IrisModel.zip
-samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiRegressionDistribution.png
-TaxiFareModel.zip
 
-**/MLModels/*.zip
+# macOS
+.DS_Store

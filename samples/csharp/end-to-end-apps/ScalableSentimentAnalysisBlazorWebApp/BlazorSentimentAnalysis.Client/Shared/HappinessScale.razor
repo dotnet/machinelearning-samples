@@ -1,0 +1,16 @@
+﻿<div class="sentiment">
+    <h4>Your sentiment is...</h4>
+    <p>😡🙁😐😃😍</p>
+
+    <div class="marker">
+        <div style="left: @Value%;">
+            <div>▲</div>
+            <label>@Value.ToString("0.0")%</label>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public float Value { get; set; }
+}

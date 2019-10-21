@@ -10,7 +10,7 @@ using Microsoft.ML.Data;
 
 namespace GitHubLabeler
 {
-    //This "Labeler" class could be used in a different End-User application (Web app, other console app, desktop app, etc.)
+    // This "Labeler" class could be used in a different End-User application (Web app, other console app, desktop app, etc.)
     internal class Labeler
     {
         private readonly GitHubClient _client;
@@ -30,19 +30,15 @@ namespace GitHubLabeler
             _repoOwner = repoOwner;
             _repoName = repoName;
            
-            _mlContext = new MLContext(seed:1);
+            _mlContext = new MLContext();
 
-            //Load model from file
-            
-            using (var stream = new FileStream(_modelPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                _trainedModel = _mlContext.Model.Load(stream);
-            }
+            // Load model from file.
+            _trainedModel = _mlContext.Model.Load(_modelPath, out var modelInputSchema);
 
-            // Create prediction engine related to the loaded trained model
-            _predEngine = _trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_mlContext);
+            // Create prediction engine related to the loaded trained model.
+            _predEngine = _mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(_trainedModel);
 
-            //Configure Client to access a GitHub repo
+            // Configure Client to access a GitHub repo.
             if (accessToken != string.Empty)
             {
                 var productInformation = new ProductHeaderValue("MLGitHubLabeler");
@@ -55,18 +51,19 @@ namespace GitHubLabeler
 
         public void TestPredictionForSingleIssue()
         {
-            GitHubIssue singleIssue = new GitHubIssue() {
+            var singleIssue = new GitHubIssue()
+			{
                 ID = "Any-ID",
                 Title = "Crash in SqlConnection when using TransactionScope",
                 Description = "I'm using SqlClient in netcoreapp2.0. Sqlclient.Close() crashes in Linux but works on Windows"
             };
 
-            //Predict labels and scores for single hard-coded issue
+            // Predict labels and scores for single hard-coded issue.
             var prediction = _predEngine.Predict(singleIssue);
 
             _fullPredictions = GetBestThreePredictions(prediction);
 
-            Console.WriteLine("==== Displaying prediction of Issue with Title = {0} and Description = {1} ====", singleIssue.Title, singleIssue.Description);
+            Console.WriteLine($"==== Displaying prediction of Issue with Title = {singleIssue.Title} and Description = {singleIssue.Description} ====");
 
             Console.WriteLine("1st Label: " + _fullPredictions[0].PredictedLabel + " with score: " + _fullPredictions[0].Score);
             Console.WriteLine("2nd Label: " + _fullPredictions[1].PredictedLabel + " with score: " + _fullPredictions[1].Score);

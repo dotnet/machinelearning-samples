@@ -2,11 +2,11 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11           | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
+| v1.3.1          | Dynamic API | Up-to-date | Console app | .csv files | Customer segmentation | Clustering | K-means++ |
 
 ## Problem
 
-You want to **identify groups of customers with similar profile** so you could target them afterwards (like different marketing campaings per identified customer group with similar characteristics, etc.)
+You want to **identify groups of customers with similar profile** so you could target them afterwards (like different marketing campaigns per identified customer group with similar characteristics, etc.)
 
 The problem to solve is how you can identify different groups of customers with similar profile and interest without having any pre-existing category list. You are *not* classifying customers across a category list because your customers are not *labeled* so you cannot do that. You just need to make groups/clusters of customers that the company will use afterwards for other business purposes.
 
@@ -119,21 +119,19 @@ MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you h
 var pivotDataView = mlContext.Data.LoadFromTextFile(path: pivotCsv,
                                             columns: new[]
                                                         {
-                                                        new TextLoader.Column(DefaultColumnNames.Features, DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
+                                                        new TextLoader.Column("Features", DataKind.Single, new[] {new TextLoader.Range(0, 31) }),
                                                         new TextLoader.Column(nameof(PivotData.LastName), DataKind.String, 32)
                                                         },
                                             hasHeader: true,
                                             separatorChar: ',');
 
-/STEP 2: Configure data transformations in pipeline
-                var dataProcessPipeline = mlContext.Transforms.Projection.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: DefaultColumnNames.Features, rank: 2)
-                 .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[]{
-                    new OneHotEncodingEstimator.ColumnOptions(name:"LastNameKey", inputColumnName:nameof(PivotData.LastName),
-                                                     OneHotEncodingTransformer.OutputKind.Ind)
-                }));
+// STEP 2: Configure data transformations in pipeline
+var dataProcessPipeline = mlContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2)
+        .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "LastNameKey", inputColumnName: nameof(PivotData.LastName), OneHotEncodingEstimator.OutputKind.Indicator));
+                
 
-//STEP 3: Create the training pipeline                
-var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: DefaultColumnNames.Features, clustersCount: 3);
+// STEP 3: Create the training pipeline                
+var trainer = mlContext.Clustering.Trainers.KMeans(featureColumnName: "Features", numberOfClusters: 3);
 var trainingPipeline = dataProcessPipeline.Append(trainer);
 ```
 
@@ -156,13 +154,14 @@ We evaluate the accuracy of the model. This accuracy is measured using the [Clus
 
 ```csharp
 var predictions = trainedModel.Transform(pivotDataView);
-var metrics = mlContext.Clustering.Evaluate(predictions, score: "Score", features: "Features");
+var metrics = mlContext.Clustering.Evaluate(predictions, scoreColumnName: "Score", featureColumnName: "Features");
+
 ```
 Finally, we save the model to local disk using the dynamic API:
 ```csharp
  //STEP 6: Save/persist the trained model to a .ZIP file
 using (var fs = new FileStream(modelZip, FileMode.Create, FileAccess.Write, FileShare.Write))
-    mlContext.Model.Save(trainedModel, fs);
+    mlContext.Model.Save(trainedModel, pivotDataView.Schema, fs);
 ```
 #### Model training execution
 

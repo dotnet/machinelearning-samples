@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-|0.11   | Dynamic API | Updated to v0.9 | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
+|v1.3.1   | Dynamic API | Up-to-date | Console app | .txt files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer (One Class)|
 
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
@@ -31,10 +31,11 @@ Matrix Factorization relies on ‘Collaborative filtering’ which operates unde
 The original data comes from SNAP:
 https://snap.stanford.edu/data/amazon0302.html
 
+DataSet's Citation information can be found [here](/ProductRecommender/Data/DATASETS-CITATION.txt)
 
-## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
+## Algorithm - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
+The algorithm for this recommendation task is Matrix Factorization, which is a supervised machine learning algorithm performing collaborative filtering. 
 
 ## Solution
 
@@ -64,7 +65,7 @@ Here's the code which will be used to build the model:
     var traindata = mlContext.Data.LoadFromTextFile(path:TrainingDataLocation,
                                                       columns: new[]
                                                                 {
-                                                                    new TextLoader.Column(DefaultColumnNames.Label, DataKind.Single, 0),
+                                                                    new TextLoader.Column("Label", DataKind.Single, 0),
                                                                     new TextLoader.Column(name:nameof(ProductEntry.ProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(0) }, keyCount: new KeyCount(262111)), 
                                                                     new TextLoader.Column(name:nameof(ProductEntry.CoPurchaseProductID), dataKind:DataKind.UInt32, source: new [] { new TextLoader.Range(1) }, keyCount: new KeyCount(262111))
                                                                 },
@@ -76,7 +77,7 @@ Here's the code which will be used to build the model:
             MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
             options.MatrixColumnIndexColumnName = nameof(ProductEntry.ProductID);
             options.MatrixRowIndexColumnName = nameof(ProductEntry.CoPurchaseProductID);
-            options.LabelColumnName= DefaultColumnNames.Label;
+            options.LabelColumnName= "Label";
             options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
             options.Alpha = 0.01;
             options.Lambda = 0.025;
@@ -128,7 +129,7 @@ Once the prediction engine has been created you can predict scores of two produc
 ```CSharp
     //STEP 6: Create prediction engine and predict the score for Product 63 being co-purchased with Product 3.
     //        The higher the score the higher the probability for this particular productID being co-purchased 
-    var predictionengine = model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(ctx);
+    var predictionengine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
     var prediction = predictionengine.Predict(
                              new ProductEntry()
                              {
@@ -136,3 +137,7 @@ Once the prediction engine has been created you can predict scores of two produc
                              CoPurchaseProductID = 63
                              });
 ```
+
+#### Score in Matrix Factorization
+
+The score produced by matrix factorization represents the likelihood of being a positive case. The larger the score value, the higher probability of being a positive case. However, the score doesn't carry any probability information. When making a prediction, you will have to compute multiple merchandises' scores and pick up the merchandise with the highest score.

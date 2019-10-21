@@ -1,0 +1,30 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<h2>Live Sentiment</h2>
+
+<p><textarea @oninput="UpdateScoreAsync" cols="45" placeholder="Type any text like a short product review"></textarea></p>
+
+<HappinessScale Value=@happiness />
+
+@code {
+    [Parameter]
+    public float happiness { get; set; } = 50; // 0=worst, 100=best
+
+    private async Task UpdateScoreAsync(ChangeEventArgs e)
+    {
+        string targetText = (string)e.Value;
+
+        // Make a real call to Sentiment service
+        happiness = await PredictSentimentAsync(targetText);
+    }
+
+    private async Task<float> PredictSentimentAsync(string targetText)
+    {
+        string url = $"api/Sentiment/sentimentprediction?sentimentText={targetText}";
+
+        float percentage = await Http.GetJsonAsync<float>(url);
+
+        return percentage;
+    }
+}

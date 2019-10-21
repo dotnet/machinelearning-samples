@@ -10,7 +10,7 @@ module Model =
             [<LoadColumn(0)>]
             Label : bool
 
-            [<LoadColumn(1)>]
+            [<LoadColumn(2)>]
             Text : string 
         }
 

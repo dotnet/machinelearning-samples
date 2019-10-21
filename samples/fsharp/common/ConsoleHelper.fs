@@ -4,10 +4,8 @@ module ConsoleHelper =
     open System
     open Microsoft.ML
     open Microsoft.ML.Data
-    open Microsoft.ML.Core.Data
     //open Microsoft.ML.Api
     open System.Reflection
-    open Microsoft.Data.DataView
 
     let printPrediction prediction =
         printfn "*************************************************"
@@ -24,11 +22,11 @@ module ConsoleHelper =
         printfn "*************************************************"
         printfn "*       Metrics for %s regression model      " name
         printfn "*------------------------------------------------"
-        printfn "*       LossFn:        %.2f" metrics.LossFn
+        printfn "*       LossFn:        %.2f" metrics.LossFunction
         printfn "*       R2 Score:      %.2f" metrics.RSquared
-        printfn "*       Absolute loss: %.2f" metrics.L1
-        printfn "*       Squared loss:  %.2f" metrics.L2
-        printfn "*       RMS loss:      %.2f" metrics.Rms
+        printfn "*       Absolute loss: %.2f" metrics.MeanAbsoluteError
+        printfn "*       Squared loss:  %.2f" metrics.MeanSquaredError
+        printfn "*       RMS loss:      %.2f" metrics.RootMeanSquaredError
         printfn "*************************************************"
     
     let printBinaryClassificationMetrics name (metrics : CalibratedBinaryClassificationMetrics) =
@@ -36,8 +34,8 @@ module ConsoleHelper =
         printfn"*       Metrics for %s binary classification model      " name
         printfn"*-----------------------------------------------------------"
         printfn"*       Accuracy: %.2f%%" (metrics.Accuracy * 100.)
-        printfn"*       Auc:      %.2f%%" (metrics.Auc * 100.)
-        printfn"*       Auprc:    %.2f%%" (metrics.Auprc * 100.)
+        printfn"*       Area Under Curve:      %.2f%%" (metrics.AreaUnderRocCurve * 100.)
+        printfn"*       Area under Precision recall Curve:    %.2f%%" (metrics.AreaUnderPrecisionRecallCurve * 100.)
         printfn"*       F1Score:  %.2f%%" (metrics.F1Score * 100.)
  
         printfn"*       LogLogg:  %.2f%%" (metrics.LogLoss)
@@ -48,12 +46,12 @@ module ConsoleHelper =
         printfn"*       NegativeRecall:      %.2f" (metrics.NegativeRecall)
         printfn"************************************************************"
 
-    let printMultiClassClassificationMetrics name (metrics : MultiClassClassifierMetrics) =
+    let printMultiClassClassificationMetrics name (metrics : MulticlassClassificationMetrics) =
         printfn "************************************************************"
         printfn "*    Metrics for %s multi-class classification model   " name
         printfn "*-----------------------------------------------------------"
-        printfn "    AccuracyMacro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.AccuracyMacro
-        printfn "    AccuracyMicro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.AccuracyMicro
+        printfn "    AccuracyMacro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.MacroAccuracy
+        printfn "    AccuracyMicro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.MacroAccuracy
         printfn "    LogLoss = %.4f, the closer to 0, the better" metrics.LogLoss
         printfn "    LogLoss for class 1 = %.4f, the closer to 0, the better" metrics.PerClassLogLoss.[0]
         printfn "    LogLoss for class 2 = %.4f, the closer to 0, the better" metrics.PerClassLogLoss.[1]
@@ -71,16 +69,16 @@ module ConsoleHelper =
         let confidenceInterval95 = 1.96 * calculateStandardDeviation(values) / Math.Sqrt(float (values.Length-1));
         confidenceInterval95
 
-    let printMulticlassClassificationFoldsAverageMetrics algorithmName (crossValResults : (MultiClassClassifierMetrics * ITransformer * IDataView) array) =
+    let printMulticlassClassificationFoldsAverageMetrics algorithmName (crossValResults : TrainCatalogBase.CrossValidationResult<MulticlassClassificationMetrics>[]) =
         
-        let metricsInMultipleFolds = crossValResults |> Array.map(fun (metrics, model, scoredTestData) -> metrics)
+        let metricsInMultipleFolds = crossValResults |> Array.map(fun r -> r.Metrics)
 
-        let microAccuracyValues  = metricsInMultipleFolds |> Array.map(fun m -> m.AccuracyMicro)
+        let microAccuracyValues  = metricsInMultipleFolds |> Array.map(fun m -> m.MicroAccuracy)
         let microAccuracyAverage = microAccuracyValues |> Array.average
         let microAccuraciesStdDeviation = calculateStandardDeviation microAccuracyValues
         let microAccuraciesConfidenceInterval95 = calculateConfidenceInterval95 microAccuracyValues
 
-        let macroAccuracyValues = metricsInMultipleFolds |> Array.map(fun m -> m.AccuracyMacro)
+        let macroAccuracyValues = metricsInMultipleFolds |> Array.map(fun m -> m.MicroAccuracy)
         let macroAccuracyAverage = macroAccuracyValues |> Array.average
         let macroAccuraciesStdDeviation = calculateStandardDeviation macroAccuracyValues
         let macroAccuraciesConfidenceInterval95 = calculateConfidenceInterval95 macroAccuracyValues
@@ -108,8 +106,8 @@ module ConsoleHelper =
         printfn "*************************************************"
         printfn "*       Metrics for %s clustering model      " name
         printfn "*------------------------------------------------"
-        printfn "*       AvgMinScore: %.15f" metrics.AvgMinScore
-        printfn "*       DBI is: %.15f" metrics.Dbi
+        printfn "*       Average Distance: %.15f" metrics.AverageDistance
+        printfn "*       Davies Bouldin Index is: %.15f" metrics.DaviesBouldinIndex
         printfn "*************************************************"
 
     let consoleWriteHeader line =
@@ -158,7 +156,7 @@ module ConsoleHelper =
 
         // Extract the 'Features' column.
         let someColumnData = 
-            transformedData.GetColumn<float32[]>(mlContext, columnName)
+            transformedData.GetColumn<float32[]>(columnName)
             |> Seq.take numberOfRows
             |> Seq.toList
 

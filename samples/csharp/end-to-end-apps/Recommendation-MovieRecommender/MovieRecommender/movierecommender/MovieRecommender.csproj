@@ -4,24 +4,14 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Models\model.zip" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Models\model.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Update="wwwroot\images\smileybob.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

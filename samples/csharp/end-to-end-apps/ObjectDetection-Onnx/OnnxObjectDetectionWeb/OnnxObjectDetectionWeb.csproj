@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>07b5f177-2aea-4405-8e78-4121f2a881ff</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MLModel\**" />
+    <Content Remove="MLModel\**" />
+    <EmbeddedResource Remove="MLModel\**" />
+    <None Remove="MLModel\**" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <Content Include="Assets\imagesList\image2.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Assets\imagesList\image4.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>    
+    <Content Include="Assets\imagesList\image1.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Assets\imagesList\image3.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+ 
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLPreviewVersion)" />
+  </ItemGroup>
+ 
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnnxObjectDetection\OnnxObjectDetection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ML\MLNETModel\Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ImagesTemp\Readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>    
+  </ItemGroup>
+
+</Project>

@@ -4,41 +4,42 @@ open System.IO.Compression
 
 open Microsoft.ML
 open Microsoft.ML.Data
-open Microsoft.ML.Transforms.Normalizers
+open Microsoft.ML.Transforms
 
 // Data models
 [<CLIMutable>]
 type TransactionObservation = {
-    Label: bool
-    V1: float32
-    V2: float32
-    V3: float32
-    V4: float32
-    V5: float32
-    V6: float32
-    V7: float32
-    V8: float32
-    V9: float32
-    V10: float32
-    V11: float32
-    V12: float32
-    V13: float32
-    V14: float32
-    V15: float32
-    V16: float32
-    V17: float32
-    V18: float32
-    V19: float32
-    V20: float32
-    V21: float32
-    V22: float32
-    V23: float32
-    V24: float32
-    V25: float32
-    V26: float32
-    V27: float32
-    V28: float32
-    Amount: float32
+    [<LoadColumn(0)>] Time: float32
+    [<LoadColumn(1)>] V1: float32
+    [<LoadColumn(2)>] V2: float32
+    [<LoadColumn(3)>] V3: float32
+    [<LoadColumn(4)>] V4: float32
+    [<LoadColumn(5)>] V5: float32
+    [<LoadColumn(6)>] V6: float32
+    [<LoadColumn(7)>] V7: float32
+    [<LoadColumn(8)>] V8: float32
+    [<LoadColumn(9)>] V9: float32
+    [<LoadColumn(10)>] V10: float32
+    [<LoadColumn(11)>] V11: float32
+    [<LoadColumn(12)>] V12: float32
+    [<LoadColumn(13)>] V13: float32
+    [<LoadColumn(14)>] V14: float32
+    [<LoadColumn(15)>] V15: float32
+    [<LoadColumn(16)>] V16: float32
+    [<LoadColumn(17)>] V17: float32
+    [<LoadColumn(18)>] V18: float32
+    [<LoadColumn(19)>] V19: float32
+    [<LoadColumn(20)>] V20: float32
+    [<LoadColumn(21)>] V21: float32
+    [<LoadColumn(22)>] V22: float32
+    [<LoadColumn(23)>] V23: float32
+    [<LoadColumn(24)>] V24: float32
+    [<LoadColumn(25)>] V25: float32
+    [<LoadColumn(26)>] V26: float32
+    [<LoadColumn(27)>] V27: float32
+    [<LoadColumn(28)>] V28: float32
+    [<LoadColumn(29)>] Amount: float32
+    [<LoadColumn(30)>] Label: bool
     }
 
 [<CLIMutable>]
@@ -83,25 +84,6 @@ let main _ =
     let seed = Nullable 1
     let mlContext = MLContext seed
 
-    let columns = 
-        [|
-            // A boolean column depicting the 'label'.
-            yield TextLoader.Column("Label", Nullable DataKind.BL, 30)
-            // 29 Features V1..V28 + Amount
-            for i in 1 .. 28 -> 
-                TextLoader.Column(sprintf "V%d" i, Nullable DataKind.R4, i)
-            yield TextLoader.Column("Amount", Nullable DataKind.R4, 29)
-        |]
-
-    let loaderArgs = TextLoader.Arguments()
-    loaderArgs.Column <- columns
-    loaderArgs.HasHeader <- true
-    loaderArgs.Separators <- [| ',' |]
-    
-    let reader = TextLoader (mlContext, loaderArgs)
-    
-    let classification = BinaryClassificationCatalog mlContext
-  
     (*
     Split the data 80:20 into train and test files, 
     if the files do not exist yet.
@@ -111,13 +93,11 @@ let main _ =
     then
         printfn "Preparing train and test data"
 
-        let data = 
-            MultiFileSource inputFile
-            |> reader.Read
+        let data = mlContext.Data.LoadFromTextFile<TransactionObservation>(inputFile, separatorChar = ',', hasHeader = true, allowQuoting = true)
 
         let trainData, testData = 
-            classification.TrainTestSplit (data, 0.2) 
-            |> fun x -> x.ToTuple ()
+            let y = mlContext.Data.TrainTestSplit(data, 0.2, seed = Nullable 1) 
+            y.TrainSet, y.TestSet
 
         // save test split
         use fileStream = File.Create testFile
@@ -131,39 +111,10 @@ let main _ =
     Read the train and test data from file
     *)
 
-    // Add the "StratificationColumn" that was added by classification.TrainTestSplit()
-    // And Label is moved to column 0
-    let columnsPlus = 
-        [|
-            // A boolean column depicting the 'label'.
-            yield TextLoader.Column("Label", Nullable DataKind.BL, 0)
-            // 30 Features V1..V28 + Amount + StratificationColumn
-            for i in 1 .. 28 -> 
-                TextLoader.Column(sprintf "V%d" i, Nullable DataKind.R4, i)
-            yield TextLoader.Column("Amount", Nullable DataKind.R4, 29)
-            yield TextLoader.Column("StratificationColumn", Nullable DataKind.R4, 30)
-        |]
-
     let trainData, testData = 
-
         printfn "Reading train and test data"
-
-        let trainData =
-            mlContext.Data.ReadFromTextFile(
-                trainFile,
-                columnsPlus,                                                           
-                loaderArgs.HasHeader,
-                loaderArgs.Separators.[0]
-                )
-                                                                  
-        let testData = 
-            mlContext.Data.ReadFromTextFile(
-                testFile,
-                columnsPlus,
-                loaderArgs.HasHeader,
-                loaderArgs.Separators.[0]
-                )
-    
+        let trainData = mlContext.Data.LoadFromTextFile<TransactionObservation>(trainFile, separatorChar = ',', hasHeader = true)
+        let testData = mlContext.Data.LoadFromTextFile<TransactionObservation>(testFile, separatorChar = ',', hasHeader = true)
         trainData, testData
       
     (*
@@ -174,28 +125,30 @@ let main _ =
     let featureColumnNames = 
         trainData.Schema
         |> Seq.map (fun column -> column.Name)
+        |> Seq.filter (fun name -> name <> "Time")
         |> Seq.filter (fun name -> name <> "Label")
-        |> Seq.filter (fun name -> name <> "StratificationColumn")
+        |> Seq.filter (fun name -> name <> "IdPreservationColumn")
         |> Seq.toArray
 
     let pipeline = 
-        mlContext.Transforms.Concatenate ("Features", featureColumnNames)
+        EstimatorChain()
+        |> fun x -> x.Append(mlContext.Transforms.Concatenate("Features", featureColumnNames))
+        |> fun x -> x.Append(mlContext.Transforms.DropColumns [|"Time"|])
         |> fun x -> 
             x.Append (
-                mlContext.Transforms.Normalize (
+                mlContext.Transforms.NormalizeMeanVariance (
                     "FeaturesNormalizedByMeanVar", 
-                    "Features", 
-                    NormalizingEstimator.NormalizerMode.MeanVariance
+                    "Features"
                     )
                 )
         |> fun x -> 
             x.Append (
                 mlContext.BinaryClassification.Trainers.FastTree(
                     "Label", 
-                    "Features", 
-                    numLeaves = 20, 
-                    numTrees = 100, 
-                    minDatapointsInLeaves = 10, 
+                    "FeaturesNormalizedByMeanVar", 
+                    numberOfLeaves = 20, 
+                    numberOfTrees = 100, 
+                    minimumExampleCountPerLeaf = 10, 
                     learningRate = 0.2
                     )
                 )
@@ -203,13 +156,13 @@ let main _ =
     printfn "Training model"
     let model = pipeline.Fit trainData
 
-    let metrics = classification.Evaluate (model.Transform (testData), "Label")   
+    let metrics = mlContext.BinaryClassification.Evaluate(model.Transform (testData), "Label")   
     printfn "Accuracy: %.12f" metrics.Accuracy 
 
     printfn "Saving model to file"
     let _ = 
         use fs = new FileStream (modelFile, FileMode.Create, FileAccess.Write, FileShare.Write)
-        mlContext.Model.Save(model, fs)
+        mlContext.Model.Save(model, trainData.Schema, fs)
 
     (*
     Read the model and test data from file,
@@ -217,15 +170,15 @@ let main _ =
     *)
 
     printfn "Reading model and test data"
-    let modelEvaluator = 
+    let modelEvaluator, inputSchema = 
         use file = File.OpenRead modelFile           
         mlContext.Model.Load(file)
-    let predictionEngine = modelEvaluator.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(mlContext)
+    let predictionEngine = mlContext.Model.CreatePredictionEngine<TransactionObservation, TransactionFraudPrediction>(modelEvaluator)
 
-    let testData = mlContext.Data.ReadFromTextFile (testFile, columnsPlus, hasHeader = true, separatorChar = ',')
+    let testData = mlContext.Data.LoadFromTextFile<TransactionObservation>(testFile, hasHeader = true, separatorChar = ',')
 
     printfn "Making predictions"
-    mlContext.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
+    mlContext.Data.CreateEnumerable<TransactionObservation>(testData, reuseRowObject = false)
     |> Seq.filter (fun x -> x.Label = true)
     // use 5 observations from the test data
     |> Seq.take 5

@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ImageClassification.Train\ImageData\ImageNetData.cs" Link="ImageData\ImageNetData.cs" />
-    <Compile Include="..\ImageClassification.Train\ImageData\ImageNetPrediction.cs" Link="ImageData\ImageNetPrediction.cs" />
+    <Compile Remove="assets\outputs\**" />
+    <EmbeddedResource Remove="assets\outputs\**" />
+    <None Remove="assets\outputs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ImageClassification.Train\ImageData\ImagePrediction.cs" Link="ImageData\ImagePrediction.cs" />
     <Compile Include="..\ImageClassification.Train\Model\ConsoleHelpers.cs" Link="Model\ConsoleHelpers.cs" />
     <Compile Include="..\ImageClassification.Train\Model\ModelHelpers.cs" Link="Model\ModelHelpers.cs" />
   </ItemGroup>
@@ -17,11 +22,6 @@
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.TensorFlow" Version="$(MicrosoftMLVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="assets\outputs\" />
-    <Folder Include="ImageData\" />
   </ItemGroup>
 
 </Project>

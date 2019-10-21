@@ -5,6 +5,7 @@ open System.IO
 open Microsoft.ML
 open MulticlassClassification_Iris
 open MulticlassClassification_Iris.DataStructures
+open Microsoft.ML.Data
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -19,37 +20,26 @@ let modelPath = sprintf @"%s/IrisClassificationModel.zip" baseModelsPath
 let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     
     // STEP 1: Common data loading configuration
-    let trainingDataView = mlContext.Data.ReadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
-    let testDataView = mlContext.Data.ReadFromTextFile<IrisData>(testDataPath, hasHeader = true)
+    let trainingDataView = mlContext.Data.LoadFromTextFile<IrisData>(trainDataPath, hasHeader = true)
+    let testDataView = mlContext.Data.LoadFromTextFile<IrisData>(testDataPath, hasHeader = true)
 
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
-        mlContext.Transforms.Concatenate("Features", "SepalLength",
+        EstimatorChain()
+            .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelKey","Label"))
+            .Append(mlContext.Transforms.Concatenate("Features", "SepalLength",
                                                      "SepalWidth",
                                                      "PetalLength",
-                                                     "PetalWidth")
-                            .AppendCacheCheckpoint(mlContext)
+                                                     "PetalWidth"))
+            .AppendCacheCheckpoint(mlContext)
 
     // STEP 3: Set the training algorithm, then append the trainer to the pipeline  
-    let trainer = mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(labelColumn = "Label", featureColumn = "Features")
+    let trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName = "LabelKey", featureColumnName = "Features")
     let trainingPipeline = dataProcessPipeline.Append(trainer)
 
-
-
-
     // STEP 4: Train the model fitting to the DataSet
-
-    //Measure training time
-    let watch = System.Diagnostics.Stopwatch.StartNew()
-
     printfn "=============== Training the model ==============="
     let trainedModel = trainingPipeline.Fit(trainingDataView)
-
-    //Stop measuring time
-    watch.Stop()
-    let elapsedMs = float watch.ElapsedMilliseconds
-    printfn "***** Training time: %f seconds *****" (elapsedMs/1000.)
-
 
     // STEP 5: Evaluate the model and show accuracy stats
     printfn "===== Evaluating Model's accuracy with Test data ====="
@@ -60,7 +50,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 6: Save/persist the trained model to a .ZIP file
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
-    mlContext.Model.Save(trainedModel, fs);
+    mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
 
     printfn "The model is saved to %s" modelPath
 
@@ -68,10 +58,10 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 let testSomePredictions (mlContext : MLContext) =
     //Test Classification Predictions with some hard-coded samples 
     use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
-    let trainedModel = mlContext.Model.Load(stream);
+    let trainedModel, inputSchema = mlContext.Model.Load(stream);
 
     // Create prediction engine related to the loaded trained model
-    let predEngine = trainedModel.CreatePredictionEngine<IrisData, IrisPrediction>(mlContext)
+    let predEngine = mlContext.Model.CreatePredictionEngine<IrisData, IrisPrediction>(trainedModel)
 
     //Score sample 1
     let resultprediction1 = predEngine.Predict(DataStructures.SampleIrisData.Iris1)

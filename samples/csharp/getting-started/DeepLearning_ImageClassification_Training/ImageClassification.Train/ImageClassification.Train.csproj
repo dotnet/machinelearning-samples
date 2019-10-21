@@ -1,0 +1,900 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\inputs\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview2" />
+    <PackageReference Include="Microsoft.ML.Dnn" Version="0.16.0-preview2" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0-preview2" />
+    <PackageReference Include="SharpZipLib" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets\inputs\images-for-predictions\FlowersForPredictions\StrangeBlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\FlowersForPredictions\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\gamer_chair_01.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair_leaked.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\north_west_us_green_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\north_west_us_wooden_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\plain_black_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\plain_white_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\usa_flag_game_watching_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175818745_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175830489_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175836082_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175851681_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175858325_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175907252_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175913386_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175921586_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175923695_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175926855_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175944865_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175952077_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175957842_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180003632_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180007877_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180010651_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180014005_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180017624_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180020252_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180022598_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180025269_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180027387_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180030921_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180034607_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180037037_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180040511_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180045781_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180049665_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180051786_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180054177_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180059495_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180103358_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180112846_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180116977_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180120878_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180143405_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180147825_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180156717_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180206412_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180216729_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190513762_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190524071_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190530997_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190536234_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190540383_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190547700_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190550065_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190553237_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190600007_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190604313_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190609532_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190614573_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190619905_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190628986_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190637299_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190645064_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190647203_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190652782_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190659860_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190701704_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190708237_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190712772_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190715079_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190721408_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190725600_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190727271_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190730984_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190732430_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190736273_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190739212_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190742683_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190744159_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190748181_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190749644_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190751085_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190752777_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190754430_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190756787_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190803633_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190807602_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\100080576_f52e8ee070_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\102841525_bd6628ae3c.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\105806915_a9c13e2106_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\107592979_aaa9cdfe78_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\11642632_1e7627a2cc.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\134372449_0f7166d96c_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\134409839_71069a95d1_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\144076848_57e1d662e3_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\144099102_bf63a41e4f_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\144603918_b9de002f60_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\147068564_32bb4350cc.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\15207766_fc2f1d692c_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\153210866_03cc9f2f36.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\154332674_453cea64f4.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\158869618_f1a6704236_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\162362896_99c7d851c8_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\162362897_1d21b70621_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\163978992_8128b49d3e_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\169371301_d9b91a2a42.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\171972704_389cf7a953.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\172882635_4cc7b86731_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\172967318_c596d082cc.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\173350276_02817aa8d5.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\174131220_c853df1287.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\175106495_53ebdef092_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\176375506_201859bb92_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\181007802_7cab5ee78e_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\21652746_cc379e0eea_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\253426762_9793d43fcd.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\25360380_1a881a5648.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\267148092_4bb874af58.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\286875003_f7c0e1882d.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\43474673_7bb4465a86.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\54377391_15648e8d18.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\5547758_eea9edfd54_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\5673551_01d1ea993e_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\5673728_71b8cb57eb.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\5794835_d15905c7c8_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\5794839_200acd910c_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\daisy\99306615_739eb94b9e_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\10443973_aeb97513fc_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\10683189_bd6e371b97.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\10919961_0af657c4e8.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\11405573_24a8a838cc_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\11545123_50a340b473_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\126012913_edf771c564_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\129019877_8eea2978ca_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\130733200_fbe28eea19.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\13290033_ebd7c7abba_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\136011860_44ca0b2835_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\136999986_e410a68efb_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\138132145_782763b84f_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\138166590_47c6cb9dd0.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\139124974_9e3ba69f6c.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\13920113_f03e867ea7_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\140951103_69847c0b7c.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\141340262_ca2e576490.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\141652526_2be95f21c3_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\141935731_d26d600f4f_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\142390525_5d81a3659d_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\142813254_20a7fd5fb6_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\14283011_3e7452c5b2_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\144040769_c5b805f868.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\14829055_2a2e646a8f_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\15987457_49dc11bf4b.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\16041975_2f6c1596e5.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\16159487_3a6615a565_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\16987075_9a690a2183.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\61242541_a04395e6bc.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\62293290_2c463891ff_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\7355522_b66e5d3078_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\80846315_d997645bea_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\8181477_8cb77d2e0f_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\8223949_2928d3f6f6_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\8223968_6b51555d2f_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\8475758_4c861ab268_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\8475769_3dea463364_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\8684108_a85764b22d_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\9818247_e2eac18894.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\dandelion\98992760_53ed1d26a9.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\README.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\102501987_3cdb8e5394_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\110472418_87b6a3aa98_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\118974357_0faa23cce9_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\12240303_80d87f77a3_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\123128873_546b8b7355_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\145862135_ab710de93c_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\159079265_d77a9ac920_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\160954292_6c2b4fda65_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\165985535_7178ce6350.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\172311368_49412f881b.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\174109630_3c544b8a2f.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\180613732_3a7aba0b80_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\218630974_5646dafc63_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\22679076_bdb4c24401_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\229488796_21ac6ee16d_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\24781114_bc83aa811e_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\269037241_07fceff56a_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\272481307_1eb47ba3e0_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\295257304_de893fc94d.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\298670754_f25edda891.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\319298955_0c72bd36bf.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\323872063_7264e7e018_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\326541992_d542103ca8_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\353897245_5453f35a8e.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\388405293_4db1d71f21_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\394990940_7af082cf8d_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\410421672_563550467c.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\410425647_4586667858.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\459042023_6273adc312_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\466486216_ab13b55763.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\475936554_a2b38aaa8e.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\475947979_554062a608_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\483444865_65962cea07_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\488849503_63a290a8c2_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\494803274_f84f21d53a.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\505517255_cfbb6f6394.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\509239741_28e2cfe492_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\512578026_f6e6f2ad26.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\512694812_48ba9c0b49_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\roses\99383371_37a5ac12a3_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\127192624_afa3d9cb84.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\145303599_2627e23815_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\147804446_ef9244c8ce_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\151898652_b5f1c70b98_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\164668737_aeab0cb55e_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\164670176_9f5b9c7965.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\164670455_29d8e02bbd_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\164671753_ab36d9cbb7_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\164672339_f2b5b164f6.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\175638423_058c07afb9.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\184682095_46f8607278.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\184682320_73ccf74710.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\184682506_8a9b8c662d.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\184682652_c927a49226_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\184682920_97ae41ce60_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\184683023_737fec5b18.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\193874852_fb633d8d00_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\193878348_43571127b9_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\197011740_21825de2bf.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\200011914_93f57ed68b.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\200288046_0032f322ff_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\24459548_27a783feda.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\24459750_eb49f6e4cb_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\26254755_1bfc494ef1_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\27465811_9477c9d044.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\27466794_57e4fe5656.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\29972905_4cc537ff4b_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\35477171_13cb52115c_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\39271782_b4335d09ae_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\40410686_272bc66faf_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\40410814_fba3837226_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\40410963_3ac280f23a_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\40411019_526f3fc8d9_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\40411100_7fbe10ec0f_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\44079668_34dfee3da1_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\45045003_30bbd0a142_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\45045005_57354ee844.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\50987813_7484bfbcdf.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\58636535_bc53ef0a21_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\sunflowers\6953297_8576bf4ea3.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\100930342_92e8746431_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\107693873_86021ac4ea_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\10791227_7168491604.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\110147301_ad921e2828.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112334842_3ecf7585dd.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112428665_d8f3632f36_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112428919_f0c5ad7d9d_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112650879_82adc2cc04_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112651128_7b5d39a346_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112951022_4892b1348b_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\112951086_150a59d499_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\113291410_1bdc718ed8_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\113902743_8f537f769b_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\113960470_38fab8f2fb_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\116343334_9cb4acdc57_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\11746080_963537acdc.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\11746276_de3dec8201.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\11746367_d23a35b085_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\11746452_5bc1749a36.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\11746548_26b3256922_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\122450705_9885fff3c4_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\130684927_a05164ba13_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\130684941_d1abfa3be6_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\130685040_3c2fcec63e_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\130685245_dcdd23836f_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\130685347_afbffe3afa_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\132538272_63658146d9_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\132538273_335240fe5b_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\133692329_c1150ed811_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\133858239_3eaa8a91fd_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\133960364_d87f883c15_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\134143359_71fa8dd9a4.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\135994133_4f306fe4bf_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\137126311_debe64c6a8_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\141479422_5a6fa1fd1b_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\142218310_d06005030a_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\14957470_6a8c272a87_m.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\38287568_627de6ca20.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\54895006_55b49052dc.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\tulips\65347450_53658c63bd_n.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\outputs\README.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

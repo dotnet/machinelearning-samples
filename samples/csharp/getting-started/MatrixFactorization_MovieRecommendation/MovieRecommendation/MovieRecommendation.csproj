@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.Recommender" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="$(MicrosoftMLPreviewVersion)" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,149 @@
+﻿@using Microsoft.eShopOnContainers.WebDashboardRazor.ReportsContext
+@{
+    var selectedMenu = ViewData.GetSelectedMenu();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/icons.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0.0/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Navigation -->
+    <!-- /.navbar-header -->
+
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <aside class="col-12 col-md-3 col-lg-2" id="sidebar" style="background-color: #333333; color: white;">
+                <nav class="navbar navbar-expand flex-row flex-md-column align-items-start p-md-0">
+                    <div class="collapse navbar-collapse w-100">
+                        <ul class="flex-row flex-md-column navbar-nav w-100 justify-content-between" style="font-size: 10pt;">
+                            <li class="nav-item d-sm-inline mt-md-3 mb-md-1">
+                                <img src="~/images/logo_eshop.png" />
+                            </li>
+                            <li class="nav-item mt-md-5 d-none d-md-block">
+                                <b style="font-size: 12pt;">Reports</b>
+                            </li>
+                            <li class="nav-item mt-md-2 pb-md-4 @(selectedMenu==SelectedMenu.Reports_Regression ? "selected" : String.Empty)">
+                                <a class="nav-link px-1 py-0 text-nowrap" asp-page="/Reports/Regression">
+                                    <i class="eshop-icon icon-product d-none d-md-inline-block" title="Products (Regression)"></i>
+                                    <span>Products (Regression)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item pt-md-2 pb-md-4 @(selectedMenu==SelectedMenu.Reports_TimeSeries ? "selected" : String.Empty)">
+                                <a class="nav-link px-1 py-0 text-nowrap" asp-page="/Reports/TimeSeries">
+                                    <i class="eshop-icon icon-data_sales d-none d-md-inline-block" title="Products (Time Series)"></i>
+                                    <span>Products (Time Series)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item mt-md-2 pb-md-4 @(selectedMenu==SelectedMenu.Reports_Comparison ? "selected" : String.Empty)">
+                                <a class="nav-link px-1 py-0 text-nowrap" asp-page="/Reports/Comparison">
+                                    <i class="eshop-icon icon-salesbyproduct d-none d-md-inline-block" title="Forecast Comparison"></i>
+                                    <span>Forecast Comparison</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+            <main class="col align-self-start">
+                <div class="row">
+                    <div class="col">
+                        <!-- START MAIN CONTENT -->
+
+                        @RenderBody()
+
+                        <!-- END MAIN CONTENT -->
+
+                    </div>
+                </div>
+                <footer class="row justify-content-center mt-1" style="font-size: 10pt;">
+                    <div class="w-100 m-3 border-bottom-highlight-footer"></div>
+
+                    <div class="col text-center mt-3 mb-4 pl-md-4">
+                        <i class="eshop-icon icon-mail align-middle es-color" style="font-size: 30pt"></i>
+                        <a href="mailto:eshop_feedback@service.microsoft.com">
+                            <span class="align-middle">eshop_feedback@service.microsoft.com</span>
+                        </a>
+                    </div>
+
+                    <div class="w-100 m-3 border-bottom-highlight-footer"></div>
+
+                    <div class="col text-center my-2">
+                        eShopDashboard @DateTime.Now.Year
+                    </div>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/js/jquery.js"></script>
+        <script src="~/lib/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/js/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0.0/bootstrap.min.js"
+                asp-fallback-src="~/lib/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    <script type="text/javascript">
+        var apiUri = {
+            catalog: "/api/catalog",
+            ordering: "/api/ordering",
+            forecasting: "/api/productdemandforecast",
+            timeseriesforcasting: "/api/producttimeseriesforecast"
+        };
+
+        if (document.getElementById('seedingModal')) {
+            $('#seedingModal').modal({ keyboard: false });
+
+            var interval = setInterval(function() {
+                $.ajax({
+                    type: 'get',
+                    url: '/api/seeding/progress',
+                    success: function(data) {
+                        $('.progress-bar')
+                            .css('width', data + '%')
+                            .attr('aria-valuenow', data);
+
+                        $('#seedingModal').modal({ keyboard: false });
+
+                        if (data === 100) {
+                            clearInterval(interval);
+                            $('#seedingModal')
+                                .modal('hide');
+                        }
+                    }
+                });
+            },
+            1000);
+        }
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

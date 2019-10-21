@@ -2,26 +2,6 @@ MICROSOFT PROVIDES THE DATASETS ON AN "AS IS" BASIS. MICROSOFT MAKES NO WARRANTI
 
 The datasets are provided under the original terms that Microsoft received such datasets. See below for more information about each dataset.
 
-### NYC Taxi Fare
-
-> Redistributing the dataset "taxi-fare-test.csv", "taxi-fare-train.csv" with attribution:
-
-> Original source: http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml.
-
-> The dataset is provided under terms provided by City of New York: https://opendata.cityofnewyork.us/overview/#termsofuse.
-
-### Sentiment Analysis
-
-> Redistributing the dataset "sentiment-imdb-train.txt", "sentiment-yelp-test.txt" with attribution:
-
-> Original source: 'From Group to Individual Labels using Deep Features', Kotzias et. al,. KDD 2015  https://archive.ics.uci.edu/ml/datasets/Sentiment+Labelled+Sentences.
-
-### Iris
-
-> Redistributing the dataset "iris-test.txt", "iris-train.txt" with attribution:
-
-> Original source: https://en.wikipedia.org/wiki/Iris_flower_data_set#Use_of_the_data_set.
-
 ### MNIST
 
 > Redistributing the dataset "optdigits-train.csv", "optdigits-val.csv" with citation:
@@ -30,6 +10,22 @@ The datasets are provided under the original terms that Microsoft received such 
 
 > Original source: http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits
 
-### Corefx Issues
+### NYC Taxi Fare
 
-> Issues downloaded from public repository https://github.com/dotnet/corefx.
+> Redistributing the dataset "taxi-fare-test.csv", "taxi-fare-train.csv" with attribution:
+
+> Original source: http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml.
+
+> The dataset is provided under terms provided by City of New York: https://opendata.cityofnewyork.us/overview/#termsofuse.
+
+### Wikipedia Detox
+
+>This dataset is provided under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/). Redistributing the dataset "wikipedia-detox-250-line-data.tsv" with attribution:
+>
+> Wulczyn, Ellery; Thain, Nithum; Dixon, Lucas (2016): Wikipedia Detox. figshare.
+>
+>With modifications by taking a sample of rows and reducing rough language.
+>
+>Original source: https://doi.org/10.6084/m9.figshare.4054689
+>
+>Original readme: https://meta.wikimedia.org/wiki/Research:Detox

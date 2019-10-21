@@ -7,8 +7,8 @@ open Microsoft.Extensions.Configuration
 open Microsoft.ML
 open DataStructures
 open Microsoft.ML.Data
-open Microsoft.ML.Core.Data
 open System.Security.Cryptography
+open Microsoft.ML.Trainers
 
 
 let repoOwner = "a"
@@ -49,14 +49,14 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
             hasHeader = true,
             columns = 
                 [|
-                    TextLoader.Column("ID", Nullable DataKind.Text, 0)
-                    TextLoader.Column("Area", Nullable DataKind.Text, 1)
-                    TextLoader.Column("Title", Nullable DataKind.Text, 2)
-                    TextLoader.Column("Description", Nullable DataKind.Text, 3)
+                    TextLoader.Column("ID", DataKind.String, 0)
+                    TextLoader.Column("Area", DataKind.String, 1)
+                    TextLoader.Column("Title", DataKind.String, 2)
+                    TextLoader.Column("Description", DataKind.String, 3)
                 |]
         )
 
-    let trainingDataView = textLoader.Read([| dataSetLocation |])
+    let trainingDataView = textLoader.Load([| dataSetLocation |])
        
     // STEP 2: Common data process configuration with pipeline data transformations
     let dataProcessPipeline = 
@@ -76,21 +76,15 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     let trainer =
         match selectedStrategy with
         | MyTrainerStrategy.SdcaMultiClassTrainer ->
-            mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(
-                DefaultColumnNames.Label, 
-                DefaultColumnNames.Features)
-            |> downcastPipeline
+            mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy( "Label", "Features") |> downcastPipeline
 
         | MyTrainerStrategy.OVAAveragedPerceptronTrainer ->
             let averagedPerceptronBinaryTrainer = 
-                mlContext.BinaryClassification.Trainers.AveragedPerceptron(
-                    DefaultColumnNames.Label,
-                    DefaultColumnNames.Features,
-                    numIterations = 10)
+                mlContext.BinaryClassification.Trainers.AveragedPerceptron( "Label", "Features", numberOfIterations = 10)
                 
-            let downcastTrainer (x : Training.ITrainerEstimator<_,_>) = 
+            let downcastTrainer (x : ITrainerEstimator<_,_>) = 
                 match x with 
-                | :? Training.ITrainerEstimator<_,_> as y -> y
+                | :? ITrainerEstimator<_,_> as y -> y
                 | _ -> failwith "downcastPipeline: expecting a ITrainerEstimator"
             
             let averagedPerceptronBinaryTrainer' = downcastTrainer averagedPerceptronBinaryTrainer
@@ -107,26 +101,17 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
         dataProcessPipeline
             .Append(trainer)
             .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"))
-
-    
+  
     // STEP 4: Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
     // in order to evaluate and get the model's accuracy metrics
     printfn "=============== Cross-validating to get model's accuracy metrics ==============="
 
-    //Measure cross-validation time
-    let watchCrossValTime = System.Diagnostics.Stopwatch.StartNew()
-
     let crossValidationResults = 
-        mlContext.MulticlassClassification.CrossValidate(data = trainingDataView, estimator = downcastPipeline modelBuilder, numFolds = 6, labelColumn = DefaultColumnNames.Label)
-        
-
-    //Stop measuring time
-    watchCrossValTime.Stop()
-    printfn "Time Cross-Validating: %d miliSecs"  watchCrossValTime.ElapsedMilliseconds
-           
+        mlContext.MulticlassClassification.CrossValidate(data = trainingDataView, estimator = downcastPipeline modelBuilder, numberOfFolds = 6, labelColumnName = "Label")
+                   
     crossValidationResults
-    |> Array.map (function struct(a,b,c) -> (a,b,c)) //convert struct tuple for print function
-    |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString())
+    |> Seq.toArray
+    |> Common.ConsoleHelper.printMulticlassClassificationFoldsAverageMetrics (trainer.ToString()) 
 
     // STEP 5: Train the model fitting to the DataSet
     printfn "=============== Training the model ==============="
@@ -140,7 +125,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
         Title = "WebSockets communication is slow in my machine"
         Description = "The WebSockets communication used under the covers by SignalR looks like is going slow in my development machine.." 
     }
-    let predEngine = trainedModel.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(mlContext)
+    let predEngine = mlContext.Model.CreatePredictionEngine<GitHubIssue, GitHubIssuePrediction>(trainedModel)
     let prediction =  predEngine.Predict(issue)
 
     printfn "=============== Single Prediction just-trained-model - Result: %s ===============" prediction.Area
@@ -149,7 +134,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     printfn "=============== Saving the model to a file ==============="
     do 
         use f = File.Open(modelPath,FileMode.Create)
-        mlContext.Model.Save(trainedModel, f)
+        mlContext.Model.Save(trainedModel, trainingDataView.Schema, f)
 
     Common.ConsoleHelper.consoleWriteHeader "Training process finalized"
 

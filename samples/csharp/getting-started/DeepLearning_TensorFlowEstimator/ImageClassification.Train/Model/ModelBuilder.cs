@@ -2,11 +2,12 @@
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.ImageAnalytics;
-using ImageClassification.ImageData;
+using ImageClassification.DataModels;
 using static ImageClassification.Model.ConsoleHelpers;
-using Microsoft.ML.Core.Data;
+using Common;
+using System.Collections;
+using System.Collections.Generic;
+using static Microsoft.ML.DataOperationsCatalog;
 
 namespace ImageClassification.Model
 {
@@ -14,79 +15,108 @@ namespace ImageClassification.Model
     {
         private readonly string dataLocation;
         private readonly string imagesFolder;
-        private readonly string inputModelLocation;
-        private readonly string outputModelLocation;
+        private readonly string inputTensorFlowModelFilePath;
+        private readonly string outputMlNetModelFilePath;
         private readonly MLContext mlContext;
-        private static string LabelTokey = nameof(LabelTokey);
+        private static string LabelAsKey = nameof(LabelAsKey);
         private static string ImageReal = nameof(ImageReal);
         private static string PredictedLabelValue = nameof(PredictedLabelValue);
 
-        public ModelBuilder(string dataLocation, string imagesFolder, string inputModelLocation, string outputModelLocation)
+        public ModelBuilder(string inputModelLocation, string outputModelLocation)
         {
-            this.dataLocation = dataLocation;
-            this.imagesFolder = imagesFolder;
-            this.inputModelLocation = inputModelLocation;
-            this.outputModelLocation = outputModelLocation;
+            this.inputTensorFlowModelFilePath = inputModelLocation;
+            this.outputMlNetModelFilePath = outputModelLocation;
             mlContext = new MLContext(seed: 1);
         }
 
-        private struct ImageNetSettings
+        private struct ImageSettingsForTFModel
         {
-            public const int imageHeight = 224;
-            public const int imageWidth = 224;
-            public const float mean = 117;
-            public const float scale = 1;
-            public const bool channelsLast = true;
+            public const int imageHeight = 299;        //224 for Inception v1 --- 299 for Inception v3
+            public const int imageWidth = 299;         //224 for Inception v1 --- 299 for Inception v3
+            public const float mean = 117;             // (offsetImage: ImageSettingsForTFModel.mean)
+            public const float scale = 1/255f;         //1/255f for InceptionV3. Not used for InceptionV1
+            public const bool channelsLast = true;     //true for Inception v1 (interleavePixelColors: ImageSettingsForTFModel.channelsLast)
         }
 
-        public void BuildAndTrain()
+        public void BuildAndTrain(IEnumerable<ImageData> imageSet)
         {
-            var featurizerModelLocation = inputModelLocation;
-
             ConsoleWriteHeader("Read model");
-            Console.WriteLine($"Model location: {featurizerModelLocation}");
-            Console.WriteLine($"Images folder: {imagesFolder}");
+            Console.WriteLine($"Model location: {inputTensorFlowModelFilePath}");            
             Console.WriteLine($"Training file: {dataLocation}");
-            Console.WriteLine($"Default parameters: image size=({ImageNetSettings.imageWidth},{ImageNetSettings.imageHeight}), image mean: {ImageNetSettings.mean}");
 
+            // 1. Load images information (filenames and labels) in IDataView
 
+            //Load the initial single full Image-Set
+            //
+            IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(imageSet);
+            IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
-            var data = mlContext.Data.ReadFromTextFile<ImageNetData>(path:dataLocation, hasHeader: true);
+            // Split the data 90:10 into train and test sets, train and evaluate.
+            TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.10);
+            IDataView trainDataView = trainTestData.TrainSet;
+            IDataView testDataView = trainTestData.TestSet;
 
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelTokey,inputColumnName:DefaultColumnNames.Label)
-                            .Append(mlContext.Transforms.LoadImages(imagesFolder, (ImageReal, nameof(ImageNetData.ImagePath))))
-                            .Append(mlContext.Transforms.Resize(outputColumnName:ImageReal, imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: ImageReal))
-                            .Append(mlContext.Transforms.ExtractPixels(new ImagePixelExtractorTransformer.ColumnInfo(name: "input",inputColumnName: ImageReal,  interleave: ImageNetSettings.channelsLast, offset: ImageNetSettings.mean)))
-                            .Append(mlContext.Transforms.ScoreTensorFlowModel(modelLocation:featurizerModelLocation, outputColumnNames: new[] { "softmax2_pre_activation" },inputColumnNames: new[] { "input" }))
-                            .Append(mlContext.MulticlassClassification.Trainers.LogisticRegression(labelColumn:LabelTokey, featureColumn:"softmax2_pre_activation"))
-                            .Append(mlContext.Transforms.Conversion.MapKeyToValue((PredictedLabelValue,DefaultColumnNames.PredictedLabel)));
+            // 2. Load images in-memory while applying image transformations 
+            // Input and output column names have to coincide with the input and output tensor names of the TensorFlow model
+            // You can check out those tensor names by opening the Tensorflow .pb model with a visual tool like Netron: https://github.com/lutzroeder/netron
+            // TF .pb model --> input node --> INPUTS --> input --> id: "input" 
+            // TF .pb model --> Softmax node --> INPUTS --> logits --> id: "softmax2_pre_activation" (Inceptionv1) or "InceptionV3/Predictions/Reshape" (Inception v3)
 
-            // Train the model
-            ConsoleWriteHeader("Training classification model");
-            ITransformer model = pipeline.Fit(data);
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelAsKey, inputColumnName: "Label")
+                            .Append(mlContext.Transforms.LoadImages(outputColumnName: "image_object", imageFolder: imagesFolder, inputColumnName: nameof(DataModels.ImageData.ImagePath)))
+                            .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image_object_resized", 
+                                                                      imageWidth: ImageSettingsForTFModel.imageWidth, imageHeight: ImageSettingsForTFModel.imageHeight, 
+                                                                      inputColumnName: "image_object"))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName:"input", inputColumnName:"image_object_resized", 
+                                                                       interleavePixelColors:ImageSettingsForTFModel.channelsLast, 
+                                                                       offsetImage:ImageSettingsForTFModel.mean, 
+                                                                       scaleImage:ImageSettingsForTFModel.scale))  //for Inception v3 needs scaleImage: set to 1/255f. Not needed for InceptionV1. 
+                            .Append(mlContext.Model.LoadTensorFlowModel(inputTensorFlowModelFilePath).
+                                 ScoreTensorFlowModel(outputColumnNames: new[] { "InceptionV3/Predictions/Reshape" }, 
+                                                      inputColumnNames: new[] { "input" }, 
+                                                      addBatchDimensionInput: false));  // (For Inception v1 --> addBatchDimensionInput: true)  (For Inception v3 --> addBatchDimensionInput: false)
+            
+            // 3. Set the training algorithm and convert back the key to the categorical values                            
+            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "InceptionV3/Predictions/Reshape");  //"softmax2_pre_activation" for Inception v1
+            var trainingPipeline = dataProcessPipeline.Append(trainer)
+                                                      .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));
 
-            // Process the training data through the model
+            // 4. Train the model
+            // Measuring training time
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            ConsoleWriteHeader("Training the ML.NET classification model");
+            ITransformer model = trainingPipeline.Fit(trainDataView);
+
+            watch.Stop();
+            long elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Training with transfer learning took: " + (elapsedMs / 1000).ToString() + " seconds");
+
+            // 5. Make bulk predictions and calculate quality metrics
+            ConsoleWriteHeader("Create Predictions and Evaluate the model quality");
+            IDataView predictionsDataView = model.Transform(testDataView);
+           
             // This is an optional step, but it's useful for debugging issues
-            var trainData = model.Transform(data);
-            var loadedModelOutputColumnNames = trainData.Schema
+            var loadedModelOutputColumnNames = predictionsDataView.Schema
                 .Where(col => !col.IsHidden).Select(col => col.Name);
-            var trainData2 = mlContext.CreateEnumerable<ImageNetPipeline>(trainData, false, true).ToList();
-            trainData2.ForEach(pr => ConsoleWriteImagePrediction(pr.ImagePath,pr.PredictedLabelValue, pr.Score.Max()));
 
-            // Get some performance metric on the model using training data            
-            var sdcaContext = new MulticlassClassificationCatalog(mlContext);
+            // 5.1 Show the predictions
+            ConsoleWriteHeader("*** Showing all the predictions ***");
+            List<ImagePredictionEx> predictions = mlContext.Data.CreateEnumerable<ImagePredictionEx>(predictionsDataView, false, true).ToList();
+            predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImagePath, pred.Label, pred.PredictedLabelValue, pred.Score.Max()));
+
+            // 5.2 Show the performance metrics for the multi-class classification            
+            var classificationContext = mlContext.MulticlassClassification;
             ConsoleWriteHeader("Classification metrics");
-            var metrics = sdcaContext.Evaluate(trainData, label: LabelTokey, predictedLabel: DefaultColumnNames.PredictedLabel);
-            Console.WriteLine($"LogLoss is: {metrics.LogLoss}");
-            Console.WriteLine($"PerClassLogLoss is: {String.Join(" , ", metrics.PerClassLogLoss.Select(c => c.ToString()))}");
+            var metrics = classificationContext.Evaluate(predictionsDataView, labelColumnName: LabelAsKey, predictedLabelColumnName: "PredictedLabel");
+            ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
-            // Save the model to assets/outputs
+            // 6. Save the model to assets/outputs
             ConsoleWriteHeader("Save model to local file");
-            ModelHelpers.DeleteAssets(outputModelLocation);
-            using (var f = new FileStream(outputModelLocation, FileMode.Create))
-                mlContext.Model.Save(model, f);
+            ModelHelpers.DeleteAssets(outputMlNetModelFilePath);
 
-            Console.WriteLine($"Model saved: {outputModelLocation}");
+            mlContext.Model.Save(model, predictionsDataView.Schema, outputMlNetModelFilePath);
+            Console.WriteLine($"Model saved: {outputMlNetModelFilePath}");
         }
 
     }

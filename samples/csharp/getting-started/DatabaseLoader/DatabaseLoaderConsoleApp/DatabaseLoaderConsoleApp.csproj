@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RestoreSources>
+      $(RestoreSources);
+    </RestoreSources>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview" />
+    <PackageReference Include="Microsoft.ML.Experimental" Version="0.16.0-preview" />
+    <PackageReference Include="Microsoft.ML.LightGBM" Version="1.4.0-preview" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="1.4.0-preview" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SqlLocalDb\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SqlLocalDb\Criteo-100k-rows.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SqlLocalDb\Criteo-100k-rows_log.ldf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

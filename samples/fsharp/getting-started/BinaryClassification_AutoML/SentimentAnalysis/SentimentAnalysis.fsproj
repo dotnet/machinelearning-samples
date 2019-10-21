@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\common\AutoML\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="datasets\wikipedia-detox-250-line-data.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="datasets\wikipedia-detox-250-line-test.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Compile Include="Program.fs" />
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\datasets\wikipedia-detox-250-line-data.tsv" Link="Data\wikipedia-detox-250-line-data.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\datasets\wikipedia-detox-250-line-test.tsv" Link="Data\wikipedia-detox-250-line-test.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.AutoML" Version="MicrosoftMLPreviewVersion" />
+  </ItemGroup>
+  
+</Project>

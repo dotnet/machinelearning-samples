@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.9" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
@@ -20,6 +24,10 @@
     <None Update="Data\ratings.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

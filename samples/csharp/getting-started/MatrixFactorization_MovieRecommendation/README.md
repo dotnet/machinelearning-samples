@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.11   | Dynamic API | Updated to v0.9 | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
+| v1.3.1   | Dynamic API | Up-to-date | Console app | .csv files | Recommendation | Matrix Factorization | MatrixFactorizationTrainer|
 
 In this sample, you can see how to use ML.NET to build a movie recommendation engine. 
 
@@ -25,9 +25,9 @@ With ML.NET we support the following three recommendation scenarios, depending u
 The original data comes from MovieLens Dataset:
 http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
 
-## ML task - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
+## Algorithm - [Matrix Factorization (Recommendation)](https://docs.microsoft.com/en-us/dotnet/machine-learning/resources/tasks#recommendation)
 
-The ML Task for this sample is Matrix Factorization, which is a supervised machine learning task performing collaborative filtering. 
+The algorithm for this recommendation task is Matrix Factorization, which is a supervised machine learning algorithm performing collaborative filtering. 
 
 ## Solution
 
@@ -64,7 +64,7 @@ Here's the code which will be used to build the model:
  MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
  options.MatrixColumnIndexColumnName = userIdEncoded;
  options.MatrixRowIndexColumnName = movieIdEncoded;
- options.LabelColumnName = DefaultColumnNames.Label;
+ options.LabelColumnName = "Label";
  options.NumberOfIterations = 20;
  options.ApproximationRank = 100;
 
@@ -93,13 +93,13 @@ We need this step to conclude how accurate our model operates on new data. To do
 Console.WriteLine("=============== Evaluating the model ===============");
 IDataView testDataView = mlcontext.Data.LoadFromTextFile<MovieRating>(TestDataLocation, hasHeader: true); 
 var prediction = model.Transform(testDataView);
-var metrics = mlcontext.Regression.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+var metrics = mlcontext.Regression.Evaluate(prediction, labelColumnName: "Label", scoreColumnName: "Score");
 ```
 
 ### 4. Consume model
 After the model is trained, you can use the `Predict()` API to predict the rating for a particular movie/user combination. 
 ```CSharp    
-var predictionengine = model.MakePredictionFunction<MovieRating, MovieRatingPrediction>(mlcontext);
+var predictionengine = mlcontext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(model);
 var movieratingprediction = predictionengine.Predict(
                 new MovieRating()
                 {
@@ -114,3 +114,6 @@ var movieratingprediction = predictionengine.Predict(
 ```
 Please note this is one approach for performing movie recommendations with Matrix Factorization. There are other scenarios for recommendation as well which we will build samples for as well. 
 
+#### Score in Matrix Factorization
+
+The score produced by matrix factorization represents the likelihood of being a positive case. The larger the score value, the higher probability of being a positive case. However, the score doesn't carry any probability information. When making a prediction, you will have to compute multiple merchandises' scores and pick up the merchandise with the highest score.

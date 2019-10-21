@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="assets\images\image1.jpg" />
+    <None Remove="assets\images\image2.jpg" />
+    <None Remove="assets\images\image3.jpg" />
+    <None Remove="assets\images\image4.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="assets\images\image1.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="assets\images\image2.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="assets\images\image3.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="assets\images\image4.jpg">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\Model\" />
+  </ItemGroup>
+
+</Project>

@@ -8,7 +8,7 @@ open System.Diagnostics
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
-let printHeader lines = 
+let printHeader lines =
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Yellow
     printfn " "
@@ -16,8 +16,8 @@ let printHeader lines =
     let maxLength = lines |> Seq.map (fun x -> x.Length) |> Seq.max
     printfn "%s" (String('#', maxLength))
     Console.ForegroundColor <- defaultColor
-    
-let printExn lines = 
+
+let printExn lines =
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Red
     printfn " "
@@ -25,30 +25,30 @@ let printExn lines =
     printfn "#########"
     Console.ForegroundColor <- defaultColor
     lines |> Seq.iter (printfn "%s")
-    
-let savePivotData offersCsv transactionsCsv pivotCsv = 
+
+let savePivotData offersCsv transactionsCsv pivotCsv =
     printHeader ["Preprocess input files"]
     printfn "Offers file: %s"  offersCsv
     printfn "Transactions file: %s"  transactionsCsv
-    let pivotData = 
+    let pivotData =
         File.ReadAllLines(transactionsCsv)
         |> Seq.skip 1 //skip header
-        |> Seq.map 
+        |> Seq.map
             (fun x ->
                 let fields = x.Split ','
                 fields.[0] , int fields.[1] // Name, Offer #
             )
         |> Seq.groupBy fst
-        |> Seq.map 
-            (fun (k, xs) -> 
+        |> Seq.map
+            (fun (k, xs) ->
                 let offers = xs |> Seq.map snd |> Set.ofSeq
                 [
                     yield! Seq.init 32 (fun i -> if Seq.contains (i + 1) offers then "1" else "0")
                     yield k
-                ] 
+                ]
                 |> String.concat ","
             )
-    File.WriteAllLines(pivotCsv, 
+    File.WriteAllLines(pivotCsv,
         seq {
             yield [
                 yield! Seq.init 32 (fun i -> sprintf "C%d" (i + 1))
@@ -56,9 +56,9 @@ let savePivotData offersCsv transactionsCsv pivotCsv =
             ] |> String.concat ","
             yield! pivotData
         })
-    
+
 [<CLIMutable>]
-type ClusteringPrediction = 
+type ClusteringPrediction =
     {
         [<ColumnName("PredictedLabel")>]
         SelectedClusterId : uint32
@@ -70,22 +70,22 @@ type ClusteringPrediction =
         LastName : string
     }
 
-let savePlot (predictions : ClusteringPrediction []) (plotSvg : string) = 
+let savePlot (predictions : ClusteringPrediction []) (plotSvg : string) =
     printHeader ["Plot Customer Segmentation"]
     let pm = PlotModel(Title = "Customer Segmentation", IsLegendVisible = true)
     predictions
     |> Seq.groupBy (fun x -> x.SelectedClusterId)
     |> Seq.sortBy fst
-    |> Seq.iter 
-        (fun (cluster,xs) -> 
-            let scatter = 
+    |> Seq.iter
+        (fun (cluster,xs) ->
+            let scatter =
                 ScatterSeries
-                    (MarkerType = MarkerType.Circle, 
-                     MarkerStrokeThickness = 2.0, 
-                     Title = sprintf "Cluster: %d" cluster, 
+                    (MarkerType = MarkerType.Circle,
+                     MarkerStrokeThickness = 2.0,
+                     Title = sprintf "Cluster: %d" cluster,
                      RenderInLegend = true )
-            xs 
-            |> Seq.map (fun x -> ScatterPoint(double x.Location.[0], double x.Location.[1])) 
+            xs
+            |> Seq.map (fun x -> ScatterPoint(double x.Location.[0], double x.Location.[1]))
             |> scatter.Points.AddRange
             pm.Series.Add scatter
         )
@@ -104,29 +104,29 @@ let main _argv =
     let plotCsv = Path.Combine(assetsPath, "outputs", "customerSegmentation.csv")
     try
         let mlContext = MLContext(seed = Nullable 1);  //Seed set to any number so you have a deterministic result
-        
+
         //Create the clusters: Create data files and plot a char
-        let model = 
-            use f = File.OpenRead modelZipFilePath
+        let model, inputSchema =
+            use f = new FileStream(modelZipFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)
             mlContext.Model.Load(f)
-        
-        let data = 
-            mlContext.Data.ReadFromTextFile(
+
+        let data =
+            mlContext.Data.LoadFromTextFile(
                 pivotCsv,
-                columns = 
-                    [| 
-                        TextLoader.Column("Features", Nullable DataKind.R4, [| TextLoader.Range(0, Nullable 31) |])
-                        TextLoader.Column("LastName", Nullable DataKind.Text, 32)
+                columns =
+                    [|
+                        TextLoader.Column("Features", DataKind.Single, [| TextLoader.Range(0, Nullable 31) |])
+                        TextLoader.Column("LastName", DataKind.String, 32)
                     |],
                 hasHeader = true,
                 separatorChar = ',')
-        
+
         //Apply data transformation to create predictions/clustering
-        let predictions = mlContext.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
+        let predictions = mlContext.Data.CreateEnumerable<ClusteringPrediction>(model.Transform(data),false) |> Seq.toArray
 
         //Generate data files with customer data grouped by clusters
         printHeader ["CSV Customer Segmentation"]
-        File.WriteAllLines(plotCsv, 
+        File.WriteAllLines(plotCsv,
             seq {
                 yield "LastName,SelectedClusterId"
                 yield! predictions |> Seq.map (fun x -> sprintf "%s,%d" x.LastName x.SelectedClusterId)
@@ -141,9 +141,9 @@ let main _argv =
         |> Process.Start
         |> ignore
 
-    with 
-    | ex -> printExn [ex.Message]
-    
+    with
+    | ex -> printExn [ex.ToString()]
+
     let defaultColor = Console.ForegroundColor
     Console.ForegroundColor <- ConsoleColor.Green
     printfn " "

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using movierecommender.Models;
 using movierecommender.Services;
+using MovieRecommender.DataStructures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,8 +21,9 @@ namespace movierecommender.Controllers
         private readonly IProfileService _profileService;
         private readonly AppSettings _appSettings;
         private readonly ILogger<MoviesController> _logger;
+        private readonly PredictionEnginePool<MovieRating, MovieRatingPrediction> _model;
 
-        public MoviesController(
+        public MoviesController(PredictionEnginePool<MovieRating, MovieRatingPrediction> model,
             ILogger<MoviesController> logger,
             IOptions<AppSettings> appSettings,
             IMovieService movieService,
@@ -30,6 +33,7 @@ namespace movierecommender.Controllers
             _profileService = profileService;
             _logger = logger;
             _appSettings = appSettings.Value;
+            _model = model;
         }
 
         public ActionResult Choose()
@@ -43,15 +47,6 @@ namespace movierecommender.Controllers
 
             // 1. Create the ML.NET environment and load the already trained model
             MLContext mlContext = new MLContext();
-            
-            ITransformer trainedModel;
-            using (FileStream stream = new FileStream(_movieService.GetModelPath(), FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream);
-            }
-
-            //2. Create a prediction function
-            var predictionEngine = trainedModel.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(mlContext);
 
             List<(int movieId, float normalizedScore)> ratings = new List<(int movieId, float normalizedScore)>();
             var MovieRatings = _profileService.GetProfileWatchedMovies(id);
@@ -66,7 +61,7 @@ namespace movierecommender.Controllers
             foreach (var movie in _movieService.GetTrendingMovies)
             {
                 // Call the Rating Prediction for each movie prediction
-                 prediction = predictionEngine.Predict(new MovieRating
+                 prediction = _model.Predict(new MovieRating
                  {
                      userId = id.ToString(),
                      movieId = movie.MovieID.ToString()
@@ -123,22 +118,6 @@ namespace movierecommender.Controllers
             public JsonContent(object obj) :
                 base(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json")
             { }
-        }
-
-        public class MovieRating
-        {
-            public string userId;
-
-            public string movieId;
-
-            public bool Label;
-        }
-
-        public class MovieRatingPrediction
-        {
-            public bool Label;
-
-            public float Score;
         }
     }
 }

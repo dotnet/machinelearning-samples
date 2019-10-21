@@ -1,0 +1,85 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<style>
+    #headerDiv {
+        color : blue;
+        text-align : center;
+    }
+
+</style>
+
+<div id="headerDiv"><h2>TensorFlow Image Classification</h2></div>
+<br/>
+<div>
+    <form method="post" enctype="multipart/form-data">
+        <div>
+            <p>Upload a file image using this form to predict its label:</p>
+        </div>
+        <div>
+            <input type="file" name="imageFile">
+        </div>
+        <div>
+            <br />
+            <input type="submit" value="Upload File" name="submit">
+        </div>
+
+    </form>
+</div>
+<br />
+<br />
+
+<div id="divPrediction" class="col-md-10"></div>
+<div id="divProbability" class="col-md-10"></div>
+
+<script src="~/js/upload.js"></script>
+
+<br />
+<br />
+<br />
+
+<script type="text/javascript">
+    window.onload = function hello() {
+        document.getElementById('divPrediction').innerHTML = 'Area to show the awesome prediction!';
+    };
+</script>
+
+<!--
+    
+    DELETE THE FOLLOWING CODE:
+
+<form name="ImageUpload" method="post" enctype="multipart/form-data" action="http://localhost:5000/api/ImageClassification/classifyImage">
+    <div>
+        <label for="caption">Image Caption</label>
+        <input name="caption" type="text" />
+    </div>
+    <div>
+        <label for="imageFile">Image File</label>
+        <input name="imageFile" type="file" />
+    </div>
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
+</form>
+
+<br />
+<br />
+<br />
+
+<form method="post" enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="http://localhost:5000/api/ImageClassification/classifyImage">
+    <div class="form-group">
+        <div class="col-md-10">
+            <p>Upload one or more files images using this form:</p>
+            <input type="file" name="files" multiple />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="submit" value="Upload" />
+        </div>
+    </div>
+</form>
+
+-->

@@ -1,0 +1,16 @@
+﻿<Window x:Class="OnnxObjectDetectionApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OnnxObjectDetectionApp"
+        mc:Ignorable="d"
+        Title="ML.NET Object Detection (Onnx)" Height="506" Width="640">
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Image x:Name="WebCamImage" Grid.Row="0" />
+        <Canvas x:Name="WebCamCanvas" Grid.Row="0" Width="{Binding Path=ActualWidth, ElementName=WebCamImage}"/>
+    </Grid>
+</Window>
