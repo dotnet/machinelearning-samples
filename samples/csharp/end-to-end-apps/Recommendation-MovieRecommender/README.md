@@ -21,15 +21,15 @@ The sample takes insipiration from the popular Netflix application and even thou
 
 * Recommendation Model 
     * The application builds a recommendation model using the MovieLens dataset. The model training code shows 
-      uses colloborative filtering based recommendation approach. 
+      uses collaborative filtering based recommendation approach. 
 
 ## How does it work?
 
 ## Model Training 
 
-Movie Recommender uses Colloborative Filtering for recommendations. 
+Movie Recommender uses Collaborative Filtering for recommendations. 
 
-The underlying assumption with Colloborative filtering is that if a person A (e.g. Amy) has the same opinion as a person B (e.g. Cesar) on an issue, A (Amy) is more likely to have B’s (Cesar) opinion on a different issue than that of a random person. 
+The underlying assumption with Collaborative filtering is that if a person A (e.g. Amy) has the same opinion as a person B (e.g. Cesar) on an issue, A (Amy) is more likely to have B’s (Cesar) opinion on a different issue than that of a random person. 
 
 For this sample we make use of the http://files.grouplens.org/datasets/movielens/ml-latest-small.zip dataset. 
 
