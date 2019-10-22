@@ -8,20 +8,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using MulticlassClassification_RestaurantInspectionsML.Model;
+using RestaurantViolationsML.Model;
 
-namespace MulticlassClassification_RestaurantInspectionsML.ConsoleApp
+namespace RestaurantViolationsML.ConsoleApp
 {
     public static class ModelBuilder
     {
         private static string TRAIN_DATA_FILEPATH = @"Restaurant_Scores_-_LIVES_Standard.csv";
-        private static string MODEL_FILEPATH = @"../../../../MulticlassClassification_RestaurantInspectionsML.Model/MLModel.zip";
+        private static string MODEL_FILEPATH = @"../../../../RestaurantViolations.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext(seed: 1);
 
-        public static async Task CreateModel()
+        public async Task CreateModel()
         {
             // Download Data
             await DownloadData();
@@ -70,8 +70,7 @@ namespace MulticlassClassification_RestaurantInspectionsML.ConsoleApp
             // Data process configuration with pipeline data transformations 
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("risk_category", "risk_category")
                                       .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[] { new InputOutputColumnPair("inspection_type", "inspection_type"), new InputOutputColumnPair("violation_description", "violation_description") }))
-                                      .Append(mlContext.Transforms.Categorical.OneHotHashEncoding(new[] { new InputOutputColumnPair("violation_id", "violation_id") }))
-                                      .Append(mlContext.Transforms.Concatenate("Features", new[] { "inspection_type", "violation_description", "violation_id" }))
+                                      .Append(mlContext.Transforms.Concatenate("Features", new[] { "inspection_type", "violation_description" }))
                                       .Append(mlContext.Transforms.NormalizeMinMax("Features", "Features"))
                                       .AppendCacheCheckpoint(mlContext);
 

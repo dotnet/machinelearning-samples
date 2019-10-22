@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.ML;
-using MulticlassClassification_RestaurantInspectionsML.Model;
+using RestaurantViolationsML.Model;
 
-namespace MulticlassClassification_RestaurantInspectionsML.Model
+namespace RestaurantViolationsML.Model
 {
     public class ConsumeModel
     {

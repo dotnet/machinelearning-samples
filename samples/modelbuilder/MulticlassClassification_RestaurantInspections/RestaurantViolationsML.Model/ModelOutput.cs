@@ -3,7 +3,7 @@
 using System;
 using Microsoft.ML.Data;
 
-namespace MulticlassClassification_RestaurantInspectionsML.Model
+namespace RestaurantViolationsML.Model
 {
     public class ModelOutput
     {

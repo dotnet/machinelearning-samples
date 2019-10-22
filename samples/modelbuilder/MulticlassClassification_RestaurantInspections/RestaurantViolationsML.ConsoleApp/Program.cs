@@ -5,12 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.ML;
-using MulticlassClassification_RestaurantInspectionsML.Model;
+using RestaurantViolationsML.Model;
 
-namespace MulticlassClassification_RestaurantInspectionsML.ConsoleApp
+namespace RestaurantViolationsML.ConsoleApp
 {
     class Program
     {
+        //Dataset to use for predictions 
+        private const string DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Downloads\Restaurant_Scores_-_LIVES_Standard.csv";
 
         static async Task Main(string[] args)
         {
@@ -23,21 +25,7 @@ namespace MulticlassClassification_RestaurantInspectionsML.ConsoleApp
             ModelOutput predictionResult = ConsumeModel.Predict(sampleData);
 
             Console.WriteLine("Using model to make single prediction -- Comparing actual Risk_category with predicted Risk_category from sample data...\n\n");
-            Console.WriteLine($"business_id: {sampleData.Business_id}");
-            Console.WriteLine($"business_name: {sampleData.Business_name}");
-            Console.WriteLine($"business_address: {sampleData.Business_address}");
-            Console.WriteLine($"business_city: {sampleData.Business_city}");
-            Console.WriteLine($"business_state: {sampleData.Business_state}");
-            Console.WriteLine($"business_postal_code: {sampleData.Business_postal_code}");
-            Console.WriteLine($"business_latitude: {sampleData.Business_latitude}");
-            Console.WriteLine($"business_longitude: {sampleData.Business_longitude}");
-            Console.WriteLine($"business_location: {sampleData.Business_location}");
-            Console.WriteLine($"business_phone_number: {sampleData.Business_phone_number}");
-            Console.WriteLine($"inspection_id: {sampleData.Inspection_id}");
-            Console.WriteLine($"inspection_date: {sampleData.Inspection_date}");
-            Console.WriteLine($"inspection_score: {sampleData.Inspection_score}");
             Console.WriteLine($"inspection_type: {sampleData.Inspection_type}");
-            Console.WriteLine($"violation_id: {sampleData.Violation_id}");
             Console.WriteLine($"violation_description: {sampleData.Violation_description}");
             Console.WriteLine($"\n\nActual Risk_category: {sampleData.Risk_category} \nPredicted Risk_category value {predictionResult.Prediction} \nPredicted Risk_category scores: [{String.Join(",", predictionResult.Score)}]\n\n");
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
@@ -49,12 +37,10 @@ namespace MulticlassClassification_RestaurantInspectionsML.ConsoleApp
         // Method to load single row of dataset to try a single prediction
         private static ModelInput CreateSingleDataSample()
         {
-
             // Use first line of dataset as model input
             // You can replace this with new test data (hardcoded or from end-user application)
             ModelInput sampleForPrediction = new ModelInput
             {
-                Violation_id = "80137_20161005_103149",
                 Inspection_type = "Routine - Unscheduled",
                 Violation_description = "Wiping cloths not clean or properly stored or inadequate sanitizer"
             };

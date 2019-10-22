@@ -1,7 +1,7 @@
 ﻿using System;
-using MulticlassClassification_RestaurantInspectionsML.Model;
+using RestaurantViolationsML.Model;
 
-namespace MulticlassClassification_RestaurantInspections
+namespace RestaurantViolations
 {
     class Program
     {

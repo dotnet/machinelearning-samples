@@ -8,6 +8,6 @@
     <PackageReference Include="Microsoft.ML" Version="1.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MulticlassClassification_RestaurantInspectionsML.Model\MulticlassClassification_RestaurantInspectionsML.Model.csproj" />
+    <ProjectReference Include="..\RestaurantViolationsML.Model\RestaurantViolationsML.Model.csproj" />
   </ItemGroup>
 </Project>
