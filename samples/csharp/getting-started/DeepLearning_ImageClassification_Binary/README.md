@@ -1,4 +1,4 @@
-# Image Classification Model Training - Preferred API (Based on native TensorFlow transfer learning)
+# Image Classification Model Training (two categories) - Preferred API (Based on native TensorFlow transfer learning)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
@@ -6,7 +6,7 @@
 
 ## Understanding the problem
 
-Image classification is a computer vision problem. Image classification takes an image as input and categorizes it into a prescribed class. This sample shows a .NET Core console application that trains a custom deep learning model using transfer learning, a pretrained image classification TensorFlow model and the ML.NET Image Classification API to classify images of concrete surfaces as cracked or uncracked.
+Image classification is a computer vision problem. Image classification takes an image as input and categorizes it into a prescribed class. This sample shows a .NET Core console application that trains a custom deep learning model using transfer learning, a pretrained image classification TensorFlow model and the ML.NET Image Classification API to classify images of concrete surfaces into one of two categories, cracked or uncracked.
 
 ![](docs/images/sdnet2018decksamples.png)
 
@@ -33,11 +33,26 @@ In this sample, only bridge deck images are used.
 
 1. Unzip the *assets.zip* directory in the project directory.
 1. Copy the subdirectories into the *assets* directory.
-1. Define the input schema by creating the `ModelInput` class.
+1. Define the image data schema containing the image path and category the image belongs to. Create a class called `ImageData`.
+
+```csharp
+class ImageData
+{
+    public string ImagePath { get; set; }
+
+    public string Label { get; set; }
+}
+```
+
+1. Define the input schema by creating the `ModelInput` class. The only columns/properties used for training and making predictions are the `Image` and `LabelAsKey`. The `ImagePath` and `Label` columns are there for convenience to access the original file name and text representation of the category it belongs to respectively.
 
 ```csharp
 class ModelInput
 {
+    public byte[] Image { get; set; }
+    
+    public UInt32 LabelAsKey { get; set; }
+
     public string ImagePath { get; set; }
 
     public string Label { get; set; }
@@ -62,7 +77,7 @@ class ModelOutput
 1.  Before loading the data, it needs to be formatted into a list of `ImageInput` objects. To do so, create a data loading utility method `LoadImagesFromDirectory`.
 
 ```csharp
-public static IEnumerable<ModelInput> LoadImagesFromDirectory(string folder, bool useFolderNameAsLabel = true)
+public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder, bool useFolderNameAsLabel = true)
 {
     var files = Directory.GetFiles(folder, "*",
         searchOption: SearchOption.AllDirectories);
@@ -88,7 +103,7 @@ public static IEnumerable<ModelInput> LoadImagesFromDirectory(string folder, boo
             }
         }
 
-        yield return new ModelInput()
+        yield return new ImageData()
         {
             ImagePath = file,
             Label = label
@@ -100,7 +115,7 @@ public static IEnumerable<ModelInput> LoadImagesFromDirectory(string folder, boo
 1. Inside of your application, use the `LoadImagesFromDirectory` method to load the data.
 
 ```csharp
-IEnumerable<ModelInput> images = LoadImagesFromDirectory(folder: assetsRelativePath, useFolderNameAsLabel: true);
+IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: assetsRelativePath, useFolderNameAsLabel: true);
 IDataView imageData = mlContext.Data.LoadFromEnumerable(images);
 ```
 
@@ -171,8 +186,43 @@ ITransformer trainedModel = trainingPipeline.Fit(trainSet);
 ```
 
 ## Use the model
+1. Create a utility method to display predictions.
 
-1. Use the test set to make predictions using the trained model. Create a utility method called `ClassifyImages`. 
+```csharp
+private static void OutputPrediction(ModelOutput prediction)
+{
+    string imageName = Path.GetFileName(prediction.ImagePath);
+    Console.WriteLine($"Image: {imageName} | Actual Value: {prediction.Label} | Predicted Value: {prediction.PredictedLabel}");
+}
+```
+
+### Classify a single image
+
+1. Make predictions on the test set using the trained model. Create a utility method called `ClassifySingleImage`. 
+
+```csharp
+public static void ClassifySingleImage(MLContext mlContext, IDataView data, ITransformer trainedModel)
+{
+    PredictionEngine<ModelInput, ModelOutput> predictionEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(trainedModel);
+
+    ModelInput image = mlContext.Data.CreateEnumerable<ModelInput>(data,reuseRowObject:true).First();
+
+    ModelOutput prediction = predictionEngine.Predict(image);
+
+    Console.WriteLine("Classifying single image");
+    OutputPrediction(prediction);
+}
+```
+
+1. Use the `ClassifySingleImage` inside of your application.
+
+```csharp
+ClassifySingleImage(mlContext, testSet, trainedModel);
+```
+
+### Classify multiple images
+
+1. Make predictions on the test set using the trained model. Create a utility method called `ClassifyImages`. 
 
 ```csharp
 public static void ClassifyImages(MLContext mlContext, IDataView data, ITransformer trainedModel)
@@ -181,10 +231,10 @@ public static void ClassifyImages(MLContext mlContext, IDataView data, ITransfor
 
     IEnumerable<ModelOutput> predictions = mlContext.Data.CreateEnumerable<ModelOutput>(predictionData, reuseRowObject: true).Take(10);
 
+    Console.WriteLine("Classifying multiple images");
     foreach (var prediction in predictions)
     {
-        string imageName = Path.GetFileName(prediction.ImagePath);
-        Console.WriteLine($"Image: {imageName} | Actual Value: {prediction.Label} | Predicted Value: {prediction.PredictedLabel}");
+        OutputPrediction(prediction);
     }
 }
 ```
@@ -192,7 +242,7 @@ public static void ClassifyImages(MLContext mlContext, IDataView data, ITransfor
 1. Use the `ClassifyImages` inside of your application.
 
 ```csharp
-ClassifyImages(mlContext, testSet, trainedModel);
+ClassifySingleImage(mlContext, testSet, trainedModel);
 ```
 
 ## Run the application
@@ -216,12 +266,19 @@ Phase: Training, Dataset used: Validation, Batch Processed Count:   6, Epoch:  2
 Phase: Training, Dataset used: Validation, Batch Processed Count:   6, Epoch:  23, Accuracy:  0.7916667
 ```
 
-### Classify Images Output
+### Classification Output
 
 ```text
+Classifying single image
 Image: 7001-220.jpg | Actual Value: UD | Predicted Value: UD
-Image: 7001-49.jpg | Actual Value: UD | Predicted Value: UD
-Image: 7004-167.jpg | Actual Value: CD | Predicted Value: UD
+
+Classifying multiple images
+Image: 7001-220.jpg | Actual Value: UD | Predicted Value: UD
+Image: 7001-163.jpg | Actual Value: UD | Predicted Value: UD
+Image: 7001-210.jpg | Actual Value: UD | Predicted Value: UD
+Image: 7004-125.jpg | Actual Value: CD | Predicted Value: UD
+Image: 7001-170.jpg | Actual Value: UD | Predicted Value: UD
+Image: 7001-77.jpg | Actual Value: UD | Predicted Value: UD
 ```
 
 ## Improve the model
