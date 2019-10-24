@@ -15,15 +15,21 @@ namespace RestaurantViolationsML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"RestaurantScores.tsv";
+        private static string TRAIN_DATA_FILEPATH = GetAbsolutePath(@"RestaurantScores.tsv");
         private static string MODEL_FILEPATH = @"../../../../RestaurantViolationsML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext(seed: 1);
 
-        public static void CreateModel()
+        public static async Task CreateModel()
         {
+            // Download Data
+            if(!File.Exists(TRAIN_DATA_FILEPATH))
+            {
+                await DownloadData();
+            }
+
             // Load Data
             IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
                                             path: TRAIN_DATA_FILEPATH,
@@ -53,11 +59,12 @@ namespace RestaurantViolationsML.ConsoleApp
 
                 using (var archive = new ZipArchive(response))
                 {
-                    ZipArchiveEntry file = archive.Entries.First();
-
-                    if(Path.GetExtension(file.FullName) == ".tsv")
+                    foreach(var file in archive.Entries)
                     {
-                        ZipFileExtensions.ExtractToFile(file, GetAbsolutePath(TRAIN_DATA_FILEPATH));
+                        if (Path.GetExtension(file.FullName) == ".tsv")
+                        {
+                            ZipFileExtensions.ExtractToFile(file, GetAbsolutePath(TRAIN_DATA_FILEPATH));
+                        }
                     }
                 }
             }

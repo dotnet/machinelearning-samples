@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.ML;
 using RestaurantViolationsML.Model;
 
@@ -10,10 +11,12 @@ namespace RestaurantViolationsML.ConsoleApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            //await ModelBuilder.CreateModel();
+
             // Create single instance of sample data from first line of dataset for model input
-            ModelInput sampleData = CreateSingleDataSample(DATA_FILEPATH);
+            ModelInput sampleData = CreateSingleDataSample();
 
             // Make a single prediction on the sample data and print results
             ModelOutput predictionResult = ConsumeModel.Predict(sampleData);
@@ -29,23 +32,17 @@ namespace RestaurantViolationsML.ConsoleApp
         // Change this code to create your own sample data
         #region CreateSingleDataSample
         // Method to load single row of dataset to try a single prediction
-        private static ModelInput CreateSingleDataSample(string dataFilePath)
+        private static ModelInput CreateSingleDataSample()
         {
-            // Create MLContext
-            MLContext mlContext = new MLContext();
-
-            // Load dataset
-            IDataView dataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-                                            path: dataFilePath,
-                                            hasHeader: true,
-                                            separatorChar: '\t',
-                                            allowQuoting: true,
-                                            allowSparse: false);
 
             // Use first line of dataset as model input
             // You can replace this with new test data (hardcoded or from end-user application)
-            ModelInput sampleForPrediction = mlContext.Data.CreateEnumerable<ModelInput>(dataView, false)
-                                                                        .First();
+            ModelInput sampleForPrediction = new ModelInput
+            {
+                InspectionType = "Complaint",
+                ViolationDescription = "Inadequate sewage or wastewater disposal"
+            };
+
             return sampleForPrediction;
         }
         #endregion
