@@ -18,6 +18,8 @@ namespace RestaurantViolations
             ModelOutput result = ConsumeModel.Predict(input);
 
             // Print Prediction
+            Console.WriteLine($"Inspection Type: {input.Inspection_type}");
+            Console.WriteLine($"Violation Description: {input.Violation_description}");
             Console.WriteLine($"Predicted risk category: {result.Prediction}");
             Console.ReadKey();
         }
