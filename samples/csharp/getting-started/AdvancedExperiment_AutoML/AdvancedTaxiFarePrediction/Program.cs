@@ -16,7 +16,7 @@ namespace AdvancedTaxiFarePrediction
 {
     internal static class Program
     {
-        private static string BaseDatasetsRelativePath = @"Data";
+        private static string BaseDatasetsRelativePath = "Data";
 
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
@@ -34,27 +34,27 @@ namespace AdvancedTaxiFarePrediction
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
-            MLContext mlContext = new MLContext();
+            var mlContext = new MLContext();
 
-            // Infer columns in the dataset with AutoML
+            // Infer columns in the dataset with AutoML.
             var columnInference = InferColumns(mlContext);
 
-            // Load data from files using inferred columns
+            // Load data from files using inferred columns.
             LoadData(mlContext, columnInference);
 
-            // Run an AutoML experiment on the dataset
+            // Run an AutoML experiment on the dataset.
             var experimentResult = RunAutoMLExperiment(mlContext, columnInference);
 
-            // Evaluate the model and print metrics
+            // Evaluate the model and print metrics.
             EvaluateModel(mlContext, experimentResult.BestRun.Model, experimentResult.BestRun.TrainerName);
 
-            // Save / persist the best model to a.ZIP file
+            // Save / persist the best model to a.ZIP file.
             SaveModel(mlContext, experimentResult.BestRun.Model);
 
-            // Make a single test prediction loading the model from .ZIP file
+            // Make a single test prediction loading the model from .ZIP file.
             TestSinglePrediction(mlContext);
 
-            // Paint regression distribution chart for a number of elements read from a Test DataSet file
+            // Paint regression distribution chart for a number of elements read from a Test DataSet file.
             PlotRegressionChart(mlContext, TestDataPath, 100, args);
 
             // Re-fit best pipeline on train and test data, to produce 
@@ -62,7 +62,7 @@ namespace AdvancedTaxiFarePrediction
             // This is the final model that can be deployed to production.
             var refitModel = RefitBestPipeline(mlContext, experimentResult, columnInference);
 
-            // Save the re-fit model to a.ZIP file
+            // Save the re-fit model to a.ZIP file.
             SaveModel(mlContext, refitModel);
 
             Console.WriteLine("Press any key to exit..");
@@ -93,7 +93,7 @@ namespace AdvancedTaxiFarePrediction
         private static ExperimentResult<RegressionMetrics> RunAutoMLExperiment(MLContext mlContext, 
             ColumnInferenceResults columnInference)
         {
-            // STEP 1: Display first few rows of the training data
+            // STEP 1: Display first few rows of the training data.
             ConsoleHelper.ShowDataViewInConsole(mlContext, TrainDataView);
 
             // STEP 2: Build a pre-featurizer for use in the AutoML experiment.
@@ -104,7 +104,7 @@ namespace AdvancedTaxiFarePrediction
             IEstimator<ITransformer> preFeaturizer = mlContext.Transforms.Conversion.MapValue("is_cash",
                 new[] { new KeyValuePair<string, bool>("CSH", true) }, "payment_type");
 
-            // STEP 3: Customize column information returned by InferColumns API
+            // STEP 3: Customize column information returned by InferColumns API.
             ColumnInformation columnInformation = columnInference.ColumnInformation;
             columnInformation.CategoricalColumnNames.Remove("payment_type");
             columnInformation.IgnoredColumnNames.Add("payment_type");
@@ -119,17 +119,17 @@ namespace AdvancedTaxiFarePrediction
             // STEP 6: Create experiment settings
             var experimentSettings = CreateExperimentSettings(mlContext, cts);
 
-            // STEP 7: Run AutoML regression experiment
+            // STEP 7: Run AutoML regression experiment.
             var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
             ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML regression experiment...");
             var stopwatch = Stopwatch.StartNew();
-            // Cancel experiment after the user presses any key
+            // Cancel experiment after the user presses any key.
             CancelExperimentAfterAnyKeyPress(cts);
             ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(TrainDataView, columnInformation, preFeaturizer, progressHandler);
             Console.WriteLine($"{experimentResult.RunDetails.Count()} models were returned after {stopwatch.Elapsed.TotalSeconds:0.00} seconds{Environment.NewLine}");
 
-            // Print top models found by AutoML
+            // Print top models found by AutoML.
             PrintTopModels(experimentResult);
 
             return experimentResult;
@@ -169,7 +169,7 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static void PrintTopModels(ExperimentResult<RegressionMetrics> experimentResult)
         {
-            // Get top few runs ranked by root mean squared error
+            // Get top few runs ranked by root mean squared error.
             var topRuns = experimentResult.RunDetails
                 .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.RootMeanSquaredError))
                 .OrderBy(r => r.ValidationMetrics.RootMeanSquaredError).Take(3);
@@ -214,14 +214,14 @@ namespace AdvancedTaxiFarePrediction
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Saving the model ===============");
             mlContext.Model.Save(model, TrainDataView.Schema, ModelPath);
-            Console.WriteLine("The model is saved to {0}", ModelPath);
+            Console.WriteLine($"The model is saved to {ModelPath}");
         }
 
         private static void CancelExperimentAfterAnyKeyPress(CancellationTokenSource cts)
         {
             Task.Run(() =>
             {
-                Console.WriteLine($"Press any key to stop the experiment run...");
+                Console.WriteLine("Press any key to stop the experiment run...");
                 Console.ReadKey();
                 cts.Cancel();
             });
@@ -248,15 +248,15 @@ namespace AdvancedTaxiFarePrediction
 
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
-            // Create prediction engine related to the loaded trained model
+            // Create prediction engine related to the loaded trained model.
             var predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
 
-            // Score
+            // Score.
             var predictedResult = predEngine.Predict(taxiTripSample);
 
-            Console.WriteLine($"**********************************************************************");
+            Console.WriteLine("**********************************************************************");
             Console.WriteLine($"Predicted fare: {predictedResult.FareAmount:0.####}, actual fare: 15.5");
-            Console.WriteLine($"**********************************************************************");
+            Console.WriteLine("**********************************************************************");
         }
 
         private static void PlotRegressionChart(MLContext mlContext,                                               
@@ -276,7 +276,7 @@ namespace AdvancedTaxiFarePrediction
             string chartFileName = "";
             using (var pl = new PLStream())
             {
-                // use SVG backend and write to SineWaves.svg in current directory
+                // use SVG backend and write to SineWaves.svg in current directory.
                 if (args.Length == 1 && args[0] == "svg")
                 {
                     pl.sdev("svg");
@@ -290,23 +290,23 @@ namespace AdvancedTaxiFarePrediction
                     pl.sfnam(chartFileName);
                 }
 
-                // use white background with black foreground
+                // use white background with black foreground.
                 pl.spal0("cmap0_alternate.pal");
 
-                // Initialize plplot
+                // Initialize plplot.
                 pl.init();
 
-                // Set axis limits
+                // Set axis limits.
                 const int xMinLimit = 0;
-                const int xMaxLimit = 35; // Rides larger than $35 are not shown in the chart
+                const int xMaxLimit = 35; // Rides larger than $35 are not shown in the chart.
                 const int yMinLimit = 0;
-                const int yMaxLimit = 35;  // Rides larger than $35 are not shown in the chart
+                const int yMaxLimit = 35;  // Rides larger than $35 are not shown in the chart.
                 pl.env(xMinLimit, xMaxLimit, yMinLimit, yMaxLimit, AxesScale.Independent, AxisBox.BoxTicksLabelsAxes);
 
-                // Set scaling for mail title text 125% size of default
+                // Set scaling for mail title text 125% size of default.
                 pl.schr(0, 1.25);
 
-                // The main title
+                // The main title.
                 pl.lab("Measured", "Predicted", "Distribution of Taxi Fare Prediction");
 
                 // plot using different colors
@@ -317,7 +317,7 @@ namespace AdvancedTaxiFarePrediction
                 var testData = new TaxiTripCsvReader().GetDataFromCsv(testDataSetPath, totalNumber).ToList();
 
                 // This code is the symbol to paint
-                char code = (char)9;
+                var code = (char)9;
 
                 // plot using other color
                 //pl.col0(9); //Light Green
@@ -334,11 +334,11 @@ namespace AdvancedTaxiFarePrediction
                     var x = new double[1];
                     var y = new double[1];
 
-                    // Make Prediction
-                    var FarePrediction = predFunction.Predict(testData[i]);
+                    // Make Prediction.
+                    var farePrediction = predFunction.Predict(testData[i]);
 
                     x[0] = testData[i].FareAmount;
-                    y[0] = FarePrediction.FareAmount;
+                    y[0] = farePrediction.FareAmount;
 
                     // Paint a dot
                     pl.poin(x, y, code);
@@ -354,10 +354,10 @@ namespace AdvancedTaxiFarePrediction
 
                     double ySquare = y[0] * y[0];
 
-                    Console.WriteLine($"-------------------------------------------------");
-                    Console.WriteLine($"Predicted : {FarePrediction.FareAmount}");
+                    Console.WriteLine("-------------------------------------------------");
+                    Console.WriteLine($"Predicted : {farePrediction.FareAmount}");
                     Console.WriteLine($"Actual:    {testData[i].FareAmount}");
-                    Console.WriteLine($"-------------------------------------------------");
+                    Console.WriteLine("-------------------------------------------------");
                 }
 
                 // Regression Line calculation explanation:
@@ -418,7 +418,7 @@ namespace AdvancedTaxiFarePrediction
 
         public static string GetAbsolutePath(string relativePath)
         {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
