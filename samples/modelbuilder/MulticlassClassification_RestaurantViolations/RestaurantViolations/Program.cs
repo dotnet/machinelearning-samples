@@ -10,8 +10,8 @@ namespace RestaurantViolations
             // Create sample data
             ModelInput input = new ModelInput
             {
-                Inspection_type = "Routine - Unscheduled",
-                Violation_description = "Wiping cloths not clean or properly stored or inadequate sanitizer"
+                Inspection_type = "Complaint",
+                Violation_description = "Inadequate sewage or wastewater disposal"
             };
 
             // Make prediction

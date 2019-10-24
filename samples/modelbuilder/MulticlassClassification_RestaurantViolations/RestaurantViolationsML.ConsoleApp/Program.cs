@@ -13,7 +13,7 @@ namespace RestaurantViolationsML.ConsoleApp
     {
         static async Task Main(string[] args)
         {
-            await ModelBuilder.CreateModel();
+            //await ModelBuilder.CreateModel();
 
             // Create single instance of sample data from first line of dataset for model input
             ModelInput sampleData = CreateSingleDataSample();
@@ -36,11 +36,10 @@ namespace RestaurantViolationsML.ConsoleApp
         {
             // Use first line of dataset as model input
             // You can replace this with new test data (hardcoded or from end-user application)
-            // Create sample data
             ModelInput sampleForPrediction = new ModelInput
             {
-                Inspection_type = "Routine - Unscheduled",
-                Violation_description = "Wiping cloths not clean or properly stored or inadequate sanitizer"
+                Inspection_type = "Complaint",
+                Violation_description = "Inadequate sewage or wastewater disposal"
             };
 
             return sampleForPrediction;

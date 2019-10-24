@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace RestaurantViolationsML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"Restaurant_Scores_-_LIVES_Standard.csv";
+        private static string TRAIN_DATA_FILEPATH = @"RestaurantScores.csv";
         private static string MODEL_FILEPATH = @"../../../../RestaurantViolationsML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
@@ -23,6 +24,7 @@ namespace RestaurantViolationsML.ConsoleApp
 
         public static async Task CreateModel()
         {
+            //Download Data
             await DownloadData();
 
             // Load Data
@@ -50,15 +52,20 @@ namespace RestaurantViolationsML.ConsoleApp
         {
             using (var client = new HttpClient())
             {
-                var response = await client.GetStreamAsync("https://data.sfgov.org/api/views/pyih-qa8i/rows.csv?accessType=DOWNLOAD");
+                var response = await client.GetStreamAsync("https://github.com/luisquintanilla/machinelearning-samples/raw/AB1608219/samples/modelbuilder/MulticlassClassification_RestaurantViolations/RestaurantScores.zip");
 
-                using (var sr = new StreamReader(response))
+                using (var archive = new ZipArchive(response))
                 {
-                    var data = await sr.ReadToEndAsync();
+                    var file = archive.Entries.First();
 
-                    using (var sw = new StreamWriter(GetAbsolutePath(TRAIN_DATA_FILEPATH)))
+                    using (var sr = new StreamReader(file.Open()))
                     {
-                        sw.Write(data);
+                        var data = await sr.ReadToEndAsync();
+
+                        using (var sw = new StreamWriter(GetAbsolutePath(TRAIN_DATA_FILEPATH)))
+                        {
+                            sw.Write(data);
+                        }
                     }
                 }
             }
