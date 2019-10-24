@@ -13,7 +13,7 @@ Create a C# .NET Core Console application that uses an ML.NET multiclass classif
 
 ## Application
 
-- RestaurantViolations:  A .NET Core Console application that uses a multiclass classification model to assign risk to violations encountered during restaurant inspections.
+- RestaurantViolations:  A C# .NET Core Console application that uses a multiclass classification model to assign risk to violations encountered during restaurant inspections.
 - RestaurantViolationsML.ConsoleApp: A .NET Core Console application that contains the model training and test prediction code.
 - RestaurantViolationsML.Model: A .NET Standard class library containing the data models that define the schema of input and output model data as well as the persisted version of the best performing model during training.
 
