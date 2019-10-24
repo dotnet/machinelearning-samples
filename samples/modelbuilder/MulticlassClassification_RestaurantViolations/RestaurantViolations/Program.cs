@@ -10,7 +10,6 @@ namespace RestaurantViolations
             // Create sample data
             ModelInput input = new ModelInput
             {
-                Violation_id = "80137_20161005_103149",
                 Inspection_type = "Routine - Unscheduled",
                 Violation_description = "Wiping cloths not clean or properly stored or inadequate sanitizer"
             };
@@ -19,7 +18,7 @@ namespace RestaurantViolations
             ModelOutput result = ConsumeModel.Predict(input);
 
             // Print Prediction
-            Console.WriteLine($"Risk Category: {result.Prediction}");
+            Console.WriteLine($"Predicted risk category: {result.Prediction}");
             Console.ReadKey();
         }
     }

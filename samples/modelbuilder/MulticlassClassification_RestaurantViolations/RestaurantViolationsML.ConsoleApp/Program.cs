@@ -11,9 +11,6 @@ namespace RestaurantViolationsML.ConsoleApp
 {
     class Program
     {
-        //Dataset to use for predictions 
-        private const string DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\Downloads\Restaurant_Scores_-_LIVES_Standard.csv";
-
         static async Task Main(string[] args)
         {
             await ModelBuilder.CreateModel();
@@ -39,6 +36,7 @@ namespace RestaurantViolationsML.ConsoleApp
         {
             // Use first line of dataset as model input
             // You can replace this with new test data (hardcoded or from end-user application)
+            // Create sample data
             ModelInput sampleForPrediction = new ModelInput
             {
                 Inspection_type = "Routine - Unscheduled",

@@ -15,15 +15,14 @@ namespace RestaurantViolationsML.ConsoleApp
     public static class ModelBuilder
     {
         private static string TRAIN_DATA_FILEPATH = @"Restaurant_Scores_-_LIVES_Standard.csv";
-        private static string MODEL_FILEPATH = @"../../../../RestaurantViolations.Model/MLModel.zip";
+        private static string MODEL_FILEPATH = @"../../../../RestaurantViolationsML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext(seed: 1);
 
-        public async Task CreateModel()
+        public static async Task CreateModel()
         {
-            // Download Data
             await DownloadData();
 
             // Load Data
