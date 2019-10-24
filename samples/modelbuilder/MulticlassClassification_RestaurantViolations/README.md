@@ -7,7 +7,7 @@
 
 ## Goal
 
-Create a .NET Core Console application that uses an ML.NET multiclass classification machine learning model trained using Model Builder to categorize the risk level of restaurant violations found during health inspections.
+Create a C# .NET Core Console application that uses an ML.NET multiclass classification machine learning model trained using Model Builder to categorize the risk level of restaurant violations found during health inspections.
 
 ![](./images/console.PNG)
 
