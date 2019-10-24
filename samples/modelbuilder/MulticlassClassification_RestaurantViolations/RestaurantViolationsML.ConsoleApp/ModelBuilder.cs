@@ -15,23 +15,20 @@ namespace RestaurantViolationsML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"RestaurantScores.csv";
+        private static string TRAIN_DATA_FILEPATH = @"RestaurantScores.tsv";
         private static string MODEL_FILEPATH = @"../../../../RestaurantViolationsML.Model/MLModel.zip";
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext(seed: 1);
 
-        public static async Task CreateModel()
+        public static void CreateModel()
         {
-            //Download Data
-            await DownloadData();
-
             // Load Data
             IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
                                             path: TRAIN_DATA_FILEPATH,
                                             hasHeader: true,
-                                            separatorChar: ',',
+                                            separatorChar: '\t',
                                             allowQuoting: true,
                                             allowSparse: false);
 
@@ -56,16 +53,11 @@ namespace RestaurantViolationsML.ConsoleApp
 
                 using (var archive = new ZipArchive(response))
                 {
-                    var file = archive.Entries.First();
+                    ZipArchiveEntry file = archive.Entries.First();
 
-                    using (var sr = new StreamReader(file.Open()))
+                    if(Path.GetExtension(file.FullName) == ".tsv")
                     {
-                        var data = await sr.ReadToEndAsync();
-
-                        using (var sw = new StreamWriter(GetAbsolutePath(TRAIN_DATA_FILEPATH)))
-                        {
-                            sw.Write(data);
-                        }
+                        ZipFileExtensions.ExtractToFile(file, GetAbsolutePath(TRAIN_DATA_FILEPATH));
                     }
                 }
             }
@@ -74,14 +66,14 @@ namespace RestaurantViolationsML.ConsoleApp
         public static IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations 
-            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("risk_category", "risk_category")
-                                      .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[] { new InputOutputColumnPair("inspection_type", "inspection_type"), new InputOutputColumnPair("violation_description", "violation_description") }))
-                                      .Append(mlContext.Transforms.Concatenate("Features", new[] { "inspection_type", "violation_description" }))
+            var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("RiskCategory", "RiskCategory")
+                                      .Append(mlContext.Transforms.Categorical.OneHotEncoding(new[] { new InputOutputColumnPair("InspectionType", "InspectionType"), new InputOutputColumnPair("ViolationDescription", "ViolationDescription") }))
+                                      .Append(mlContext.Transforms.Concatenate("Features", new[] { "InspectionType", "ViolationDescription" }))
                                       .Append(mlContext.Transforms.NormalizeMinMax("Features", "Features"))
                                       .AppendCacheCheckpoint(mlContext);
 
             // Set the training algorithm 
-            var trainer = mlContext.MulticlassClassification.Trainers.OneVersusAll(mlContext.BinaryClassification.Trainers.AveragedPerceptron(labelColumnName: "risk_category", numberOfIterations: 10, featureColumnName: "Features"), labelColumnName: "risk_category")
+            var trainer = mlContext.MulticlassClassification.Trainers.OneVersusAll(mlContext.BinaryClassification.Trainers.AveragedPerceptron(labelColumnName: "RiskCategory", numberOfIterations: 10, featureColumnName: "Features"), labelColumnName: "RiskCategory")
                                       .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel", "PredictedLabel"));
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
@@ -103,7 +95,7 @@ namespace RestaurantViolationsML.ConsoleApp
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "risk_category");
+            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "RiskCategory");
             PrintMulticlassClassificationFoldsAverageMetrics(crossValidationResults);
         }
         private static void SaveModel(MLContext mlContext, ITransformer mlModel, string modelRelativePath, DataViewSchema modelInputSchema)

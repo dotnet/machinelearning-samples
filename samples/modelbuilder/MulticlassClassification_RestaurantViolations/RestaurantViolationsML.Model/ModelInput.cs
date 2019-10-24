@@ -6,16 +6,16 @@ namespace RestaurantViolationsML.Model
 {
     public class ModelInput
     {
-        [ColumnName("inspection_type"), LoadColumn(0)]
-        public string Inspection_type { get; set; }
+        [ColumnName("InspectionType"), LoadColumn(0)]
+        public string InspectionType { get; set; }
 
 
-        [ColumnName("violation_description"), LoadColumn(1)]
-        public string Violation_description { get; set; }
+        [ColumnName("ViolationDescription"), LoadColumn(1)]
+        public string ViolationDescription { get; set; }
 
 
-        [ColumnName("risk_category"), LoadColumn(2)]
-        public string Risk_category { get; set; }
+        [ColumnName("RiskCategory"), LoadColumn(2)]
+        public string RiskCategory { get; set; }
 
 
     }

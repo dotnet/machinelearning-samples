@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.ML;
 using RestaurantViolationsML.Model;
 
@@ -11,20 +10,18 @@ namespace RestaurantViolationsML.ConsoleApp
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            //await ModelBuilder.CreateModel();
-
             // Create single instance of sample data from first line of dataset for model input
-            ModelInput sampleData = CreateSingleDataSample();
+            ModelInput sampleData = CreateSingleDataSample(DATA_FILEPATH);
 
             // Make a single prediction on the sample data and print results
             ModelOutput predictionResult = ConsumeModel.Predict(sampleData);
 
-            Console.WriteLine("Using model to make single prediction -- Comparing actual Risk_category with predicted Risk_category from sample data...\n\n");
-            Console.WriteLine($"inspection_type: {sampleData.Inspection_type}");
-            Console.WriteLine($"violation_description: {sampleData.Violation_description}");
-            Console.WriteLine($"\n\nActual Risk_category: {sampleData.Risk_category} \nPredicted Risk_category value {predictionResult.Prediction} \nPredicted Risk_category scores: [{String.Join(",", predictionResult.Score)}]\n\n");
+            Console.WriteLine("Using model to make single prediction -- Comparing actual RiskCategory with predicted RiskCategory from sample data...\n\n");
+            Console.WriteLine($"InspectionType: {sampleData.InspectionType}");
+            Console.WriteLine($"ViolationDescription: {sampleData.ViolationDescription}");
+            Console.WriteLine($"\n\nActual RiskCategory: {sampleData.RiskCategory} \nPredicted RiskCategory value {predictionResult.Prediction} \nPredicted RiskCategory scores: [{String.Join(",", predictionResult.Score)}]\n\n");
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
         }
@@ -32,16 +29,23 @@ namespace RestaurantViolationsML.ConsoleApp
         // Change this code to create your own sample data
         #region CreateSingleDataSample
         // Method to load single row of dataset to try a single prediction
-        private static ModelInput CreateSingleDataSample()
+        private static ModelInput CreateSingleDataSample(string dataFilePath)
         {
+            // Create MLContext
+            MLContext mlContext = new MLContext();
+
+            // Load dataset
+            IDataView dataView = mlContext.Data.LoadFromTextFile<ModelInput>(
+                                            path: dataFilePath,
+                                            hasHeader: true,
+                                            separatorChar: '\t',
+                                            allowQuoting: true,
+                                            allowSparse: false);
+
             // Use first line of dataset as model input
             // You can replace this with new test data (hardcoded or from end-user application)
-            ModelInput sampleForPrediction = new ModelInput
-            {
-                Inspection_type = "Complaint",
-                Violation_description = "Inadequate sewage or wastewater disposal"
-            };
-
+            ModelInput sampleForPrediction = mlContext.Data.CreateEnumerable<ModelInput>(dataView, false)
+                                                                        .First();
             return sampleForPrediction;
         }
         #endregion
