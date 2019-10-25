@@ -44,9 +44,39 @@ namespace Forecasting_BikeSharingDemand
 
             SsaForecastingTransformer forecaster = forecastingPipeline.Fit(firstYearData);
 
+            Evaluate(secondYearData, 7, forecaster, mlContext);
+
             Forecast(secondYearData, 7, forecaster, mlContext);
 
             Console.ReadKey();
+        }
+
+        private static void Evaluate(IDataView testData, int horizon, ITransformer model, MLContext mlContext)
+        {
+
+            TimeSeriesPredictionEngine<ModelInput, ModelOutput> forecaster =
+                model.CreateTimeSeriesEngine<ModelInput, ModelOutput>(mlContext);
+
+            //var startDate = new DateTime(2011, 12, 31);
+            //var endDate = new DateTime(2012, 12, 23);
+
+            var metrics = mlContext.Data.CreateEnumerable<ModelInput>(testData, reuseRowObject: true)
+                //.Where(rental => rental.RentalDate > startDate)
+                .Select(rental =>
+                {
+                    var prediction = forecaster.Predict(rental).ForecastedDemand[0];
+                    var ad = Math.Abs(rental.TotalRentals - prediction);
+                    var ape = Math.Abs(ad / rental.TotalRentals);
+                    return new { ad = ad, ape = ape };
+                });
+
+
+            var MAPE = metrics.Average(x => x.ape);
+            var MAD = metrics.Average(x => x.ad);
+
+            Console.WriteLine(metrics.Count());
+
+            Console.WriteLine($"MAPE: {MAPE}, MAD: {MAD}");
         }
 
         private static void Forecast(IDataView testData, int horizon, ITransformer model, MLContext mlContext)
