@@ -153,6 +153,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScalableMLModelAzure.Soluti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysisFunctionsApp", "end-to-end-apps\ScalableMLModelOnAzureFunction\SentimentAnalysisFunctionsApp\SentimentAnalysisFunctionsApp.csproj", "{3E93581D-666B-4E34-8E38-D33168EA6D8C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewsArticlesClustering.Solution", "NewsArticlesClustering.Solution", "{88669E3C-9AD1-4B6E-9A07-0D030B908804}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClusteringNewsArticles.Train", "getting-started\Clustering_NewsArticles\ClusteringNewsArticles.Train\ClusteringNewsArticles.Train.csproj", "{5DB1928D-0B12-49D7-BADA-18B628AE2C18}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClusteringNewsArticles.Perdict", "getting-started\Clustering_NewsArticles\ClusteringNewsArticles.Perdict\ClusteringNewsArticles.Perdict.csproj", "{5FA25120-7162-4254-A7EF-81838F826457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -513,6 +519,22 @@ Global
 		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|x64.ActiveCfg = Release|Any CPU
 		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|x64.Build.0 = Release|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Debug|x64.Build.0 = Debug|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Release|x64.ActiveCfg = Release|Any CPU
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18}.Release|x64.Build.0 = Release|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Debug|x64.Build.0 = Debug|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Release|x64.ActiveCfg = Release|Any CPU
+		{5FA25120-7162-4254-A7EF-81838F826457}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -562,6 +584,8 @@ Global
 		{B42F17AE-5370-4E7D-B1B9-CC283ACEE2BC} = {997F44A3-D9E4-4A6E-A61C-12AD97A3AE40}
 		{32E73B92-57E9-4B62-A27F-5FBB53A5143C} = {997F44A3-D9E4-4A6E-A61C-12AD97A3AE40}
 		{3E93581D-666B-4E34-8E38-D33168EA6D8C} = {0EBCD944-E7C8-44CF-B258-615BC90381E9}
+		{5DB1928D-0B12-49D7-BADA-18B628AE2C18} = {88669E3C-9AD1-4B6E-9A07-0D030B908804}
+		{5FA25120-7162-4254-A7EF-81838F826457} = {88669E3C-9AD1-4B6E-9A07-0D030B908804}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}

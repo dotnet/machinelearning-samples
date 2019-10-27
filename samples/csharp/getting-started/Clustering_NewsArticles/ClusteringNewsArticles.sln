@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.138
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusteringNewsArticles.Train", "ClusteringNewsArticles.Train\ClusteringNewsArticles.Train.csproj", "{EE6C2387-D712-4383-B451-CB4F1261EBE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusteringNewsArticles.Perdict", "ClusteringNewsArticles.Perdict\ClusteringNewsArticles.Perdict.csproj", "{351DC3EE-5749-4AA4-941E-85638184E269}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE6C2387-D712-4383-B451-CB4F1261EBE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE6C2387-D712-4383-B451-CB4F1261EBE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE6C2387-D712-4383-B451-CB4F1261EBE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE6C2387-D712-4383-B451-CB4F1261EBE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{351DC3EE-5749-4AA4-941E-85638184E269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351DC3EE-5749-4AA4-941E-85638184E269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351DC3EE-5749-4AA4-941E-85638184E269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351DC3EE-5749-4AA4-941E-85638184E269}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB0E1BEB-5B50-40E1-947C-6C492D4FB3C1}
+	EndGlobalSection
+EndGlobal
