@@ -31,12 +31,11 @@ namespace RestaurantViolationsML.ConsoleApp
 
         // Change this code to create your own sample data
         #region CreateSingleDataSample
-        // Method to load single row of dataset to try a single prediction
+        // Method to load single data sample to try a single prediction
         private static ModelInput CreateSingleDataSample()
         {
 
-            // Use first line of dataset as model input
-            // You can replace this with new test data (hardcoded or from end-user application)
+            // Use new test data
             ModelInput sampleForPrediction = new ModelInput
             {
                 InspectionType = "Complaint",
