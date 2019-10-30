@@ -38,7 +38,7 @@ namespace Forecasting_BikeSharingDemand
                 seriesLength: 30,
                 trainSize: 365,
                 horizon: 7,
-                confidenceLevel: 0.90f,
+                confidenceLevel: 0.95f,
                 confidenceLowerBoundColumn: "LowerBoundRentals",
                 confidenceUpperBoundColumn: "UpperBoundRentals");
 
@@ -57,19 +57,17 @@ namespace Forecasting_BikeSharingDemand
             IDataView predictions = model.Transform(testData);
 
             // Actual values
-            IEnumerable<ModelInput> actual = mlContext.Data.CreateEnumerable<ModelInput>(testData, true);
+            IEnumerable<float> actual = 
+                mlContext.Data.CreateEnumerable<ModelInput>(testData, true)
+                    .Select(observed => observed.TotalRentals);
 
             // Predicted values
-            IEnumerable<ModelOutput> forecast = mlContext.Data.CreateEnumerable<ModelOutput>(predictions, true);
+            IEnumerable<float> forecast =
+                mlContext.Data.CreateEnumerable<ModelOutput>(predictions, true)
+                    .Select(prediction => prediction.ForecastedRentals[0]);
 
             // Calculate error (actual - forecast)
-            var metrics = actual.Zip(forecast, (actualValue, forecastValue) =>
-                 {
-                     var prediction = forecastValue.ForecastedRentals[0];
-                     var error = actualValue.TotalRentals - forecastValue.ForecastedRentals[0];
-                     return error;
-                 }
-            );
+            var metrics = actual.Zip(forecast, (actualValue, forecastValue) => actualValue - forecastValue);
             
             // Get metric averages
             var MAE = metrics.Average(error => Math.Abs(error)); // Mean Absolute Error
