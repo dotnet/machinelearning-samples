@@ -46,8 +46,9 @@ Database Loader provides a simple API to read data from relational databases dir
 To load data, you need to provide a connection string and a SQL command to get data from the database.
 
 ```csharp
-string dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "DailyDemand.mdf");
-var connectionString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Integrated Security=True;Connect Timeout=30";
+string rootDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../"));
+string dbFilePath = Path.Combine(rootDir, "Data", "DailyDemand.mdf");
+var connectionString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Integrated Security=True;Connect Timeout=30;";
 
 MLContext mlContext = new MLContext();
 DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<ModelInput>();
