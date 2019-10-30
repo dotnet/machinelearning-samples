@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Common;
-using CsvHelper;
-using CsvHelper.Configuration.Attributes;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.Text;
-using Newtonsoft.Json.Schema;
 
 namespace ClusteringNewsArticles.Train
 {
