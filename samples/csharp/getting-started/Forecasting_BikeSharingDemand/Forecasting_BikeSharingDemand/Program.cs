@@ -14,6 +14,7 @@ namespace Forecasting_BikeSharingDemand
         static void Main(string[] args)
         {
             string dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "DailyDemand.mdf");
+            string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MLModel.zip");
             var connectionString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Integrated Security=True;Connect Timeout=30";
 
             MLContext mlContext = new MLContext();
@@ -46,8 +47,11 @@ namespace Forecasting_BikeSharingDemand
 
             Evaluate(secondYearData, forecaster, mlContext);
 
-            Forecast(secondYearData, 7, forecaster, mlContext);
+            var forecastEngine = forecaster.CreateTimeSeriesEngine<ModelInput, ModelOutput>(mlContext);
+            forecastEngine.CheckPoint(mlContext, modelPath);
 
+            Forecast(secondYearData, 7, forecastEngine, mlContext);
+            
             Console.ReadKey();
         }
 
@@ -80,10 +84,8 @@ namespace Forecasting_BikeSharingDemand
             Console.WriteLine($"Root Mean Squared Error: {RMSE:F3}\n");
         }
 
-        private static void Forecast(IDataView testData, int horizon, ITransformer model, MLContext mlContext)
+        private static void Forecast(IDataView testData, int horizon, TimeSeriesPredictionEngine<ModelInput,ModelOutput> forecaster, MLContext mlContext)
         {
-            TimeSeriesPredictionEngine<ModelInput, ModelOutput> forecaster =
-                model.CreateTimeSeriesEngine<ModelInput, ModelOutput>(mlContext);
 
             ModelOutput forecast = forecaster.Predict();
 
