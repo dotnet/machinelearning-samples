@@ -5,6 +5,8 @@
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.3.1           | Up-to-date | Console App | Single data sample | Issue Classification | Multiclass classification | Linear Classification |
 
+For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/health-violation-classification-model-builder) on the Microsoft Docs site.
+
 ## Goal
 
 Create a C# .NET Core Console application that uses an ML.NET multiclass classification machine learning model trained using Model Builder to categorize the risk level of restaurant violations found during health inspections.
