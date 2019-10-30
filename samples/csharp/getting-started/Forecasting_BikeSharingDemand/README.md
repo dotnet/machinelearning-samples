@@ -71,3 +71,34 @@ The ML Task for this sample is forecasting, which is a supervised machine learni
 To solve this problem, you build and train an ML model on existing training data, evaluate how good it is (analyzing the obtained metrics), and lastly you can consume/test the model to predict the demand given input data variables.
 
 ![Build -> Train -> Evaluate -> Consume](../shared_content/modelpipeline.png)
+
+## Sample Output
+
+When you run the application, you should see output similar to the following:
+
+```text
+Evaluation Metrics
+---------------------
+Mean Absolute Error: 726.416
+Root Mean Squared Error: 987.658
+
+Rental Forecast
+---------------------
+Date: 1/1/2012
+Actual Rentals: 2294
+Lower Estimate: 1197.842
+Forecast: 2334.443
+Upper Estimate: 3471.044
+
+Date: 1/2/2012
+Actual Rentals: 1951
+Lower Estimate: 1148.412
+Forecast: 2360.861
+Upper Estimate: 3573.309
+
+Date: 1/3/2012
+Actual Rentals: 2236
+Lower Estimate: 1068.507
+Forecast: 2373.277
+Upper Estimate: 3678.046
+```
