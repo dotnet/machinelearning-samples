@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
 using Microsoft.ML;
 using ImageClassification.WebApp.ML.DataModels;
+using ImageClassification.DataModels;
 
 namespace ImageClassification.WebApp
 {

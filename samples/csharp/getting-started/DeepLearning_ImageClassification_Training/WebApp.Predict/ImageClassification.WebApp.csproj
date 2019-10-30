@@ -21,4 +21,9 @@
     <Folder Include="ImageHelpers\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageClassification.Shared\ImageClassification.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

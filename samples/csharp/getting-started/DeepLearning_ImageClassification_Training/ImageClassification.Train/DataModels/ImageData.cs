@@ -1,16 +1,16 @@
-﻿using Microsoft.ML.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace ImageClassification.DataModels
+﻿namespace ImageClassification.DataModels
 {
     public class ImageData
     {
-        public string ImagePath;
+        public ImageData(string imagePath, string label)
+        {
+            ImagePath = imagePath;
+            Label = label;
+        }
 
-        public string Label;
+        public readonly string ImagePath;
+
+        public readonly string Label;
     }
 
 }

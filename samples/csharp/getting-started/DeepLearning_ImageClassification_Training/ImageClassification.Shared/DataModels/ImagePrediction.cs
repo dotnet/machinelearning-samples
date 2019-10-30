@@ -1,9 +1,6 @@
 ﻿using Microsoft.ML.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ImageClassification.WebApp.ML.DataModels
+namespace ImageClassification.DataModels
 {
     public class ImagePrediction
     {

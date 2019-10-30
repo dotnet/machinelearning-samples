@@ -12,6 +12,8 @@ using Microsoft.Extensions.ML;
 using ImageClassification.WebApp;
 using ImageClassification.WebApp.ImageHelpers;
 using ImageClassification.WebApp.ML.DataModels;
+using ImageClassification.DataModels;
+using ImageClassification;
 
 namespace TensorFlowImageClassification.Controllers
 {
@@ -47,7 +49,7 @@ namespace TensorFlowImageClassification.Controllers
             await imageFile.CopyToAsync(imageMemoryStream);
 
             // Check that the image is valid.
-            byte[] imageData = imageMemoryStream.ToArray();
+            var imageData = imageMemoryStream.ToArray();
             if (!imageData.IsValidImage())
                 return StatusCode(StatusCodes.Status415UnsupportedMediaType);
 
@@ -57,7 +59,7 @@ namespace TensorFlowImageClassification.Controllers
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             // Set the specific image data into the ImageInputData type used in the DataView.
-            var imageInputData = new InMemoryImageData { Image = imageData };
+            var imageInputData = new InMemoryImageData(image: imageData, label: null, imageFileName: null);
 
             // Predict code for provided image.
             var prediction = _predictionEnginePool.Predict(imageInputData);
@@ -68,32 +70,24 @@ namespace TensorFlowImageClassification.Controllers
             _logger.LogInformation($"Image processed in {elapsedMs} miliseconds");
 
             // Predict the image's label (The one with highest probability).
-            ImagePredictedLabelWithProbability imageBestLabelPrediction =
-                        new ImagePredictedLabelWithProbability()
-                        {  
-                            PredictedLabel = prediction.PredictedLabel,
-                            Probability = prediction.Score.Max(),
-                            PredictionExecutionTime = elapsedMs,
-                            ImageId = imageFile.FileName
-                        };
+            var imageBestLabelPrediction =
+                new ImagePredictedLabelWithProbability
+                {  
+                    PredictedLabel = prediction.PredictedLabel,
+                    Probability = prediction.Score.Max(),
+                    PredictionExecutionTime = elapsedMs,
+                    ImageId = imageFile.FileName,
+                };
 
             return Ok(imageBestLabelPrediction);
         }
 
         public static string GetAbsolutePath(string relativePath)
-        {
-            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-            string assemblyFolderPath = _dataRoot.Directory.FullName;
-
-            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
-            return fullPath;
-        }
+            => FileUtils.GetAbsolutePath(typeof(Program).Assembly, relativePath);
 
         // GET api/ImageClassification
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
-        {
-            return new string[] { "ACK Heart beat 1", "ACK Heart beat 2" };
-        }
+            => new string[] { "ACK Heart beat 1", "ACK Heart beat 2" };
     }
 }
