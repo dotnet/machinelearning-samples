@@ -32,51 +32,54 @@ namespace Forecasting_BikeSharingDemand
             IDataView secondYearData = mlContext.Data.FilterRowsByColumn(dataView, "Year", lowerBound: 1);
 
             var forecastingPipeline = mlContext.Forecasting.ForecastBySsa(
-                outputColumnName: "ForecastedDemand",
+                outputColumnName: "ForecastedRentals",
                 inputColumnName: "TotalRentals",
                 windowSize: 7,
                 seriesLength: 30,
                 trainSize: 365,
                 horizon: 7,
                 confidenceLevel: 0.90f,
-                confidenceLowerBoundColumn: "ConfidenceLowerBound",
-                confidenceUpperBoundColumn: "ConfidenceUpperBound");
+                confidenceLowerBoundColumn: "LowerBoundRentals",
+                confidenceUpperBoundColumn: "UpperBoundRentals");
 
             SsaForecastingTransformer forecaster = forecastingPipeline.Fit(firstYearData);
 
-            Evaluate(secondYearData, 7, forecaster, mlContext);
+            Evaluate(secondYearData, forecaster, mlContext);
 
             Forecast(secondYearData, 7, forecaster, mlContext);
 
             Console.ReadKey();
         }
 
-        private static void Evaluate(IDataView testData, int horizon, ITransformer model, MLContext mlContext)
+        private static void Evaluate(IDataView testData, ITransformer model, MLContext mlContext)
         {
+            // Make predictions
+            IDataView predictions = model.Transform(testData);
 
-            TimeSeriesPredictionEngine<ModelInput, ModelOutput> forecaster =
-                model.CreateTimeSeriesEngine<ModelInput, ModelOutput>(mlContext);
+            // Actual values
+            IEnumerable<ModelInput> actual = mlContext.Data.CreateEnumerable<ModelInput>(testData, true);
 
-            //var startDate = new DateTime(2011, 12, 31);
-            //var endDate = new DateTime(2012, 12, 23);
+            // Predicted values
+            IEnumerable<ModelOutput> forecast = mlContext.Data.CreateEnumerable<ModelOutput>(predictions, true);
 
-            var metrics = mlContext.Data.CreateEnumerable<ModelInput>(testData, reuseRowObject: true)
-                //.Where(rental => rental.RentalDate > startDate)
-                .Select(rental =>
-                {
-                    var prediction = forecaster.Predict(rental).ForecastedDemand[0];
-                    var ad = Math.Abs(rental.TotalRentals - prediction);
-                    var ape = Math.Abs(ad / rental.TotalRentals);
-                    return new { ad = ad, ape = ape };
-                });
+            // Calculate error (actual - forecast)
+            var metrics = actual.Zip(forecast, (actualValue, forecastValue) =>
+                 {
+                     var prediction = forecastValue.ForecastedRentals[0];
+                     var error = actualValue.TotalRentals - forecastValue.ForecastedRentals[0];
+                     return error;
+                 }
+            );
+            
+            // Get metric averages
+            var MAE = metrics.Average(error => Math.Abs(error)); // Mean Absolute Error
+            var RMSE = Math.Sqrt(metrics.Average(error => Math.Pow(error, 2))); // Root Mean Squared Error
 
-
-            var MAPE = metrics.Average(x => x.ape);
-            var MAD = metrics.Average(x => x.ad);
-
-            Console.WriteLine(metrics.Count());
-
-            Console.WriteLine($"MAPE: {MAPE}, MAD: {MAD}");
+            // Output metrics
+            Console.WriteLine("Evaluation Metrics");
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"Mean Absolute Error: {MAE:F3}"); 
+            Console.WriteLine($"Root Mean Squared Error: {RMSE:F3}\n");
         }
 
         private static void Forecast(IDataView testData, int horizon, ITransformer model, MLContext mlContext)
@@ -93,9 +96,9 @@ namespace Forecasting_BikeSharingDemand
                     {
                         string rentalDate = rental.RentalDate.ToShortDateString();
                         float actualRentals = rental.TotalRentals;
-                        float lowerEstimate = Math.Max(0, forecast.ConfidenceLowerBound[index]);
-                        float estimate = forecast.ForecastedDemand[index];
-                        float upperEstimate = forecast.ConfidenceUpperBound[index];
+                        float lowerEstimate = Math.Max(0, forecast.LowerBoundRentals[index]);
+                        float estimate = forecast.ForecastedRentals[index];
+                        float upperEstimate = forecast.UpperBoundRentals[index];
                         return $"Date: {rentalDate}\n" +
                         $"Actual Rentals: {actualRentals}\n" +
                         $"Lower Estimate: {lowerEstimate}\n" +
@@ -105,11 +108,10 @@ namespace Forecasting_BikeSharingDemand
 
             // Output predictions
             Console.WriteLine("Rental Forecast");
-            Console.WriteLine("---------------------\n");
+            Console.WriteLine("---------------------");
             foreach (var prediction in forecastOutput)
             {
                 Console.WriteLine(prediction);
-                Console.WriteLine("---------------------\n");
             }
         }
     }
@@ -125,10 +127,10 @@ namespace Forecasting_BikeSharingDemand
 
     public class ModelOutput
     {
-        public float[] ForecastedDemand { get; set; }
+        public float[] ForecastedRentals { get; set; }
 
-        public float[] ConfidenceLowerBound { get; set; }
+        public float[] LowerBoundRentals { get; set; }
 
-        public float[] ConfidenceUpperBound { get; set; }
+        public float[] UpperBoundRentals { get; set; }
     }
 }
