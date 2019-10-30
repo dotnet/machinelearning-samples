@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Common;
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.Text;
@@ -23,7 +26,7 @@ namespace ClusteringNewsArticles.Train
             try
             {
                 var mlContext = new MLContext(1);
-                var pivotDataView = mlContext.Data.LoadFromTextFile(newsArticlesCsv, new []
+                var newsDataView = mlContext.Data.LoadFromTextFile(newsArticlesCsv, new[]
                 {
                     new TextLoader.Column("news_articles", DataKind.String, 0)
                 }, ',', true);
@@ -43,25 +46,25 @@ namespace ClusteringNewsArticles.Train
 
                 }
 
-                ConsoleHelper.PeekDataViewInConsole(mlContext, pivotDataView, dataProcessPipeline, 10);
-                ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", pivotDataView, dataProcessPipeline, 10);
+                ConsoleHelper.PeekDataViewInConsole(mlContext, newsDataView, dataProcessPipeline, 10);
+                ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "Features", newsDataView, dataProcessPipeline, 10);
 
                 var trainer = mlContext.Clustering.Trainers.KMeans("Features", numberOfClusters: 41);
                 var trainingPipeline = dataProcessPipeline.Append(trainer);
-                
+
                 Console.WriteLine("=============== Training the model ===============");
-                
-                ITransformer trainedModel = trainingPipeline.Fit(pivotDataView);
-                
+
+                ITransformer trainedModel = trainingPipeline.Fit(newsDataView);
+
                 Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
-                
-                var predictions = trainedModel.Transform(pivotDataView);
+
+                var predictions = trainedModel.Transform(newsDataView);
                 var metrics = mlContext.Clustering.Evaluate(predictions, null, "Score", "Features");
-                
+
                 ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
-                
-                mlContext.Model.Save(trainedModel, pivotDataView.Schema, modelPath);
-                
+
+                mlContext.Model.Save(trainedModel, newsDataView.Schema, modelPath);
+
                 Console.WriteLine("The model is saved to {0}", modelPath);
             }
             catch (Exception ex)
@@ -74,7 +77,7 @@ namespace ClusteringNewsArticles.Train
 
         private static string ValidateArgs(IReadOnlyList<string> argument)
         {
-            var argumentOptions = new[] {"ApplyWordEmbedding", "FeaturizeText" };
+            var argumentOptions = new[] { "ApplyWordEmbedding", "FeaturizeText" };
             var message = "Parameter passed options are 'ApplyWordEmbedding and 'FeaturizeText' default will be used 'FeaturizeText'.";
 
             if (!argument.Any() || !argumentOptions.ToList().Contains(argument[0]))
