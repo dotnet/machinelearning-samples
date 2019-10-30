@@ -16,8 +16,8 @@ namespace TaxiFareRegression
 {
     internal static class Program
     {
-        private static string BaseRelativePath = @"../../../../TaxiFarePredictionConsoleApp";
-        private static string BaseDataPath = Path.Combine(Path.GetFullPath(BaseRelativePath), "inputs");
+        private static string BaseRelativePath = @"../../..";
+        private static string BaseDataPath = Path.Combine(GetAbsolutePath(BaseRelativePath), "inputs");
 
         private static string TrainDataPath = Path.Combine(BaseDataPath, "taxi-fare-train.csv");
         private static string TestDataPath = Path.Combine(BaseDataPath, "taxi-fare-test.csv");
@@ -28,7 +28,6 @@ namespace TaxiFareRegression
         {
             // Create ML Context with seed for repeteable/deterministic results.
             var mlContext = new MLContext(seed: 0);
-
 
             // Create, Train, Evaluate and Save a model.
             TrainModel(mlContext);
@@ -104,6 +103,16 @@ namespace TaxiFareRegression
             Console.WriteLine("The model is saved to {0}", ModelPath);
             
             return fccModel;
+        }
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
 
         private static void CalculatePermutationFeatureImportance(MLContext mlContext, IDataView trainingDataView,
@@ -330,16 +339,6 @@ namespace TaxiFareRegression
                 UseShellExecute = true
             };
             p.Start();
-        }
-
-        public static string GetAbsolutePath(string relativePath)
-        {
-            var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-            string assemblyFolderPath = _dataRoot.Directory.FullName;
-
-            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
-
-            return fullPath;
         }
     }
 
