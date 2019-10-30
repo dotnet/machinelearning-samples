@@ -13,9 +13,9 @@ Bike Sharing Demand competition from Kaggle](https://www.kaggle.com/c/bike-shari
 
 ## DataSet
 
-The data used in this tutorial comes from the [UCI Bike Sharing Dataset](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset). Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg, [Web Link](https://link.springer.com/article/10.1007%2Fs13748-013-0040-3).
+The data used in this sample comes from the [UCI Bike Sharing Dataset](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset). Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg, [Web Link](https://link.springer.com/article/10.1007%2Fs13748-013-0040-3).
 
-The original dataset contains several columns corresponding to seasonality and weather. For brevity and because the technique used in this tutorial only requires the values from a single numerical column, the original dataset has been enhanced to include only the following columns:  
+The original dataset contains several columns corresponding to seasonality and weather. For brevity and because the technique used in this sample only requires the values from a single numerical column, the original dataset has been enhanced to include only the following columns:  
 
 - **dteday**: The date of the observation.
 - **year**: The encoded year of the observation (0=2011, 1=2012).
