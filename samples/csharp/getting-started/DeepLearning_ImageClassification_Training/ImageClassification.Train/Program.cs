@@ -7,6 +7,7 @@ using Common;
 using ImageClassification.DataModels;
 using Microsoft.ML;
 using Microsoft.ML.Transforms;
+using Microsoft.ML.Vision;
 using static Microsoft.ML.Transforms.ValueToKeyMappingEstimator;
 
 namespace ImageClassification.Train
@@ -50,35 +51,38 @@ namespace ImageClassification.Train
             IDataView testDataView = trainTestData.TestSet;
 
             // 5. Define the model's training pipeline using DNN default values
+            //
             var pipeline = mlContext.MulticlassClassification.Trainers
                     .ImageClassification(featureColumnName: "Image",
-                                         labelColumnName: "LabelAsKey", 
+                                         labelColumnName: "LabelAsKey",
                                          validationSet: testDataView)
                 .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel",
                                                                       inputColumnName: "PredictedLabel"));
 
-            // 5.1 Define the model's training pipeline using explicit hyper-parameters
-            //var pipeline = mlContext.MulticlassClassification.Trainers
-            //       .ImageClassification()
+            // 5.1 (OPTIONAL) Define the model's training pipeline by using explicit hyper-parameters
+            //
+            //var options = new ImageClassificationTrainer.Options()
+            //{
+            //    FeatureColumnName = "Image",
+            //    LabelColumnName = "LabelAsKey",
+            //    // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250 here instead of 
+            //    // ResnetV2101 you can try a different architecture/
+            //    // pre-trained model. 
+            //    Arch = ImageClassificationTrainer.Architecture.ResnetV250,
+            //    Epoch = 50,       //100
+            //    BatchSize = 10,   
+            //    LearningRate = 0.01f,
+            //    MetricsCallback = (metrics) => Console.WriteLine(metrics),
+            //    ValidationSet = testDataView
+            //};
 
+            //var pipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(options)
+            //        .Append(mlContext.Transforms.Conversion.MapKeyToValue(
+            //            outputColumnName: "PredictedLabel",
+            //            inputColumnName: "PredictedLabel"));
 
-           // OLD Preview-2 code
-           //var pipeline = mlContext.Model.ImageClassification(
-           //    featuresColumnName:"Image",
-           //    labelColumnName:"LabelAsKey",
-           //    arch: ImageClassificationEstimator.Architecture.InceptionV3, // Just by changing/selecting InceptionV3 here instead of ResnetV2101 you can try a different architecture/pre-trained model. 
-           //    epoch: 100,      //An epoch is one learning cycle where the learner sees the whole training data set.
-           //    batchSize: 10,   // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
-           //    learningRate: 0.01f,
-           //    metricsCallback: (metrics) => Console.WriteLine(metrics),
-           //    validationSet: testDataView
-           //    //disableEarlyStopping: true, //If true, it will run all the specified epochs. If false, when converging it'll stop training.
-           //    //reuseTrainSetBottleneckCachedValues: false //Use cache. Use it for fastest training if there are no changes in the dataset
-           //    )
-           //    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel", inputColumnName: "PredictedLabel"));
-
-           // 6. Train/create the ML model
-           Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
+            // 6. Train/create the ML model
+            Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
 
             // Measuring training time
             var watch = Stopwatch.StartNew();
