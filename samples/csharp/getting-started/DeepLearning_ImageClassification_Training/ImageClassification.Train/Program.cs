@@ -16,71 +16,82 @@ namespace ImageClassification.Train
         static void Main()
         {
             const string assetsRelativePath = @"../../../assets";
-            var assetsPath = GetAbsolutePath(assetsRelativePath);
+            string assetsPath = GetAbsolutePath(assetsRelativePath);
 
-            var outputMlNetModelFilePath = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
-            var imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
+            string outputMlNetModelFilePath = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
+            string imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
 
-            var imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
+            string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
 
             // 1. Download the image set and unzip
-            var finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
-            var fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
+            string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
+            string fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
 
             var mlContext = new MLContext(seed: 1);
 
             // 2. Load the initial full image-set into an IDataView and shuffle so it'll be better balanced
-            var images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameAsLabel: true);
-            var fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
-            var shuffledFullImageFilePathsDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
+            IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameAsLabel: true);
+            IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
+            IDataView shuffledFullImageFilePathsDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
             // 3. Load Images with in-memory type within the IDataView and Transform Labels to Keys (Categorical)
-            var shuffledFullImagesDataset = mlContext.Transforms.Conversion
-                .MapValueToKey(
-                    outputColumnName: "LabelAsKey",
-                    inputColumnName: "Label",
-                    keyOrdinality: KeyOrdinality.ByValue)
-                .Append(
-                    mlContext.Transforms.LoadImages(
-                        outputColumnName: "Image",
-                        imageFolder: fullImagesetFolderPath, 
-                        useImageType: false,
-                        inputColumnName: "ImagePath"))
+            IDataView shuffledFullImagesDataset = mlContext.Transforms.Conversion.
+                    MapValueToKey(outputColumnName: "LabelAsKey", inputColumnName: "Label", keyOrdinality: KeyOrdinality.ByValue)
+                .Append(mlContext.Transforms.LoadRawImageBytes(
+                                                outputColumnName: "Image",
+                                                imageFolder: fullImagesetFolderPath,
+                                                inputColumnName: "ImagePath"))
                 .Fit(shuffledFullImageFilePathsDataset)
                 .Transform(shuffledFullImageFilePathsDataset);
 
             // 4. Split the data 80:20 into train and test sets, train and evaluate.
             var trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
-            var trainDataView = trainTestData.TrainSet;
-            var testDataView = trainTestData.TestSet;
+            IDataView trainDataView = trainTestData.TrainSet;
+            IDataView testDataView = trainTestData.TestSet;
 
-            // 5. Define the model's training pipeline 
-            var pipeline = mlContext.Model.ImageClassification(
-                featuresColumnName:"Image",
-                labelColumnName:"LabelAsKey",
-                arch: ImageClassificationEstimator.Architecture.InceptionV3, // Just by changing/selecting InceptionV3 here instead of ResnetV2101 you can try a different architecture/pre-trained model. 
-                epoch: 100,      //An epoch is one learning cycle where the learner sees the whole training data set.
-                batchSize: 10,   // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
-                learningRate: 0.01f,
-                metricsCallback: (metrics) => Console.WriteLine(metrics),
-                validationSet: testDataView
-                //disableEarlyStopping: true, //If true, it will run all the specified epochs. If false, when converging it'll stop training.
-                //reuseTrainSetBottleneckCachedValues: false //Use cache. Use it for fastest training if there are no changes in the dataset
-                )
-                .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel", inputColumnName: "PredictedLabel"));
+            // 5. Define the model's training pipeline using DNN default values
+            var pipeline = mlContext.MulticlassClassification.Trainers
+                    .ImageClassification(featureColumnName: "Image",
+                                         labelColumnName: "LabelAsKey", 
+                                         validationSet: testDataView)
+                .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel",
+                                                                      inputColumnName: "PredictedLabel"));
 
-            // 6. Train/create the ML model
-            Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
+            // 5.1 Define the model's training pipeline using explicit hyper-parameters
+            //var pipeline = mlContext.MulticlassClassification.Trainers
+            //       .ImageClassification()
+
+
+           // OLD Preview-2 code
+           //var pipeline = mlContext.Model.ImageClassification(
+           //    featuresColumnName:"Image",
+           //    labelColumnName:"LabelAsKey",
+           //    arch: ImageClassificationEstimator.Architecture.InceptionV3, // Just by changing/selecting InceptionV3 here instead of ResnetV2101 you can try a different architecture/pre-trained model. 
+           //    epoch: 100,      //An epoch is one learning cycle where the learner sees the whole training data set.
+           //    batchSize: 10,   // batchSize sets the number of images to feed the model at a time. It needs to divide the training set evenly or the remaining part won't be used for training.                              
+           //    learningRate: 0.01f,
+           //    metricsCallback: (metrics) => Console.WriteLine(metrics),
+           //    validationSet: testDataView
+           //    //disableEarlyStopping: true, //If true, it will run all the specified epochs. If false, when converging it'll stop training.
+           //    //reuseTrainSetBottleneckCachedValues: false //Use cache. Use it for fastest training if there are no changes in the dataset
+           //    )
+           //    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel", inputColumnName: "PredictedLabel"));
+
+           // 6. Train/create the ML model
+           Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
 
             // Measuring training time
             var watch = Stopwatch.StartNew();
+
+            //Train
+            ITransformer trainedModel = pipeline.Fit(trainDataView);
+
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
 
             Console.WriteLine($"Training with transfer learning took: {elapsedMs / 1000} seconds");
 
             // 7. Get the quality metrics (accuracy, etc.)
-            ITransformer trainedModel = pipeline.Fit(trainDataView);
             EvaluateModel(mlContext, testDataView, trainedModel);
 
             // 8. Save the model to assets/outputs (You get ML.NET .zip model file and TensorFlow .pb model file)
@@ -88,7 +99,7 @@ namespace ImageClassification.Train
             Console.WriteLine($"Model saved to: {outputMlNetModelFilePath}");
 
             // 9. Try a single prediction simulating an end-user app
-            TrySinglePrediction(imagesFolderPathForPredictions, mlContext, trainedModel); 
+            TrySinglePrediction(imagesFolderPathForPredictions, mlContext, trainedModel);
 
             Console.WriteLine("Press any key to finish");
             Console.ReadKey();

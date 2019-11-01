@@ -49,7 +49,7 @@ namespace TensorFlowImageClassification.Controllers
             await imageFile.CopyToAsync(imageMemoryStream);
 
             // Check that the image is valid.
-            var imageData = imageMemoryStream.ToArray();
+            byte[] imageData = imageMemoryStream.ToArray();
             if (!imageData.IsValidImage())
                 return StatusCode(StatusCodes.Status415UnsupportedMediaType);
 

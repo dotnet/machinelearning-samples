@@ -44,7 +44,7 @@ namespace ImageClassification.Predict
                 // Double-check using the index
                 var maxIndex = prediction.Score.ToList().IndexOf(maxScore);
                 VBuffer<ReadOnlyMemory<char>> keys = default;
-                predictionEngine.OutputSchema[4].GetKeyValues(ref keys);
+                predictionEngine.OutputSchema[3].GetKeyValues(ref keys);
                 var keysArray = keys.DenseValues().ToArray();
                 var predictedLabelString = keysArray[maxIndex];
                 ////////
@@ -68,28 +68,6 @@ namespace ImageClassification.Predict
                         $"Predicted Label : [{currentPrediction.PredictedLabel}], " +
                         $"Probability : [{currentPrediction.Score.Max()}]");
                 }
-
-                //Console.WriteLine("*** Showing all the predictions ***");
-                //// Find the original label names.
-                //VBuffer<ReadOnlyMemory<char>> keys = default;
-                //predictionsDataView.Schema["LabelAsKey"].GetKeyValues(ref keys);
-                //var originalLabels = keys.DenseValues().ToArray();
-
-                //List<ImagePredictionEx> predictions = mlContext.Data.CreateEnumerable<ImagePredictionEx>(predictionsDataView, false, true).ToList();
-                //predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImagePath, pred.Label, (originalLabels[pred.PredictedLabel]).ToString(), pred.Score.Max()));
-
-                // OTHER CASE:
-                // Find the original label names.
-                //VBuffer<ReadOnlyMemory<char>> keys = default;
-                //predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
-
-                //var originalLabels = keys.DenseValues().ToArray();
-                ////var index = prediction.PredictedLabel;
-
-                //Console.WriteLine($"In-Memory Image provided, " +
-                //                  $"Scores : [{string.Join(",", prediction.Score)}], " +
-                //                  $"Predicted Label : {prediction.PredictedLabel}");
-
             }
             catch (Exception ex)
             {
@@ -99,33 +77,6 @@ namespace ImageClassification.Predict
             Console.WriteLine("Press any key to end the app..");
             Console.ReadKey();
         }
-
-        //private int GetTopScoreIndex(float[] scores, int n)
-        //{
-        //    int i;
-        //    float first;
-        //    int index0 = 0;
-        //    if (n < 3)
-        //    {
-        //        Console.WriteLine("Invalid Input");
-        //        return 0;
-        //    }
-        //    first = 000;
-        //    for (i = 0; i < n; i++)
-        //    {
-        //        // If current element is  
-        //        // smaller than first 
-        //        if (scores[i] > first)
-        //        {
-        //            first = scores[i];
-        //        }
-        //    }
-        //    var scoresList = scores.ToList();
-        //    scoresList.
-        //    index0 = scoresList.IndexOf(first);
-
-        //    return index0;
-        //}
 
         public static string GetAbsolutePath(string relativePath)
             => FileUtils.GetAbsolutePath(typeof(Program).Assembly, relativePath);
