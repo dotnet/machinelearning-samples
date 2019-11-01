@@ -35,7 +35,25 @@ namespace ImageClassification.Predict
 
                 var imageToPredict = imagesToPredict.First();
 
+                // Measure #1 prediction execution time.
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+
                 var prediction = predictionEngine.Predict(imageToPredict);
+
+                // Stop measuring time.
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Console.WriteLine("First Prediction took: " + elapsedMs + "mlSecs");
+
+                // Measure #2 prediction execution time.
+                var watch2 = System.Diagnostics.Stopwatch.StartNew();
+
+                var prediction2 = predictionEngine.Predict(imageToPredict);
+
+                // Stop measuring time.
+                watch2.Stop();
+                var elapsedMs2 = watch2.ElapsedMilliseconds;
+                Console.WriteLine("Second Prediction took: " + elapsedMs2 + "mlSecs");
 
                 // Get the highest score and its index
                 var maxScore = prediction.Score.Max();

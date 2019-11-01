@@ -48,7 +48,7 @@ namespace ImageClassification.WebApp
                     .FromFile(Configuration["MLModel:MLModelFilePath"]);
 
             // (Optional) Get the pool to initialize it and warm it up.       
-            WarmUpPredictionEnginePool(services);
+            //WarmUpPredictionEnginePool(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,31 +74,37 @@ namespace ImageClassification.WebApp
 
         public static void WarmUpPredictionEnginePool(IServiceCollection services)
         {
+            //#1 - Simply get a Prediction Engine
             var predictionEnginePool = services.BuildServiceProvider().GetRequiredService<PredictionEnginePool<InMemoryImageData, ImagePrediction>>();
-            var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-            var logger = services.BuildServiceProvider().GetRequiredService<ILogger<ImageClassificationController>>();
+            var predictionEngine = predictionEnginePool.GetPredictionEngine();
+            predictionEnginePool.ReturnPredictionEngine(predictionEngine);
 
-            Image img = Image.FromFile(@"TestImages/BlackRose.png");
-            byte[] imageData;
-            IFormFile imageFile;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            // #2 - Predict
+            // Get a sample image
+            //
+            //Image img = Image.FromFile(@"TestImages/BlackRose.png");
+            //byte[] imageData;
+            //IFormFile imageFile;
+            //using (MemoryStream ms = new MemoryStream())
+            //{
+            //    img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            //    //To byte[] (#1)
+            //    imageData = ms.ToArray();
 
-                //To byte[] (#1)
-                imageData = ms.ToArray();
+            //    //To FormFile (#2)
+            //    imageFile = new FormFile((Stream)ms, 0, ms.Length, "BlackRose", "BlackRose.png");
+            //}
 
-                //To FormFile (#2)
-                imageFile = new FormFile((Stream)ms, 0, ms.Length, "BlackRose", "BlackRose.png");
-            }
+            //var imageInputData = new InMemoryImageData(image: imageData, label: null, imageFileName: null);
 
-            //#1
-            var imageInputData = new InMemoryImageData(image: imageData, label: null, imageFileName: null);
-            var prediction = predictionEnginePool.Predict(imageInputData);
-          
-            //#2
-            ImageClassificationController myController = new ImageClassificationController(predictionEnginePool, configuration, logger);
-            myController.ClassifyImage(imageFile);
+            //// Measure execution time.
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            //var prediction = predictionEnginePool.Predict(imageInputData);
+
+            //// Stop measuring time.
+            //watch.Stop();
+            //var elapsedMs = watch.ElapsedMilliseconds;
         }
 
         public static string GetAbsolutePath(string relativePath)
