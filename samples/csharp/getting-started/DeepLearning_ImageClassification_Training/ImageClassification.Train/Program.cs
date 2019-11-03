@@ -30,6 +30,10 @@ namespace ImageClassification.Train
 
             var mlContext = new MLContext(seed: 1);
 
+            // Specify MLContext Filter to only show feedback log/traces about ImageClassification
+            // This is not needed for feedback output if using the explicit MetricsCallback parameter
+            mlContext.Log += FilterMLContextLog;           
+
             // 2. Load the initial full image-set into an IDataView and shuffle so it'll be better balanced
             IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameAsLabel: true);
             IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
@@ -65,12 +69,11 @@ namespace ImageClassification.Train
             //{
             //    FeatureColumnName = "Image",
             //    LabelColumnName = "LabelAsKey",
-            //    // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250 here instead of 
-            //    // ResnetV2101 you can try a different architecture/
-            //    // pre-trained model. 
-            //    Arch = ImageClassificationTrainer.Architecture.ResnetV250,
+            //    // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250  
+            //    // you can try a different DNN architecture (TensorFlow pre-trained model). 
+            //    Arch = ImageClassificationTrainer.Architecture.MobilenetV2,
             //    Epoch = 50,       //100
-            //    BatchSize = 10,   
+            //    BatchSize = 10,
             //    LearningRate = 0.01f,
             //    MetricsCallback = (metrics) => Console.WriteLine(metrics),
             //    ValidationSet = testDataView
@@ -198,6 +201,14 @@ namespace ImageClassification.Train
             Console.Write(Probability);
             Console.ForegroundColor = defaultForeground;
             Console.WriteLine("");
+        }
+
+        private static void FilterMLContextLog(object sender, LoggingEventArgs e)
+        {
+            if (e.Message.StartsWith("[Source=ImageClassificationTrainer;"))
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

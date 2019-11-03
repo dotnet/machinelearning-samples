@@ -3,16 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageClassificationModelTraining.Solution", "ImageClassificationModelTraining.Solution", "{58888D0A-8521-4544-8CB7-A4151630EF77}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Predict", "getting-started\DeepLearning_ImageClassification_Training\ImageClassification.Predict\ImageClassification.Predict.csproj", "{73E98D88-1A4F-4328-BCF7-8191AF788586}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Train", "getting-started\DeepLearning_ImageClassification_Training\ImageClassification.Train\ImageClassification.Train.csproj", "{5D928947-78DD-412B-8A40-2EB5A72A6144}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.Shared", "getting-started\DeepLearning_ImageClassification_Training\ImageClassification.Shared\ImageClassification.Shared.csproj", "{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageClassification.WebApp", "getting-started\DeepLearning_ImageClassification_Training\WebApp.Predict\ImageClassification.WebApp.csproj", "{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MovieRecommendation.Solution", "MovieRecommendation.Solution", "{A7836E64-C522-4236-8B31-0A360C2CA9ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieRecommendation", "getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation\MovieRecommendation.csproj", "{39070118-6DFD-401F-8396-E1036F0C598C}"
@@ -33,38 +23,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Debug|x64.Build.0 = Debug|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Release|x64.ActiveCfg = Release|Any CPU
-		{73E98D88-1A4F-4328-BCF7-8191AF788586}.Release|x64.Build.0 = Release|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Debug|x64.Build.0 = Debug|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Release|x64.ActiveCfg = Release|Any CPU
-		{5D928947-78DD-412B-8A40-2EB5A72A6144}.Release|x64.Build.0 = Release|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Debug|x64.Build.0 = Debug|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Release|x64.ActiveCfg = Release|Any CPU
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D}.Release|x64.Build.0 = Release|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Debug|x64.Build.0 = Debug|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Release|x64.ActiveCfg = Release|Any CPU
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E}.Release|x64.Build.0 = Release|Any CPU
 		{39070118-6DFD-401F-8396-E1036F0C598C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39070118-6DFD-401F-8396-E1036F0C598C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39070118-6DFD-401F-8396-E1036F0C598C}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -86,11 +44,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{58888D0A-8521-4544-8CB7-A4151630EF77} = {50C6D192-D2F6-4275-B5DB-00DC85A1FA88}
-		{73E98D88-1A4F-4328-BCF7-8191AF788586} = {58888D0A-8521-4544-8CB7-A4151630EF77}
-		{5D928947-78DD-412B-8A40-2EB5A72A6144} = {58888D0A-8521-4544-8CB7-A4151630EF77}
-		{1472A4E8-91D5-4738-98E0-7BA2D1C8DE5D} = {58888D0A-8521-4544-8CB7-A4151630EF77}
-		{677BDA3F-C9AE-4F35-A12C-C4F9257FF00E} = {58888D0A-8521-4544-8CB7-A4151630EF77}
 		{A7836E64-C522-4236-8B31-0A360C2CA9ED} = {50C6D192-D2F6-4275-B5DB-00DC85A1FA88}
 		{39070118-6DFD-401F-8396-E1036F0C598C} = {A7836E64-C522-4236-8B31-0A360C2CA9ED}
 		{FF92F77A-4D79-42DB-BCCE-2C49B6CCE6B3} = {50C6D192-D2F6-4275-B5DB-00DC85A1FA88}
