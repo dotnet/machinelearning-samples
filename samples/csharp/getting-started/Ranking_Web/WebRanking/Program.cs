@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.ML.Trainers.LightGbm;
+using Microsoft.ML.Data;
 
 namespace WebRanking
 {
@@ -35,7 +37,7 @@ namespace WebRanking
 
                 // Create the pipeline using the training data's schema; the validation and testing data have the same schema.
                 IDataView trainData = mlContext.Data.LoadFromTextFile<SearchResultData>(TrainDatasetPath, separatorChar: '\t', hasHeader: true);
-                IEstimator<ITransformer> pipeline = CreatePipeline(mlContext, trainData);
+                IEstimator<ITransformer> pipeline = CreatePipeline(mlContext, trainData);                
 
                 // Train the model on the training dataset. To perform training you need to call the Fit() method.
                 Console.WriteLine("===== Train the model on the training dataset =====\n");
@@ -162,15 +164,11 @@ namespace WebRanking
             // Use the model to perform predictions on the test data.
             IDataView predictions = model.Transform(data);
 
-            Console.WriteLine("===== Use metrics for the data using NDCG@3 =====\n");
-
-            // Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
-            ConsoleHelper.EvaluateMetrics(mlContext, predictions);
-
             Console.WriteLine("===== Use metrics for the data using NDCG@10 =====\n");
 
-            // Evaluate metrics for up to 10 search results (e.g. NDCG@10).
-            ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
+            // Evaluate the metrics for the data using NDCG; specifically, evaluate metrics for up to 10 search results (e.g. NDCG@10).
+            RankingEvaluatorOptions options = new RankingEvaluatorOptions() { DcgTruncationLevel = 10 };
+            ConsoleHelper.EvaluateMetrics(mlContext, predictions, options);
         }
 
         static void ConsumeModel(MLContext mlContext, ITransformer model, string modelPath, IDataView data)
