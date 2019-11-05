@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.ML.LightGbm" Version="$(MicrosoftMLVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\Input\" />
+  </ItemGroup>
+
 </Project>
