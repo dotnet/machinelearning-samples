@@ -248,8 +248,6 @@ function TraceProductHistory(historyItems) {
             }
         },
         text: texts,
-        fill: 'tozeroy',
-        fillcolor: '#dd1828',
         marker: {
             symbol: "circle",
             color: "white",
@@ -282,8 +280,6 @@ function TraceProductForecast(labels, next_x_label, next_text, prev_text, values
             shape: 'spline',
             color: forecastColor
         },
-        fill: 'tozeroy',
-        fillcolor: forecastColor,
         marker: {
             symbol: "circle",
             color: "white",
