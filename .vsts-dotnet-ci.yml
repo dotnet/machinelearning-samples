@@ -193,6 +193,11 @@ phases:
 - phase: DatabaseIntegration
   queue: Hosted VS2017
   steps:
+  - task: UseDotNet@2
+  displayName: Install .NET Core 3.0 SDK
+  inputs:
+    packageType: 'sdk'
+    version: '3.0.100'
   - task: DotNetCoreCLI@2
     displayName: Build Database Integration
     inputs:
