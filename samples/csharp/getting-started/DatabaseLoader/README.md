@@ -3,7 +3,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v0.16-Preview          | Dynamic API | up-to-date | Console app | SQL Server database or any relational database | IDataView from DB | Any | Any |
+| v1.4          | Dynamic API | up-to-date | Console app | SQL Server database or any relational database | IDataView from DB | Any | Any |
 
 ![](https://devblogs.microsoft.com/dotnet/wp-content/uploads/sites/10/2019/08/database-loader-illustration-300x181.png)
 

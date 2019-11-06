@@ -167,10 +167,10 @@ namespace WebRanking
             // Evaluate the metrics for the data using NDCG; by default, metrics for the up to 3 search results in the query are reported (e.g. NDCG@3).
             ConsoleHelper.EvaluateMetrics(mlContext, predictions);
 
-            Console.WriteLine("===== Use metrics for the data using NDCG@10 =====\n");
-
             // Evaluate metrics for up to 10 search results (e.g. NDCG@10).
-            ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
+            // TO CHECK:
+            //Console.WriteLine("===== Use metrics for the data using NDCG@10 =====\n");
+            //ConsoleHelper.EvaluateMetrics(mlContext, predictions, 10);
         }
 
         static void ConsumeModel(MLContext mlContext, ITransformer model, string modelPath, IDataView data)

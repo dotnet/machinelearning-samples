@@ -16,7 +16,7 @@ namespace SpikeDetection.WinForms
         private string filePath = "";
         Tuple<string, string> tup = null;
         Dictionary<int, Tuple<string, string>> dict = new Dictionary<int, Tuple<string, string>>();
-        private static string BaseModelsRelativePath = @"../../../MLModels";
+        private static string BaseModelsRelativePath = @"../../../../MLModels";
         private static string ModelRelativePath1 = $"{BaseModelsRelativePath}/ProductSalesSpikeModel.zip";
         private static string ModelRelativePath2 = $"{BaseModelsRelativePath}/ProductSalesChangePointModel.zip";
 

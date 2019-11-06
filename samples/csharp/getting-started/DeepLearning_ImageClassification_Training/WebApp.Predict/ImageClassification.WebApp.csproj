@@ -10,10 +10,11 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview2" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0-preview2" />
-    <PackageReference Include="Microsoft.ML.Dnn" Version="0.16.0-preview2" />
-    <PackageReference Include="Microsoft.Extensions.ML" Version="0.16.0-preview2" />   
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.Vision" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="SciSharp.TensorFlow.Redist" Version="1.15.0" />
+    <PackageReference Include="Microsoft.Extensions.ML" Version="$(MicrosoftMLVersion)" /> 
   </ItemGroup>
 
 
@@ -24,6 +25,22 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImageClassification.Shared\ImageClassification.Shared.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="TestImages\BlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestImages\classic-daisy.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestImages\classic-tulip.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestImages\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

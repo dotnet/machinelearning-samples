@@ -1,11 +1,11 @@
 
 
-# SENTIMENT ANALYSIS: Blazor sample (ASP.NET Core 3.0 Preview) optimized for scalability and performance when running/scoring an ML.NET model (Using the new '.NET Core Integration Package for ML.NET')
+# SENTIMENT ANALYSIS: Blazor sample (ASP.NET Core 3.0) optimized for scalability and performance when running/scoring an ML.NET model (Using the new '.NET Core Integration Package for ML.NET')
 
 
 | ML.NET version | Status     | App Type                  | Data type          | Scenario           | ML Task               | Algorithms            |
 |----------------|------------|---------------------------|--------------------|--------------------|-----------------------|-----------------------|
-| v1.3.1         | Up-to-date | Blazor / ASP.NET Core 3.0 | Single data sample | Sentiment Analysis | Binary Classification | Linear Classification |
+| v1.4         | Up-to-date | Blazor / ASP.NET Core 3.0 | Single data sample | Sentiment Analysis | Binary Classification | Linear Classification |
 
 # Goal
 

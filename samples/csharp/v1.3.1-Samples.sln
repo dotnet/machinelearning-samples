@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScalableMLModelAzureFunction.Solution", "ScalableMLModelAzureFunction.Solution", "{0EBCD944-E7C8-44CF-B258-615BC90381E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysisFunctionsApp", "end-to-end-apps\ScalableMLModelOnAzureFunction\SentimentAnalysisFunctionsApp\SentimentAnalysisFunctionsApp.csproj", "{3E93581D-666B-4E34-8E38-D33168EA6D8C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Debug|x64.Build.0 = Debug|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|x64.ActiveCfg = Release|Any CPU
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E93581D-666B-4E34-8E38-D33168EA6D8C} = {0EBCD944-E7C8-44CF-B258-615BC90381E9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
+	EndGlobalSection
+EndGlobal

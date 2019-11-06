@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Dynamic API | Up-to-date | Console app & WinForms app | .csv files | Feature Importance | Regression | Sdca Regression |
+| v1.4           | Dynamic API | Up-to-date | Console app & WinForms app | .csv files | Feature Importance | Regression | Sdca Regression |
 
 This sample's goal is about Model Explainability and feature importance.
 
