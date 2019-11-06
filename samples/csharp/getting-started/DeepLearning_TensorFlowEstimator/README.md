@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Dynamic API | Up-to-date | Console app | image files | Image classification | Featurization + Classification  | Deep neural network + LbfgsMaximumEntropy |
+| v1.4           | Dynamic API | Up-to-date | Console app | image files | Image classification | Featurization + Classification  | Deep neural network + LbfgsMaximumEntropy |
  
 ## Problem 
 Image classification is a common problem which has been solved quite a while using Machine Learning techniques. In this sample, we will review an approach that mixes new techniques (deep learning) and old school (LbfgsMaximumEntropy) techniques.

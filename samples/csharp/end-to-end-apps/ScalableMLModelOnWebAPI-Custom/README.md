@@ -5,7 +5,7 @@
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Up-to-date | ASP.NET Core 2.2 WebAPI | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
+| v1.4           | Up-to-date | ASP.NET Core 2.2 WebAPI | Single data sample | Sentiment Analysis | Binary   classification | Linear Classification |
 
 **IMPORTANT NOTE: This sample uses an older approach by implementing all the 'plumbing' related to the PredictionEngine Object Pool. This custom implementation is no longer required since the release of the PredictionEnginePool API provided since May 2019.
 Check this other sample for the preferred and much simpler approach:**

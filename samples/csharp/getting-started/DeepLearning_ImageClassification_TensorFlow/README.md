@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inception5h  | DeepLearning model |
+| v1.4           | Dynamic API | up-to-date | Console app | Images and text labels | Images classification | TensorFlow Inception5h  | DeepLearning model |
 
 
 ## Problem
