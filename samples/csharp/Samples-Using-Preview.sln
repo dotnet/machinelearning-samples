@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageBinaryClassificationMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepLearning_ImageClassification_Binary", "getting-started\DeepLearning_ImageClassification_Binary\DeepLearning_ImageClassification_Binary\DeepLearning_ImageClassification_Binary.csproj", "{147DAD69-AAB4-47FF-805F-53B3E9299D02}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BikeSharing-TimeSeries-Forecast-And-DB", "BikeSharing-TimeSeries-Forecast-And-DB", "{1EA75CE9-074B-444F-A4F9-AA3C6607BB2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeDemandForecasting", "getting-started\Forecasting_BikeSharingDemand\BikeDemandForecasting\BikeDemandForecasting.csproj", "{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{147DAD69-AAB4-47FF-805F-53B3E9299D02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{147DAD69-AAB4-47FF-805F-53B3E9299D02}.Release|x64.ActiveCfg = Release|Any CPU
 		{147DAD69-AAB4-47FF-805F-53B3E9299D02}.Release|x64.Build.0 = Release|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Debug|x64.Build.0 = Debug|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Release|x64.ActiveCfg = Release|Any CPU
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +74,8 @@ Global
 		{833EEC6A-F866-4052-ACE2-8D7E72E7862D} = {FF92F77A-4D79-42DB-BCCE-2C49B6CCE6B3}
 		{4C0827DD-9212-485B-B3A7-D7969AFD9328} = {50C6D192-D2F6-4275-B5DB-00DC85A1FA88}
 		{147DAD69-AAB4-47FF-805F-53B3E9299D02} = {4C0827DD-9212-485B-B3A7-D7969AFD9328}
+		{1EA75CE9-074B-444F-A4F9-AA3C6607BB2B} = {50C6D192-D2F6-4275-B5DB-00DC85A1FA88}
+		{68FFA3D0-A818-4767-89CC-821FB6F8EAEC} = {1EA75CE9-074B-444F-A4F9-AA3C6607BB2B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98369941-33DD-450C-A410-B9A91C8CDE91}
