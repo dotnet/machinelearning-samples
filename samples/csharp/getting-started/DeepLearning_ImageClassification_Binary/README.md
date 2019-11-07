@@ -173,6 +173,7 @@ var classifierOptions = new ImageClassificationTrainer.Options()
     TestOnTrainSet = false,
     ReuseTrainSetBottleneckCachedValues = true,
     ReuseValidationSetBottleneckCachedValues = true,
+    WorkspacePath=workspaceRelativePath
 };
 
 var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
