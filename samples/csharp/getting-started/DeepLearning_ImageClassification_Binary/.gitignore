@@ -1,2 +1,4 @@
 **/assets/UD
 **/assets/CD
+**/workspace/*
+!**/workspace/README.md

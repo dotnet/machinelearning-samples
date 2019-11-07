@@ -13,6 +13,7 @@ namespace DeepLearning_ImageClassification_Binary
         static void Main(string[] args)
         {
             var projectDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../"));
+            var workspaceRelativePath = Path.Combine(projectDirectory, "workspace");
             var assetsRelativePath = Path.Combine(projectDirectory, "assets");
 
             MLContext mlContext = new MLContext();
@@ -52,6 +53,7 @@ namespace DeepLearning_ImageClassification_Binary
                 TestOnTrainSet = false,
                 ReuseTrainSetBottleneckCachedValues = true,
                 ReuseValidationSetBottleneckCachedValues = true,
+                WorkspacePath=workspaceRelativePath
             };
 
             var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
