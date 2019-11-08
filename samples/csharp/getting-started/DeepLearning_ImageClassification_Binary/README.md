@@ -133,13 +133,12 @@ IDataView shuffledData = mlContext.Data.ShuffleRows(imageData);
 
 ```csharp
 var preprocessingPipeline = mlContext.Transforms.Conversion.MapValueToKey(
-        inputColumnName:"Label",
-        outputColumnName:"LabelAsKey")
-    .Append(mlContext.Transforms.LoadImages(
-        outputColumnName:"Image", 
+        inputColumnName: "Label",
+        outputColumnName: "LabelAsKey")
+    .Append(mlContext.Transforms.LoadRawImageBytes(
+        outputColumnName: "Image",
         imageFolder: assetsRelativePath,
-        useImageType: false,
-        inputColumnName:"ImagePath"));
+        inputColumnName: "ImagePath"));
 ```
 
 1. Fit the data to the preprocessing pipeline.
@@ -164,18 +163,20 @@ IDataView testSet = validationTestSplit.TestSet;
 ## Define the training pipeline
 
 ```csharp
-var trainingPipeline = mlContext.Model.ImageClassification(
-        featuresColumnName: "Image",
-        labelColumnName: "LabelAsKey",
-        arch: ImageClassificationEstimator.Architecture.ResnetV2101,
-        epoch: 100,
-        batchSize: 20,
-        testOnTrainSet: false,
-        metricsCallback: (metrics) => Console.WriteLine(metrics),
-        validationSet: validationSet,
-        reuseTrainSetBottleneckCachedValues: true,
-        reuseValidationSetBottleneckCachedValues: true,
-        disableEarlyStopping:false)
+var classifierOptions = new ImageClassificationTrainer.Options()
+{
+    FeatureColumnName = "Image",
+    LabelColumnName = "LabelAsKey",
+    ValidationSet = validationSet,
+    Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
+    MetricsCallback = (metrics) => Console.WriteLine(metrics),
+    TestOnTrainSet = false,
+    ReuseTrainSetBottleneckCachedValues = true,
+    ReuseValidationSetBottleneckCachedValues = true,
+    WorkspacePath=workspaceRelativePath
+};
+
+var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
     .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 ```
 
@@ -254,10 +255,10 @@ Run your console app. The output should be similar to that below. You may see wa
 ### Bottleneck phase
 
 ```text
-Phase: Bottleneck Computation, Dataset used:      Train, Image Index: 279, Image Name:
-Phase: Bottleneck Computation, Dataset used:      Train, Image Index: 280, Image Name:
-Phase: Bottleneck Computation, Dataset used: Validation, Image Index:   1, Image Name:
-Phase: Bottleneck Computation, Dataset used: Validation, Image Index:   2, Image Name:
+Phase: Bottleneck Computation, Dataset used:      Train, Image Index: 279
+Phase: Bottleneck Computation, Dataset used:      Train, Image Index: 280
+Phase: Bottleneck Computation, Dataset used: Validation, Image Index:   1
+Phase: Bottleneck Computation, Dataset used: Validation, Image Index:   2
 ```
 
 ### Training phase
