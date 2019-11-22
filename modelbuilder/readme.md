@@ -183,7 +183,7 @@ By default, Model Builder will take all but the **column to predict (Label)** as
 
 The Label is what you are predicting,  The rest of the columns are Features, which are attributes that help predict the Label. Limiting to most relevant attributes or features will result in providing you the best performance for your models.
 
-We currently support *.tsv*, *.csv* and SQL as the data-types you can use as datasets for the Model Builder. The files should have a header row. For this preview Model Builder does not support *.txt files or ';' separated or ',' separated files
+We currently support *.tsv*, *.csv*, *.txt*, and SQL as the data types you can use as datasets for Model Builder. If you have a *.txt* file, columns should be separated with ',' or ';' or '/t'. The files must have a header row.
 
 ## Train
 
