@@ -1,0 +1,1 @@
+download imagenet-vgg-verydeep-19.mat file from [VGG-19 Mat](http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat)

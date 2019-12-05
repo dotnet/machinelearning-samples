@@ -1,0 +1,11 @@
+{
+  "StartupBashScript": null,
+  "EnableBashScript": false,
+  "StartupProgram": "python",
+  "Environment": "",
+  "EnableRunInDocker": false,
+  "EnableConcurrency": false,
+  "CommonParameter": null,
+  "ExtraParameter": "--style_image mosaic.jpg --input_dir ~/styletransfer --output_dir ~/model_mosaic --lambda_style 15",
+  "HyperParameters": []
+}
