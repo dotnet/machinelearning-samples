@@ -6,7 +6,7 @@
 
 ## Problem
 
-You want to **identify groups of customers with similar profile** so you could target them afterwards (like different marketing campaings per identified customer group with similra characteristics, etc.)
+You want to **identify groups of customers with similar profile** so you could target them afterwards (like different marketing campaings per identified customer group with similar characteristics, etc.)
 
 The problem to solve is how you can identify different groups of customers with similar profile and interest without having any pre-existing category list. You are *not* classifying customers across a category list because your customers are not *labeled* so you cannot do that. You just need to make groups/clusters of customers that the company will use afterwards for other business purposes.
 
