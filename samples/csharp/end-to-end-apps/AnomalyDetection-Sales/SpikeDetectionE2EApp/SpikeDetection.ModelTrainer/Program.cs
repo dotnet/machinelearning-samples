@@ -49,7 +49,7 @@ namespace SpikeDetection.WinFormsTrainer
         {
             Console.WriteLine("===============Detect temporary changes in pattern===============");
 
-            // STEP 1: Create Esimator.
+            // STEP 1: Create Estimator.
             var estimator = mlContext.Transforms.DetectIidSpike(outputColumnName: nameof(ProductSalesPrediction.Prediction), inputColumnName: nameof(ProductSalesData.numSales), confidence: 95, pvalueHistoryLength: size / 4);
 
             // STEP 2:The Transformed Model.
