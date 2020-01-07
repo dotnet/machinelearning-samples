@@ -36,7 +36,7 @@ namespace Regression_TaxiFarePrediction
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
-            //Create ML Context with seed for repeteable/deterministic results
+            //Create ML Context with seed for repeatable/deterministic results
             MLContext mlContext = new MLContext(seed: 0);
 
             // Create, Train, Evaluate and Save a model
