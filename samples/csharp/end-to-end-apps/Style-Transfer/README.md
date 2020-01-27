@@ -69,14 +69,14 @@ The Deep Learning Virtual Machine is a specially configured variant of the [Data
     * OS Type: `Linux`.
     * Set the username and password.
 
-    > [!NOTE]
+    > NOTE:
     > Keep these credentials in a Notepad as we'll need them later to connect to the VM.
  
     * Select your preferred subscription.
     * Create a new resource group: `mlnet-<your initials>`.
     * Location: `West US 2`
 
-    > [!NOTE]
+    > NOTE:
     > For this lab we'll use a Deep Learning VM which requires NC class machines that are only available in EAST US, NORTH CENTRAL US, SOUTH CENTRAL US, and WEST US 2.
         
 1. Click **OK** to continue with the **Settings** section.
@@ -84,7 +84,7 @@ The Deep Learning Virtual Machine is a specially configured variant of the [Data
 1. Continue until the last section **Buy**.
 1. Click **Create** to start the provisioning.
 
-> [!NOTE]
+> NOTE:
 > A link is provided to the terms of the transaction. The VM does not have any additional charges beyond the compute for the server size you chose in the Size step.
 
 1. The provisioning should take about 10 minutes. The status of the provisioning is displayed int the Azure portal.
@@ -93,7 +93,7 @@ The Deep Learning Virtual Machine is a specially configured variant of the [Data
 1. Click on the first result to open it.
 1. Copy the `Public IP address` into Notepad.
 
-> [!NOTE]
+> NOTE:
 > We'll need this value later on to connect to the VM.
 
 
@@ -112,7 +112,7 @@ Follow the next steps to download the sample code provided for this lab. It incl
 1. Login to your VM:
     * Open a command prompt and run `ssh <username>@<dlvm public ip address>`
 
-    > [!NOTE]
+    > NOTE:
     > The **username** is the one you indicated when you created the DLVM.
 
     * After that, you'll be prompted for your password. Type the one you used during the DLVM setup.
@@ -123,7 +123,7 @@ Follow the next steps to download the sample code provided for this lab. It incl
 
 <!-- TODO Change the repo's address. Pending decision. -->
 
-> [!ALERT]
+> ALERT:
 > Make sure to put your code into `<your home>\styletransfer-lab`.
 
 #### Download the images dataset
@@ -132,7 +132,7 @@ After connecting to the DLVM, you'll need to download the images dataset for tra
 
 1. Enter the following command to navigate to the training directory: `cd styletransfer-lab/Training/StyleTransferTraining`.
 
-> [!NOTE]
+> NOTE:
 > There you'll see the **data**, **output** and **src** folders. 
 
 1. Enter the following commands to download the images from Google Cloud Storage:
@@ -140,16 +140,16 @@ After connecting to the DLVM, you'll need to download the images dataset for tra
     * Make sure to add **gsutil** to the system *PATH* when prompted. Use the default *bashrc* file.
     * Type the following command to apply the changes in the *.bashrc* file: `source ~/.bashrc`
     * Download the images: `gsutil -m rsync gs://images.cocodataset.org/train2014 data/train`
-    > [!NOTE]
+    > NOTE:
     > This process might take a few minutes as it will download ˜12.6GB of data.
 
     * Check that you have the training images: `du -sh data/train`
-    > [!NOTE]
+    > NOTE:
     > This should output ˜13GB of data.
 
 1. Once the images have been downloaded, execute the following command to download the base model: `curl http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat > data/vgg/imagenet-vgg-verydeep-19.mat`
 
-    > [!NOTE]
+    > NOTE:
     > This is a pretrained model from the Very Deep Convolutional Networks for Large-Scale Visual Recognition.
 
 ### Train and create the model
@@ -163,15 +163,15 @@ Create the TensorFlow model using the previously downloaded images.
 1. Navigate to the **src** folder: `cd src`.
 1. Run the training script: `python train.py --input_dir ../data --output_dir ../output --log_dir ../log --gpu_id 0 --batch_size 16`
 
-> [!ALERT]
+> ALERT:
 > The training lasts for about 4 hours, so consider using a tool like [screen](https://linuxize.com/post/how-to-use-linux-screen/) so you can keep your process running if the ssh connection fails. You should also make sure that TensorFlow v. 1.13.2 is installed in your VM.
 
-> [!NOTE]
+> NOTE:
 > The parameters indicate the training images path, the output and log directories, the GPU to use, and batch size that will be used in the training process.
 
 1. Once the training is finished, check the **output** directory: `ls ../output/checkpoint`. You should see the following files:
 
-![Checkpoints](Resources/checkpoints.png)
+![Checkpoints](./checkpoints.png)
 
 #### Export the model
 
@@ -179,7 +179,7 @@ Export the model checkpoint to a saved model.
 
 1. Run the following command: `python export.py --ckpt_dir ../output/checkpoint`.
 
-> [!NOTE]
+> NOTE:
 > Make sure you are in the **src** folder. This might take a few minutes.
 
 1. When the process is finished it will create an **export** directory. Type `ls export` and you should see a **saved_model.pb** file and a **variables** folder.
@@ -205,7 +205,7 @@ Follow these steps to download the sample code provided for this lab. It include
 1. Clone the lab repo to your VM using the command `git clone https://github.com/microsoft/AISchoolTutorials ai-school-tutorials`.
 1. Copy the following command to move the lab content to `<your home>\styletransfer-lab: mv ai-school-tutorials/style-transfer ./styletransfer-lab`
 
-> [!ALERT]
+> ALERT:
 > Make sure to uncompress/clone your code into **Downloads\styletransfer-lab**.
 
 #### Download the model
@@ -216,12 +216,12 @@ After the training is complete, the model can be downloaded to your local comput
 1. Move to your lab directory: `cd <your home dir>\Downloads\styletransfer-lab`
 1. Execute the following command to copy the model: `scp -r <username>@<vm public ip address>:/home/<username>/styletransfer-lab/Training/StyleTransferTraining/src/export/* .\WebApp\StyleTransfer.Web\Models\`
 
-> [!NOTE]
+> NOTE:
 > The **-r** stands for recursive, as you'll be copying the folder and all of its contents.
 
 1. Provide your **password** when prompted.
 
-> [!NOTE]
+> NOTE:
 > This process might take a few minutes.
 
 1. Check the downloaded files by executing `dir .\WebApp\StyleTransfer.Web\Models\`. The folder should contain the `saved_model.pb` file and a `variables` folder.
@@ -284,7 +284,7 @@ The code base comes with a pre-built Web App and an API that applies the model t
     var pipeline = MlContext.Model.LoadTensorFlowModel(modelLocation: ImageConstants.ModelLocation).ScoreTensorFlowModel(inputColumnNames: new[] { "Placeholder" }, outputColumnNames: new[] { "add_37" });
     ```
 
-    > [!NOTE]
+    > NOTE:
    This pipeline is only composed by a **TensorFlowEstimator**. This is just enough to get a prediction from our TensorFlow model. Notice the *input* and *output* columns are explicitly specified. You can get that info by opening the saved model in a tool like [Netron](https://github.com/lutzroeder/Netron).
 
     * Replace the last line `return null` with the following code snippet:
@@ -294,7 +294,7 @@ The code base comes with a pre-built Web App and an API that applies the model t
     return mlModel;
     ```
 
-    > [!NOTE]
+    > NOTE:
     > Here we apply the new style to the input pixels and return the transformed pixels in the prediction result.
 
 1. Find the method `CreateEmptyDataView` and add the following code:
@@ -323,7 +323,7 @@ The code base comes with a pre-built Web App and an API that applies the model t
 
 1. Find the method `RunPrediction` and modify the following lines:
 
-    > [!NOTE]
+    > NOTE:
     > Here we resize the image to a specific size and extract the pixels. We use those pixels as the input data.
 
     ```csharp
@@ -338,7 +338,7 @@ The code base comes with a pre-built Web App and an API that applies the model t
     return ProcessResult(ImageLabelPredictions);
     ```
     
-    > [!NOTE]
+    > NOTE:
     > Here we apply the new style to the input pixels and return the transformed pixels in the prediction result.
 
 1. Save your changes.
@@ -349,18 +349,18 @@ Let's run the pre-built front-end to test our model from Visual Studio Code.
 
 1. In order to run the project you can press the **F5** key or you can click on **Debug -> Start Debugging** from VS Code menu.
 
-> [!NOTE]
+> NOTE:
 > This starts both the .NET Core dev server, as well as the client Node.js development server. It might take a few minutes to start.
 
 1. A new web page with the Web App will be opened in your browser. You'll see the *Style Transfer* page with a **Create!** button.
 1. Click the **Create!** button, the app will take you to the *camera/picture* upload section.
 
-> [!NOTE]
+> NOTE:
 > Click **Allow** if the browser requests for permission to access you camera.
 
 1. Click on **Capture** to take a picture and wait for a few seconds while the API runs the prediction. You'll see the image you uploaded with the new style applied in the right panel.
 
-> [!NOTE]
+> NOTE:
 > You can take a picture of yourself or upload one from your PC.
 
 ### Write the code to build an advanced pipeline
@@ -372,8 +372,8 @@ Let's update the Prediction method to use a more complex pipeline. ML.NET has a 
 1. Find the method `ConfigureServices` and paste the following code after the comment `Add the EnginePool service`
     
     ```csharp
-    services.AddPredictionEnginePool<TensorInput, TensorOutput>();
-        services.AddOptions<PredictionEnginePoolOptions<TensorInput, TensorOutput>>()
+    services.AddPredictionEnginePool<ImageInput, TensorOutput>();
+        services.AddOptions<PredictionEnginePoolOptions<ImageInput, TensorOutput>>()
             .Configure(options =>
             {
                 options.ModelLoader = new InMemoryModelLoader(_mlnetModel);
@@ -392,7 +392,7 @@ Let's update the Prediction method to use a more complex pipeline. ML.NET has a 
         .Append(MlContext.Model.LoadTensorFlowModel(modelLocation: ImageConstants.ModelLocation).ScoreTensorFlowModel(inputColumnNames: new[] { "Placeholder" }, outputColumnNames: new[] { "add_37" }));
     ```
 
-    > [!NOTE]
+    > NOTE:
     > This pipeline is chaining multiple estimators to transform the image: one estimator to load the images from a local path, another estimator to resize the image and one to extract the pixels. Finally, the last estimator from the chain executes the scoring using the tensor flow model. In this scenario the pipeline will perform all the required transformations on the image.
 
 1. Find the method `CreateEmptyDataView` and add the following code:
@@ -430,7 +430,7 @@ Let's update the Prediction method to use a more complex pipeline. ML.NET has a 
 
     return ProcessResult(ImageLabelPredictions);
     ```
-    > [!NOTE]
+    > NOTE:
     > Here we are only changing the type of the input parameter to accept our new *ImageInput* with the path.
 
 1. Save your changes.
@@ -438,7 +438,7 @@ Let's update the Prediction method to use a more complex pipeline. ML.NET has a 
 1. Follow the same steps as before to take a picture of yourself and test our new pipeline.
 1. You'll see the image you uploaded with the new style applied in the right panel, this time using a more advanced transformation technique.
 
-   > [!NOTE]
+   > NOTE:
    > In order to avoid saving the input image to disk, you can also try building your own [ImageLoadingTransformer](https://github.com/dotnet/machinelearning/blob/master/src/Microsoft.ML.ImageAnalytics/ImageLoader.cs) that ingests the images in memory instead of writing to disk.
 
 *Media Elements and Templates. You may copy and use images, clip art, animations, sounds, music, shapes, video clips and templates provided with the sample application and identified for such use in documents and projects that you create using the sample application. These use rights only apply to your use of the sample application and you may not redistribute such media otherwise.*
