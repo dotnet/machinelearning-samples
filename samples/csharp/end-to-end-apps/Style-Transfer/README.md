@@ -89,7 +89,7 @@ The Deep Learning Virtual Machine is a specially configured variant of the [Data
 
 1. The provisioning should take about 10 minutes. The status of the provisioning is displayed int the Azure portal.
 1. Once provisioning is complete, you will see a **Deployment succeeded** notification.
-1. Go to **All Resources** in the left pane and search for the new resource: `ai-labs-st-<your initials>`.
+1. Go to **All Resources** in the left pane and search for the new resource: `ai-labs-st-<your initials>`
 1. Click on the first result to open it.
 1. Copy the `Public IP address` into Notepad.
 
@@ -118,19 +118,25 @@ Follow the next steps to download the sample code provided for this lab. It incl
     * After that, you'll be prompted for your password. Type the one you used during the DLVM setup.
 
 1. You should see a welcome message in your terminal indicating that you have successfully connected to the DLVM.
-1. Clone this repo to your VM using the command `git clone https://github.com/microsoft/AISchoolTutorials ai-school-tutorials`.
+1. Clone this repo to your VM using the command `git clone https://github.com/microsoft/AISchoolTutorials ai-school-tutorials`
 1. Copy the following command to move the lab content to `<your home>\styletransfer-lab`: `mv ai-school-tutorials/style-transfer ./styletransfer-lab`
 
 <!-- TODO Change the repo's address. Pending decision. -->
 
 > ALERT:
-> Make sure to put your code into `<your home>\styletransfer-lab`.
+> Make sure to put your code into `<your home>\styletransfer-lab`
+
+1. Finally, check the TensorFlow version installed on your machine. You can quickly check this by typing `pip freeze` in the command and finding tensorflow. Ideally it should be in range 1.13 - 1.15. In case it isn't check the following instructions:
+    * Uninstall the current version with the command `pip uninstall tensorflow`  
+    In case there is any tensorflow-gpu or tensorflow-estimator you may uninstall them as well.
+    * Then write `pip install tensorflow-gpu==1.x`
+    being x the desired version in the above range.
 
 #### Download the images dataset
 
 After connecting to the DLVM, you'll need to download the images dataset for training.
 
-1. Enter the following command to navigate to the training directory: `cd styletransfer-lab/Training/StyleTransferTraining`.
+1. Enter the following command to navigate to the training directory: `cd styletransfer-lab/Training/StyleTransferTraining`
 
 > NOTE:
 > There you'll see the **data**, **output** and **src** folders. 
@@ -160,16 +166,17 @@ Create the TensorFlow model and download the file.
 
 Create the TensorFlow model using the previously downloaded images.
 
-1. Navigate to the **src** folder: `cd src`.
+1. Navigate to the **src** folder: `cd src`
 1. Run the training script: `python train.py --input_dir ../data --output_dir ../output --log_dir ../log --gpu_id 0 --batch_size 16`
 
 > ALERT:
-> The training lasts for about 4 hours, so consider using a tool like [screen](https://linuxize.com/post/how-to-use-linux-screen/) so you can keep your process running if the ssh connection fails. You should also make sure that TensorFlow v. 1.13.2 is installed in your VM.
+> The training lasts for about 4 hours, so consider using a tool like [screen](https://linuxize.com/post/how-to-use-linux-screen/) so you can keep your process running if the ssh connection fails.
 
 > NOTE:
 > The parameters indicate the training images path, the output and log directories, the GPU to use, and batch size that will be used in the training process.
 
-1. Once the training is finished, check the **output** directory: `ls ../output/checkpoint`. You should see the following files:
+1. Once the training is finished, check the **output** directory: `ls ../output/checkpoint` 
+You should see the following files:
 
 ![Checkpoints](./checkpoints.png)
 
@@ -177,14 +184,18 @@ Create the TensorFlow model using the previously downloaded images.
 
 Export the model checkpoint to a saved model.
 
-1. Run the following command: `python export.py --ckpt_dir ../output/checkpoint`.
+1. Run the following command: `python export.py --ckpt_dir ../output/checkpoint`
 
 > NOTE:
 > Make sure you are in the **src** folder. This might take a few minutes.
 
 1. When the process is finished it will create an **export** directory. Type `ls export` and you should see a **saved_model.pb** file and a **variables** folder.
 
-1. **Optional:** You can run the **inference.py** script to test the model. In order to execute the script you need to run  `python inference.py --input ../data/style_images/starry_night.jpg --gpu 0 --mdl ./export/` from the **src** directory.  This will take the input image (*starry_night.jpg*) and run it through the exported model. As a result, a **stylized_image.jpg** will be created in the **src** folder. You can use **scp** to download the generated image to your local computer and open the file locally to view the image.
+1. **Optional:** You can run the **inference.py** script to test the model. In order to execute the script you need to run  `python inference.py --input ../data/style_images/starry_night.jpg --gpu 0 --mdl ./export/` from the **src** directory.  This will take the input image (*starry_night.jpg*) and run it through the exported model. As a result, a **stylized_image.jpg** will be created in the **src** folder. You can use **scp** to download the generated image to your local computer and open the file locally to view the image. 
+    * This can be done by opening a terminal in your local enviroment and using the following command:
+    `scp <username>@<vm public ip address>:/home/<username>/styletransfer-lab/Training/StyleTransferTraining/src/stylized_image.jpg .` 
+
+    This dot as second param means that is going to be copied to the terminal actual folder. In case you want it to be downloaded elsewhere, you can introduce any path of your local enviroment.
 
 1. Type `exit` in the console to close the ssh connection.
 
@@ -202,7 +213,7 @@ Download the required files to your local machine and finish preparing your deve
 
 Follow these steps to download the sample code provided for this lab. It includes a prebuilt React-based web application that captures an image and then sends the image content to an API for inferencing.
 
-1. Clone the lab repo to your VM using the command `git clone https://github.com/microsoft/AISchoolTutorials ai-school-tutorials`.
+1. Clone the lab repo to your VM using the command `git clone https://github.com/microsoft/AISchoolTutorials ai-school-tutorials`
 1. Copy the following command to move the lab content to `<your home>\styletransfer-lab: mv ai-school-tutorials/style-transfer ./styletransfer-lab`
 
 > ALERT:
@@ -224,14 +235,15 @@ After the training is complete, the model can be downloaded to your local comput
 > NOTE:
 > This process might take a few minutes.
 
-1. Check the downloaded files by executing `dir .\WebApp\StyleTransfer.Web\Models\`. The folder should contain the `saved_model.pb` file and a `variables` folder.
+1. Check the downloaded files by executing `dir .\WebApp\StyleTransfer.Web\Models\` 
+The folder should contain the `saved_model.pb` file and a `variables` folder.
 
 #### Open and set up your code in Visual Studio
 
 Open your code in Visual Studio and install any missing dependency. The code provided should be compiling without errors.
 
 1. Open `Visual Studio Code` from the **Start Menu**.
-1. Go to **File -> Open Folder** and open the folder at `Downloads\styletransfer-lab\WebApp\StyleTransfer.Web`.
+1. Go to **File -> Open Folder** and open the folder at `Downloads\styletransfer-lab\WebApp\StyleTransfer.Web`
 1. Wait for the code to load:
     * VS Code will prompt with an information dialog about unresolved dependencies. Click **Restore** to execute the restore command.
     * VS Code might prompt about missing required assets (C# Extension). Click **Yes** to add it.
@@ -252,9 +264,9 @@ Open your code in Visual Studio and install any missing dependency. The code pro
    * Select the first result.
    * Select the version `1.4`.
    * Press **Enter**.
-1. Type `Microsoft.ML.TensorFlow.Redist` and press **Enter**.
+1. Type `SciSharp.TensorFlow.Redist` and press **Enter**.
    * Select the first result.
-   * Select the version `0.14`.
+   * Select the version `1.15.0`.
    * Press **Enter**.
 
 ### Write code to get predictions using a simple pipeline
