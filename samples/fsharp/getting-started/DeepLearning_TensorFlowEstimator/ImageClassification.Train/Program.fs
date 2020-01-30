@@ -19,6 +19,7 @@ type ImageNetData =
         [<LoadColumn(1)>]
         Label : string
     }
+
 [<CLIMutable>]
 type ImageNetPipeline =
     {
