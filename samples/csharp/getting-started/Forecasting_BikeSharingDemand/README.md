@@ -6,7 +6,7 @@
 
 In this sample, you can see how to load data from a relational database using the Database Loader to train a forecasting model that predicts bike rental demand. 
 
-For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/time-series-demand-forecasting) on the Microsoft Docs site.
+For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/dotnet/machine-learning/tutorials/time-series-demand-forecasting) on the Microsoft Docs site.
 
 ## Problem
 
