@@ -57,18 +57,6 @@ Sample references screenshot in training project using **CPU**:
 
 ![](https://user-images.githubusercontent.com/1712635/68235892-f15d4e00-ffb8-11e9-98c2-5f318da56c40.png)
 
-#### Using GPU for training or inference/scoring
-
-When using **GPU**, your project has to reference the following redist library (*and remove the CPU version reference*):
-
-- `SciSharp.TensorFlow.Redist-Windows-GPU` (GPU training on Windows) 
-
-- `SciSharp.TensorFlow.Redist-Linux-GPU` (GPU training on Linux)
-
-Sample references screenshot in training project using **GPU**:
-
-![](https://user-images.githubusercontent.com/1712635/68236124-6cbeff80-ffb9-11e9-97e7-afcc1be23960.png)
-
 ### 2. Build Model
 
 Building the model includes the following steps:
@@ -219,4 +207,4 @@ In contrast, this sample is natively retraining a new TensorFlow model based on 
 
 - **Reuse across multiple frameworks and platforms:**
     This ultimately means that since you natively trained a Tensorflow model, in addition to being able to run/consume that model with the ML.NET 'wrapper' model (.zip file), you could also take the .pb TensorFlow frozen model and run it on any other framework such as Python/Keras/TensorFlow, or a Java/Android app or any framework that supports TensorFlow.
-- **Flexibility and performace:** Since ML.NET is internally retraining natively on Tensorflow layers, the ML.NET team will be able to optimize further and take multiple approaches like training on the last layer or training on multiple layers across the TensorFlow model and achive better quality levels.
+- **Flexibility and performace:** Since ML.NET is internally retraining natively on Tensorflow layers, the ML.NET team will be able to optimize further and take multiple approaches like training on the last layer or training on multiple layers across the TensorFlow model and achieve better quality levels.
