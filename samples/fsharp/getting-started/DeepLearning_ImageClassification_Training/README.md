@@ -145,7 +145,7 @@ let train, validation, test =
 
 70% of the data is used to train the model. From the remaining 30%, 90% of it is used for validation and the remaining 10% is used for testing.
 
-Once the data has been split, define the classifier options along with the model training pipeline. In this example, the 101-layer variant of the ResNet architecture is used. 
+Once the data has been split, define the classifier options along with the model training pipeline. In this example, the 101-layer variant of the ResNet architecture is used.
 
 ```fsharp
 // Define ImageClassificationTrainer Options
@@ -163,7 +163,7 @@ let trainingPipeline =
         .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel","LabelAsKey"))
 ```
 
-The `mlContext.MulticlassClassification.Trainers.ImageClassification` high level API trains a native TensorFlow Deep Neural Network image classification model using the ResNet V2 101 architecture and performing transfer learning using the provided dataset.
+The `mlContext.MulticlassClassification.Trainers.ImageClassification` high level API trains a native TensorFlow Deep Neural Network image classification model using the ResNet V2 101 architecture and performs transfer learning on the newly provided dataset.
 
 ### 3. Train model
 
@@ -211,14 +211,6 @@ mlContext.Data.CreateEnumerable<ImagePrediction>(predictions, reuseRowObject=tru
 This sample app is retraining a TensorFlow model for image classification. As a user, you could think it is pretty similar to this other sample [Image classifier using the TensorFlow Estimator featurizer](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator). However, the internal implementation is very different under the covers. In that mentioned sample, it is using a 'model composition approach' where an initial TensorFlow model (i.e. InceptionV3 or ResNet) is only used to featurize the images and produce the binary information per image to be used by another ML.NET classifier trainer added on top (such as `LbfgsMaximumEntropy`). Therefore, even when that sample is using a TensorFlow model, you are training only with a ML.NET trainer, you don't retrain a new TensorFlow model but train an ML.NET model. That's why the output of that sample is only an ML.NET model (.zip file).
 
 In contrast, this sample is natively retraining a new TensorFlow model based on a Transfer Learning approach but training a new TensorFlow model derived from the specified pre-trained model (Inception V3 or ResNet).
-
-The important difference is that this approach is internally retraining with TensorFlow APIs and creating a new TensorFlow model (.pb). Then, the ML.NET .zip file model you use is just like a wrapper around the new retrained TensorFlow model. This is why you can also see a new .pb file generated after training:
-
-![](https://user-images.githubusercontent.com/1712635/64131693-26fa7680-cd7f-11e9-8010-89c60b71fe11.png)
-
-In the screenshot below you can see how you can see that retrained TensorFlow model (`custom_retrained_model_based_on_InceptionV3.meta.pb`) in **Netron**, since it is a native TensorFlow model:
-
-![](https://user-images.githubusercontent.com/1712635/64131904-9d4ba880-cd80-11e9-96a3-c2f936f8c5e0.png)
 
 **Benefits:** 
 
