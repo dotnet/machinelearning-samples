@@ -65,7 +65,7 @@ let loadImagesFromDirectory (path:string) (useDirectoryAsLabel:bool) =
 
 [<EntryPoint>]
 let main argv =
-
+    
     let fileName = "flower_photos_small_set.zip"
     let downloadUrl = "https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D"
  
@@ -125,19 +125,19 @@ let main argv =
         train 
         |> trainingPipeline.Fit
 
-    // Make predictions on the test set
-    let predictions = 
-        mlContext.Data.CreateEnumerable<ImagePrediction>(test |> trainedModel.Transform, reuseRowObject=true)
+    // Get Prediction IDataView
+    let predictions = test |> trainedModel.Transform
 
     // Evaluate the model
-    let metrics = mlContext.MulticlassClassification.Evaluate(test |> trainedModel.Transform,labelColumnName="LabelAsKey")
+    let metrics = mlContext.MulticlassClassification.Evaluate(predictions,labelColumnName="LabelAsKey")
     printfn "MacroAccurracy: %f | LogLoss: %f" metrics.MacroAccuracy metrics.LogLoss
 
     // Save Model
     mlContext.Model.Save(trainedModel, preprocessedData.Schema, Path.Join(__SOURCE_DIRECTORY__,"model.zip"))
 
-    // Output 5 predictions
-    predictions 
-    |> Seq.take 5 
-    |> Seq.iter(fun prediction -> printfn "Original: %s | Predicted: %s" prediction.Label prediction.PredictedLabel)
+    // Display 5 predictions
+    mlContext.Data.CreateEnumerable<ImagePrediction>(predictions, reuseRowObject=true)
+    |> Seq.take 5
+    |> Seq.iter(fun prediction -> printfn "Original: %s | Predicted: %s" prediction.Label prediction.PredictedLabel) 
+    
     0 // return an integer exit code
