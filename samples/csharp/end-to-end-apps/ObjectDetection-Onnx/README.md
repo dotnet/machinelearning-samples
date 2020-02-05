@@ -33,7 +33,7 @@ There are multiple pre-trained models for identifying multiple objects in the im
 
 ## Custom Vision models
 
-This sample defaults to use the pre-trained Tiny YOLOv2 model described above.  However it was also written to support ONNX models exported from Microsoft [Custom Vision](https://www.customvision.a).
+This sample defaults to use the pre-trained Tiny YOLOv2 model described above.  However it was also written to support ONNX models exported from Microsoft [Custom Vision](https://www.customvision.ai).
 
 ### To use your own model, use the following steps
 
