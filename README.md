@@ -1,3 +1,5 @@
+> Note: We'd love to hear your feedback about ML.NET. Let us know your thoughts in [this survey](https://aka.ms/feb2020-mlnet-survey).
+
 # ML.NET Samples
 
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers. 
