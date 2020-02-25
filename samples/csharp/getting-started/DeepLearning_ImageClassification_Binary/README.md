@@ -1,3 +1,12 @@
+---
+page_type: sample
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+---
+
 # Image Classification Model Training (two categories) - Preferred API (Based on native TensorFlow transfer learning)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
