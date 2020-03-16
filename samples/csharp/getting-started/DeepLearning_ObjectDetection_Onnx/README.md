@@ -19,7 +19,7 @@ There are multiple models which are pre-trained for identifying multiple objects
 
 The Open Neural Network eXchange i.e [ONNX](http://onnx.ai/) is an open format to represent deep learning models. With ONNX, developers can move models between state-of-the-art tools and choose the combination that is best for them. ONNX is developed and supported by a community of partners.
 
-The model is downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/tiny_yolov2) which is a is a collection of pre-trained, state-of-the-art models in the ONNX format.
+The model is downloaded from the [ONNX Model Zoo](https://github.com/onnx/models) which is a is a collection of pre-trained, state-of-the-art models in the ONNX format.
 
 The Tiny YOLO2 model was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. Below are the model's prerequisites. 
 
