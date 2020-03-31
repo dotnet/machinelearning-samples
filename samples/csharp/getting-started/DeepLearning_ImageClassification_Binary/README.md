@@ -1,3 +1,16 @@
+---
+page_type: sample
+name: "Train a deep learning image classification model with ML.NET and TensorFlow"
+description: "Use transfer learning to train a deep learning image classification model with ML.NET and TensorFlow"
+urlFragment: "mlnet-image-classification-transfer-learning"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- vs
+---
+
 # Image Classification Model Training (two categories) - Preferred API (Based on native TensorFlow transfer learning)
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
