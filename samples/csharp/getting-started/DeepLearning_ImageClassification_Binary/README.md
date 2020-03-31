@@ -1,5 +1,8 @@
 ---
 page_type: sample
+name: "Train a deep learning image classification model with ML.NET and TensorFlow"
+description: "Use transfer learning to train a deep learning image classification model with ML.NET and TensorFlow"
+urlFragment: "mlnet-image-classification-transfer-learning"
 languages:
 - csharp
 products:
