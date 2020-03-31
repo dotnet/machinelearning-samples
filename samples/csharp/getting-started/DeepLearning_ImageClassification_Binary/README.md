@@ -8,6 +8,7 @@ languages:
 products:
 - dotnet
 - dotnet-core
+- vs
 ---
 
 # Image Classification Model Training (two categories) - Preferred API (Based on native TensorFlow transfer learning)
