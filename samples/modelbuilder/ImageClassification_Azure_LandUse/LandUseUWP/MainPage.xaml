@@ -1,0 +1,52 @@
+﻿<Page
+    x:Class="LandUseUWP.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LandUseUWP"
+    xmlns:Custom="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBox 
+            x:Name="AddressBar" 
+            Text="Address Bar" 
+            VerticalAlignment="Top"
+            Margin="10" 
+            FontSize="20"/>
+        <Button 
+            x:Name="QueryLocation"
+            Content="Query Location"
+            VerticalAlignment="Top"
+            Margin="10"
+            Grid.Column="1"
+            FontSize="20"
+            Click="QueryLocation_Click"/>
+        <Custom:MapControl 
+            x:Name="SatelliteMap"
+            Margin="10"
+            Style="Aerial"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            ZoomLevel="19"
+            Loaded="SatelliteMap_Loaded"/>
+        <TextBlock
+            x:Name="PredictionText"
+            HorizontalAlignment="Center"
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            FontSize="24"/>
+    </Grid>
+</Page>
