@@ -6,7 +6,7 @@
 
 ## Goal
 
-Train a deep learning image classification model in Azure. The 
+Train a deep learning image classification model in Azure. The model determines
 
 ## Application
 
