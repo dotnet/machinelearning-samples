@@ -357,5 +357,5 @@ MigrationBackup/
 .ionide/
 
 # Models
-**/*.onnx
-**/MLModel.zip
+# **/*.onnx
+# **/MLModel.zip
