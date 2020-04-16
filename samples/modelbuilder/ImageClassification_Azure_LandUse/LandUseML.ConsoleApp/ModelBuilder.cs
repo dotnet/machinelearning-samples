@@ -10,9 +10,8 @@ namespace LandUseML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\AppData\Local\Temp\b63cb632-0e6a-44e4-8f8b-21c94ade7849.tsv";
-        private static string MLNET_MODEL = @"C:\Users\luquinta.REDMOND\AppData\Local\Temp\MLVSTools\LandUseML\LandUseML.Model\MLModel.zip";
-        private static string ONNX_MODEL = @"C:\Users\luquinta.REDMOND\AppData\Local\Temp\MLVSTools\LandUseML\LandUseML.Model\bestModel.onnx";
+        private static string MLNET_MODEL = @"MLModel.zip";
+        private static string ONNX_MODEL = @"bestModel.onnx";
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
@@ -22,12 +21,7 @@ namespace LandUseML.ConsoleApp
         public static void CreateMLNetModelFromOnnx()
         {
             // Load data
-            IDataView inputDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-                                            path: TRAIN_DATA_FILEPATH,
-                                            hasHeader: true,
-                                            separatorChar: '\t',
-                                            allowQuoting: true,
-                                            allowSparse: false);
+            IDataView inputDataView = mlContext.Data.LoadFromEnumerable(new ModelInput[] { });
 
             // Create an ML.NET pipeline to score using the ONNX model
             // Notice that this pipeline is not trainable because it only contains transformers

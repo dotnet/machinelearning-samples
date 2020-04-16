@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.ML;
 using LandUseML.Model;
+using System.IO;
+using System.Reflection;
 
 namespace LandUseML.Model
 {
@@ -15,7 +17,6 @@ namespace LandUseML.Model
         // Method for consuming model in your app
         public static ModelOutput Predict(ModelInput input)
         {
-
             // Create new MLContext
             MLContext mlContext = new MLContext();
 
@@ -26,7 +27,7 @@ namespace LandUseML.Model
             mlContext.ComponentCatalog.RegisterAssembly(typeof(LabelMapping).Assembly);
 
             // Load model & create prediction engine
-            string modelPath = @"C:\Users\luquinta.REDMOND\AppData\Local\Temp\MLVSTools\LandUseML\LandUseML.Model\MLModel.zip";
+            string modelPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),"MLModel.zip");
             ITransformer mlModel = mlContext.Model.Load(modelPath, out var modelInputSchema);
             var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
 

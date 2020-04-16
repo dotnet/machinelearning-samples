@@ -5,17 +5,18 @@ using System.IO;
 using System.Linq;
 using Microsoft.ML;
 using LandUseML.Model;
+using System.Reflection;
 
 namespace LandUseML.ConsoleApp
 {
     class Program
     {
-        //Dataset to use for predictions 
-        private const string DATA_FILEPATH = @"C:\Users\luquinta.REDMOND\AppData\Local\Temp\b63cb632-0e6a-44e4-8f8b-21c94ade7849.tsv";
+        //Image to use for predictions
+        private const string DATA_FILEPATH = @"inputimage.jpeg";
 
         static void Main(string[] args)
         {
-            // Create single instance of sample data from first line of dataset for model input
+            // Create single instance of sample data for model input
             ModelInput sampleData = CreateSingleDataSample(DATA_FILEPATH);
 
             // Make a single prediction on the sample data and print results
@@ -33,21 +34,10 @@ namespace LandUseML.ConsoleApp
         // Method to load single row of dataset to try a single prediction
         private static ModelInput CreateSingleDataSample(string dataFilePath)
         {
-            // Create MLContext
-            MLContext mlContext = new MLContext();
-
-            // Load dataset
-            IDataView dataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-                                            path: dataFilePath,
-                                            hasHeader: true,
-                                            separatorChar: '\t',
-                                            allowQuoting: true,
-                                            allowSparse: false);
-
             // Use first line of dataset as model input
             // You can replace this with new test data (hardcoded or from end-user application)
-            ModelInput sampleForPrediction = mlContext.Data.CreateEnumerable<ModelInput>(dataView, false)
-                                                                        .First();
+            ModelInput sampleForPrediction = new ModelInput { ImageSource = dataFilePath };
+
             return sampleForPrediction;
         }
         #endregion

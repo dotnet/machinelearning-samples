@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.IO;
 using Microsoft.ML;
 using LandUseML.Model;
@@ -31,19 +24,24 @@ namespace LandUseAPI
         {
             services.AddSingleton<PredictionEngine<ModelInput, ModelOutput>>(sp =>
             {
+                // Initialize MLContext
                 MLContext ctx = new MLContext();
+
                 // Register NormalizeMapping
                 ctx.ComponentCatalog.RegisterAssembly(typeof(NormalizeMapping).Assembly);
+                
                 // Register LabelMapping
                 ctx.ComponentCatalog.RegisterAssembly(typeof(LabelMapping).Assembly);
+                
                 // Define model path
                 var modelPath = Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "MLModel.zip");
+                
                 //Load model
-                ITransformer mlModel = ctx.Model.Load(modelPath, out var
-            modelInputSchema);
+                ITransformer mlModel = ctx.Model.Load(modelPath, out var modelInputSchema);
+                
                 // Create prediction engine
-                var predEngine = ctx.Model.CreatePredictionEngine<ModelInput,
-            ModelOutput>(mlModel);
+                var predEngine = ctx.Model.CreatePredictionEngine<ModelInput,ModelOutput>(mlModel);
+
                 return predEngine;
             });
             services.AddControllers();

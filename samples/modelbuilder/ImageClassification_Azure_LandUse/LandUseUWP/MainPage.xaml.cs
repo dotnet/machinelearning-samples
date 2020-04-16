@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Geolocation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -138,13 +130,16 @@ namespace LandUseUWP
         {
             string prediction;
             string base64image = Convert.ToBase64String(imageBytes);
+
+            // Create request body
             string content = JsonSerializer.Serialize(
                 new Dictionary<string, string>
                 {
-                { "data", base64image }
+                    { "data", base64image }
                 });
 
-            using (var client = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (a, b, c, d) => true }))
+            // Send image to ASP.NET Core Web API for classification
+            using (var client = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (msg, cert, chain, ssl) => true }))
             {
                 var res = await client.PostAsync("https://localhost:5001/api/classification", new StringContent(content, Encoding.UTF8, "application/json"));
                 prediction = await res.Content.ReadAsStringAsync();
