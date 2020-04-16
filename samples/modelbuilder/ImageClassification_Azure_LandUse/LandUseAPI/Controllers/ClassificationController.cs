@@ -40,7 +40,7 @@ namespace LandUseAPI.Controllers
 
             lock (_predictionEngineLock)
             {
-                // Use Prediction to classify image
+                // Use PredictionEngine to classify image
                 ModelOutput output = _predictionEngine.Predict(new ModelInput { ImageSource = imagePath });
                 prediction = output.Prediction;
             }

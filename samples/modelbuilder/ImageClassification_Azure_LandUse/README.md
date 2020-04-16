@@ -1,3 +1,19 @@
+---
+page_type: sample
+name: "Train a deep learning image classification model in Azure with ML.NET Model Builder"
+description: "Use ML.NET Model Builder to train a deep learning image classification model in Azure"
+urlFragment: "mlnet-image-classification-azure-model-builder"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- aspnet-core
+- vs
+- windows
+- windows-uwp
+---
+
 # Image Classification in Azure with Model Builder
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
