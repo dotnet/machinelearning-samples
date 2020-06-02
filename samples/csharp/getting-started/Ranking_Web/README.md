@@ -4,7 +4,7 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.4         | Dynamic API       | Up-to-date                    | Console app | .csv file | Ranking search engine results | Ranking          | LightGBM |
 
-This introductory sample shows how to use ML.NET to predict the the best order to display search engine results. In the world of machine learning, this type of prediction is known as ranking.
+This introductory sample shows how to use ML.NET to predict the best order to display search engine results. In the world of machine learning, this type of prediction is known as ranking.
 
 ## Problem
 The ability to perform ranking is a common problem faced by search engines since users expect query results to be ranked/sorted according to their relevance. This problem extends beyond the needs of search engines to include a variety of business scenarios where personalized sorting is key to the user experience. Here are a few specific examples:
@@ -107,7 +107,7 @@ IEstimator<ITransformer> dataPipeline = mlContext.Transforms.Concatenate(Feature
     .Append(mlContext.Transforms.Conversion.Hash(nameof(SearchResultData.GroupId), nameof(SearchResultData.GroupId), numberOfBits: 20));
 
 // Set the LightGBM LambdaRank trainer.
-IEstimator<ITransformer> trainer = mlContext.Ranking.Trainers.LightGbm(labelColumnName: nameof(SearchResultData.Label), featureColumnName: FeaturesVectorName, rowGroupColumnName: nameof(SearchResultData.GroupId));  ;
+IEstimator<ITransformer> trainer = mlContext.Ranking.Trainers.LightGbm(labelColumnName: nameof(SearchResultData.Label), featureColumnName: FeaturesVectorName, rowGroupColumnName: nameof(SearchResultData.GroupId));
 IEstimator<ITransformer> trainerPipeline = dataPipeline.Append(trainer);
 `````
 
