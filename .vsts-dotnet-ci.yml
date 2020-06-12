@@ -13,9 +13,10 @@ phases:
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
   - task: DotNetCoreCLI@2
+    displayName: Run CreditCardFraudDetection (BinaryClassification) trainer sample
     inputs:
       command: 'run'
-      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\**\*.csproj'
+      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.Trainer\CreditCardFraudDetection.Trainer.csproj'
 
 # - phase: CreditCardFraudDetection2
 #   queue: Hosted VS2017
