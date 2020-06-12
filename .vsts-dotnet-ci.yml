@@ -7,6 +7,10 @@ phases:
     displayName: Build CreditCardFraudDetection (BinaryClassification)
     inputs:
       projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'run'
+      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\**\*.csproj'
 
 - phase: CreditCardFraudDetection2
   queue: Hosted VS2017
