@@ -1,10 +1,14 @@
 
 
+pool:
+  vmImage: 'windows-latest'
 phases:
 - phase: CreditCardFraudDetection
-  queue: Hosted VS2017
+  # queue: Hosted VS2017
   steps:
   - task: UseDotNet@2
+    pool:
+      vmImage: 'windows-2019'
     inputs:
       packageType: 'sdk'
       version: '2.1.x'
