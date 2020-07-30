@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <StartupObject />
   </PropertyGroup>
@@ -24,11 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="assets\inputs\images-for-predictions\FlowersForPredictions\StrangeBlackRose.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="assets\inputs\test-images\StrangeBlackRose.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="assets\inputs\images-for-predictions\FlowersForPredictions\RareThreeSpiralledRose.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="assets\inputs\test-images\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="assets\inputs\images-for-predictions\gamer_chair_01.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
