@@ -193,21 +193,21 @@ Since any given ML.NET sample could be comprised by multiple apps/projects (e.g.
 
 ### Phase A: Iterative process building the model
 
-	1. Input dataset (where is my data)
-	2. Loader function (define columns)
-	3. Feature engineering (process raw input data)
-	4. Learner (define my pipeline's model type & hyperparameters)
-	5. TrainTest / CV (get metrics for my pipeline)
-	6. (Look at metrics)
-	7. (Iterate to improve metrics -- goto step 3 or 4)
-	8. Re-train a model for production on 100% of data
+1. Input dataset (where is my data)
+2. Loader function (define columns)
+3. Feature engineering (process raw input data)
+4. Learner (define my pipeline's model type & hyperparameters)
+5. TrainTest / CV (get metrics for my pipeline)
+6. (Look at metrics)
+7. (Iterate to improve metrics -- goto step 3 or 4)
+8. Re-train a model for production on 100% of data
 
 **Train with 100% of the data once the algorithm and config are decided**:
- 
+
 You should do a full re-train after your iterative train/evaluate/test cycles because of the following reasons:
 
-- The full re-training on the entire dataset gives you a better model because it is trained with more data. 
-- The CV/TrainTest gives your pipeline's metrics { accuracy, AUC, NDCG, etc } so you can compare different approaches (algorithm/hyper-parameters). 
+- The full re-training on the entire dataset gives you a better model because it is trained with more data.
+- The CV/TrainTest gives your pipeline's metrics { accuracy, AUC, NDCG, etc } so you can compare different approaches (algorithm/hyper-parameters).
 - The full retraining, on 100% of the dataset, is the model to deploy in production.
 
 ### B. Deploy the model to production application (end-user application)
