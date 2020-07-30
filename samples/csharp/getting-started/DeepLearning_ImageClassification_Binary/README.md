@@ -50,216 +50,217 @@ In this sample, only bridge deck images are used.
 1. Copy the subdirectories into the *assets* directory.
 1. Define the image data schema containing the image path and category the image belongs to. Create a class called `ImageData`.
 
-```csharp
-class ImageData
-{
-    public string ImagePath { get; set; }
+    ```csharp
+    class ImageData
+    {
+        public string ImagePath { get; set; }
 
-    public string Label { get; set; }
-}
-```
+        public string Label { get; set; }
+    }
+    ```
 
 1. Define the input schema by creating the `ModelInput` class. The only columns/properties used for training and making predictions are the `Image` and `LabelAsKey`. The `ImagePath` and `Label` columns are there for convenience to access the original file name and text representation of the category it belongs to respectively.
 
-```csharp
-class ModelInput
-{
-    public byte[] Image { get; set; }
-    
-    public UInt32 LabelAsKey { get; set; }
+    ```csharp
+    class ModelInput
+    {
+        public byte[] Image { get; set; }
 
-    public string ImagePath { get; set; }
+        public UInt32 LabelAsKey { get; set; }
 
-    public string Label { get; set; }
-}
-```
+        public string ImagePath { get; set; }
+
+        public string Label { get; set; }
+    }
+    ```
 
 1. Define the output schema by creating the `ModelInput` class.
 
-```csharp
-class ModelOutput
-{
-    public string ImagePath { get; set; }
+    ```csharp
+    class ModelOutput
+    {
+        public string ImagePath { get; set; }
 
-    public string Label { get; set; }
+        public string Label { get; set; }
 
-    public string PredictedLabel { get; set; }
-}
-```
+        public string PredictedLabel { get; set; }
+    }
+    ```
 
 ## Load the data
 
 1.  Before loading the data, it needs to be formatted into a list of `ImageInput` objects. To do so, create a data loading utility method `LoadImagesFromDirectory`.
 
-```csharp
-public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder, bool useFolderNameAsLabel = true)
-{
-    var files = Directory.GetFiles(folder, "*",
-        searchOption: SearchOption.AllDirectories);
-
-    foreach (var file in files)
+    ```csharp
+    public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder, bool useFolderNameAsLabel = true)
     {
-        if ((Path.GetExtension(file) != ".jpg") && (Path.GetExtension(file) != ".png"))
-            continue;
+        var files = Directory.GetFiles(folder, "*",
+            searchOption: SearchOption.AllDirectories);
 
-        var label = Path.GetFileName(file);
-
-        if (useFolderNameAsLabel)
-            label = Directory.GetParent(file).Name;
-        else
+        foreach (var file in files)
         {
-            for (int index = 0; index < label.Length; index++)
+            if ((Path.GetExtension(file) != ".jpg") && (Path.GetExtension(file) != ".png"))
+                continue;
+
+            var label = Path.GetFileName(file);
+
+            if (useFolderNameAsLabel)
+                label = Directory.GetParent(file).Name;
+            else
             {
-                if (!char.IsLetter(label[index]))
+                for (int index = 0; index < label.Length; index++)
                 {
-                    label = label.Substring(0, index);
-                    break;
+                    if (!char.IsLetter(label[index]))
+                    {
+                        label = label.Substring(0, index);
+                        break;
+                    }
                 }
             }
-        }
 
-        yield return new ImageData()
-        {
-            ImagePath = file,
-            Label = label
-        };
+            yield return new ImageData()
+            {
+                ImagePath = file,
+                Label = label
+            };
+        }
     }
-}
-```
+    ```
 
 1. Inside of your application, use the `LoadImagesFromDirectory` method to load the data.
 
-```csharp
-IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: assetsRelativePath, useFolderNameAsLabel: true);
-IDataView imageData = mlContext.Data.LoadFromEnumerable(images);
-```
+    ```csharp
+    IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: assetsRelativePath, useFolderNameAsLabel: true);
+    IDataView imageData = mlContext.Data.LoadFromEnumerable(images);
+    ```
 
 ## Preprocess the data
 
 1. Add variance to the data by shuffling it.
 
-```csharp
-IDataView shuffledData = mlContext.Data.ShuffleRows(imageData);
-```
+    ```csharp
+    IDataView shuffledData = mlContext.Data.ShuffleRows(imageData);
+    ```
 
 1. Machine learning models expect input to be in numerical format. Therefore, some preprocessing needs to be done on the data prior to training. First, the label or value to predict is converted into a numerical value. Then, the images are loaded as a `byte[]`.
 
-```csharp
-var preprocessingPipeline = mlContext.Transforms.Conversion.MapValueToKey(
-        inputColumnName: "Label",
-        outputColumnName: "LabelAsKey")
-    .Append(mlContext.Transforms.LoadRawImageBytes(
-        outputColumnName: "Image",
-        imageFolder: assetsRelativePath,
-        inputColumnName: "ImagePath"));
-```
+    ```csharp
+    var preprocessingPipeline = mlContext.Transforms.Conversion.MapValueToKey(
+            inputColumnName: "Label",
+            outputColumnName: "LabelAsKey")
+        .Append(mlContext.Transforms.LoadRawImageBytes(
+            outputColumnName: "Image",
+            imageFolder: assetsRelativePath,
+            inputColumnName: "ImagePath"));
+    ```
 
 1. Fit the data to the preprocessing pipeline.
 
-```csharp
-IDataView preProcessedData = preprocessingPipeline
-                    .Fit(shuffledData)
-                    .Transform(shuffledData);
-```
+    ```csharp
+    IDataView preProcessedData = preprocessingPipeline
+                        .Fit(shuffledData)
+                        .Transform(shuffledData);
+    ```
 
 1. Create train/validation/test datasets to train and evaluate the model.
 
-```csharp
-TrainTestData trainSplit = mlContext.Data.TrainTestSplit(data: preProcessedData, testFraction: 0.3);
-TrainTestData validationTestSplit = mlContext.Data.TrainTestSplit(trainSplit.TestSet);
+    ```csharp
+    TrainTestData trainSplit = mlContext.Data.TrainTestSplit(data: preProcessedData, testFraction: 0.3);
+    TrainTestData validationTestSplit = mlContext.Data.TrainTestSplit(trainSplit.TestSet);
 
-IDataView trainSet = trainSplit.TrainSet;
-IDataView validationSet = validationTestSplit.TrainSet;
-IDataView testSet = validationTestSplit.TestSet;
-```
+    IDataView trainSet = trainSplit.TrainSet;
+    IDataView validationSet = validationTestSplit.TrainSet;
+    IDataView testSet = validationTestSplit.TestSet;
+    ```
 
 ## Define the training pipeline
 
-```csharp
-var classifierOptions = new ImageClassificationTrainer.Options()
-{
-    FeatureColumnName = "Image",
-    LabelColumnName = "LabelAsKey",
-    ValidationSet = validationSet,
-    Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
-    MetricsCallback = (metrics) => Console.WriteLine(metrics),
-    TestOnTrainSet = false,
-    ReuseTrainSetBottleneckCachedValues = true,
-    ReuseValidationSetBottleneckCachedValues = true,
-    WorkspacePath=workspaceRelativePath
-};
+    ```csharp
+    var classifierOptions = new ImageClassificationTrainer.Options()
+    {
+        FeatureColumnName = "Image",
+        LabelColumnName = "LabelAsKey",
+        ValidationSet = validationSet,
+        Arch = ImageClassificationTrainer.Architecture.ResnetV2101,
+        MetricsCallback = (metrics) => Console.WriteLine(metrics),
+        TestOnTrainSet = false,
+        ReuseTrainSetBottleneckCachedValues = true,
+        ReuseValidationSetBottleneckCachedValues = true,
+        WorkspacePath=workspaceRelativePath
+    };
 
-var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
-    .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
-```
+    var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
+        .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+    ```
 
 ## Train the model
 
 Apply the data to the training pipeline. 
 
-```
-ITransformer trainedModel = trainingPipeline.Fit(trainSet);
-```
+    ```csharp
+    ITransformer trainedModel = trainingPipeline.Fit(trainSet);
+    ```
 
 ## Use the model
+
 1. Create a utility method to display predictions.
 
-```csharp
-private static void OutputPrediction(ModelOutput prediction)
-{
-    string imageName = Path.GetFileName(prediction.ImagePath);
-    Console.WriteLine($"Image: {imageName} | Actual Value: {prediction.Label} | Predicted Value: {prediction.PredictedLabel}");
-}
-```
+    ```csharp
+    private static void OutputPrediction(ModelOutput prediction)
+    {
+        string imageName = Path.GetFileName(prediction.ImagePath);
+        Console.WriteLine($"Image: {imageName} | Actual Value: {prediction.Label} | Predicted Value: {prediction.PredictedLabel}");
+    }
+    ```
 
 ### Classify a single image
 
 1. Make predictions on the test set using the trained model. Create a utility method called `ClassifySingleImage`. 
 
-```csharp
-public static void ClassifySingleImage(MLContext mlContext, IDataView data, ITransformer trainedModel)
-{
-    PredictionEngine<ModelInput, ModelOutput> predictionEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(trainedModel);
+    ```csharp
+    public static void ClassifySingleImage(MLContext mlContext, IDataView data, ITransformer trainedModel)
+    {
+        PredictionEngine<ModelInput, ModelOutput> predictionEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(trainedModel);
 
-    ModelInput image = mlContext.Data.CreateEnumerable<ModelInput>(data,reuseRowObject:true).First();
+        ModelInput image = mlContext.Data.CreateEnumerable<ModelInput>(data,reuseRowObject:true).First();
 
-    ModelOutput prediction = predictionEngine.Predict(image);
+        ModelOutput prediction = predictionEngine.Predict(image);
 
-    Console.WriteLine("Classifying single image");
-    OutputPrediction(prediction);
-}
-```
+        Console.WriteLine("Classifying single image");
+        OutputPrediction(prediction);
+    }
+    ```
 
 1. Use the `ClassifySingleImage` inside of your application.
 
-```csharp
-ClassifySingleImage(mlContext, testSet, trainedModel);
-```
+    ```csharp
+    ClassifySingleImage(mlContext, testSet, trainedModel);
+    ```
 
 ### Classify multiple images
 
 1. Make predictions on the test set using the trained model. Create a utility method called `ClassifyImages`. 
 
-```csharp
-public static void ClassifyImages(MLContext mlContext, IDataView data, ITransformer trainedModel)
-{
-    IDataView predictionData = trainedModel.Transform(data);
-
-    IEnumerable<ModelOutput> predictions = mlContext.Data.CreateEnumerable<ModelOutput>(predictionData, reuseRowObject: true).Take(10);
-
-    Console.WriteLine("Classifying multiple images");
-    foreach (var prediction in predictions)
+    ```csharp
+    public static void ClassifyImages(MLContext mlContext, IDataView data, ITransformer trainedModel)
     {
-        OutputPrediction(prediction);
+        IDataView predictionData = trainedModel.Transform(data);
+
+        IEnumerable<ModelOutput> predictions = mlContext.Data.CreateEnumerable<ModelOutput>(predictionData, reuseRowObject: true).Take(10);
+
+        Console.WriteLine("Classifying multiple images");
+        foreach (var prediction in predictions)
+        {
+            OutputPrediction(prediction);
+        }
     }
-}
-```
+    ```
 
 1. Use the `ClassifyImages` inside of your application.
 
-```csharp
-ClassifySingleImage(mlContext, testSet, trainedModel);
-```
+    ```csharp
+    ClassifySingleImage(mlContext, testSet, trainedModel);
+    ```
 
 ## Run the application
 
