@@ -1,15 +1,15 @@
-﻿using CreditCardFraudDetection.Common;
+﻿using CCFraudDetection.Common;
 using System;
 using System.IO;
 
-namespace CreditCardFraudDetection.Predictor
+namespace CCFraudDetection.Predictor
 {
     class Program
     {
         static void Main(string[] args)
         {
             string assetsPath = GetAbsolutePath(@"../../../assets");
-            string trainOutput = GetAbsolutePath(@"../../../../CreditCardFraudDetection.Trainer/assets/output");
+            string trainOutput = GetAbsolutePath(@"../../../../CCFraudDetection.Trainer/assets/output");
 
             CopyModelAndDatasetFromTrainingProject(trainOutput, assetsPath);
 

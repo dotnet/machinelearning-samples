@@ -1,10 +1,10 @@
-﻿using CreditCardFraudDetection.Common.DataModels;
+﻿using CCFraudDetection.Common.DataModels;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using System;
 using System.Linq;
 
-namespace CreditCardFraudDetection.Predictor
+namespace CCFraudDetection.Predictor
 {
     public class Predictor
     {

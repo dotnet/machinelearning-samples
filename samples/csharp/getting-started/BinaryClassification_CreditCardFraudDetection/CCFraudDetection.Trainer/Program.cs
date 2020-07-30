@@ -3,12 +3,12 @@ using System.Linq;
 using System.IO;
 using System;
 using Common;
-using CreditCardFraudDetection.Common.DataModels;
+using CCFraudDetection.Common.DataModels;
 using System.IO.Compression;
 using Microsoft.ML.Trainers;
 using static Microsoft.ML.DataOperationsCatalog;
 
-namespace CreditCardFraudDetection.Trainer
+namespace CCFraudDetection.Trainer
 {
     class Program
     {

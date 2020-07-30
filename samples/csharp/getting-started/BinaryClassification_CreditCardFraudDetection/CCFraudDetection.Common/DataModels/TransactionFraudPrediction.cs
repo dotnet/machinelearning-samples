@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.ML.Data;
 //using static Microsoft.ML.Runtime.Data.RoleMappedSchema;
 
-namespace CreditCardFraudDetection.Common.DataModels
+namespace CCFraudDetection.Common.DataModels
 {
     public class TransactionFraudPrediction : IModelEntity
     {

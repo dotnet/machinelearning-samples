@@ -25,7 +25,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\CreditCardFraudDetection.Common\CreditCardFraudDetection.Common.csproj" />
+    <ProjectReference Include="..\CCFraudDetection.Common\CCFraudDetection.Common.csproj" />
   </ItemGroup>
   
 </Project>

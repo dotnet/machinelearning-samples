@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace CreditCardFraudDetection.Common
+namespace CCFraudDetection.Common
 {
     public static class LocalConsoleHelper
     {
