@@ -18,6 +18,7 @@ namespace DeepLearning_ImageClassification
 
             MLContext mlContext = new MLContext();
 
+            // You must unzip assets.zip before training
             IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: assetsRelativePath, useFolderNameAsLabel: true);
 
             IDataView imageData = mlContext.Data.LoadFromEnumerable(images);
