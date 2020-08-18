@@ -1,5 +1,5 @@
 ﻿
-namespace TensorFlowImageClassification.ML.DataModels
+namespace TFClassification.ML.DataModels
 {
     public class ImagePredictedLabelWithProbability
     {

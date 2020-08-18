@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace TensorFlowImageClassification.ImageHelpers
+namespace TFImageClassification.ImageHelpers
 {
     public static class ImageValidationExtensions
     {

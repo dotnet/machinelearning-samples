@@ -3,7 +3,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.ML;
 using System.Threading;
 
-namespace TensorFlowImageClassification.ML
+namespace TFClassification.ML
 {
     public class InMemoryModelLoader : ModelLoader
     {

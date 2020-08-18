@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ML;
-using TensorFlowImageClassification.ImageHelpers;
-using TensorFlowImageClassification.ML.DataModels;
+using TFClassification.ML.DataModels;
+using TFImageClassification.ImageHelpers;
+using TFImageClassification.ML.DataModels;
 
-namespace TensorFlowImageClassification.Controllers
+namespace TFImageClassification.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

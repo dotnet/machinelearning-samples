@@ -1,9 +1,9 @@
 ﻿using Microsoft.ML;
 using System.Collections.Generic;
 using System.Linq;
-using TensorFlowImageClassification.ML.DataModels;
+using TFImageClassification.ML.DataModels;
 
-namespace TensorFlowImageClassification.ML
+namespace TFImageClassification.ML
 {
     public class TensorFlowModelConfigurator
     {

@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace TensorFlowImageClassification.ML.DataModels
+namespace TFImageClassification.ML.DataModels
 {
     public class ImageInputData
     {

@@ -2,15 +2,17 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
+using Microsoft.Extensions.Hosting;
 using Microsoft.ML;
-using TensorFlowImageClassification.ML;
-using TensorFlowImageClassification.ML.DataModels;
+using TFImageClassification.ML;
+using TFImageClassification.ML.DataModels;
+using TFClassification.ML.DataModels;
+using TFClassification.ML;
 
-namespace TensorFlowImageClassification
+namespace TFImageClassification
 {
     public class Startup
     {
@@ -41,7 +43,7 @@ namespace TensorFlowImageClassification
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddRazorPages();
 
             /////////////////////////////////////////////////////////////////////////////
             // Register the PredictionEnginePool as a service in the IoC container for DI.
@@ -55,7 +57,7 @@ namespace TensorFlowImageClassification
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -72,7 +74,12 @@ namespace TensorFlowImageClassification
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
 
         public static string GetAbsolutePath(string relativePath)

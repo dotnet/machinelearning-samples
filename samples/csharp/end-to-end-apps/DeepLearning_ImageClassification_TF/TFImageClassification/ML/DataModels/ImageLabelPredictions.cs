@@ -2,7 +2,7 @@
 
 using Microsoft.ML.Data;
 
-namespace TensorFlowImageClassification.ML.DataModels
+namespace TFClassification.ML.DataModels
 {
     public class ImageLabelPredictions
     {
