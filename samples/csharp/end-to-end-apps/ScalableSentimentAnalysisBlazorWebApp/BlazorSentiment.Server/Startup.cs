@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using Microsoft.Extensions.ML;
-using BlazorSentimentAnalysis.Server.ML.DataModels;
+using BlazorSentiment.Server.ML.DataModels;
 
-namespace BlazorSentimentAnalysis.Server
+namespace BlazorSentiment.Server
 {
     public class Startup
     {

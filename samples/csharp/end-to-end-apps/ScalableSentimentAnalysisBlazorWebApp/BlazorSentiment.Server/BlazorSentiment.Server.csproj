@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorSentimentAnalysis.Client\BlazorSentimentAnalysis.Client.csproj" />
+    <Folder Include="ML\DataModels\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ML\DataModels\" />
+    <ProjectReference Include="..\BlazorSentiment.Client\BlazorSentiment.Client.csproj" />
   </ItemGroup>
 
 </Project>

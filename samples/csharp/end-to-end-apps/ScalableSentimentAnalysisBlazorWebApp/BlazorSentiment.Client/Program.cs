@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Blazor.Hosting;
 
-namespace BlazorSentimentAnalysis.Client
+namespace BlazorSentiment.Client
 {
     public class Program
     {

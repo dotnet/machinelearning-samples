@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorSentimentAnalysis.Server
+namespace BlazorSentiment.Server
 {
     public class Program
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.ML;
 using Microsoft.AspNetCore.Mvc;
-using BlazorSentimentAnalysis.Server.ML.DataModels;
+using BlazorSentiment.Server.ML.DataModels;
 
-namespace BlazorSentimentAnalysis.Server.Controllers
+namespace BlazorSentiment.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

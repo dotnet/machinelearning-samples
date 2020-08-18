@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorSentimentAnalysis.Client
+namespace BlazorSentiment.Client
 {
     public class Startup
     {

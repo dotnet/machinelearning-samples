@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace BlazorSentimentAnalysis.Server.ML.DataModels
+namespace BlazorSentiment.Server.ML.DataModels
 {
     public class SamplePrediction
     {
