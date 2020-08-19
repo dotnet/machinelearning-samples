@@ -43,9 +43,9 @@ namespace SpamDetectionConsoleApp
                                       {
                                           WordFeatureExtractor = new Microsoft.ML.Transforms.Text.WordBagEstimator.Options { NgramLength = 2, UseAllLengths = true },
                                           CharFeatureExtractor = new Microsoft.ML.Transforms.Text.WordBagEstimator.Options { NgramLength = 3, UseAllLengths = false },
+                                          Norm = Microsoft.ML.Transforms.Text.TextFeaturizingEstimator.NormFunction.L2,
                                       }, "Message"))
                                       .Append(mlContext.Transforms.CopyColumns("Features", "FeaturesText"))
-                                      .Append(mlContext.Transforms.NormalizeLpNorm("Features", "Features"))
                                       .AppendCacheCheckpoint(mlContext);
 
             // Set the training algorithm 
