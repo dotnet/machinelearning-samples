@@ -39,6 +39,7 @@ namespace ImageClassification.WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddControllers();
             services.AddRazorPages();
 
             /////////////////////////////////////////////////////////////////////////////
@@ -74,6 +75,7 @@ namespace ImageClassification.WebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
 
