@@ -5,7 +5,7 @@ namespace TFClassification.ML.DataModels
     {
         public string ImageId;
 
-        public string PredictedLabel;
+        public string PredictedLabel { get; set; }
         public float Probability { get; set; }
 
         public long PredictionExecutionTime;
