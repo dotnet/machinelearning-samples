@@ -144,51 +144,53 @@ let nonMaxSuppress limit threshold boxes =
     |> Array.toList
     |> loop 0 []
 
+[<EntryPoint>]
+let main argv = 
+    try
+        let mlContext = MLContext()
+        let model =
+            printfn "Read model"
+            printfn "Model location: %s" modelFilePath
+            printfn "Images folder: %s" imagesFolder
+            printfn "Default parameters: image size=(%d,%d)" imageWidth imageHeight
+            let data = mlContext.Data.LoadFromTextFile<ImageNetData>(tagsTsv, hasHeader=true)
+            let pipeline =
+                EstimatorChain()
+                    .Append(mlContext.Transforms.LoadImages("image", imageFolder = imagesFolder, inputColumnName = "ImagePath"))
+                    .Append(mlContext.Transforms.ResizeImages("image", imageWidth = imageWidth, imageHeight = imageHeight, inputColumnName = "image"))
+                    .Append(mlContext.Transforms.ExtractPixels("image"))
+                    .Append(mlContext.Transforms.ApplyOnnxModel(modelFile = modelFilePath, outputColumnNames = [|OutputTensorName|], inputColumnNames = [|InputTensorName|]))
+            let model = pipeline.Fit(data)
+            mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model)
 
-try
-    let mlContext = MLContext()
-    let model =
-        printfn "Read model"
-        printfn "Model location: %s" modelFilePath
-        printfn "Images folder: %s" imagesFolder
-        printfn "Default parameters: image size=(%d,%d)" imageWidth imageHeight
-        let data = mlContext.Data.LoadFromTextFile<ImageNetData>(imagesFolder, hasHeader=true)
-        let pipeline =
-            EstimatorChain()
-                .Append(mlContext.Transforms.LoadImages("image", imageFolder = imagesFolder, inputColumnName = "ImagePath"))
-                .Append(mlContext.Transforms.ResizeImages("image", imageWidth = imageWidth, imageHeight = imageHeight, inputColumnName = "image"))
-                .Append(mlContext.Transforms.ExtractPixels("image"))
-                .Append(mlContext.Transforms.ApplyOnnxModel(modelFile = modelFilePath, outputColumnNames = [|OutputTensorName|], inputColumnNames = [|InputTensorName|]))
-        let model = pipeline.Fit(data)
-        mlContext.Model.CreatePredictionEngine<ImageNetData, ImageNetPrediction>(model)
+        printfn "Tags file location: %s" tagsTsv
+        printfn ""
+        printfn "=====Identify the objects in the images====="
+        printfn ""
 
-    printfn "Tags file location: %s" tagsTsv
-    printfn ""
-    printfn "=====Identify the objects in the images====="
-    printfn ""
+        File.ReadAllLines(tagsTsv)
+        |> Seq.map
+            (fun x ->
+                let a = x.Split '\t'
+                {ImagePath = Path.Combine(imagesFolder, a.[0]); Label = a.[1]}
+            )
+        |> Seq.iter
+            (fun sample ->
+                let probs = model.Predict(sample).PredictedLabels
+                let boundingBoxes = parseOutputs 0.3f probs
+                let filteredBoxes = nonMaxSuppress 5 0.5f boundingBoxes
 
-    File.ReadAllLines(tagsTsv)
-    |> Seq.map
-        (fun x ->
-            let a = x.Split '\t'
-            {ImagePath = Path.Combine(imagesFolder, a.[0]); Label = a.[1]}
-        )
-    |> Seq.iter
-        (fun sample ->
-            let probs = model.Predict(sample).PredictedLabels
-            let boundingBoxes = parseOutputs 0.3f probs
-            let filteredBoxes = nonMaxSuppress 5 0.5f boundingBoxes
+                printfn ".....The objects in the image %s are detected as below...."  sample.Label
+                filteredBoxes
+                |> Seq.iter
+                    (fun fbox ->
+                        printfn "%s and its Confidence score: %0.7f" fbox.Label fbox.Confidence
+                    )
+                printfn ""
+            )
+     with
+     | e -> printfn "%s" (e.ToString())
 
-            printfn ".....The objects in the image %s are detected as below...."  sample.Label
-            filteredBoxes
-            |> Seq.iter
-                (fun fbox ->
-                    printfn "%s and its Confidence score: %0.7f" fbox.Label fbox.Confidence
-                )
-            printfn ""
-        )
- with
- | e -> printfn "%s" (e.ToString())
-
-printfn "========= End of Process. Hit any Key ========"
-Console.ReadLine() |> ignore
+    printfn "========= End of Process. Hit any Key ========"
+    Console.ReadLine() |> ignore
+    0 // Return integer exit code

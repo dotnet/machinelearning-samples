@@ -43,6 +43,7 @@ namespace TFImageClassification
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddControllers();
             services.AddRazorPages();
 
             /////////////////////////////////////////////////////////////////////////////
@@ -78,6 +79,7 @@ namespace TFImageClassification
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
         }
