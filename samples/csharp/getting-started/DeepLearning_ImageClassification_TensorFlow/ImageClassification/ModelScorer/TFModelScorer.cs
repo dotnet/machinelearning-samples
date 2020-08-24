@@ -83,7 +83,7 @@ namespace ImageClassification.ModelScorer
                                                                   string labelsLocation, 
                                                                   PredictionEngine<ImageNetData, ImageNetPrediction> model)
         {
-            ConsoleWriteHeader("Classificate images");
+            ConsoleWriteHeader("Classify images");
             Console.WriteLine($"Images folder: {imagesFolder}");
             Console.WriteLine($"Training file: {testLocation}");
             Console.WriteLine($"Labels file: {labelsLocation}");

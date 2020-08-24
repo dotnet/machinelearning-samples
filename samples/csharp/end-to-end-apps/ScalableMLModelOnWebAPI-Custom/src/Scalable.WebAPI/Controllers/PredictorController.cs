@@ -32,7 +32,6 @@ namespace Scalable.WebAPI.Controllers
             string retVal = $"Prediction: Is Toxic?: '{isToxic.ToString()}' with {probability.ToString()}% probability of toxicity  for the text '{sentimentText}'";
 
             return retVal;
-
         }
 
         public static float CalculatePercentage(double value)
