@@ -10,11 +10,11 @@ namespace mnist
     class Program
     {
         private static string BaseDatasetsRelativePath = @"../../../Data";
-        private static string TrianDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
-        private static string TestDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
+        private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
+        private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
 
-        private static string TrainDataPath = GetAbsolutePath(TrianDataRealtivePath);
-        private static string TestDataPath = GetAbsolutePath(TestDataRealtivePath);
+        private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
+        private static string TestDataPath = GetAbsolutePath(TestDataRelativePath);
 
         private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath = $"{BaseModelsRelativePath}/Model.zip";
