@@ -20,7 +20,7 @@ namespace ImageClassification.Train
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
             string outputMlNetModelFilePath = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
-            string imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
+            string imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "test-images");
 
             string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
 

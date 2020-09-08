@@ -2,18 +2,18 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
 using Microsoft.ML;
 using ImageClassification.WebApp.ML.DataModels;
 using ImageClassification.DataModels;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Drawing;
 using TensorFlowImageClassification.Controllers;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http.Internal;
+//using Microsoft.AspNetCore.Http.Internal;
 using System.Threading.Tasks;
 using System;
 using System.Threading;
@@ -39,7 +39,8 @@ namespace ImageClassification.WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
+            services.AddRazorPages();
 
             /////////////////////////////////////////////////////////////////////////////
             // Register the PredictionEnginePool as a service in the IoC container for DI.
@@ -52,7 +53,7 @@ namespace ImageClassification.WebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -69,7 +70,13 @@ namespace ImageClassification.WebApp
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
         }
 
         public static void WarmUpPredictionEnginePool(IServiceCollection services)

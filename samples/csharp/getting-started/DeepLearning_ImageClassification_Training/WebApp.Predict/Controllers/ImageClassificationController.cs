@@ -39,7 +39,7 @@ namespace TensorFlowImageClassification.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        [Route("classifyimage")]
+        [Route("classifyImage")]
         public async Task<IActionResult> ClassifyImage(IFormFile imageFile)
         {
             if (imageFile.Length == 0)

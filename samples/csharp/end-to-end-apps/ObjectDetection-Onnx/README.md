@@ -2,7 +2,7 @@
 
 | ML.NET version | API type    | Status     | App Type    | Data type   | Scenario         | ML Task       | Algorithms                        |
 |----------------|-------------|------------|-------------|-------------|------------------|---------------|-----------------------------------|
-| v1.4         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | ONNX: Tiny YOLOv2 & Custom Vision |
+| v1.5.0         | Dynamic API | Up-to-date | End-End app | image files | Object Detection | Deep Learning | ONNX: Tiny YOLOv2 & Custom Vision |
 
 ## Problem
 
