@@ -55,6 +55,15 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
+        public static void PrintRankingMetrics(string name, RankingMetrics metrics)
+        {
+            Console.WriteLine($"************************************************************");
+            Console.WriteLine($"*    Metrics for {name} ranking model   ");
+            Console.WriteLine($"*-----------------------------------------------------------");
+            Console.WriteLine($"    Discounted Cumulative Gains = {metrics.DiscountedCumulativeGains.Average():0.####}");
+            Console.WriteLine($"    Normalized Discounted Cumulative Gains = {metrics.NormalizedDiscountedCumulativeGains.Average():0.####}, a value between 0 and 1, the closer to 1, the better");
+        }
+
         public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
         {
             string msg = string.Format("Show data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
@@ -89,6 +98,11 @@ namespace Common
             CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.RSquared ?? double.NaN,8:F4} {metrics?.MeanAbsoluteError ?? double.NaN,13:F2} {metrics?.MeanSquaredError ?? double.NaN,12:F2} {metrics?.RootMeanSquaredError ?? double.NaN,8:F2} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
+        internal static void PrintIterationMetrics(int iteration, string trainerName, RankingMetrics metrics, double? runtimeInSeconds)
+        {
+            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.DiscountedCumulativeGains.Average() ?? double.NaN,14:F4} {metrics?.NormalizedDiscountedCumulativeGains.Average() ?? double.NaN,14:F2} {runtimeInSeconds.Value,9:F1}", Width);
+        }
+
         internal static void PrintIterationException(Exception ex)
         {
             Console.WriteLine($"Exception during AutoML iteration: {ex}");
@@ -107,6 +121,11 @@ namespace Common
         internal static void PrintRegressionMetricsHeader()
         {
             CreateRow($"{"",-4} {"Trainer",-35} {"RSquared",8} {"Absolute-loss",13} {"Squared-loss",12} {"RMS-loss",8} {"Duration",9}", Width);
+        }
+
+        internal static void PrintRankingMetricsHeader()
+        {
+            CreateRow($"{"",-4} {"Trainer",-35}, {"DiscountedCumulativeGains",14}, {"NoramlizedDiscountedCumuliativeGains",14}", Width);
         }
 
         private static void CreateRow(string message, int width)

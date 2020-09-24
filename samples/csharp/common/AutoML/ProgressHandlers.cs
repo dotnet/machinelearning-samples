@@ -81,4 +81,27 @@ namespace Common
             }
         }
     }
+
+    public class RankingExperimentProgressHandler : IProgress<RunDetail<RankingMetrics>>
+    {
+        private int _iterationIndex;
+
+        public void Report(RunDetail<RankingMetrics> iterationResult)
+        {
+            if (_iterationIndex++ == 0)
+            {
+                ConsoleHelper.PrintRankingMetricsHeader();
+            }
+
+            if (iterationResult.Exception != null)
+            {
+                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+            }
+            else
+            {
+                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                    iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
+            }
+        }
+    }
 }
