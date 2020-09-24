@@ -12,7 +12,7 @@ namespace Ranking
 {
     class Program
     {
-        const string AssetsPath = @"../../../Data";
+        const string AssetsPath = @"../../../Assets";
         const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
         const string ValidationDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
         const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
@@ -25,6 +25,8 @@ namespace Ranking
         readonly static string ModelPath = Path.Combine(OutputPath, "RankingModel.zip");
 
         private static uint ExperimentTime = 60;
+
+        private static RankingData sampleRankingData = null;
 
         static void Main(string[] args)
         {
@@ -75,6 +77,10 @@ namespace Ranking
             ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
 
+            // Get a row for single prediction
+            sampleRankingData = mlContext.Data.CreateEnumerable<RankingData>(mlContext.Data.TakeRows(testDataView, 1), reuseRowObject: false)
+                .FirstOrDefault();
+
             var metrics = mlContext.Ranking.Evaluate(predictions);
 
             ConsoleHelper.PrintRankingMetrics(bestRun.TrainerName, metrics);
@@ -92,6 +98,17 @@ namespace Ranking
             ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
 
+            ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
+            Console.WriteLine($"=============== Loaded Model OK  ===============");
+
+            // Create prediction engine related to the loaded trained model
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<RankingData, RankingPrediction>(trainedModel, inputSchema: modelInputSchema);
+
+            var predictionResult = predictionEngine.Predict(sampleRankingData);
+
+            Console.WriteLine($"=============== Single Prediction  ===============");
+            Console.WriteLine($"Prediction: {predictionResult.Score}");
+            Console.WriteLine($"==================================================");
         }
 
         private static void GetData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl,
