@@ -64,14 +64,17 @@ namespace Ranking
 
             ExperimentResult<RankingMetrics> experimentResult = mlContext.Auto()
                 .CreateRankingExperiment(ExperimentTime)
-                .Execute(trainDataView, progressHandler: progressHandler);
+                .Execute(
+                    trainData: trainDataView, 
+                    validationData: testDataView,
+                    progressHandler: progressHandler);
 
             // Print top models found by AutoML
             Console.WriteLine();
             PrintTopModels(experimentResult);
 
             // STEP 5: Evaluate the model and print metrics
-            ConsoleHelper.ConsoleWriteHeader("=============== Evaluating model's accuracy with test data ===============");
+            ConsoleHelper.ConsoleWriteHeader("=============== Evaluating model's nDCG with test data ===============");
             RunDetail<RankingMetrics> bestRun = experimentResult.BestRun;
 
             ITransformer trainedModel = bestRun.Model;
@@ -96,7 +99,6 @@ namespace Ranking
         private static void TestSinglePrediction(MLContext mlContext)
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
-
 
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
             Console.WriteLine($"=============== Loaded Model OK  ===============");
@@ -158,12 +160,12 @@ namespace Ranking
 
         private static void PrintTopModels(ExperimentResult<RankingMetrics> experimentResult)
         {
-            // Get top few runs ranked by accuracy
+            // Get top few runs ranked by nDCG
             var topRuns = experimentResult.RunDetails
                 .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains.Average()))
                 .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains.Average()).Take(3);
 
-            Console.WriteLine("Top models ranked by accuracy --");
+            Console.WriteLine("Top models ranked by nDCG --");
             ConsoleHelper.PrintRankingMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {

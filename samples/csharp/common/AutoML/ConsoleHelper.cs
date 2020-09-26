@@ -100,7 +100,7 @@ namespace Common
 
         internal static void PrintIterationMetrics(int iteration, string trainerName, RankingMetrics metrics, double? runtimeInSeconds)
         {
-            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.DiscountedCumulativeGains.Average() ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains.Average() ?? double.NaN,9:F2} {runtimeInSeconds.Value,9:F1}", Width);
+            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[9] ?? double.NaN,9:F4}  {metrics?.DiscountedCumulativeGains[9] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
         internal static void PrintIterationException(Exception ex)
