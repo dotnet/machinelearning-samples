@@ -60,8 +60,8 @@ namespace Common
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*    Metrics for {name} ranking model   ");
             Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"    Discounted Cumulative Gains = {metrics.DiscountedCumulativeGains.Average():0.####}");
-            Console.WriteLine($"    Normalized Discounted Cumulative Gains = {metrics.NormalizedDiscountedCumulativeGains.Average():0.####}, a value between 0 and 1, the closer to 1, the better");
+            Console.WriteLine($"    Discounted Cumulative Gains = {metrics.DiscountedCumulativeGains[0]:0.####}");
+            Console.WriteLine($"    Normalized Discounted Cumulative Gains = {metrics.NormalizedDiscountedCumulativeGains[0]:0.####}, a value between 0 and 1, the closer to 1, the better");
         }
 
         public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
@@ -100,7 +100,7 @@ namespace Common
 
         internal static void PrintIterationMetrics(int iteration, string trainerName, RankingMetrics metrics, double? runtimeInSeconds)
         {
-            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[9] ?? double.NaN,9:F4}  {metrics?.DiscountedCumulativeGains[9] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
+            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[0] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
         internal static void PrintIterationException(Exception ex)
