@@ -60,8 +60,8 @@ namespace Common
             Console.WriteLine($"************************************************************");
             Console.WriteLine($"*    Metrics for {name} ranking model   ");
             Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"    Discounted Cumulative Gains = {metrics.DiscountedCumulativeGains[0]:0.####}");
-            Console.WriteLine($"    Normalized Discounted Cumulative Gains = {metrics.NormalizedDiscountedCumulativeGains[0]:0.####}, a value between 0 and 1, the closer to 1, the better");
+            Console.WriteLine($"    Discounted Cumulative Gain (DCG@10) = {metrics?.DiscountedCumulativeGains?[9] ?? double.NaN:0.####}");
+            Console.WriteLine($"    Normalized Discounted Cumulative Gain (NDCG@10) = {metrics?.NormalizedDiscountedCumulativeGains?[9] ?? double.NaN:0.####}, a value between 0 and 1, the closer to 1, the better");
         }
 
         public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
@@ -100,7 +100,7 @@ namespace Common
 
         internal static void PrintIterationMetrics(int iteration, string trainerName, RankingMetrics metrics, double? runtimeInSeconds)
         {
-            CreateRow($"{iteration,-4} {trainerName,-35} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[0] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
+            CreateRow($"{iteration,-4} {trainerName,-9} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[0] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
         internal static void PrintIterationException(Exception ex)
@@ -125,7 +125,7 @@ namespace Common
 
         internal static void PrintRankingMetricsHeader()
         {
-            CreateRow($"{"",-4} {"Trainer",-35}, {"DiscountedCumulativeGains",14}, {"NoramlizedDiscountedCumuliativeGains",14}", Width);
+            CreateRow($"{"",-4} {"Trainer",-35}, {"NoramlizedDiscountedCumuliativeGains@1",9}, {"NoramlizedDiscountedCumuliativeGains@3",9} {"DiscountedCumuliativeGains@1",9}", Width);
         }
 
         private static void CreateRow(string message, int width)

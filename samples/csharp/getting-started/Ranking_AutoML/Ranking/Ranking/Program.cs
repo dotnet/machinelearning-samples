@@ -101,7 +101,7 @@ namespace Ranking
             // a model that is trained on as much data as is available while
             // still having test data for the final estimate of how well the
             // model will do in production.
-            Console.WriteLine("\n===== Refitting on train+valid and evaluating model's rsquared with test data =====");
+            Console.WriteLine("\n===== Refitting on train+valid and evaluating model's nDCG with test data =====");
             var trainPlusValidationDataView = textLoader.Load(new MultiFileSource(TrainDatasetPath, ValidationDatasetPath));
 
             var refitModel = experimentResult.BestRun.Estimator.Fit(trainPlusValidationDataView);
@@ -217,7 +217,7 @@ namespace Ranking
         {
             // Get top few runs ranked by nDCG
             var topRuns = experimentResult.RunDetails
-                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains.Average()))
+                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains[0]))
                 .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[0]).Take(3);
 
             Console.WriteLine("Top models ranked by nDCG --");
