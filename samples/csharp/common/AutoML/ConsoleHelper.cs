@@ -100,7 +100,7 @@ namespace Common
 
         internal static void PrintIterationMetrics(int iteration, string trainerName, RankingMetrics metrics, double? runtimeInSeconds)
         {
-            CreateRow($"{iteration,-4} {trainerName,-9} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[0] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
+            CreateRow($"{iteration,-4} {trainerName,-9} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4}, {metrics?.NormalizedDiscountedCumulativeGains[1] ?? double.NaN,9:F4}, {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[0] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
         internal static void PrintIterationException(Exception ex)
@@ -125,7 +125,7 @@ namespace Common
 
         internal static void PrintRankingMetricsHeader()
         {
-            CreateRow($"{"",-4} {"Trainer",-35}, {"NoramlizedDiscountedCumuliativeGains@1",9}, {"NoramlizedDiscountedCumuliativeGains@3",9} {"DiscountedCumuliativeGains@1",9}", Width);
+            CreateRow($"{"",-4} {"Trainer",-14}, {"nDCG@1",9}, {"nDCG@2",9}, {"nDCG@10",9}, {"DCG@1",9}, {"Duration",9}", Width);
         }
 
         private static void CreateRow(string message, int width)
