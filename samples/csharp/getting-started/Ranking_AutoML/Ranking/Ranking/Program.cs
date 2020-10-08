@@ -90,7 +90,7 @@ namespace Ranking
                 .CreateRankingExperiment(experimentSettings)
                 .Execute(
                     trainData: trainDataView,
-                    validationData: testDataView,
+                    validationData: validationDataView,
                     progressHandler: progressHandler);
 
             // Print top models found by AutoML
