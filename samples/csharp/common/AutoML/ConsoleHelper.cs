@@ -125,7 +125,7 @@ namespace Common
 
         internal static void PrintRankingMetricsHeader()
         {
-            CreateRow($"{"",-4} {"Trainer",-14}, {"nDCG@1",9}, {"nDCG@2",9}, {"nDCG@10",9}, {"DCG@1",9}, {"Duration",9}", Width);
+            CreateRow($"{"",-4} {"Trainer",-14}, {"nDCG@1",9}, {"nDCG@3",9}, {"nDCG@10",9}, {"DCG@10",9}, {"Duration",9}", Width);
         }
 
         private static void CreateRow(string message, int width)
