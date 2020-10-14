@@ -1,4 +1,4 @@
-> Note: We'd love to hear your feedback about MLOps. Let us know your thoughts in [this survey](https://www.research.net/r/mlops-samples).
+> Note: We'd love to hear your thoughts about MLOps. Let us know in [this survey](https://www.research.net/r/mlops-samples).
 
 # ML.NET Samples
 
