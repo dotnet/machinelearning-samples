@@ -25,7 +25,8 @@ namespace Ranking
         readonly static string TestDatasetPath = Path.Combine(InputPath, "MSLRWeb10KTest240kRows.tsv");
         readonly static string ModelPath = Path.Combine(OutputPath, "RankingModel.zip");
 
-        private static uint ExperimentTime = 60;
+        // Runtime should allow for the sweeping to plateau, which begins near iteration 60
+        private static uint ExperimentTime = 600;
 
         private static IDataView _predictions = null;
 
@@ -108,7 +109,7 @@ namespace Ranking
 
             IDataView predictionsRefitOnTrainPlusValidation = refitModel.Transform(validationDataView);
 
-            // Setting the DCG trunctation level
+            // Setting the DCG truncation level
             var rankingEvaluatorOptions = new RankingEvaluatorOptions { DcgTruncationLevel = 10 };
 
             var metricsRefitOnTrainPlusValidation = mlContext.Ranking.Evaluate(predictionsRefitOnTrainPlusValidation, rankingEvaluatorOptions);
@@ -218,7 +219,7 @@ namespace Ranking
             // Get top few runs ranked by nDCG
             var topRuns = experimentResult.RunDetails
                 .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains[0]))
-                .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[0]).Take(3);
+                .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[2]).Take(5);
 
             Console.WriteLine("Top models ranked by nDCG --");
             ConsoleHelper.PrintRankingMetricsHeader();
