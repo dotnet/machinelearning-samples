@@ -10,7 +10,7 @@ The ability to perform ranking is a common problem faced by search engines since
 
 Ranking is useful to any scenario where it is important to list items in an order that increases the likelihood of a click, purchase, reservation, etc.
  
-In this sample, we show how to apply ranking to search engine results. To perform ranking, there are two algorithms currently available - FastTree Boosting (FastRank) and Light Gradient Boosting Machine (LightGBM). We use the LightGBM's LambdaRank implementation in this sample to automatically build an ML model to predict ranking. 
+In this sample, we show how to apply ranking to search engine results. AutoML sweeps over the models and associated hyperparameters to optimize [NDCG@N](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.rankingmetrics.normalizeddiscountedcumulativegains?view=ml-dotnet) (normalized discounted cumulative gains) or [DCG@N](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.data.rankingmetrics.discountedcumulativegains?view=ml-dotnet) (discounted cumulative gains).
 
 ## Dataset
 The data used by this sample is based on a public [dataset provided by Microsoft](https://www.microsoft.com/en-us/research/project/mslr/) originally provided Microsoft Bing. The dataset is released under a [CC-by 4.0](https://creativecommons.org/licenses/by/4.0/) license and includes training, validation, and testing data.
