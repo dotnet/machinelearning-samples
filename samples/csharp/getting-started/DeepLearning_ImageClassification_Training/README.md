@@ -50,11 +50,13 @@ To solve this problem, first we will build an ML model. Then we will train the m
 By default this solution uses **CPU** for training and scoring.
 But if your machine has a compatible **GPU** available (basically most NVIDIA GPU graphics cards), you can configure the project to use GPU.
 
+> :warning: Make sure you use the correct versions of the NuGet packages listed below. Other versions might be incompatiple with Nvidia CUDA v10.0
+
 #### Using CPU for training or inference/scoring
 
 When using **CPU**, your project has to reference the following redist library:
 
-- `SciSharp.TensorFlow.Redist` (CPU training)
+- `SciSharp.TensorFlow.Redist (1.15.0)` (CPU training)
 
 Sample references screenshot in training project using **CPU**:
 
@@ -64,9 +66,9 @@ Sample references screenshot in training project using **CPU**:
 
 When using **GPU**, your project has to reference the following redist library (*and remove the CPU version reference*):
 
-- `SciSharp.TensorFlow.Redist-Windows-GPU` (GPU training on Windows) 
+- `SciSharp.TensorFlow.Redist-Windows-GPU (1.14.0)` (GPU training on Windows) 
 
-- `SciSharp.TensorFlow.Redist-Linux-GPU` (GPU training on Linux)
+- `SciSharp.TensorFlow.Redist-Linux-GPU (1.14.0)` (GPU training on Linux)
 
 Sample references screenshot in training project using **GPU**:
 
