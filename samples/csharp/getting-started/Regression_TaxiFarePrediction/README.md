@@ -21,7 +21,7 @@ and predicts the fare of the ride.
 
 ## ML task - Regression
 The generalized problem of **regression** is to predict some continuous value for given parameters, for example:
-* predict a house prise based on number of rooms, location, year built, etc.
+* predict a house price based on number of rooms, location, year built, etc.
 * predict a car fuel consumption based on fuel type and car parameters.
 * predict a time estimate for fixing an issue based on issue attributes.
 
