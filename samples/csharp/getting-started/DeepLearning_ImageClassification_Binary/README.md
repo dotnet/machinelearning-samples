@@ -19,6 +19,8 @@ products:
 
 For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/image-classification-api-transfer-learning) on the Microsoft Docs site.
 
+This sample may be downloaded and built directly. However, for a succesful run, you **must** first unzip *assets.zip* in the project directory, and copy its subdirectories into the *assets* directory.
+
 ## Understanding the problem
 
 Image classification is a computer vision problem. Image classification takes an image as input and categorizes it into a prescribed class. This sample shows a .NET Core console application that trains a custom deep learning model using transfer learning, a pretrained image classification TensorFlow model and the ML.NET Image Classification API to classify images of concrete surfaces into one of two categories, cracked or uncracked.
