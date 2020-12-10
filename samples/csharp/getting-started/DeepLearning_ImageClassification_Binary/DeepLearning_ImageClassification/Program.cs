@@ -53,8 +53,7 @@ namespace DeepLearning_ImageClassification
                 MetricsCallback = (metrics) => Console.WriteLine(metrics),
                 TestOnTrainSet = false,
                 ReuseTrainSetBottleneckCachedValues = true,
-                ReuseValidationSetBottleneckCachedValues = true,
-                WorkspacePath=workspaceRelativePath
+                ReuseValidationSetBottleneckCachedValues = true
             };
 
             var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
