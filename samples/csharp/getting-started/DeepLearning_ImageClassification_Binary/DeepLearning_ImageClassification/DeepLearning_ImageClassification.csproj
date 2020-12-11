@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.Vision" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.0" />
-    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.1'" Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.1'" Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
   </ItemGroup>
 
   <ItemGroup>
