@@ -1,4 +1,4 @@
-> Note: We'd love to hear your feedback about ML.NET. Let us know your thoughts in [this survey](https://aka.ms/feb2020-mlnet-survey).
+> Note: We'd love to hear your thoughts about MLOps. Let us know in [this survey](https://www.research.net/r/mlops-samples).
 
 # ML.NET Samples
 
