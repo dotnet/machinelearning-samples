@@ -18,6 +18,7 @@
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.1'" Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.1'" Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
   </ItemGroup>
 
   <ItemGroup>
