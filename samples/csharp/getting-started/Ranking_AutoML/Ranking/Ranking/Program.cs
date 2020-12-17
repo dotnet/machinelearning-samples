@@ -84,7 +84,8 @@ namespace Ranking
             var experimentSettings = new RankingExperimentSettings
             {
                 MaxExperimentTimeInSeconds = ExperimentTime,
-                OptimizingMetric = RankingMetric.Ndcg
+                OptimizingMetric = RankingMetric.Ndcg,
+                OptimizationMetricTruncationLevel = 10
             };
 
             ExperimentResult<RankingMetrics> experimentResult = mlContext.Auto()
@@ -219,7 +220,7 @@ namespace Ranking
             // Get top few runs ranked by nDCG
             var topRuns = experimentResult.RunDetails
                 .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains[0]))
-                .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[2]).Take(5);
+                .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[9]).Take(5);
 
             Console.WriteLine("Top models ranked by nDCG --");
             ConsoleHelper.PrintRankingMetricsHeader();
