@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Microsoft.ML;
 using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
@@ -28,23 +28,21 @@ namespace Ranking
         // Runtime should allow for the sweeping to plateau, which begins near iteration 60
         private static uint ExperimentTime = 600;
 
-        private static IDataView _predictions = null;
-
         static void Main(string[] args)
         {
             var mlContext = new MLContext(seed: 0);
 
             // Create, train, evaluate and save a model
-            BuildTrainEvaluateAndSaveModel(mlContext);
+            (var model, var predictions) = BuildTrainEvaluateAndSaveModel(mlContext);
 
             // Make a single test prediction loading the model from .ZIP file
-            TestSinglePrediction(mlContext);
+            TestSinglePrediction(mlContext, predictions);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
         }
 
-        private static ITransformer BuildTrainEvaluateAndSaveModel(MLContext mlContext)
+        private static (ITransformer, IDataView) BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Download and load the data
             GetData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath,
@@ -96,61 +94,50 @@ namespace Ranking
                     progressHandler: progressHandler);
 
             // Print top models found by AutoML
-            Console.WriteLine();
-            PrintTopModels(experimentResult);
+            Console.WriteLine("\n===== Evaluating model's NDCG (on validation data) =====");
+            PrintTopModels(experimentResult, experimentSettings.OptimizationMetricTruncationLevel);
 
+            var rankingEvaluatorOptions = new RankingEvaluatorOptions
+            {
+                DcgTruncationLevel = Math.Min(10, (int)experimentSettings.OptimizationMetricTruncationLevel * 2)
+            };
+
+            Console.WriteLine("\n===== Evaluating model's NDCG (on test data) =====");
+            IDataView predictions = experimentResult.BestRun.Model.Transform(testDataView);
+            var metrics = mlContext.Ranking.Evaluate(predictions, rankingEvaluatorOptions);
+            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metrics, experimentSettings.OptimizationMetricTruncationLevel);
+
+            // STEP 5: Refit the model with all available data
             // Re-fit best pipeline on train and validation data, to produce 
             // a model that is trained on as much data as is available while
             // still having test data for the final estimate of how well the
             // model will do in production.
-            Console.WriteLine("\n===== Refitting on train+valid and evaluating model's nDCG with test data =====");
+            Console.WriteLine("\n===== Refitting on train+valid and evaluating model's NDCG (on test data) =====");
             var trainPlusValidationDataView = textLoader.Load(new MultiFileSource(TrainDatasetPath, ValidationDatasetPath));
-
             var refitModel = experimentResult.BestRun.Estimator.Fit(trainPlusValidationDataView);
-
-            IDataView predictionsRefitOnTrainPlusValidation = refitModel.Transform(validationDataView);
-
-            // Setting the DCG truncation level
-            var rankingEvaluatorOptions = new RankingEvaluatorOptions { DcgTruncationLevel = 10 };
-
+            IDataView predictionsRefitOnTrainPlusValidation = refitModel.Transform(testDataView);
             var metricsRefitOnTrainPlusValidation = mlContext.Ranking.Evaluate(predictionsRefitOnTrainPlusValidation, rankingEvaluatorOptions);
+            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainPlusValidation, experimentSettings.OptimizationMetricTruncationLevel);
 
-            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainPlusValidation);
-
-            // Re-fit best pipeline on train, validation, and test data, to 
+            // STEP 6: Refit the model with all available data
+            // Re-fit best pipeline again on train, validation, and test data, to 
             // produce a model that is trained on as much data as is available.
             // This is the final model that can be deployed to production.
+            // No metrics are printed since we no longer have an independent
+            // scoring dataset.
             Console.WriteLine("\n===== Refitting on train+valid+test to get the final model to launch to production =====");
             var trainPlusValidationPlusTestDataView = textLoader.Load(new MultiFileSource(TrainDatasetPath, ValidationDatasetPath, TestDatasetPath));
-
-            var refitModelWithValidationSet = experimentResult.BestRun.Estimator.Fit(trainPlusValidationPlusTestDataView);
-
-            IDataView predictionsRefitOnTrainValidationPlusTest = refitModelWithValidationSet.Transform(testDataView);
-
-            var metricsRefitOnTrainValidationPlusTest = mlContext.Ranking.Evaluate(predictionsRefitOnTrainValidationPlusTest, rankingEvaluatorOptions);
-
-            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainValidationPlusTest);
-
-            // STEP 5: Evaluate the model and print metrics
-            ConsoleHelper.ConsoleWriteHeader("=============== Evaluating model's nDCG with test data ===============");
-            RunDetail<RankingMetrics> bestRun = experimentResult.BestRun;
-
-            ITransformer trainedModel = bestRun.Model;
-            _predictions = trainedModel.Transform(testDataView);
-
-            var metrics = mlContext.Ranking.Evaluate(_predictions, rankingEvaluatorOptions);
-
-            ConsoleHelper.PrintRankingMetrics(bestRun.TrainerName, metrics);
-
-            // STEP 6: Save/persist the trained model to a .ZIP file
-            mlContext.Model.Save(trainedModel, trainDataView.Schema, ModelPath);
+            var refitModelOnTrainValidTest = experimentResult.BestRun.Estimator.Fit(trainPlusValidationPlusTestDataView);
+            
+            // STEP 7: Save/persist the trained model to a .ZIP file
+            mlContext.Model.Save(refitModelOnTrainValidTest, trainDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
-            return trainedModel;
+            return (refitModelOnTrainValidTest, predictionsRefitOnTrainPlusValidation);
         }
 
-        private static void TestSinglePrediction(MLContext mlContext)
+        private static void TestSinglePrediction(MLContext mlContext, IDataView predictions)
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
@@ -158,7 +145,7 @@ namespace Ranking
             Console.WriteLine($"=============== Loaded Model OK  ===============");
 
             // In the predictions, get the scores of the search results included in the first query (e.g. group).
-            var searchQueries = mlContext.Data.CreateEnumerable<RankingPrediction>(_predictions, reuseRowObject: false);
+            var searchQueries = mlContext.Data.CreateEnumerable<RankingPrediction>(predictions, reuseRowObject: false);
             var firstGroupId = searchQueries.First().GroupId;
             var firstGroupPredictions = searchQueries.Take(100).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.Score).ToList();
 
@@ -215,14 +202,14 @@ namespace Ranking
             Console.WriteLine("===== Download is finished =====\n");
         }
 
-        private static void PrintTopModels(ExperimentResult<RankingMetrics> experimentResult)
+        private static void PrintTopModels(ExperimentResult<RankingMetrics> experimentResult, uint optimizationMetricTruncationLevel)
         {
-            // Get top few runs ranked by nDCG
+            // Get top few runs ordered by NDCG
             var topRuns = experimentResult.RunDetails
-                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains[0]))
-                .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[9]).Take(5);
+                .Where(r => r.ValidationMetrics != null && !double.IsNaN(r.ValidationMetrics.NormalizedDiscountedCumulativeGains[(int)optimizationMetricTruncationLevel - 1]))
+                .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[(int)optimizationMetricTruncationLevel - 1]).Take(5);
 
-            Console.WriteLine("Top models ranked by nDCG --");
+            Console.WriteLine($"Top models ordered by NDCG@{optimizationMetricTruncationLevel}");
             ConsoleHelper.PrintRankingMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {

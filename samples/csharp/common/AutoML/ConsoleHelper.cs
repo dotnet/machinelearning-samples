@@ -44,10 +44,10 @@ namespace Common
         public static void PrintMulticlassClassificationMetrics(string name, MulticlassClassificationMetrics metrics)
         {
             Console.WriteLine($"************************************************************");
-            Console.WriteLine($"*    Metrics for {name} multi-class classification model   ");
+            Console.WriteLine($"*    Metrics for {name} multi-class classification model    ");
             Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"    MacroAccuracy = {metrics.MacroAccuracy:0.####}, a value between 0 and 1, the closer to 1, the better");
-            Console.WriteLine($"    MicroAccuracy = {metrics.MicroAccuracy:0.####}, a value between 0 and 1, the closer to 1, the better");
+            Console.WriteLine($"    MacroAccuracy = {metrics.MacroAccuracy:0.####}, a value from 0 and 1, where closer to 1.0 is better");
+            Console.WriteLine($"    MicroAccuracy = {metrics.MicroAccuracy:0.####}, a value from 0 and 1, where closer to 1.0 is better");
             Console.WriteLine($"    LogLoss = {metrics.LogLoss:0.####}, the closer to 0, the better");
             Console.WriteLine($"    LogLoss for class 1 = {metrics.PerClassLogLoss[0]:0.####}, the closer to 0, the better");
             Console.WriteLine($"    LogLoss for class 2 = {metrics.PerClassLogLoss[1]:0.####}, the closer to 0, the better");
@@ -55,13 +55,13 @@ namespace Common
             Console.WriteLine($"************************************************************");
         }
 
-        public static void PrintRankingMetrics(string name, RankingMetrics metrics)
+        public static void PrintRankingMetrics(string name, RankingMetrics metrics, uint optimizationMetricTruncationLevel)
         {
             Console.WriteLine($"************************************************************");
-            Console.WriteLine($"*    Metrics for {name} ranking model   ");
+            Console.WriteLine($"*             Metrics for {name} ranking model              ");
             Console.WriteLine($"*-----------------------------------------------------------");
-            Console.WriteLine($"    Discounted Cumulative Gain (DCG@10) = {metrics?.DiscountedCumulativeGains?[9] ?? double.NaN:0.####}");
-            Console.WriteLine($"    Normalized Discounted Cumulative Gain (NDCG@10) = {metrics?.NormalizedDiscountedCumulativeGains?[9] ?? double.NaN:0.####}, a value between 0 and 1, the closer to 1, the better");
+            Console.WriteLine($"    Normalized Discounted Cumulative Gain (NDCG@{optimizationMetricTruncationLevel}) = {metrics?.NormalizedDiscountedCumulativeGains?[(int)optimizationMetricTruncationLevel - 1] ?? double.NaN:0.####}, a value from 0 and 1, where closer to 1.0 is better");
+            Console.WriteLine($"    Discounted Cumulative Gain (DCG@{optimizationMetricTruncationLevel}) = {metrics?.DiscountedCumulativeGains?[(int)optimizationMetricTruncationLevel - 1] ?? double.NaN:0.####}");
         }
 
         public static void ShowDataViewInConsole(MLContext mlContext, IDataView dataView, int numberOfRows = 4)
@@ -100,7 +100,7 @@ namespace Common
 
         internal static void PrintIterationMetrics(int iteration, string trainerName, RankingMetrics metrics, double? runtimeInSeconds)
         {
-            CreateRow($"{iteration,-4} {trainerName,-9} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4}, {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4}, {metrics?.NormalizedDiscountedCumulativeGains[9] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[9] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
+            CreateRow($"{iteration,-4} {trainerName,-15} {metrics?.NormalizedDiscountedCumulativeGains[0] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[2] ?? double.NaN,9:F4} {metrics?.NormalizedDiscountedCumulativeGains[9] ?? double.NaN,9:F4} {metrics?.DiscountedCumulativeGains[9] ?? double.NaN,9:F4} {runtimeInSeconds.Value,9:F1}", Width);
         }
 
         internal static void PrintIterationException(Exception ex)
@@ -125,7 +125,7 @@ namespace Common
 
         internal static void PrintRankingMetricsHeader()
         {
-            CreateRow($"{"",-4} {"Trainer",-14}, {"nDCG@1",9}, {"nDCG@3",9}, {"nDCG@10",9}, {"DCG@10",9}, {"Duration",9}", Width);
+            CreateRow($"{"",-4} {"Trainer",-15} {"NDCG@1",9} {"NDCG@3",9} {"NDCG@10",9} {"DCG@10",9} {"Duration",9}", Width);
         }
 
         private static void CreateRow(string message, int width)
@@ -258,10 +258,10 @@ namespace Common
 
                 tableRows.Add(new[]
                 {
-                columnName,
-                GetColumnDataType(columnName),
-                columnPurpose
-            });
+                    columnName,
+                    GetColumnDataType(columnName),
+                    columnPurpose
+                });
             }
 
             private void AppendTableRows(ICollection<string[]> tableRows,
