@@ -107,7 +107,7 @@ namespace Ranking
             var metrics = mlContext.Ranking.Evaluate(predictions, rankingEvaluatorOptions);
             ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metrics, experimentSettings.OptimizationMetricTruncationLevel);
 
-            // STEP 5: Refit the model with all available data
+            // STEP 5: Refit the model and get final metrics
             // Re-fit best pipeline on train and validation data, to produce 
             // a model that is trained on as much data as is available while
             // still having test data for the final estimate of how well the
