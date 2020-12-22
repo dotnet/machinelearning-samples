@@ -164,9 +164,9 @@ phases:
   queue: Hosted VS2017
   steps:
   - task: UseDotNet@2
-    displayName: 'Use .NET Core 3.0'
+    displayName: 'Use .NET Core 3.1'
     inputs:
-      version: 3.0.x
+      version: 3.1.x
       includePreviewVersions: true
       installationPath: $(Agent.ToolsDirectory)/dotnet
   - task: DotNetCoreCLI@2
@@ -194,9 +194,9 @@ phases:
   queue: Hosted VS2017
   steps:
   - task: UseDotNet@2
-    displayName: 'Use .NET Core 3.0'
+    displayName: 'Use .NET Core 3.1'
     inputs:
-      version: 3.0.x
+      version: 3.1.x
       includePreviewVersions: true
       installationPath: $(Agent.ToolsDirectory)/dotnet
   - task: DotNetCoreCLI@2
