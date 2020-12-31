@@ -4,6 +4,7 @@ using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
 using Ranking.DataStructures;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,16 +34,16 @@ namespace Ranking
             var mlContext = new MLContext(seed: 0);
 
             // Create, train, evaluate and save a model
-            (var model, var predictions) = BuildTrainEvaluateAndSaveModel(mlContext);
+            (var predictions, var testDataView) = BuildTrainEvaluateAndSaveModel(mlContext);
 
             // Make a single test prediction loading the model from .ZIP file
-            TestSinglePrediction(mlContext, predictions);
+            TestSinglePrediction(mlContext, predictions, testDataView);
 
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
         }
 
-        private static (ITransformer, IDataView) BuildTrainEvaluateAndSaveModel(MLContext mlContext)
+        private static (IDataView, IDataView) BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Download and load the data
             GetData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath,
@@ -134,10 +135,10 @@ namespace Ranking
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
 
-            return (refitModelOnTrainValidTest, predictionsRefitOnTrainPlusValidation);
+            return (predictionsRefitOnTrainPlusValidation, testDataView);
         }
 
-        private static void TestSinglePrediction(MLContext mlContext, IDataView predictions)
+        private static void TestSinglePrediction(MLContext mlContext, IDataView predictions, IDataView testDataView)
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
@@ -149,11 +150,16 @@ namespace Ranking
             var firstGroupId = searchQueries.First().GroupId;
             var firstGroupPredictions = searchQueries.Take(100).Where(p => p.GroupId == firstGroupId).OrderByDescending(p => p.Score).ToList();
 
+            // Label values from the test dataset (not the predicted scores/labels)
+            IEnumerator<float> labelEnumerator = mlContext.Data.CreateEnumerable<RankingData>(testDataView, true)
+                .Select(a => a.Label).GetEnumerator();
+
             // The individual scores themselves are NOT a useful measure of result quality; instead, they are only useful as a relative measure to other scores in the group. 
             // The scores are used to determine the ranking where a higher score indicates a higher ranking versus another candidate result.
             foreach (var prediction in firstGroupPredictions)
             {
-                Console.WriteLine($"GroupId: {prediction.GroupId}, Score: {prediction.Score}");
+                labelEnumerator.MoveNext();
+                Console.WriteLine($"GroupId: {prediction.GroupId}, Score: {prediction.Score}, Correct Label: {labelEnumerator.Current}");
             }
         }
 

@@ -8,7 +8,7 @@ namespace Ranking.DataStructures
         public float Label { get; set; }
 
         [LoadColumn(1)]
-        public float GroupId { get; set; }
+        public int GroupId { get; set; }
 
         [LoadColumn(2, 133)]
         [VectorType(133)]
