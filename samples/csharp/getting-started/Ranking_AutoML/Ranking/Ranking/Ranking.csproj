@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\..\..\common\AutoML\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+		<Compile Include="..\..\..\..\common\AutoML\ProgressHandlers.cs" Link="Common\ProgressHandlers.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="Microsoft.ML.AutoML" Version="0.17.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+    <Folder Include="MLModel\" />
+  </ItemGroup>
+
+</Project>
