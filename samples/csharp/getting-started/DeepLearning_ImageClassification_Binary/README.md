@@ -76,7 +76,7 @@ class ModelInput
 }
 ```
 
-1. Define the output schema by creating the `ModelInput` class.
+1. Define the output schema by creating the `ModelOutput` class.
 
 ```csharp
 class ModelOutput

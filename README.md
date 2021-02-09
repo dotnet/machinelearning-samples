@@ -141,11 +141,11 @@ These additional technologies for automating model generation are in PREVIEW sta
 
 The ML.NET CLI (command-line interface) is a tool you can run on any command-prompt (Windows, Mac or Linux) for generating good quality ML.NET models based on training datasets you provide. In addition, it also generates sample C# code to run/score that model plus the C# code that was used to create/train it so you can research what algorithm and settings it is using.
 
-| CLI (Command Line Interface) samples                  |
+| CLI (Command Line Interface) samples |
 |----------------------------------|
-| [Binary Classification sample](/samples/CLI/BinaryClassification_CLI)   |
+| [Binary Classification sample](/samples/CLI/BinaryClassification_CLI) |
 | [MultiClass Classification sample](/samples/CLI/MulticlassClassification_CLI) |
-| [Regression sample](/samples/CLI/Regression_CLI)                |
+| [Regression sample](/samples/CLI/Regression_CLI) |
 
 
 ## AutoML API samples: (Preview state)
@@ -154,10 +154,11 @@ ML.NET AutoML API is basically a set of libraries packaged as a NuGet package yo
 
 | AutoML API samples                    |
 |----------------------------------|
-| [Binary Classification sample](/samples/csharp/getting-started/BinaryClassification_AutoML)   |
+| [Binary Classification sample](/samples/csharp/getting-started/BinaryClassification_AutoML) |
 | [MultiClass Classification sample](/samples/csharp/getting-started/MulticlassClassification_AutoML) |
-| [Regression sample](/samples/csharp/getting-started/Regression_AutoML)                |
-| [Advanced experiment sample](/samples/csharp/getting-started/AdvancedExperiment_AutoML)                |
+| [Ranking sample](/samples/csharp/getting-started/Ranking_AutoML/Ranking) |
+| [Regression sample](/samples/csharp/getting-started/Regression_AutoML) |
+| [Advanced experiment sample](/samples/csharp/getting-started/AdvancedExperiment_AutoML) |
 
 
 -------------------------------------------------------
