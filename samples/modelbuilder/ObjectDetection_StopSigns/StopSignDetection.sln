@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StopSignDetection", "StopSignDetection\StopSignDetection.csproj", "{88B7BCEF-6961-4C8F-A151-604F001514AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StopSignDetectionML.ConsoleApp", "StopSignDetectionML.ConsoleApp\StopSignDetectionML.ConsoleApp.csproj", "{B70E527B-C2DF-4F15-90F8-94C641D1F6B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StopSignDetectionML.Model", "StopSignDetectionML.Model\StopSignDetectionML.Model.csproj", "{B7208A41-133D-4BC8-B0E6-C8622CB1DE8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88B7BCEF-6961-4C8F-A151-604F001514AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88B7BCEF-6961-4C8F-A151-604F001514AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88B7BCEF-6961-4C8F-A151-604F001514AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88B7BCEF-6961-4C8F-A151-604F001514AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B70E527B-C2DF-4F15-90F8-94C641D1F6B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70E527B-C2DF-4F15-90F8-94C641D1F6B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70E527B-C2DF-4F15-90F8-94C641D1F6B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70E527B-C2DF-4F15-90F8-94C641D1F6B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7208A41-133D-4BC8-B0E6-C8622CB1DE8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7208A41-133D-4BC8-B0E6-C8622CB1DE8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7208A41-133D-4BC8-B0E6-C8622CB1DE8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7208A41-133D-4BC8-B0E6-C8622CB1DE8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {693C7232-4883-40F2-BC7F-CA7BB68CD09B}
+	EndGlobalSection
+EndGlobal

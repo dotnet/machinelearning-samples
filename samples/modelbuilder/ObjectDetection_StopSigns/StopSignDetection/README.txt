@@ -1,0 +1,1 @@
+﻿Test image is from pexels.com: https://www.pexels.com/photo/red-stop-sign-39080/
