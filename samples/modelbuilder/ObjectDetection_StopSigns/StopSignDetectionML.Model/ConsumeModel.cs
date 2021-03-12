@@ -16,8 +16,6 @@ namespace StopSignDetectionML.Model
 
         public static string MLNetModelPath = Path.GetFullPath("MLModel.zip");
 
-        public static string OnnxModelPath = Path.GetFullPath("bestModel.onnx");
-
         // For more info on consuming ML.NET models, visit https://aka.ms/mlnet-consume
         // Method for consuming model in your app
         public static ModelOutput Predict(ModelInput input)
