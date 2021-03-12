@@ -12,7 +12,7 @@ namespace StopSignDetectionML.ConsoleApp
             // Create single instance of sample data from first line of dataset for model input
             ModelInput sampleData = new ModelInput()
             {
-                ImageSource = @"C:\Users\brachtma\Desktop\Object Detection Tutorial\Images\Stop-Signs\joshua-hoehne-WPrTKRw8KRQ-unsplash.jpg",
+                ImageSource = @"test-image1.jpeg",
             };
 
             // Make a single prediction on the sample data and print results

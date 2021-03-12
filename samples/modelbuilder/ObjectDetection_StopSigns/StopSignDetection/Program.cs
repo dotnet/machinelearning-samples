@@ -14,11 +14,8 @@ namespace StopSignDetection
 
             ModelOutput output = ConsumeModel.Predict(input);
 
-            foreach (BoundingBox box in output.BoundingBoxes)
-            {
-                Console.WriteLine($"Found {box.Label} at coordinates Left: {box.Left}, Right: {box.Right}, Top: {box.Top}, Bottom: {box.Bottom} with Confidence Score {box.Score}");
-            }
-
+            Console.WriteLine("\n\nPredicted Boxes:\n");
+            Console.WriteLine(output);
         }
     }
 }

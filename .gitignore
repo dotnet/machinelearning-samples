@@ -330,3 +330,4 @@ ASALocalRun/
 .DS_Store
 samples/modelbuilder/ObjectDetection_StopSigns/StopSignDetectionML.Model/MLModel.zip
 samples/modelbuilder/ObjectDetection_StopSigns/StopSignDetectionML.Model/bestModel.onnx
+samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
