@@ -7,6 +7,10 @@ using System.Text;
 using System.IO;
 using Microsoft.ML;
 using StopSignDetectionML.Model;
+using System.Net.Http;
+using Microsoft.ML.Trainers;
+using System.Web;
+using System.Net;
 
 namespace StopSignDetectionML.Model
 {
@@ -14,7 +18,9 @@ namespace StopSignDetectionML.Model
     {
         private static Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictionEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(CreatePredictionEngine);
 
-        public static string MLNetModelPath = Path.GetFullPath("MLModel.zip");
+        private static WebClient client = new WebClient();
+
+        public static string MLNetModelPath = Path.GetFullPath(@"../../../../StopSignDetectionML.Model/MLModel.zip");
 
         // For more info on consuming ML.NET models, visit https://aka.ms/mlnet-consume
         // Method for consuming model in your app
@@ -29,11 +35,29 @@ namespace StopSignDetectionML.Model
             // Create new MLContext
             MLContext mlContext = new MLContext();
 
+            // Download the model if doesn't exist in project
+            if (!File.Exists(MLNetModelPath))
+            {
+                DownloadModel();
+            }
+
             // Load model & create prediction engine
             ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var modelInputSchema);
+
             var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
 
-            return predEngine;
+             return predEngine;
+        }
+
+        private static void DownloadModel()
+        {
+            //WebClient client = new WebClient();
+            string fileName = MLNetModelPath;
+            string url = $"https://mlpublicassets.blob.core.windows.net/samples/object-detection/MLModel.zip";
+
+            client.DownloadFile(url, fileName);
+
+            //Console.WriteLine("Downloaded model to: " + MLNetModelPath);
         }
     }
 }
