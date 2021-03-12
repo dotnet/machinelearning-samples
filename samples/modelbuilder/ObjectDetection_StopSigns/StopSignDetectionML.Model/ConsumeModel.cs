@@ -35,7 +35,7 @@ namespace StopSignDetectionML.Model
             // Create new MLContext
             MLContext mlContext = new MLContext();
 
-            // Download the model if doesn't exist in project
+            // Download the model
             if (!File.Exists(MLNetModelPath))
             {
                 DownloadModel();
