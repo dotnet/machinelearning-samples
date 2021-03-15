@@ -42,16 +42,5 @@ namespace StopSignDetectionML.Model
 
              return predEngine;
         }
-
-        private static void DownloadModel()
-        {
-            //WebClient client = new WebClient();
-            string fileName = MLNetModelPath;
-            string url = $"https://aka.ms/mlnet-object-detection-tutorial-model";
-
-            client.DownloadFile(url, fileName);
-
-            //Console.WriteLine("Downloaded model to: " + MLNetModelPath);
-        }
     }
 }
