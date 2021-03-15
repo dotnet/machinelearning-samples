@@ -20,7 +20,7 @@ namespace StopSignDetectionML.Model
 
         private static WebClient client = new WebClient();
 
-        public static string MLNetModelPath = Path.GetFullPath(@"../../../../StopSignDetectionML.Model/MLModel.zip");
+        public static string MLNetModelPath = "MLModel.zip";
 
         // For more info on consuming ML.NET models, visit https://aka.ms/mlnet-consume
         // Method for consuming model in your app
@@ -35,12 +35,6 @@ namespace StopSignDetectionML.Model
             // Create new MLContext
             MLContext mlContext = new MLContext();
 
-            // Download the model
-            if (!File.Exists(MLNetModelPath))
-            {
-                DownloadModel();
-            }
-
             // Load model & create prediction engine
             ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var modelInputSchema);
 
@@ -53,7 +47,7 @@ namespace StopSignDetectionML.Model
         {
             //WebClient client = new WebClient();
             string fileName = MLNetModelPath;
-            string url = $"https://mlpublicassets.blob.core.windows.net/samples/object-detection/MLModel.zip";
+            string url = $"https://aka.ms/mlnet-object-detection-tutorial-model";
 
             client.DownloadFile(url, fileName);
 

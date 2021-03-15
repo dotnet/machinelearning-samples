@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,6 +12,14 @@
   <ItemGroup>
     <ProjectReference Include="..\StopSignDetectionML.Model\StopSignDetectionML.Model.csproj" />
   </ItemGroup>
+
+  <Target Name="DownloadModelFiles" BeforeTargets="Build">
+    <DownloadFile 
+      SourceUrl="https://aka.ms/mlnet-object-detection-tutorial-model"
+      SkipUnchangedFiles="true"
+      DestinationFolder="$(OutDir)">
+    </DownloadFile>
+  </Target>
 
   <ItemGroup>
     <None Update="test-image1.jpeg">
