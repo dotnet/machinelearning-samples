@@ -7,18 +7,12 @@ using System.Text;
 using System.IO;
 using Microsoft.ML;
 using StopSignDetectionML.Model;
-using System.Net.Http;
-using Microsoft.ML.Trainers;
-using System.Web;
-using System.Net;
 
 namespace StopSignDetectionML.Model
 {
     public class ConsumeModel
     {
         private static Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictionEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(CreatePredictionEngine);
-
-        private static WebClient client = new WebClient();
 
         public static string MLNetModelPath = "MLModel.zip";
 
