@@ -12,6 +12,7 @@ products:
 ---
 
 # ML.NET Model Builder Stop Sign Object Detection
+
 This sample relates to the [ML.NET Model Builder Object Detection tutorial](https://docs.microsoft.com/dotnet/machine-learning/tutorials/object-detection-model-builder).
 
 ## Contents
@@ -20,7 +21,6 @@ This sample relates to the [ML.NET Model Builder Object Detection tutorial](http
 |-----------------------------|-------------------------------------------------------------|
 | `StopSignDetection`         | Console app that consumes the trained model.                |
 | `StopSignDetectionML.Model` | Class library that contains the model and consumption code. |
-
 
 The test image `test-image1.jpeg` is from [pexels](https://www.pexels.com/photo/red-stop-sign-39080/).
 
