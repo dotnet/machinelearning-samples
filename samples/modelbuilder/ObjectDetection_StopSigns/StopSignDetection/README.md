@@ -8,7 +8,7 @@ languages:
 products:
 - dotnet
 - dotnet-core
-- visual-studio
+- vs
 ---
 
 # ML.NET Model Builder Stop Sign Object Detection
