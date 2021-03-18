@@ -79,7 +79,7 @@ namespace Common
             Console.WriteLine($"    LogLoss for class 3 = {metrics.PerClassLogLoss[2]:0.####}, the closer to 0, the better");
             Console.WriteLine($"************************************************************");
         }
-       
+
         public static void PrintRegressionFoldsAverageMetrics(string algorithmName, IReadOnlyList<CrossValidationResult<RegressionMetrics>> crossValidationResults)
         {
             var L1 = crossValidationResults.Select(r => r.Metrics.MeanAbsoluteError);
@@ -187,11 +187,11 @@ namespace Common
             string msg = string.Format("Peek data in DataView: Showing {0} rows with the columns", numberOfRows.ToString());
             ConsoleWriteHeader(msg);
 
-            //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
+            //https://github.com/dotnet/machinelearning/blob/main/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
             var transformer = pipeline.Fit(dataView);
             var transformedData = transformer.Transform(dataView);
 
-            // 'transformedData' is a 'promise' of data, lazy-loading. call Preview  
+            // 'transformedData' is a 'promise' of data, lazy-loading. call Preview
             //and iterate through the returned collection from preview.
 
             var preViewTransformedData = transformedData.Preview(maxRows: numberOfRows);
@@ -230,7 +230,7 @@ namespace Common
                                             String concatColumn = String.Empty;
                                             foreach (float f in row)
                                             {
-                                                concatColumn += f.ToString();                                              
+                                                concatColumn += f.ToString();
                                             }
 
                                             Console.WriteLine();

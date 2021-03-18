@@ -37,7 +37,7 @@ This sample defaults to use the pre-trained Tiny YOLOv2 model described above.  
 
 ### To use your own model, use the following steps
 
-1. [Create and train](https://docs.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/get-started-build-detector) an object detector with the Custom Vision. To export the model, make sure to select a **compact** domain such as **General (compact)**. To export an existing object detector, convert the domain to compact by selecting the gear icon at the top right. In _**Settings**_, choose a compact model, save, and train your project.  
+1. [Create and train](https://docs.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/get-started-build-detector) an object detector with the Custom Vision. To export the model, make sure to select a **compact** domain such as **General (compact)**. To export an existing object detector, convert the domain to compact by selecting the gear icon at the top right. In _**Settings**_, choose a compact model, save, and train your project.
 2. [Export your model](https://docs.microsoft.com/azure/cognitive-services/custom-vision-service/export-your-model) by going to the _**Performance**_ tab. Select an iteration trained with a compact domain, an "Export" button will appear. Select _Export_, _ONNX_, _ONNX1.2_, and then _Export_. Once the file is ready, select the *Download* button.
 3. The export will a zip file containing several files, including some sample code, a list of labels, and the ONNX model.  Drop the .zip file into the [**OnnxModels**](./OnnxObjectDetection/ML/OnnxModels) folder in the [OnnxObjectDetection](./OnnxObjectDetection) project.
 4. In Solutions Explorer, right-click the [OnnxModels](./OnnxObjectDetection/ML/OnnxModels) folder and select _Add Existing Item_. Select the .zip file you just added.
@@ -135,7 +135,7 @@ _Note, if the model were trained to detect a different number of classes this va
 
 ## Code Walkthrough
 
-_This sample differs from the [getting-started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) in that here we load/process the images **in-memory** whereas the getting-started sample loads the images from a **file**._
+_This sample differs from the [getting-started object detection sample](https://github.com/dotnet/machinelearning-samples/tree/main/samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx) in that here we load/process the images **in-memory** whereas the getting-started sample loads the images from a **file**._
 
 Create a class that defines the data schema to use while loading data into an `IDataView`. ML.NET supports the `Bitmap` type for images, so we'll specify `Bitmap` property decorated with the `ImageTypeAttribute` and pass in the height and width dimensions we got by [inspecting the model](#model-input-and-output), as shown below.
 
@@ -187,7 +187,7 @@ var model = pipeline.Fit(dataView);
 
 ## Load model and create PredictionEngine
 
-After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and then pass the image to the engine to detect objects using the model. This is one place that the **Web** app and the **WPF** app differ slightly.  
+After the model is configured, we need to save the model, load the saved model, create a `PredictionEngine`, and then pass the image to the engine to detect objects using the model. This is one place that the **Web** app and the **WPF** app differ slightly.
 
 The **Web** app uses a `PredictionEnginePool` to efficiently manage and provide the service with a `PredictionEngine` to use to make predictions.  Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
@@ -271,10 +271,10 @@ When deploying this application on Azure via App Service, you may encounter some
 
     1. One reason why you may get a 5xx code after deploying the application is the platform. The web application only runs on 64-bit architectures. In Azure, change the **Platform** setting in the your respective App Service located in the **Settings > Configuration > General Settings** menu.
 
-    1. Another reason for a 5xx code after deploying the application is the target framework for the web application is .NET Core 3.0, which is currently in preview. You can either revert the application and the referenced project to .NET Core 2.x or add an extension to your App Service. 
+    1. Another reason for a 5xx code after deploying the application is the target framework for the web application is .NET Core 3.0, which is currently in preview. You can either revert the application and the referenced project to .NET Core 2.x or add an extension to your App Service.
 
-        - To add .NET Core 3.0 support in the Azure Portal, select the **Add** button in the **Development Tools > Extensions** section of your respective App Service. 
-        - Then, select **Choose Extension** and select **ASP.NET Core 3.0 (x64) Runtime** from the list of extensions and accept the Legal Terms to proceed with adding the extension to your App Service. 
+        - To add .NET Core 3.0 support in the Azure Portal, select the **Add** button in the **Development Tools > Extensions** section of your respective App Service.
+        - Then, select **Choose Extension** and select **ASP.NET Core 3.0 (x64) Runtime** from the list of extensions and accept the Legal Terms to proceed with adding the extension to your App Service.
 
 1. Relative paths
 

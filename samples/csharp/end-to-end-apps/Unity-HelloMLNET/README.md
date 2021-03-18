@@ -1,14 +1,14 @@
-# Loading ML.NET Models in Unity 
+# Loading ML.NET Models in Unity
 
 ## Overview
 
 This Unity Package shows you how to load a ML.NET model into your Unity Game using a simple form based UI application.
 
-![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/master/images/HelloML.NET_Unity.png)
+![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/main/images/HelloML.NET_Unity.png)
 
 ## Features
-* Unity Package File  
-    * Simple Unity Package File which has a simple form based UI component which predicts Toxicity of input sentiments using a ML.NET model     
+* Unity Package File
+    * Simple Unity Package File which has a simple form based UI component which predicts Toxicity of input sentiments using a ML.NET model
 
 ## Known Workarounds
 * Create a plugins folder in assets and add core ML.NET Nuget binaries along with all nested
