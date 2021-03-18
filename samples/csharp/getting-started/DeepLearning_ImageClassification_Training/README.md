@@ -4,12 +4,12 @@
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | Microsoft.ML 1.5.0 | Dynamic API | Up-to-date | Console apps and Web App | Image files | Image classification | Image classification with TensorFlow model retrain based on transfer learning  | DNN architectures: ResNet, InceptionV3, MobileNet, etc.  |
 
-## Problem 
+## Problem
 Image classification is a common problem within the Deep Learning subject. This sample shows how to create your own custom image classifier by training your model based on the transfer learning approach which is basically retraining a pre-trained model (architecture such as InceptionV3 or ResNet) so you get a custom model trained on your own images.
 
 In this sample app you create your own custom image classifier model by natively training a TensorFlow model from ML.NET API with your own images.
 
-*Image classifier scenario – Train your own custom deep learning model with ML.NET* 
+*Image classifier scenario – Train your own custom deep learning model with ML.NET*
 ![](https://devblogs.microsoft.com/dotnet/wp-content/uploads/sites/10/2019/08/image-classifier-scenario.png)
 
 
@@ -17,7 +17,7 @@ In this sample app you create your own custom image classifier model by natively
 
 > *Image set license*
 >
-> This sample's dataset is based on the 'flower_photos imageset' available from Tensorflow at [this URL](http://download.tensorflow.org/example_images/flower_photos.tgz). 
+> This sample's dataset is based on the 'flower_photos imageset' available from Tensorflow at [this URL](http://download.tensorflow.org/example_images/flower_photos.tgz).
 > All images in this archive are licensed under the Creative Commons By-Attribution License, available at:
 https://creativecommons.org/licenses/by/2.0/
 >
@@ -25,7 +25,7 @@ https://creativecommons.org/licenses/by/2.0/
 
 The by default imageset being downloaded by the sample has 200 images evenly distributed across 5 flower classes:
 
-    Images --> flower_photos_small_set -->       
+    Images --> flower_photos_small_set -->
                |
                daisy
                |
@@ -37,7 +37,7 @@ The by default imageset being downloaded by the sample has 200 images evenly dis
                |
                tulips
 
-The name of each sub-folder is important because that'll be the name of each class/label the model is going to use to classify the images. 
+The name of each sub-folder is important because that'll be the name of each class/label the model is going to use to classify the images.
 
 ## ML Task - Image Classification
 
@@ -64,7 +64,7 @@ Sample references screenshot in training project using **CPU**:
 
 When using **GPU**, your project has to reference the following redist library (*and remove the CPU version reference*):
 
-- `SciSharp.TensorFlow.Redist-Windows-GPU` (GPU training on Windows) 
+- `SciSharp.TensorFlow.Redist-Windows-GPU` (GPU training on Windows)
 
 - `SciSharp.TensorFlow.Redist-Linux-GPU` (GPU training on Linux)
 
@@ -78,7 +78,7 @@ Building the model includes the following steps:
 * Loading the image files (file paths in this case) into an IDataView
 * Image classification using the ImageClassification estimator (high level API)
 
-Define the schema of data in a class type and refer that type while loading the images from the files folder. 
+Define the schema of data in a class type and refer that type while loading the images from the files folder.
 
 ```csharp
 public class ImageData
@@ -130,7 +130,7 @@ IDataView shuffledFullImageFilePathsDataset = mlContext.Data.ShuffleRows(fullIma
 Once it's loaded into the IDataView, the rows are shuffled so the dataset is better balanced before spliting into the training/test datasets.
 
 Now, this next step is very important. Since we want the ML model to work with in-memory images, we need to load the images into the dataset and actually do it by calling fit() and transform().
-This step needs to be done in a initial and seggregated pipeline in the first place so the filepaths won't be used by the pipeline and model to create when training.  
+This step needs to be done in a initial and seggregated pipeline in the first place so the filepaths won't be used by the pipeline and model to create when training.
 
 ```csharp
 // 3. Load Images with in-memory type within the IDataView and Transform Labels to Keys (Categorical)
@@ -181,15 +181,15 @@ There’s another overloaded method for advanced users where you can also specif
 
 The following is how you use the advanced DNN parameters:
 
-```csharp 
+```csharp
 // 5.1 (OPTIONAL) Define the model's training pipeline by using explicit hyper-parameters
 
 var options = new ImageClassificationTrainer.Options()
 {
     FeatureColumnName = "Image",
     LabelColumnName = "LabelAsKey",
-    // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250  
-    // you can try a different DNN architecture (TensorFlow pre-trained model). 
+    // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250
+    // you can try a different DNN architecture (TensorFlow pre-trained model).
     Arch = ImageClassificationTrainer.Architecture.MobilenetV2,
     Epoch = 50,       //100
     BatchSize = 10,
@@ -207,14 +207,14 @@ var pipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(o
 ### 3. Train model
 In order to begin the training process you run `Fit` on the built pipeline:
 
-```csharp 
+```csharp
 // 4. Train/create the ML model
 ITransformer trainedModel = pipeline.Fit(trainDataView);
 ```
 
 ### 4. Evaluate model
 
-After the training, we evaluate the model's quality by using the test dataset. 
+After the training, we evaluate the model's quality by using the test dataset.
 
 The `Evaluate` function needs an `IDataView` with the predictions generated from the test dataset by calling Transfor().
 
@@ -242,9 +242,9 @@ You should proceed as follows in order to train a model your model:
 
 #### GPU vs. CPU for consuming/scoring the model
 
-When consuming/scoring the model you can also choose between CPU/GPU, however, if using GPU you also need to make sure that the machine/server running the model supports a GPU. 
+When consuming/scoring the model you can also choose between CPU/GPU, however, if using GPU you also need to make sure that the machine/server running the model supports a GPU.
 
-The way you set up the scoring/consumption project to use GPU is the same way explained at the begining of this readme.md by simply using one or the other redist library. 
+The way you set up the scoring/consumption project to use GPU is the same way explained at the begining of this readme.md by simply using one or the other redist library.
 
 #### Sample Console app for scoring
 
@@ -286,14 +286,14 @@ float maxScore = prediction.Score.Max();
 
 Console.WriteLine($"Image Filename : [{imageToPredict.ImageFileName}], " +
                     $"Predicted Label : [{prediction.PredictedLabel}], " +
-                    $"Probability : [{maxScore}] " 
+                    $"Probability : [{maxScore}] "
                     );
 ```
 
-The prediction engine receives as parameter an object of type `InMemoryImageData` (containing 2 properties: `Image` and `ImageFileName`). 
+The prediction engine receives as parameter an object of type `InMemoryImageData` (containing 2 properties: `Image` and `ImageFileName`).
 The ImageFileName is not used byt the model. You simple have it there so you can print the filename out out when showing the prediction. The prediction is only using the image's bits in the `byte[] Image` field.
 
-Then the model returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and all the `Scores` for all the classes/types of images. 
+Then the model returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and all the `Scores` for all the classes/types of images.
 
 Since the `PredictedLabel` is already a string it'll be shown in the console.
 About the score for the predicted label, we just need to take the highest score which is the probability for the predicted label.
@@ -307,7 +307,7 @@ You should proceed as follows in order to train a model your model:
 
 #### Sample ASP.NET Core web app for scoring/inference
 
-In the sample's solution there's another project named *ImageClassification.WebApp* which is an ASP.NET Core web app that allows the user to submit an image through HTTP and score/predict with that in-memory image. 
+In the sample's solution there's another project named *ImageClassification.WebApp* which is an ASP.NET Core web app that allows the user to submit an image through HTTP and score/predict with that in-memory image.
 
 This sample also uses the `PredictionEnginePool` which is recommended for multi-threaded and scalable applications.
 
@@ -318,7 +318,7 @@ Below you can see an screenshot of the app:
 
 # TensorFlow DNN Transfer Learning background information
 
-This sample app is retraining a TensorFlow model for image classification. As a user, you could think it is pretty similar to this other sample [Image classifier using the TensorFlow Estimator featurizer](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator). However, the internal implementation is very different under the covers. In that mentioned sample, it is using a 'model composition approach' where an initial TensorFlow model (i.e. InceptionV3 or ResNet) is only used to featurize the images and produce the binary information per image to be used by another ML.NET classifier trainer added on top (such as `LbfgsMaximumEntropy`). Therefore, even when that sample is using a TensorFlow model, you are training only with a ML.NET trainer, you don't retrain a new TensorFlow model but train an ML.NET model. That's why the output of that sample is only an ML.NET model (.zip file).
+This sample app is retraining a TensorFlow model for image classification. As a user, you could think it is pretty similar to this other sample [Image classifier using the TensorFlow Estimator featurizer](https://github.com/dotnet/machinelearning-samples/tree/main/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator). However, the internal implementation is very different under the covers. In that mentioned sample, it is using a 'model composition approach' where an initial TensorFlow model (i.e. InceptionV3 or ResNet) is only used to featurize the images and produce the binary information per image to be used by another ML.NET classifier trainer added on top (such as `LbfgsMaximumEntropy`). Therefore, even when that sample is using a TensorFlow model, you are training only with a ML.NET trainer, you don't retrain a new TensorFlow model but train an ML.NET model. That's why the output of that sample is only an ML.NET model (.zip file).
 
 In contrast, this sample is natively retraining a new TensorFlow model based on a Transfer Learning approach but training a new TensorFlow model derived from the specified pre-trained model (Inception V3 or ResNet).
 
@@ -330,7 +330,7 @@ In the screenshot below you can see how you can see that retrained TensorFlow mo
 
 ![](https://user-images.githubusercontent.com/1712635/64131904-9d4ba880-cd80-11e9-96a3-c2f936f8c5e0.png)
 
-**Benefits:** 
+**Benefits:**
 
 - **Train and inference using GPU:**
     When using this native DNN approach based on TensorFlow you can either use the CPU or GPU (if available) for a better performance (less time needed for training and scoring).

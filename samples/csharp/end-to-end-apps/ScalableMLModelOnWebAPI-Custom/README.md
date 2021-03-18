@@ -10,7 +10,7 @@
 **IMPORTANT NOTE: This sample uses an older approach by implementing all the 'plumbing' related to the PredictionEngine Object Pool. This custom implementation is no longer required since the release of the PredictionEnginePool API provided since May 2019.
 Check this other sample for the preferred and much simpler approach:**
 
-https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg
+https://github.com/dotnet/machinelearning-samples/tree/main/samples/csharp/end-to-end-apps/ScalableMLModelOnWebAPI-IntegrationPkg
 
 ---
 
@@ -31,7 +31,7 @@ For a much more detailed explanation, including design diagrams, read the follow
 SamplePrediction prediction = _modelEngine.Predict(sampleData);
 ```
 
-As simple as a single line. The object _modelEngine will be injected in the controller's constructor or into your custom class. 
+As simple as a single line. The object _modelEngine will be injected in the controller's constructor or into your custom class.
 
 Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
@@ -41,7 +41,7 @@ The problem running/scoring an ML.NET model in multi-threaded applications comes
 
 # Solution
 
-## Use Object Pooling for PredictionEngine objects  
+## Use Object Pooling for PredictionEngine objects
 
 Since a PredictionEngine object cannot be singleton because it is not 'thread safe', a good solution for being able to have 'ready to use' PredictionEngine objects is to use an object pooling-based approach.
 
@@ -49,6 +49,6 @@ When it is necessary to work with a number of objects that are particularly expe
 
 An object pool design pattern can be very effective in such cases.
 
-The [object pool pattern](https://en.wikipedia.org/wiki/Object_pool_pattern) is a design pattern that uses a set of initialized objects kept ready to use (a 'pool') rather than allocating and destroying them on demand. 
+The [object pool pattern](https://en.wikipedia.org/wiki/Object_pool_pattern) is a design pattern that uses a set of initialized objects kept ready to use (a 'pool') rather than allocating and destroying them on demand.
 
 This solution's implementation is based on a higher-level custom class (named **MLModelEngine**) which is instantiated as singleton and creates the needed infrastructure for such an object pool solution.

@@ -24,7 +24,7 @@ All commits in a pull request will be squashed to a single commit with the origi
 
 
 ## Uploading datasets
-* Only datasets that allowed for public use for all purposes (including redistribution) can be uploaded to this repository. 
+* Only datasets that allowed for public use for all purposes (including redistribution) can be uploaded to this repository.
 * To avoid the repository growing too large that it's not convenient to work with, the limit for an uploaded dataset file is 5 MB. Everything that is bigger should be downloaded programmatically on the first run of the app.
-* All datasets should be stored in [datasets](https://github.com/dotnet/machinelearning-samples/tree/master/datasets) folder to allow reusing them by other examples.
+* All datasets should be stored in [datasets](https://github.com/dotnet/machinelearning-samples/tree/main/datasets) folder to allow reusing them by other examples.
 * If you are uploading a dataset, please add a section in datasets [README](datasets/README.md) file describing the original source and license.

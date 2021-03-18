@@ -11,11 +11,11 @@ This sample shows you how you can use the native database loader ro directly tra
 
 ## Problem
 
-In the enterprise and many organizations in general, data is organized and stored as relational databases to be used by enterprise applications. Many of those organizations also prepare their ML model training/evaluation data in relational databases which is also where the new data is being collected and prepared. Therefore, many of those users would also like to directly train/evaluate ML models directly agaist that data stored in relational databases.  
+In the enterprise and many organizations in general, data is organized and stored as relational databases to be used by enterprise applications. Many of those organizations also prepare their ML model training/evaluation data in relational databases which is also where the new data is being collected and prepared. Therefore, many of those users would also like to directly train/evaluate ML models directly agaist that data stored in relational databases.
 
 ## Background
 
-In previous [ML.NET](https://dot.net/ml) releases, since [ML.NET](https://dot.net/ml) 1.0, you could also train against a relational database by providing data through an IEnumerable collection by using the [LoadFromEnumerable()](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.dataoperationscatalog.loadfromenumerable?view=ml-dotnet) API where the data could be coming from a relational database or any other source. However, when using that approach, you as a developer are responsible for the code reading from the relational database (such as using Entity Framework or any other approach) which needs to be implemented properly so you are streaming data while training the ML model, as in this [previous sample using LoadFromEnumerable()](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DatabaseIntegration).
+In previous [ML.NET](https://dot.net/ml) releases, since [ML.NET](https://dot.net/ml) 1.0, you could also train against a relational database by providing data through an IEnumerable collection by using the [LoadFromEnumerable()](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.dataoperationscatalog.loadfromenumerable?view=ml-dotnet) API where the data could be coming from a relational database or any other source. However, when using that approach, you as a developer are responsible for the code reading from the relational database (such as using Entity Framework or any other approach) which needs to be implemented properly so you are streaming data while training the ML model, as in this [previous sample using LoadFromEnumerable()](https://github.com/dotnet/machinelearning-samples/tree/main/samples/csharp/getting-started/DatabaseIntegration).
 
 ## Solution
 
@@ -27,8 +27,8 @@ Here’s example code on how easily you can now configure your code to load data
 
 var mlContext = new MLContext();
 
-// The following is a connection string using a localdb SQL database, 
-// but you can also use connection strings against on-premises SQL Server, Azure SQL Database 
+// The following is a connection string using a localdb SQL database,
+// but you can also use connection strings against on-premises SQL Server, Azure SQL Database
 // or any other relational database (Oracle, SQLite, PostgreSQL, MySQL, Progress, IBM DB2, etc.)
 
 // localdb SQL database connection string using a filepath to attach the database file into localdb
@@ -38,11 +38,11 @@ string connectionString = $"Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilena
 string commandText = "SELECT * from URLClicks";
 
 DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<UrlClick>();
-            
-DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, 
-                                                connectionString, 
+
+DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance,
+                                                connectionString,
                                                 commandText);
-            
+
 IDataView dataView = loader.Load(dbSource);
 
 // From this point you can use the IDataView for training and validating an ML.NET model as in any other sample

@@ -28,7 +28,7 @@ module ConsoleHelper =
         printfn "*       Squared loss:  %.2f" metrics.MeanSquaredError
         printfn "*       RMS loss:      %.2f" metrics.RootMeanSquaredError
         printfn "*************************************************"
-    
+
     let printBinaryClassificationMetrics name (metrics : CalibratedBinaryClassificationMetrics) =
         printfn"************************************************************"
         printfn"*       Metrics for %s binary classification model      " name
@@ -37,7 +37,7 @@ module ConsoleHelper =
         printfn"*       Area Under Curve:      %.2f%%" (metrics.AreaUnderRocCurve * 100.)
         printfn"*       Area under Precision recall Curve:    %.2f%%" (metrics.AreaUnderPrecisionRecallCurve * 100.)
         printfn"*       F1Score:  %.2f%%" (metrics.F1Score * 100.)
- 
+
         printfn"*       LogLogg:  %.2f%%" (metrics.LogLoss)
         printfn"*       LogLossreduction:  %.2f%%" (metrics.LogLossReduction)
         printfn"*       PositivePrecision:      %.2f" (metrics.PositivePrecision)
@@ -70,7 +70,7 @@ module ConsoleHelper =
         confidenceInterval95
 
     let printMulticlassClassificationFoldsAverageMetrics algorithmName (crossValResults : TrainCatalogBase.CrossValidationResult<MulticlassClassificationMetrics>[]) =
-        
+
         let metricsInMultipleFolds = crossValResults |> Array.map(fun r -> r.Metrics)
 
         let microAccuracyValues  = metricsInMultipleFolds |> Array.map(fun m -> m.MicroAccuracy)
@@ -126,19 +126,19 @@ module ConsoleHelper =
 
 
     let peekDataViewInConsole<'TObservation when 'TObservation : (new : unit -> 'TObservation) and 'TObservation : not struct> (mlContext : MLContext) (dataView : IDataView) (pipeline : IEstimator<ITransformer>) numberOfRows =
-        
+
         let msg = sprintf "Peek data in DataView: Showing %d rows with the columns" numberOfRows
         consoleWriteHeader msg
 
-        //https://github.com/dotnet/machinelearning/blob/master/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
+        //https://github.com/dotnet/machinelearning/blob/main/docs/code/MlNetCookBook.md#how-do-i-look-at-the-intermediate-data
         let transformer = pipeline.Fit dataView
         let transformedData = transformer.Transform dataView
 
-        // 'transformedData' is a 'promise' of data, lazy-loading. call Preview  
+        // 'transformedData' is a 'promise' of data, lazy-loading. call Preview
         //and iterate through the returned collection from preview.
 
         transformedData.Preview(numberOfRows).RowView
-        |> Seq.iter 
+        |> Seq.iter
             (fun row ->
                 row.Values
                 |> Array.map (function KeyValue(k,v) -> sprintf "| %s:%O" k v)
@@ -155,21 +155,21 @@ module ConsoleHelper =
         let transformedData = transformer.Transform dataView
 
         // Extract the 'Features' column.
-        let someColumnData = 
+        let someColumnData =
             transformedData.GetColumn<float32[]>(columnName)
             |> Seq.take numberOfRows
             |> Seq.toList
 
         // print to console the peeked rows
         someColumnData
-        |> List.iter(fun row -> 
-            let concatColumn = 
+        |> List.iter(fun row ->
+            let concatColumn =
                 row
                 |> Array.map string
                 |> String.concat ""
             printfn "%s" concatColumn
         )
-                        
+
         someColumnData;
 
     let consoleWriterSection (lines : string array) =
@@ -182,7 +182,7 @@ module ConsoleHelper =
         let maxLength = lines |> Array.map(fun x -> x.Length) |> Array.max
         printfn "%s" (new string('-', maxLength))
         Console.ForegroundColor <- defaultColor
-    
+
     let consolePressAnyKey () =
         let defaultColor = Console.ForegroundColor
         Console.ForegroundColor <- ConsoleColor.Green
@@ -190,7 +190,7 @@ module ConsoleHelper =
         printfn "Press any key to finish."
         Console.ForegroundColor <- defaultColor
         Console.ReadKey() |> ignore
-    
+
     let consoleWriteException (lines : string array) =
         let defaultColor = Console.ForegroundColor
         Console.ForegroundColor <- ConsoleColor.Red

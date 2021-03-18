@@ -6,7 +6,7 @@
 
 
 ## Problem
-The problem is how to run/score a TensorFlow model in a web app/service while using in-memory images. 
+The problem is how to run/score a TensorFlow model in a web app/service while using in-memory images.
 
 ## Solution
 The model (`model.pb`) is trained using TensorFlow as disscussed in the blogpost [Run with ML.NET C# code a TensorFlow model exported from Azure Cognitive Services Custom Vision](https://devblogs.microsoft.com/cesardelatorre/run-with-ml-net-c-code-a-tensorflow-model-exported-from-azure-cognitive-services-custom-vision/).
@@ -16,7 +16,7 @@ See the below architecture that shows how to run/score TensorFlow model in ASP.N
 ![](docs/scenario-architecture.png)
 
 
-The difference between the [getting started sample](https://github.com/dotnet/machinelearning-samples/tree/master/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow) and this end-to-end sample is that the images are loaded from  **file** in getting started sample whereas the images are loaded from **in-memory** in this end-to-end sample.
+The difference between the [getting started sample](https://github.com/dotnet/machinelearning-samples/tree/main/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow) and this end-to-end sample is that the images are loaded from  **file** in getting started sample whereas the images are loaded from **in-memory** in this end-to-end sample.
 
 **Note:**  this sample is trained using Custom images and it predicts the only specific images that are in [TestImages](./TestImages) Folder.
 
