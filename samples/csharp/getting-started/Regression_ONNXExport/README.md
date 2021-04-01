@@ -8,7 +8,7 @@ In this sample, you'll see how to use ML.NET to train a regression model and the
 
 ## Problem
 
-The Open Neural Network eXchange i.e [ONNX](http://onnx.ai/) is an open format to represent deep learning models. With ONNX, developers can move models between state-of-the-art tools and choose the combination that is best for them. ONNX is developed and supported by a community of partners.
+The Open Neural Network Exchange i.e [ONNX](http://onnx.ai/) is an open format to represent deep learning models. With ONNX, developers can move models between state-of-the-art tools and choose the combination that is best for them. ONNX is developed and supported by a community of partners.
 
 There may be times when you want to train a model with ML.NET and then convert to ONNX, for instance if you want to consume your model with WinML to take advantage of GPU inferencing in Windows applications.
 
