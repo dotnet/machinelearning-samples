@@ -48,7 +48,6 @@ namespace ONNXExport
             using (var stream = File.Create("taxi-fare-model.onnx"))
                 mlContext.Model.ConvertToOnnx(model, trainingDataView, stream);
 
-
             // Create the pipeline using the ONNX file
             var onnxModelPath = "taxi-fare-model.onnx";
             var onnxEstimator = mlContext.Transforms.ApplyOnnxModel(onnxModelPath);

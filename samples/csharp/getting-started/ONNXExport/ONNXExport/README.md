@@ -14,8 +14,8 @@ There may be times when you want to train a model with ML.NET and then convert t
 Not all ML.NET models can be converted to ONNX; it is dependent on the trainers and transforms in the training pipeline. For a list of supported trainers see the tables in the ML.NET [Algorithms Doc](https://docs.microsoft.com/dotnet/machine-learning/how-to-choose-an-ml-net-algorithm) and for a list of supported transforms check out the [Data transforms Doc](https://docs.microsoft.com/dotnet/machine-learning/resources/transforms).
 
  
-## DataSet
-The dataset contains images which are located in the [assets](./ObjectDetectionConsoleApp/assets/images) folder. These images are taken from [wikimedia commons site](https://commons.wikimedia.org/wiki/Main_Page). Go to [Wikimediacommon.md](./ObjectDetectionConsoleApp/assets/images/wikimedia.md) to refer to the image urls and their licenses.
+## Dataset
+This sample uses the [NYC Taxi Fare dataset](https://github.com/dotnet/machinelearning-samples/blob/main/datasets/README.md#nyc-taxi-fare) for training.
 
 
 ##  Solution
