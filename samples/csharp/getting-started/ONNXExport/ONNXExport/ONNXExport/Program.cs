@@ -31,11 +31,11 @@ namespace ONNXExport
                                             separatorChar: ',');
 
 
-            // Create data processing pipeline
+            // Create data processing pipeline for training ML.NET model
             var dataProcessPipeline = mlContext.Transforms.Categorical.OneHotEncoding(new[] { new InputOutputColumnPair("vendor_id", "vendor_id"), new InputOutputColumnPair("payment_type", "payment_type") })
                                       .Append(mlContext.Transforms.Concatenate("Features", new[] { "vendor_id", "payment_type", "rate_code", "passenger_count", "trip_time_in_secs", "trip_distance" }));
 
-            // Set the training algorithm and append to pipeline
+            // Set training algorithm and append to pipeline
             var trainer = mlContext.Regression.Trainers.Sdca(labelColumnName: "fare_amount", featureColumnName: "Features");
 
             var trainingPipeline = dataProcessPipeline.Append(trainer);
@@ -48,6 +48,8 @@ namespace ONNXExport
             using (var stream = File.Create("taxi-fare-model.onnx"))
                 mlContext.Model.ConvertToOnnx(model, trainingDataView, stream);
 
+            // Now you can compare the results from the ML.NET and ONNX models
+
             // Create the pipeline using the ONNX file
             var onnxModelPath = "taxi-fare-model.onnx";
             var onnxEstimator = mlContext.Transforms.ApplyOnnxModel(onnxModelPath);
@@ -55,23 +57,23 @@ namespace ONNXExport
             // Make sure to either use the 'using' clause or explicitly dispose the returned onnxTransformer to prevent memory leaks
             using var onnxTransformer = onnxEstimator.Fit(trainingDataView);
 
-            // Inference on the test set with the ONNX model
+            // Inference on the test set with the ML.NET model
             var output = model.Transform(testDataView);
+
+            // Inference on the test set with the ONNX model
             var onnxOutput = onnxTransformer.Transform(testDataView);
 
-            //Get the outScores
+            //Get the Scores from ML.NET model
             var outScores = mlContext.Data.CreateEnumerable<ScoreValue>(output, reuseRowObject: false);
+
+            //Get the Scores from ONNX model
             var onnxOutScores = mlContext.Data.CreateEnumerable<OnnxScoreValue>(onnxOutput, reuseRowObject: false);
 
-            // Print
+            // Print Scores from ML.NET model
             PrintScore(outScores, 5);
+
+            // Print Scores from ONNX model
             PrintScore(onnxOutScores, 5);
-            //Expected same results for the above 4 methods
-            //Score - 0.09044361
-            //Score - 9.105377
-            //Score - 11.049
-            //Score - 3.061928
-            //Score - 6.375817
         }
 
         // Define model input schema
@@ -124,12 +126,14 @@ namespace ONNXExport
 
         private static void PrintScore(IEnumerable<ScoreValue> values, int numRows)
         {
+            Console.WriteLine("Predicted Scores with ML.NET model");
             foreach (var value in values.Take(numRows))
                 Console.WriteLine("{0, -10} {1, -10}", "Score", value.Score);
         }
 
         private static void PrintScore(IEnumerable<OnnxScoreValue> values, int numRows)
         {
+            Console.WriteLine("Predicted Scores with ONNX model");
             foreach (var value in values.Take(numRows))
                 Console.WriteLine("{0, -10} {1, -10}", "Score", value.Score.GetItemOrDefault(0));
         }
