@@ -11,8 +11,8 @@ namespace ONNXExport
     class Program
     {
         private static string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        private static string TRAIN_DATA_FILEPATH = Path.Combine(currentDirectory, @"..\..\..\..\..\..\Regression_TaxiFarePrediction\TaxiFarePrediction\Data\taxi-fare-train.csv");
-        private static string TEST_DATA_FILEPATH = Path.Combine(currentDirectory, @"..\..\..\..\..\..\Regression_TaxiFarePrediction\TaxiFarePrediction\Data\taxi-fare-test.csv");
+        private static string TRAIN_DATA_FILEPATH = Path.Combine(currentDirectory, @"..\..\..\..\..\Regression_TaxiFarePrediction\TaxiFarePrediction\Data\taxi-fare-train.csv");
+        private static string TEST_DATA_FILEPATH = Path.Combine(currentDirectory, @"..\..\..\..\..\Regression_TaxiFarePrediction\TaxiFarePrediction\Data\taxi-fare-test.csv");
 
         static void Main(string[] args)
         {
