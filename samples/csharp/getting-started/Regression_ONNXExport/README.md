@@ -78,3 +78,9 @@ Score      5.9175444
 Score      4.8969507
 Score      19.108932
 ```
+
+## Performance
+
+The default ONNX to ML.NET conversion is not optimal and produces extra graph outputs that are not needed for ML.NET usage. ONNX Runtime does reverse depth first search which results in a lot of conversion operations of native memory to managed memory from ONNX Runtime to ML.NET and execution of more than the necessary kernels. 
+
+If you specify just the necessary graph outputs, it will only execute a subset of the graph. Thus, by eliminating all graph outputs except Score, you can improve inference performance.
