@@ -1,0 +1,30 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+    text-align: center;
+    background-color: rgba(0,0,0,.8);
+    color: #fff;
+    font-size: .8em;
+    width: 100%;
+    position: inherit;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1em;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-links a {
+    color: #ffffff;
+}
+
+.footer-links>*+* {
+    margin: 0 1em;
+}
