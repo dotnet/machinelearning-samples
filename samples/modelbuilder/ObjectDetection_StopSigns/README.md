@@ -3,6 +3,9 @@ page_type: sample
 name: "ML.NET Model Builder Stop Sign Object Detection"
 description: "Use ML.NET Model Builder to train a deep learning object detection model in Azure."
 urlFragment: "mlnet-object-detection-model-builder"
+extendedZipContent:
+- path: null
+  target: null
 languages:
 - csharp
 products:
