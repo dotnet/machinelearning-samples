@@ -28,7 +28,7 @@ The name of each sub-folder is important because it will be used as the label fo
 
 > All images in this image set are licensed under the Creative Commons By-Attribution License, available at:
 > https://creativecommons.org/licenses/by/2.0/
-> When the image set is downloaded, a LICENSE.txt is also downloaded where you can see the full details of > the imageset license.
+> When the image set is downloaded, a LICENSE.txt is also downloaded where you can see the full details of the imageset license.
 
 ## ML Task - [Image Classification](https://en.wikipedia.org/wiki/Outline_of_object_recognition)
 To solve this problem, first we will build an ML model. Then we will train the model on existing data, evaluate how good it is, and lastly we'll consume the model to classify a new image.
@@ -47,7 +47,7 @@ Building the model includes the following steps:
 * Image *featurization* using the deep neural network model
 * Image classification using LbfgsMaximumEntropy
 
-Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageNetData. 
+Define the schema of data in a class type and refer that type while loading data using TextLoader. Here the class type is ImageData. 
 
 ```csharp
     public class ImageData
@@ -177,6 +177,6 @@ Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], 
 The prediction engine receives as parameter an object of type `ImageData` (containing 2 properties: `ImagePath` and `Label`). Then returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and `Score` (*probability* value between 0 and 1) properties.
 
 #### Model testing: making classifications
-1) Copy the model produced by the training model (located at [ImageClassification.Train](./ImageClassification.Train/)/[assets](./ImageClassification.Train/assets/)/[outputs](./ImageClassification.Train/assets/outputs/)/[imageClassifier.zip](./ImageClassification.Train/assets/outputs/imageClassifier.zip) ) to the prediction project (at [ImageClassification.Predict](./ImageClassification.Predict/)/[assets](./ImageClassification.Predict/assets/)/[inputs](./ImageClassification.Predict/assets/inputs/)/[MLNETModel](./ImageClassification.Predict/assets/inputs/MLNETModel)/[imageClassifier.zip](./ImageClassification.Predict/assets/inputs/imageClassifier.zip) ).
+1) Copy the model produced by the training dataset (located at [ImageClassification.Train](./ImageClassification.Train/)/[assets](./ImageClassification.Train/assets/)/[outputs](./ImageClassification.Train/assets/outputs/)/[imageClassifier.zip](./ImageClassification.Train/assets/outputs/imageClassifier.zip) ) to the prediction project (at [ImageClassification.Predict](./ImageClassification.Predict/)/[assets](./ImageClassification.Predict/assets/)/[inputs](./ImageClassification.Predict/assets/inputs/)/[MLNETModel](./ImageClassification.Predict/assets/inputs/MLNETModel)/[imageClassifier.zip](./ImageClassification.Predict/assets/inputs/imageClassifier.zip) ).
 2) Set VS default startup project: Set `ImageClassification.Predict` as starting project in Visual Studio. 
 3) Press F5 in Visual Studio. After some seconds, the process will finish and show the predictions.
