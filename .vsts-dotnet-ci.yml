@@ -203,4 +203,3 @@ phases:
     displayName: Build Database Integration
     inputs:
       projects: '.\samples\csharp\getting-started\DatabaseIntegration\DatabaseIntegration.sln'
-
