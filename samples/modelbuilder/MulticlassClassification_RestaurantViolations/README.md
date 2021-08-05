@@ -1,9 +1,8 @@
 # Restaurant Violation Inspections
 
-
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Up-to-date | Console App | Single data sample | Issue Classification | Multiclass classification | Linear Classification |
+| v1.6           | Up-to-date | Console App | Single data sample | Issue Classification | Multiclass classification | Linear Classification |
 
 For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/health-violation-classification-model-builder) on the Microsoft Docs site.
 
@@ -11,7 +10,7 @@ For a detailed explanation of how to build this application, see the accompanyin
 
 Create a C# .NET Core Console application that uses an ML.NET multiclass classification machine learning model trained using Model Builder to categorize the risk level of restaurant violations found during health inspections.
 
-![](./images/console.PNG)
+![Console output](./images/console.PNG)
 
 ## Application
 
