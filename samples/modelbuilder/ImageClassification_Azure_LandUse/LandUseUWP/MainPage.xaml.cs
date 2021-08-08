@@ -141,7 +141,7 @@ namespace LandUseUWP
             // Send image to ASP.NET Core Web API for classification
             using (var client = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (msg, cert, chain, ssl) => true }))
             {
-                var res = await client.PostAsync("https://localhost:5001/api/classification", new StringContent(content, Encoding.UTF8, "application/json"));
+                var res = await client.PostAsync("https://localhost:44398/api/classification", new StringContent(content, Encoding.UTF8, "application/json"));
                 prediction = await res.Content.ReadAsStringAsync();
             }
 
