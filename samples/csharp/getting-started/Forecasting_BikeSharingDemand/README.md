@@ -2,7 +2,7 @@
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.4.0-preview2 | Dynamic API | Up-to-date | Console app | SQL Server | Demand prediction | Forecasting | Single Spectrum Analysis |
+| v1.6.0 | Dynamic API | Up-to-date | Console app | SQL Server | Demand prediction | Forecasting | Single Spectrum Analysis |
 
 In this sample, you can see how to load data from a relational database using the Database Loader to train a forecasting model that predicts bike rental demand. 
 
