@@ -1,8 +1,22 @@
+---
+page_type: sample
+name: "Detect objects in images using a pretrained ONNX model and ML.NET"
+description: "Use ML.NET and a pretrained YOLOv2 object detection ONNX model to identify objects in an image"
+urlFragment: "mlnet-onnx-object-detection"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- vs
+- mlnet
+---
+
 # Object Detection
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.4           | Dynamic API | Up-to-date | Console app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
+| v1.6           | Dynamic API | Up-to-date | Console app | image files | Object Detection | Deep Learning  | Tiny Yolo2 ONNX model |
 
 
 For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/object-detection-onnx) on the Microsoft Docs site. 
