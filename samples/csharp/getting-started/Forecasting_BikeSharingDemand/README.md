@@ -1,8 +1,22 @@
+---
+page_type: sample
+name: "Forecast bike rental demand with ML.NET"
+description: "Use ML.NET's Single Spectrum Analysis (SSA) time-series forecasting algorithm to predict demand for bike rentals"
+urlFragment: "mlnet-time-series-demand-forecasting"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- vs
+- mlnet
+---
+
 # Bike Sharing Demand - Forecasting
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.4.0-preview2 | Dynamic API | Up-to-date | Console app | SQL Server | Demand prediction | Forecasting | Single Spectrum Analysis |
+| v1.6.0 | Dynamic API | Up-to-date | Console app | SQL Server | Demand prediction | Forecasting | Single Spectrum Analysis |
 
 In this sample, you can see how to load data from a relational database using the Database Loader to train a forecasting model that predicts bike rental demand. 
 
