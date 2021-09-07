@@ -14,8 +14,8 @@ Create a C# .NET Core Console application that uses an object detection machine 
 
 ## Application
 
-- StopSignDetection:  A C# .NET Core Console application that uses an ML.NET model to find stop signs in images and, if any are found, returns their bounding boxes to where they are located in the image.
-- StopSignDetectionML.ConsoleApp: A .NET Core Console application that contains the model training and test prediction code.
+- **StopSignDetection**:  A C# .NET Core Console application that uses an ML.NET model to find stop signs in images and, if any are found, returns their bounding boxes to where they are located in the image.
+- **StopSignDetectionML.ConsoleApp**: A .NET Core Console application that contains the model training and test prediction code.
 
 ## The data
 
@@ -27,9 +27,9 @@ You can download the dataset [here](https://aka.ms/mlnet-object-detection-tutori
 
 The goal of the application is to predict whether an image includes a stop sign and, if any are found, gives their bounding boxes to where the stop sign is located in the image. The Machine Learning Task to use in this scenario is multiclass classification. The model in this application was trained using Model Builder.
 
-[Model Builder](https://docs.microsoft.com/en-us/dotnet/machine-learning/how-to-guides/install-model-builder) is an intuitive graphical Visual Studio extension to build, train, and deploy custom machine learning models.
+[Model Builder](https://docs.microsoft.com/dotnet/machine-learning/how-to-guides/install-model-builder) is an intuitive graphical Visual Studio extension to build, train, and deploy custom machine learning models.
 
-Model Builder Azure Machine Learning to train the object detection model.
+Model Builder uses Azure Machine Learning to train the object detection model.
 
 You don't need machine learning expertise to use Model Builder. All you need is some data, and a problem to solve. Model Builder generates the code to add the model to your .NET application.
 
