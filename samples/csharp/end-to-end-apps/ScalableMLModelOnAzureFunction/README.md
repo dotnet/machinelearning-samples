@@ -1,3 +1,19 @@
+---
+page_type: sample
+name: "Detect anomalies in phone call volumes using ML.NET"
+description: "Use ML.NET's time series anomaly detection algorithms to detect anomalies in phone call volumes"
+urlFragment: "mlnet-time-series-anomaly-detection"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- vs
+- azure
+- azure-functions
+- mlnet
+---
+
 # Azure Functions Sentiment Analysis Sample 
 
 This sample highlights dependency injection in conjunction with the **.NET Core Integration Package** to build a scalable, serverless Azure Functions application. 

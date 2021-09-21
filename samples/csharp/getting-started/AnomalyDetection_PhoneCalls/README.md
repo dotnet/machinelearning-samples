@@ -1,3 +1,17 @@
+---
+page_type: sample
+name: "Detect anomalies in phone call volumes using ML.NET"
+description: "Use ML.NET's time series anomaly detection algorithms to detect anomalies in phone call volumes"
+urlFragment: "mlnet-time-series-anomaly-detection"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- vs
+- mlnet
+---
+
 # Anomaly Detection of Numbers of Phone Calls
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
