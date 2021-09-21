@@ -1,8 +1,8 @@
 ---
 page_type: sample
-name: "Train a deep learning object detection model to detect stop sings"
-description: "Train a deep learning object detection model to detect stop signs in images"
-urlFragment: "mlnet-object-detection-model-builder"
+name: "Categorize the severity of restaurant health violations using ML.NET Model Builder"
+description: "Train a machine learning model to categorize the severity of restaurant health violations using ML.NET Model Builder"
+urlFragment: "mlnet-multiclass-classification-model-builder"
 languages:
 - csharp
 products:
