@@ -1,3 +1,19 @@
+---
+page_type: sample
+name: "Train a deep learning object detection model to detect stop signs"
+description: "Train a deep learning object detection model to detect stop signs in images"
+urlFragment: "mlnet-object-detection-model-builder"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- aspnet-core
+- vs
+- vs-ide
+- mlnet
+---
+
 # Stop Sign Object Detection
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |

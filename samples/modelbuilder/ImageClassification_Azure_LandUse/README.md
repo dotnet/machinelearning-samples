@@ -10,8 +10,10 @@ products:
 - dotnet-core
 - aspnet-core
 - vs
+- vs-ide
 - windows
 - windows-uwp
+- mlnet
 ---
 
 # Image Classification in Azure with Model Builder

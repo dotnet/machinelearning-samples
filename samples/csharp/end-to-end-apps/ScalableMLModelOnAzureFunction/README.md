@@ -1,3 +1,19 @@
+---
+page_type: sample
+name: "Deploy an ML.NET machine learning model to Azure Functions"
+description: "Deploy an ML.NET machine learning model to an Azure Functions serverless environment"
+urlFragment: "mlnet-deploy-serverless-azure-functions"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- vs
+- azure
+- azure-functions
+- mlnet
+---
+
 # Azure Functions Sentiment Analysis Sample 
 
 This sample highlights dependency injection in conjunction with the **.NET Core Integration Package** to build a scalable, serverless Azure Functions application. 

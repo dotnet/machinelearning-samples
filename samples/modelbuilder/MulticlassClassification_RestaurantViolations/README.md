@@ -1,9 +1,25 @@
+---
+page_type: sample
+name: "Categorize the severity of restaurant health violations using ML.NET Model Builder"
+description: "Train a machine learning model to categorize the severity of restaurant health violations using ML.NET Model Builder"
+urlFragment: "mlnet-multiclass-classification-model-builder"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- aspnet-core
+- vs
+- vs-ide
+- mlnet
+---
+
 # Restaurant Violation Inspections
 
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.3.1           | Up-to-date | Console App | Single data sample | Issue Classification | Multiclass classification | Linear Classification |
+| v1.6.0       | Up-to-date | Console App | Single data sample | Issue Classification | Multiclass classification | Linear Classification |
 
 For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/health-violation-classification-model-builder) on the Microsoft Docs site.
 

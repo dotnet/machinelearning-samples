@@ -1,3 +1,19 @@
+---
+page_type: sample
+name: "Train a sentiment analysis machine learning model with ML.NET Model Builder"
+description: "Train a machine learning model to analyze and classify sentiment using ML.NET Model Builder"
+urlFragment: "mlnet-sentiment-analysis-model-builder"
+languages:
+- csharp
+products:
+- dotnet
+- dotnet-core
+- aspnet-core
+- vs
+- vs-ide
+- mlnet
+---
+
 # Sentiment Analysis: Razor Pages sample optimized for scalability and performance when running/scoring an ML.NET model built with Model Builder (Using the new '.NET Core Integration Package for ML.NET')
 
 
