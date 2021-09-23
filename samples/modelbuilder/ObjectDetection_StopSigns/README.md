@@ -1,6 +1,6 @@
 ---
 page_type: sample
-name: "Train a deep learning object detection model to detect stop sings"
+name: "Train a deep learning object detection model to detect stop signs"
 description: "Train a deep learning object detection model to detect stop signs in images"
 urlFragment: "mlnet-object-detection-model-builder"
 languages:
