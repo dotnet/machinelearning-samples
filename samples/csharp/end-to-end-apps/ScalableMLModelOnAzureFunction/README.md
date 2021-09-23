@@ -1,8 +1,8 @@
 ---
 page_type: sample
-name: "Detect anomalies in phone call volumes using ML.NET"
-description: "Use ML.NET's time series anomaly detection algorithms to detect anomalies in phone call volumes"
-urlFragment: "mlnet-time-series-anomaly-detection"
+name: "Deploy an ML.NET machine learning model to Azure Functions"
+description: "Deploy an ML.NET machine learning model to an Azure Functions serverless environment"
+urlFragment: "mlnet-deploy-serverless-azure-functions"
 languages:
 - csharp
 products:
