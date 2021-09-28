@@ -20,7 +20,7 @@ products:
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v1.5.0-preview           | Up-to-date | UWP & ASP.NET Core WebAPI | Single data sample | Image Classification | Image Classification | ResNet50 |
+| v1.6           | Up-to-date | UWP & ASP.NET Core WebAPI | Single data sample | Image Classification | Image Classification | ResNet50 |
 
 ## Goal
 
@@ -32,9 +32,9 @@ Train a deep learning image classification model in Azure. The model classifies 
 - **LandUseML.ConsoleApp**: A C# .NET Core console application that provides starter code to build the prediction pipeline and make predictions.
 - **LandUseML.Model**: A C# .NET Standard application that contains the data models that define the schema of input and output model data as well as the following assets:  
 
-    - bestModel.onnx: A serialized version of the model in Open Neural Network Exchange (ONNX) format. ONNX is an open source format for AI models that supports interoperability between frameworks like ML.NET, PyTorch and TensorFlow.
-    - bestModelMap.json: A list of categories used when making predictions to map the model output to a text category.
-    - MLModel.zip: A serialized version of the ML.NET prediction pipeline that uses the serialized version of the model bestModel.onnx to make predictions and maps outputs using the bestModelMap.json file.
+  - bestModel.onnx: A serialized version of the model in Open Neural Network Exchange (ONNX) format. ONNX is an open source format for AI models that supports interoperability between frameworks like ML.NET, PyTorch and TensorFlow.
+  - bestModelMap.json: A list of categories used when making predictions to map the model output to a text category.
+  - MLModel.zip: A serialized version of the ML.NET prediction pipeline that uses the serialized version of the model bestModel.onnx to make predictions and maps outputs using the bestModelMap.json file.
 
 - **LandUseUWP**: Universal Windows Platform (UWP) application that consumes the model to classify satellite map images of locations provided by the user.
 
@@ -78,7 +78,7 @@ In this solution, both the `LandUseML.ConsoleApp` and `LandUseML.Model` projects
 
 The model is served by the `LandUseAPI` ASP.NET Core Web API project.
 
-The API uses a `PredictionEngine` to make predictions. `PredictionEngine` is a convenience API that uses the model to make predictions on a single data instance. Using dependency injetion, a singleton instance of `PredictionEngine` is registered inside the `ConfigureServices` method of the *Startup.cs* file.
+The API uses a `PredictionEngine` to make predictions. `PredictionEngine` is a convenience API that uses the model to make predictions on a single data instance. Using dependency injection, a singleton instance of `PredictionEngine` is registered inside the `ConfigureServices` method of the *Startup.cs* file.
 
 ```csharp
 services.AddSingleton<PredictionEngine<ModelInput, ModelOutput>>(sp =>
@@ -117,7 +117,7 @@ public ClassificationController(PredictionEngine<ModelInput, ModelOutput> predic
 }
 ```
 
-Then, a method inside the controller accepts incoming image data via an HTTP POST request and uses the `PredictioneEngine` to classify the image.
+Then, a method inside the controller accepts incoming image data via an HTTP POST request and uses the `PredictionEngine` to classify the image.
 
 ```csharp
 [HttpPost]

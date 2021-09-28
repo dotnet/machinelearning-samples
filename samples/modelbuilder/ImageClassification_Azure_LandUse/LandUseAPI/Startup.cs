@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.ML;
 using LandUseML.Model;
 using System.Reflection;
+using Microsoft.Extensions.ML;
 
 namespace LandUseAPI
 {
@@ -22,6 +23,8 @@ namespace LandUseAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             services.AddSingleton<PredictionEngine<ModelInput, ModelOutput>>(sp =>
             {
                 // Initialize MLContext
@@ -29,23 +32,22 @@ namespace LandUseAPI
 
                 // Register NormalizeMapping
                 ctx.ComponentCatalog.RegisterAssembly(typeof(NormalizeMapping).Assembly);
-                
+
                 // Register LabelMapping
                 ctx.ComponentCatalog.RegisterAssembly(typeof(LabelMapping).Assembly);
-                
+
                 // Define model path
                 var modelPath = Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "MLModel.zip");
-                
+
                 //Load model
                 ITransformer mlModel = ctx.Model.Load(modelPath, out var modelInputSchema);
-                
+
                 // Create prediction engine
-                var predEngine = ctx.Model.CreatePredictionEngine<ModelInput,ModelOutput>(mlModel);
+                var predEngine = ctx.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
 
                 return predEngine;
             });
-            services.AddControllers();
-        }
+    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
