@@ -30,7 +30,7 @@ namespace LandUse_WebApi
             var pipeline = mlContext.Transforms.LoadImages(outputColumnName:@"input1",imageFolder:@"",inputColumnName:@"ImageSource")      
                                     .Append(mlContext.Transforms.ResizeImages(imageWidth:224,imageHeight:224,outputColumnName:@"input1",inputColumnName:@"input1",cropAnchor:ImageResizingEstimator.Anchor.Center,resizing:ImageResizingEstimator.ResizingKind.IsoCrop))      
                                     .Append(mlContext.Transforms.ExtractPixels(outputColumnName:@"input1",inputColumnName:@"input1",colorsToExtract:ImagePixelExtractingEstimator.ColorBits.Rgb,orderOfExtraction:ImagePixelExtractingEstimator.ColorsOrder.ARGB))      
-                                    .Append(mlContext.Transforms.ApplyOnnxModel(modelFile:@"C:\Users\chron\Source\Repos\LandUse\LandUse\LandUse.onnx"));
+                                    .Append(mlContext.Transforms.ApplyOnnxModel(modelFile:@"./LandUse.onnx"));
 
             return pipeline;
         }
