@@ -1,2 +1,0 @@
-# Ignore mbconfig since it has absolute paths to data files
-*.mbconfig
