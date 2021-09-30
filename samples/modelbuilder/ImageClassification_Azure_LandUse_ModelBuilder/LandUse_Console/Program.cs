@@ -12,7 +12,7 @@ namespace LandUse_Console
             // Create single instance of sample data from first line of dataset for model input
             LandUse.ModelInput sampleData = new LandUse.ModelInput()
             {
-                ImageSource = @"C:\Users\chron\Downloads\assets\assets\AnnualCrop\AnnualCrop_1.jpg",
+                ImageSource = @"./Data/AnnualCrop_1.jpg",
             };
 
             // Make a single prediction on the sample data and print results
@@ -21,7 +21,7 @@ namespace LandUse_Console
             Console.WriteLine("Using model to make single prediction -- Comparing actual Label with predicted Label from sample data...\n\n");
 
 
-            Console.WriteLine($"ImageSource: {@"C:\Users\chron\Downloads\assets\assets\AnnualCrop\AnnualCrop_1.jpg"}");
+            Console.WriteLine($"ImageSource: {@"./Data/AnnualCrop_1.jpg"}");
 
 
             Console.WriteLine($"\n\nPredicted Label value: {predictionResult.Prediction} \nPredicted Label scores: [{String.Join(",", predictionResult.Score)}]\n\n");

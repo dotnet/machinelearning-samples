@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Description = "Docs for my API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Land Use", Description = "Docs for Land User API", Version = "v1" });
 });
 var app = builder.Build();
 
