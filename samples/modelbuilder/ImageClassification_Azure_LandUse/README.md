@@ -65,7 +65,7 @@ The original RGB version of the dataset which contains 27,000 images is also ava
 
 The goal of the application is to categorize what a plot of land is used for using satellite images. The Machine Learning task to use in this scenario is image classification. The model in this application was trained using Model Builder.
 
-[Model Builder](https://docs.microsoft.com/en-us/dotnet/machine-learning/how-to-guides/install-model-builder) is an intuitive graphical Visual Studio extension to build, train, and deploy custom machine learning models.
+[Model Builder](https://docs.microsoft.com/dotnet/machine-learning/how-to-guides/install-model-builder) is an intuitive graphical Visual Studio extension to build, train, and deploy custom machine learning models.
 
 Model Builder uses automated machine learning (AutoML) to explore different machine learning algorithms and settings to help you find the one that best suits your scenario.
 
