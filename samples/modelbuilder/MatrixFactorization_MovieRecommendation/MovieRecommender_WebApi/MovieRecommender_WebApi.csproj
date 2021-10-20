@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ML" Version="1.5.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+    <PackageReference Include="Microsoft.ML" Version="1.6.0" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="0.18.0" />
+  </ItemGroup>
+  <ItemGroup Label="MovieRecommender">
+    <None Include="MovieRecommender.consumption.cs">
+      <DependentUpon>MovieRecommender.mbconfig</DependentUpon>
+    </None>
+    <None Include="MovieRecommender.training.cs">
+      <DependentUpon>MovieRecommender.mbconfig</DependentUpon>
+    </None>
+    <None Include="MovieRecommender.zip">
+      <DependentUpon>MovieRecommender.mbconfig</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

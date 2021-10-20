@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.6.0" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="0.18.0" />
+  </ItemGroup>
+  <ItemGroup Label="MovieRecommender">
+    <None Include="MovieRecommender.consumption.cs">
+      <DependentUpon>MovieRecommender.mbconfig</DependentUpon>
+    </None>
+    <None Include="MovieRecommender.training.cs">
+      <DependentUpon>MovieRecommender.mbconfig</DependentUpon>
+    </None>
+    <None Include="MovieRecommender.zip">
+      <DependentUpon>MovieRecommender.mbconfig</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
