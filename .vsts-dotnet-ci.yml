@@ -1,206 +1,215 @@
-phases:
+jobs:
 
-- phase: CreditCardFraudDetection
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build CreditCardFraudDetection (BinaryClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
+  - job: ObjectDetectionConsoleApp
+    pool: default
+    steps: 
+      - task: DotNetCoreCLI@2 
+        displayName: Build ObjectDetectioConsoleApp
+        inputs:
+          projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
+# phases:
 
-- phase: CreditCardFraudDetection2
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build CreditCardFraudDetection (AnomalyDetection)
-    inputs:
-      projects: '.\samples\csharp\getting-started\AnomalyDetection_CreditCardFraudDetection\CreditCardFraudDetection.sln'
+# - phase: CreditCardFraudDetection
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build CreditCardFraudDetection (BinaryClassification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
 
-- phase: SentimentAnalysis
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build SentimentAnalysis (BinaryClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
+# - phase: CreditCardFraudDetection2
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build CreditCardFraudDetection (AnomalyDetection)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\AnomalyDetection_CreditCardFraudDetection\CreditCardFraudDetection.sln'
 
-- phase: HeartDiseaseDetection
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Heart Disease Detection (BinaryClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection.sln'
+# - phase: SentimentAnalysis
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build SentimentAnalysis (BinaryClassification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
 
-- phase: SpamDetection
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Spam Detection (BinaryClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp.sln'
+# - phase: HeartDiseaseDetection
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Heart Disease Detection (BinaryClassification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection.sln'
 
-- phase: CustomerSegmentation
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build CustomerSegmentation (Clustering)
-    inputs:
-      projects: '.\samples\csharp\getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.sln'
+# - phase: SpamDetection
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Spam Detection (BinaryClassification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp.sln'
 
-- phase: IrisClustering
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Iris (Clustering)
-    inputs:
-      projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
+# - phase: CustomerSegmentation
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build CustomerSegmentation (Clustering)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.sln'
 
-- phase: TensorFlowScorer
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: TensorFlow Scorer (Image Classification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TFModelScorer.sln'
+# - phase: IrisClustering
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Iris (Clustering)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
 
-- phase: TensorFlowFeaturizerEstimator
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: TensorFlow Featurizer Estimator (Image Classification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TFFeaturizerEstimator.sln'
+# - phase: TensorFlowScorer
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: TensorFlow Scorer (Image Classification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TFModelScorer.sln'
 
-- phase: IrisMultiClass
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Iris (MulticlassClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\MulticlassClassification_Iris\MulticlassClassification_Iris.sln'
+# - phase: TensorFlowFeaturizerEstimator
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: TensorFlow Featurizer Estimator (Image Classification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TFFeaturizerEstimator.sln'
 
-- phase: BikeSharingDemand
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build BikeSharingDemand (Regression)
-    inputs:
-      projects: '.\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand.sln'
+# - phase: IrisMultiClass
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Iris (MulticlassClassification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\MulticlassClassification_Iris\MulticlassClassification_Iris.sln'
 
-- phase: TaxiFarePrediction
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build TaxiFarePrediction (Regression)
-    inputs:
-      projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction.sln'
+# - phase: BikeSharingDemand
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build BikeSharingDemand (Regression)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand.sln'
 
-- phase: GitHubLabeler
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build GitHubLabeler
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler.sln'
+# - phase: TaxiFarePrediction
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build TaxiFarePrediction (Regression)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction.sln'
 
-- phase: eShopDashboardML
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build eShopDashboardML (Regression)
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\Forecasting-Sales\eShopDashboardML.sln'
+# - phase: GitHubLabeler
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build GitHubLabeler
+#     inputs:
+#       projects: '.\samples\csharp\end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler.sln'
 
-- phase: MovieRecommenderE2E
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build MovieRecommender E2E (Recommendation)
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\Recommendation-MovieRecommender\Recommendation_MovieRecommenderApp.sln'
+# - phase: eShopDashboardML
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build eShopDashboardML (Regression)
+#     inputs:
+#       projects: '.\samples\csharp\end-to-end-apps\Forecasting-Sales\eShopDashboardML.sln'
 
-- phase: MovieRecommenderMF
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build MovieRecommender MF (Recommendation)
-    inputs:
-      projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'
+# - phase: MovieRecommenderE2E
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build MovieRecommender E2E (Recommendation)
+#     inputs:
+#       projects: '.\samples\csharp\end-to-end-apps\Recommendation-MovieRecommender\Recommendation_MovieRecommenderApp.sln'
 
-- phase: Mnist
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Mnist (MulticlassClassification)
-    inputs:
-      projects: '.\samples\csharp\getting-started\MulticlassClassification_MNIST\MNISTConsoleApp.sln'
+# - phase: MovieRecommenderMF
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build MovieRecommender MF (Recommendation)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'
 
-- phase: SalesSpikeAndChangeDetection
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Sales spike and change Detection (Anomaly Detection)
-    inputs:
-      projects: '.\samples\csharp\getting-started\AnomalyDetection_Sales\SpikeDetection.sln'
+# - phase: Mnist
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Mnist (MulticlassClassification)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\MulticlassClassification_MNIST\MNISTConsoleApp.sln'
 
-- phase: PowerConsumptionAnomalyDetection
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Power Anomaly Detection (Time Series)
-    inputs:
-      projects: '.\samples\csharp\getting-started\AnomalyDetection_PowerMeterReadings\PowerAnomalyDetection.sln'
+# - phase: SalesSpikeAndChangeDetection
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Sales spike and change Detection (Anomaly Detection)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\AnomalyDetection_Sales\SpikeDetection.sln'
 
-- phase: ObjectDetectionConsoleApp
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Object Detection (Onnx Scorer)
-    inputs:
-      projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
+# - phase: PowerConsumptionAnomalyDetection
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Power Anomaly Detection (Time Series)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\AnomalyDetection_PowerMeterReadings\PowerAnomalyDetection.sln'
 
-- phase: ObjectDetectionE2EAPP
-  queue: Hosted VS2017
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core 3.1'
-    inputs:
-      version: 3.1.x
-      includePreviewVersions: true
-      installationPath: $(Agent.ToolsDirectory)/dotnet
-  - task: DotNetCoreCLI@2
-    displayName: Build Object Detection E2E (Onnx Scorer)
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\ObjectDetection-Onnx\OnnxObjectDetection.sln'
+# - phase: ObjectDetectionConsoleApp
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Object Detection (Onnx Scorer)
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
 
-- phase: SalesSpikeChangeDetectionE2E
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Sales spike and change Detection E2E(Anomaly Detection)
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-Sales\SpikeDetectionTemporaryApp.sln'
+# - phase: ObjectDetectionE2EAPP
+#   queue: Hosted VS2017
+#   steps:
+#   - task: UseDotNet@2
+#     displayName: 'Use .NET Core 3.1'
+#     inputs:
+#       version: 3.1.x
+#       includePreviewVersions: true
+#       installationPath: $(Agent.ToolsDirectory)/dotnet
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Object Detection E2E (Onnx Scorer)
+#     inputs:
+#       projects: '.\samples\csharp\end-to-end-apps\ObjectDetection-Onnx\OnnxObjectDetection.sln'
 
-- phase: ScalableMLModelOnWebAPIIntegrationPkg
-  queue: Hosted VS2017
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Build Scalable ML Model On WebAPI Integration Pkg
-    inputs:
-      projects: '.\samples\csharp\end-to-end-apps\ScalableMLModelOnWebAPI-IntegrationPkg\ScalableMLModelOnWebAPI-IntegrationPkg.sln'
+# - phase: SalesSpikeChangeDetectionE2E
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Sales spike and change Detection E2E(Anomaly Detection)
+#     inputs:
+#       projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-Sales\SpikeDetectionTemporaryApp.sln'
 
-- phase: DatabaseIntegration
-  queue: Hosted VS2017
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core 3.1'
-    inputs:
-      version: 3.1.x
-      includePreviewVersions: true
-      installationPath: $(Agent.ToolsDirectory)/dotnet
-  - task: DotNetCoreCLI@2
-    displayName: Build Database Integration
-    inputs:
-      projects: '.\samples\csharp\getting-started\DatabaseIntegration\DatabaseIntegration.sln'
+# - phase: ScalableMLModelOnWebAPIIntegrationPkg
+#   queue: Hosted VS2017
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Scalable ML Model On WebAPI Integration Pkg
+#     inputs:
+#       projects: '.\samples\csharp\end-to-end-apps\ScalableMLModelOnWebAPI-IntegrationPkg\ScalableMLModelOnWebAPI-IntegrationPkg.sln'
+
+# - phase: DatabaseIntegration
+#   queue: Hosted VS2017
+#   steps:
+#   - task: UseDotNet@2
+#     displayName: 'Use .NET Core 3.1'
+#     inputs:
+#       version: 3.1.x
+#       includePreviewVersions: true
+#       installationPath: $(Agent.ToolsDirectory)/dotnet
+#   - task: DotNetCoreCLI@2
+#     displayName: Build Database Integration
+#     inputs:
+#       projects: '.\samples\csharp\getting-started\DatabaseIntegration\DatabaseIntegration.sln'
 
