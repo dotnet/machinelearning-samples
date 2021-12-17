@@ -1,7 +1,7 @@
 
 jobs:
   - job:
-    pool: 'windows-2022'
+    pool: NetCore1ESPool-Public
     steps:
       - task: DotNetCoreCLI@2
         inputs:
