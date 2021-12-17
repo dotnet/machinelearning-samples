@@ -7,7 +7,7 @@ jobs:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          projects: './samples/csharp/getting-started/BinaryClassification_CreditCardFraudDetection/CreditCardFraudDetection.sln'
+          projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
 
 # phases:
 
