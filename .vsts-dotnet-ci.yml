@@ -1,7 +1,7 @@
 jobs:
 
   - job: ObjectDetectionConsoleApp
-    pool: default
+    pool: windows-2022
     steps: 
       - task: DotNetCoreCLI@2 
         displayName: Build ObjectDetectioConsoleApp
