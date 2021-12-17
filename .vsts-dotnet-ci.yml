@@ -1,167 +1,217 @@
-phases:
 
-- phase: CreditCardFraudDetection
-  queue: Hosted VS2017
+jobs:
+  # - job:
+  #   pool: 
+  #     vmImage: 'windows-2022'
+  #   steps:
+  #     - task: DotNetCoreCLI@2
+  #       inputs:
+  #         command: 'build'
+  #         projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
+
+- job: CreditCardFraudDetection
+  pool: 
+    vmImage: 'windows-2022'
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build CreditCardFraudDetection (BinaryClassification)
     inputs:
+      command: 'build'
       projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
 
-- phase: CreditCardFraudDetection2
-  queue: Hosted VS2017
+- job: CreditCardFraudDetection2
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build CreditCardFraudDetection (AnomalyDetection)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\AnomalyDetection_CreditCardFraudDetection\CreditCardFraudDetection.sln'
 
-- phase: SentimentAnalysis
-  queue: Hosted VS2017
+- job: SentimentAnalysis
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build SentimentAnalysis (BinaryClassification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\BinaryClassification_SentimentAnalysis\SentimentAnalysis-Solution.sln'
 
-- phase: HeartDiseaseDetection
-  queue: Hosted VS2017
+- job: HeartDiseaseDetection
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Heart Disease Detection (BinaryClassification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\BinaryClassification_HeartDiseaseDetection\HeartDiseaseDetection.sln'
 
-- phase: SpamDetection
-  queue: Hosted VS2017
+- job: SpamDetection
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Spam Detection (BinaryClassification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\BinaryClassification_SpamDetection\SpamDetectionConsoleApp.sln'
 
-- phase: CustomerSegmentation
-  queue: Hosted VS2017
+- job: CustomerSegmentation
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build CustomerSegmentation (Clustering)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\Clustering_CustomerSegmentation\CustomerSegmentation.sln'
 
-- phase: IrisClustering
-  queue: Hosted VS2017
+- job: IrisClustering
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Iris (Clustering)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\Clustering_Iris\Clustering_Iris.sln'
 
-- phase: TensorFlowScorer
-  queue: Hosted VS2017
+- job: TensorFlowScorer
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: TensorFlow Scorer (Image Classification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\DeepLearning_ImageClassification_TensorFlow\TFModelScorer.sln'
 
-- phase: TensorFlowFeaturizerEstimator
-  queue: Hosted VS2017
+- job: TensorFlowFeaturizerEstimator
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: TensorFlow Featurizer Estimator (Image Classification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\DeepLearning_TensorFlowEstimator\TFFeaturizerEstimator.sln'
 
-- phase: IrisMultiClass
-  queue: Hosted VS2017
+- job: IrisMultiClass
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Iris (MulticlassClassification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\MulticlassClassification_Iris\MulticlassClassification_Iris.sln'
 
-- phase: BikeSharingDemand
-  queue: Hosted VS2017
+- job: BikeSharingDemand
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build BikeSharingDemand (Regression)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\Regression_BikeSharingDemand\BikeSharingDemand.sln'
 
-- phase: TaxiFarePrediction
-  queue: Hosted VS2017
+- job: TaxiFarePrediction
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build TaxiFarePrediction (Regression)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\Regression_TaxiFarePrediction\TaxiFarePrediction.sln'
 
-- phase: GitHubLabeler
-  queue: Hosted VS2017
+- job: GitHubLabeler
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build GitHubLabeler
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\end-to-end-apps\MulticlassClassification-GitHubLabeler\GitHubLabeler.sln'
 
-- phase: eShopDashboardML
-  queue: Hosted VS2017
+- job: eShopDashboardML
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build eShopDashboardML (Regression)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\end-to-end-apps\Forecasting-Sales\eShopDashboardML.sln'
 
-- phase: MovieRecommenderE2E
-  queue: Hosted VS2017
+- job: MovieRecommenderE2E
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build MovieRecommender E2E (Recommendation)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\end-to-end-apps\Recommendation-MovieRecommender\Recommendation_MovieRecommenderApp.sln'
 
-- phase: MovieRecommenderMF
-  queue: Hosted VS2017
+- job: MovieRecommenderMF
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build MovieRecommender MF (Recommendation)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\MatrixFactorization_MovieRecommendation\MovieRecommendation.sln'
 
-- phase: Mnist
-  queue: Hosted VS2017
+- job: Mnist
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Mnist (MulticlassClassification)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\MulticlassClassification_MNIST\MNISTConsoleApp.sln'
 
-- phase: SalesSpikeAndChangeDetection
-  queue: Hosted VS2017
+- job: SalesSpikeAndChangeDetection
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Sales spike and change Detection (Anomaly Detection)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\AnomalyDetection_Sales\SpikeDetection.sln'
 
-- phase: PowerConsumptionAnomalyDetection
-  queue: Hosted VS2017
+- job: PowerConsumptionAnomalyDetection
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Power Anomaly Detection (Time Series)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\AnomalyDetection_PowerMeterReadings\PowerAnomalyDetection.sln'
 
-- phase: ObjectDetectionConsoleApp
-  queue: Hosted VS2017
+- job: ObjectDetectionConsoleApp
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Object Detection (Onnx Scorer)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
 
-- phase: ObjectDetectionE2EAPP
-  queue: Hosted VS2017
+- job: ObjectDetectionE2EAPP
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: UseDotNet@2
     displayName: 'Use .NET Core 3.1'
@@ -172,26 +222,32 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Object Detection E2E (Onnx Scorer)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\end-to-end-apps\ObjectDetection-Onnx\OnnxObjectDetection.sln'
 
-- phase: SalesSpikeChangeDetectionE2E
-  queue: Hosted VS2017
+- job: SalesSpikeChangeDetectionE2E
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Sales spike and change Detection E2E(Anomaly Detection)
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\end-to-end-apps\AnomalyDetection-Sales\SpikeDetectionTemporaryApp.sln'
 
-- phase: ScalableMLModelOnWebAPIIntegrationPkg
-  queue: Hosted VS2017
+- job: ScalableMLModelOnWebAPIIntegrationPkg
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build Scalable ML Model On WebAPI Integration Pkg
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\end-to-end-apps\ScalableMLModelOnWebAPI-IntegrationPkg\ScalableMLModelOnWebAPI-IntegrationPkg.sln'
 
-- phase: DatabaseIntegration
-  queue: Hosted VS2017
+- job: DatabaseIntegration
+  pool:
+    vmImage: 'windows-2022'  
   steps:
   - task: UseDotNet@2
     displayName: 'Use .NET Core 3.1'
@@ -202,5 +258,6 @@ phases:
   - task: DotNetCoreCLI@2
     displayName: Build Database Integration
     inputs:
+      command: 'build'    
       projects: '.\samples\csharp\getting-started\DatabaseIntegration\DatabaseIntegration.sln'
 
