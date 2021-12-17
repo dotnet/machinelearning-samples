@@ -1,31 +1,30 @@
-pr:
-  branches:
-    include:
-    - master
+# pr:
+#   branches:
+#     include:
+#     - master
 
-pool:
-  vmImage: 'windows-2022'
+# pool:
+#   vmImage: 'windows-2022'
 
-jobs:
+# jobs:
 
-  - job: ObjectDetectionConsoleApp
-    pool: windows-2022
-    steps: 
-      - task: DotNetCoreCLI@2 
-        displayName: Build ObjectDetectionConsoleApp
-        inputs:
-          projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
+#   - job: ObjectDetectionConsoleApp
+#     pool: windows-2022
+#     steps: 
+#       - task: DotNetCoreCLI@2 
+#         displayName: Build ObjectDetectionConsoleApp
+#         inputs:
+#           projects: '.\samples\csharp\getting-started\DeepLearning_ObjectDetection_Onnx\ObjectDetection.sln'
 
-# phases:
+phases:
 
-# - phase: CreditCardFraudDetection
-#   queue: Hosted VS2017
-#   steps:
-#   - task: DotNetCoreCLI@2
-#     displayName: Build CreditCardFraudDetection (BinaryClassification)
-#     inputs:
-#       projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
-
+- phase: CreditCardFraudDetection
+  queue: Hosted VS2017
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build CreditCardFraudDetection (BinaryClassification)
+    inputs:
+      projects: '.\samples\csharp\getting-started\BinaryClassification_CreditCardFraudDetection\CreditCardFraudDetection.sln'
 
 # phases:
 
