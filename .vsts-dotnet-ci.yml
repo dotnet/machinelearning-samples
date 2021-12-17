@@ -1,7 +1,8 @@
 
 jobs:
   - job:
-    pool: NetCorePublic-Pool
+    pool: 
+      vmImage: 'windows-2022'
     steps:
       - task: DotNetCoreCLI@2
         inputs:
