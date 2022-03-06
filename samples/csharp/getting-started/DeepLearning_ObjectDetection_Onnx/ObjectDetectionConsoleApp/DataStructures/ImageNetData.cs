@@ -17,7 +17,7 @@ namespace ObjectDetection.DataStructures
         {
             return Directory
                 .GetFiles(imageFolder)
-                .Where(filePath => Path.GetExtension(filePath) != ".md")
+                .Where(filePath => Path.GetExtension(filePath) == ".jpg")
                 .Select(filePath => new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) });
         }
     }
