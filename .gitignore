@@ -334,6 +334,7 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 
 # Big files
 
+/datasets/creditcardfraud-dataset.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
 
@@ -344,6 +345,7 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/Intersection-Counts.jpg
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/ManyPets.jpg
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/Model/TinyYolo2_model.onnx
+/samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
 
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/ObjectDetectionPhotosSet.zip
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/output/
@@ -352,3 +354,5 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/image3.jpg
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/image4.jpg
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/Model/TinyYolo2_model.onnx
+/samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
+/samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/

@@ -7,6 +7,7 @@ using CCFraudDetection.Common.DataModels;
 using System.IO.Compression;
 using Microsoft.ML.Trainers;
 using static Microsoft.ML.DataOperationsCatalog;
+using System.Collections.Generic;
 
 namespace CCFraudDetection.Trainer
 {
@@ -17,11 +18,20 @@ namespace CCFraudDetection.Trainer
             //File paths
             string AssetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(AssetsRelativePath);
+            string datassetPath = Path.Combine(assetsPath, "input");
             string zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
             string fullDataSetFilePath = Path.Combine(assetsPath, "input", "creditcard.csv");
             string trainDataSetFilePath = Path.Combine(assetsPath, "output", "trainData.csv"); 
             string testDataSetFilePath = Path.Combine(assetsPath, "output", "testData.csv");
             string modelFilePath = Path.Combine(assetsPath, "output", "fastTree.zip");
+
+            var datasetFile = "creditcardfraud-dataset";
+            var datasetZip = datasetFile + ".zip";
+            var datasetUrl = "https://bit.ly/3GtwH1S";
+            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+            List<string> destFiles = new List<string>() { fullDataSetFilePath };
+            Web.DownloadBigFile(datassetPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
 
             // Unzip the original dataset as it is too large for GitHub repo if not zipped
             UnZipDataSet(zipDataSet, fullDataSetFilePath);
