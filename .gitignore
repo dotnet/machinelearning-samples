@@ -334,10 +334,13 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 
 # Big files
 
+MSLRWeb10K*Rows.tsv
+
 /datasets/creditcardfraud-dataset.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
 /datasets/url_svmlight.tar.gz
+/datasets/WebRanking.zip
 
 /graphs/TinyYolo2_model.onnx
 
@@ -360,3 +363,7 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight.tar.gz
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/PreparedUrlData/url_svmlight
+/samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Input/WebRanking.zip
+/samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Output/RankingModel.zip
+/samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
+/samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
