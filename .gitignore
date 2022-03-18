@@ -337,6 +337,7 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 /datasets/creditcardfraud-dataset.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
+/datasets/url_svmlight.tar.gz
 
 /graphs/TinyYolo2_model.onnx
 
@@ -356,3 +357,6 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/Model/TinyYolo2_model.onnx
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight
+/samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight.tar.gz
+/samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/PreparedUrlData/url_svmlight
