@@ -369,6 +369,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set.zip
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos.tgz
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/tensorflow-pretrained-models/inception-v3/inception-v3.zip
@@ -388,5 +389,3 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Output/RankingModel.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
-
-
