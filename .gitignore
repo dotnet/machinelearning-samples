@@ -350,17 +350,30 @@ MSLRWeb10K*Rows.tsv
 /graphs/inception-v3.zip
 /graphs/TinyYolo2_model.onnx
 
+/samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
+/samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/*.jpg
+/samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/*.png
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/flower_photos_very_small_set.zip
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/inception/inception5h.zip
+/samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/inception/tensorflow_inception_graph.pb
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/outputs/imageClassifier.zip
+/samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Predict/assets/inputs/data/*.jpg
+/samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Predict/assets/inputs/data/*.png
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Predict/assets/inputs/data/flower_photos_prediction_set.zip
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/ObjectDetectionPhotosSet2.zip
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/dog2.jpg
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/Intersection-Counts.jpg
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/ManyPets.jpg
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/Model/TinyYolo2_model.onnx
-/samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
 
+/samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
+/samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos.tgz
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/tensorflow-pretrained-models/inception-v3/inception-v3.zip
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/tensorflow-pretrained-models/inception-v3/inception_v3_2016_08_28_frozen.pb
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/outputs/imageClassifier.zip
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/ObjectDetectionPhotosSet.zip
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/output/
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/image1.jpg
@@ -368,12 +381,6 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/image3.jpg
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/image4.jpg
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/Model/TinyYolo2_model.onnx
-/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos.tgz
-/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos
-/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/tensorflow-pretrained-models/inception-v3/inception-v3.zip
-/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/outputs/imageClassifier.zip
-/samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
-/samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight.tar.gz
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/PreparedUrlData/url_svmlight
@@ -381,3 +388,5 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Output/RankingModel.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
+
+
