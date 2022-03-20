@@ -341,6 +341,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/flower_photos_small_set.zip
 /datasets/flower_photos_very_small_set.zip
 /datasets/flower_photos_prediction_set.zip
+/datasets/ImagesClassification.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
 /datasets/url_svmlight.tar.gz
@@ -352,7 +353,10 @@ MSLRWeb10K*Rows.tsv
 
 /samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
+/samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
+/samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/inception5h.zip
+/samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/tensorflow_inception_graph.pb
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/*.jpg
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/*.png
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/flower_photos_very_small_set.zip
@@ -370,7 +374,12 @@ MSLRWeb10K*Rows.tsv
 
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
+/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
+/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/tensorflow-pretrained-models/inception5h/inception5h.zip
+/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/inception5h.zip
+/samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/tensorflow_inception_graph.pb
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set.zip
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos.tgz
