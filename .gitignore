@@ -380,6 +380,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/tensorflow-pretrained-models/inception5h/inception5h.zip
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/inception5h.zip
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/tensorflow_inception_graph.pb
+/samples/csharp/getting-started/DeepLearning_ImageClassification_Training/ImageClassification.Train/assets/inputs/images/flower_photos_small_set
 /samples/csharp/getting-started/DeepLearning_ImageClassification_Training/ImageClassification.Train/assets/outputs/imageClassifier.zip
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/images/flower_photos_small_set.zip
@@ -402,4 +403,3 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Output/RankingModel.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
-
