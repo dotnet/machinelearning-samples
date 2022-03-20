@@ -19,14 +19,32 @@ namespace ImageClassification.Train
             const string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
+            // SINGLE SMALL FLOWERS IMAGESET (200 files)
+            const string imagesDatasetZip = "flower_photos_small_set.zip";
+            const string imagesDatasetUrl = "https://bit.ly/3fkRKYy";
+            
+            // SINGLE FULL FLOWERS IMAGESET (3,600 files)
+            // const string imagesDatasetZip = "flower_photos.tgz";
+            // const string imagesDatasetUrl = "http://download.tensorflow.org/example_images/" + imagesDatasetZip;
+
             string outputMlNetModelFilePath = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
             string imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "test-images");
 
-            string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
-
             // 1. Download the image set and unzip
-            string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
-            string fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
+            string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
+            string imagesFolder = imagesDownloadFolderPath;
+            //string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
+            //var fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
+            var fullImagesetFolderPath = Path.Combine(
+                imagesFolder, Path.GetFileNameWithoutExtension(imagesDatasetZip));
+            Console.WriteLine($"Images folder: {fullImagesetFolderPath}");
+            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+            var imagePath1 = Path.Combine(fullImagesetFolderPath,
+                "daisy", "286875003_f7c0e1882d.jpg");
+            List<string> destFiles = new List<string>() { imagePath1 };
+            Web.DownloadBigFile(imagesFolder, imagesDatasetUrl, imagesDatasetZip,
+                commonDatasetsPath, destFiles);
 
             var mlContext = new MLContext(seed: 1);
 
@@ -156,24 +174,24 @@ namespace ImageClassification.Train
             => FileUtils.LoadImagesFromDirectory(folder, useFolderNameAsLabel)
                 .Select(x => new ImageData(x.imagePath, x.label));
 
-        public static string DownloadImageSet(string imagesDownloadFolder)
-        {
-            // get a set of images to teach the network about the new classes
+        //public static string DownloadImageSet(string imagesDownloadFolder)
+        //{
+        //    // get a set of images to teach the network about the new classes
 
-            //SINGLE SMALL FLOWERS IMAGESET (200 files)
-            const string fileName = "flower_photos_small_set.zip";
-            var url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
-            Web.Download(url, imagesDownloadFolder, fileName);
-            Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
+        //    //SINGLE SMALL FLOWERS IMAGESET (200 files)
+        //    const string fileName = "flower_photos_small_set.zip";
+        //    var url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+        //    Web.Download(url, imagesDownloadFolder, fileName);
+        //    Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
-            //SINGLE FULL FLOWERS IMAGESET (3,600 files)
-            //string fileName = "flower_photos.tgz";
-            //string url = $"http://download.tensorflow.org/example_images/{fileName}";
-            //Web.Download(url, imagesDownloadFolder, fileName);
-            //Compress.ExtractTGZ(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
+        //    //SINGLE FULL FLOWERS IMAGESET (3,600 files)
+        //    //string fileName = "flower_photos.tgz";
+        //    //string url = $"http://download.tensorflow.org/example_images/{fileName}";
+        //    //Web.Download(url, imagesDownloadFolder, fileName);
+        //    //Compress.ExtractTGZ(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
-            return Path.GetFileNameWithoutExtension(fileName);
-        }
+        //    return Path.GetFileNameWithoutExtension(fileName);
+        //}
 
         public static string GetAbsolutePath(string relativePath)
             => FileUtils.GetAbsolutePath(typeof(Program).Assembly, relativePath);
