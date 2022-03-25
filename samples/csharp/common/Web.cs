@@ -59,7 +59,8 @@ namespace Common
     {
         public static void DownloadBigFile(string bigFileFolder, string bigFileUrl,
             string bigFileDest, string commonDatasetsPath,
-            List<string> destFiles = null, string destFolder = null)
+            List<string> destFiles = null, string destFolder = null, 
+            bool doNotUnzip = false)
         {
             string destPath = Path.Combine(bigFileFolder, bigFileDest);
             string commonPath = Path.Combine(commonDatasetsPath, bigFileDest);
@@ -133,13 +134,15 @@ namespace Common
 
             if (File.Exists(destFullPath)) {
                 Console.WriteLine("==== Extracting data... ====");
-                bool unzipSuccess = false;
+                bool unzipSuccess = true;
+                if (!doNotUnzip) 
                 try
                 {
                     switch (extension)
                     {
                         case ".zip":
                             {
+                                unzipSuccess = false;
                                 FastZip myFastZip = new FastZip();
                                 myFastZip.ExtractZip(destFullPath, bigFileFolder, fileFilter: string.Empty);
                                 unzipSuccess = true;
@@ -149,6 +152,7 @@ namespace Common
                         case ".tgz":
                         case ".tar.gz":
                             {
+                                unzipSuccess = false;
                                 using (var inputStream = File.OpenRead(destFullPath))
                                 {
                                     using (var gzipStream = new GZipInputStream(inputStream))

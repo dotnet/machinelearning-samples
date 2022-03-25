@@ -5,6 +5,8 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using Common;
+
 namespace LandUse_Console
 {
     public partial class LandUse
@@ -62,6 +64,10 @@ namespace LandUse_Console
 
         private static string MLNetModelPath = Path.GetFullPath(
             Path.Combine("..\\..\\..\\..\\LandUse", "LandUse.zip"));
+        private static string OnnxModelPath = Path.GetFullPath(
+            Path.Combine("..\\..\\..\\..\\LandUse", "LandUse.onnx"));
+        private static string AssetsPath = Path.GetFullPath(
+            Path.Combine("..\\..\\..\\..\\", "LandUsePhotosSet.zip")); // "assets.zip"
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 
@@ -79,8 +85,53 @@ namespace LandUse_Console
         private static PredictionEngine<ModelInput, ModelOutput> CreatePredictEngine()
         {
             var mlContext = new MLContext();
+
+            if (!File.Exists(MLNetModelPath))
+            {
+                var graphZip = "LandUse.zip";
+                var graphUrl = "https://bit.ly/3qCkgLn";
+                var commonGraphsRelativePath = @"../../../../../../../graphs";
+                var commonGraphsPath = GetAbsolutePath(commonGraphsRelativePath);
+                var modelFileFolder = Path.GetDirectoryName(MLNetModelPath);
+                Web.DownloadBigFile(modelFileFolder, graphUrl, graphZip, commonGraphsPath,  
+                    doNotUnzip:true);
+            }
+            
+            // Not required: onnx model yet included in LandUse.zip
+            //if (!File.Exists(OnnxModelPath))
+            //{
+            //    var graphOnnx = "LandUse.onnx";
+            //    var graphUrl = "https://bit.ly/3JEUayT";
+            //    var commonGraphsRelativePath = @"../../../../../../../graphs";
+            //    var commonGraphsPath = GetAbsolutePath(commonGraphsRelativePath);
+            //    var modelFileFolder = Path.GetDirectoryName(OnnxModelPath);
+            //    Web.DownloadBigFile(modelFileFolder, graphUrl, graphOnnx, commonGraphsPath);
+            //}
+
+            // Required?
+            if (!File.Exists(AssetsPath))
+            {
+                var datasetZip = "LandUsePhotosSet.zip";
+                var datasetUrl = "https://bit.ly/384T15P";
+                var commonDatasetsRelativePath = @"../../../../../../../datasets";
+                var commonDatasets = GetAbsolutePath(commonDatasetsRelativePath);
+                var datasetFolder = Path.GetDirectoryName(AssetsPath);
+                Web.DownloadBigFile(datasetFolder, datasetUrl, datasetZip, commonDatasets,
+                    doNotUnzip: true);
+            }
+
             ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var _);
             return mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
+        }
+
+        private static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }

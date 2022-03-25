@@ -342,6 +342,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/flower_photos_very_small_set.zip
 /datasets/flower_photos_prediction_set.zip
 /datasets/ImagesClassification.zip
+/datasets/LandUsePhotosSet.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
 /datasets/url_svmlight.tar.gz
@@ -349,6 +350,8 @@ MSLRWeb10K*Rows.tsv
 
 /graphs/inception5h.zip
 /graphs/inception-v3.zip
+/graphs/LandUse.onnx
+/graphs/LandUse.zip
 /graphs/TinyYolo2_model.onnx
 
 /samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
@@ -405,3 +408,5 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
 
+/samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
+/samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
