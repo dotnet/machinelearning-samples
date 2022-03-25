@@ -16,10 +16,6 @@
       <DependentUpon>LandUse.mbconfig</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="LandUse.onnx">
-      <DependentUpon>LandUse.mbconfig</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="LandUse.training.cs">
       <DependentUpon>LandUse.mbconfig</DependentUpon>
     </None>
