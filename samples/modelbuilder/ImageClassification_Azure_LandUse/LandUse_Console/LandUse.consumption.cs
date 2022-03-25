@@ -60,7 +60,8 @@ namespace LandUse_Console
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("LandUse.zip");
+        private static string MLNetModelPath = Path.GetFullPath(
+            Path.Combine("..\\..\\..\\..\\LandUse", "LandUse.zip"));
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 
