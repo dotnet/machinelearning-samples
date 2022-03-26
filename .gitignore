@@ -379,6 +379,8 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/input/creditcardfraud-dataset.zip
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows.mdf
+/samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows_log.ldf
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/DatabaseLoaderSqlLocalDb.zip
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
