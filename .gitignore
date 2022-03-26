@@ -346,8 +346,9 @@ MSLRWeb10K*Rows.tsv
 /datasets/LandUsePhotosSet.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
-/datasets/url_svmlight.tar.gz
 /datasets/WebRanking.zip
+/datasets/wikiDetoxAnnotated40kRows.zip
+/datasets/url_svmlight.tar.gz
 
 /graphs/inception5h.zip
 /graphs/inception-v3.zip

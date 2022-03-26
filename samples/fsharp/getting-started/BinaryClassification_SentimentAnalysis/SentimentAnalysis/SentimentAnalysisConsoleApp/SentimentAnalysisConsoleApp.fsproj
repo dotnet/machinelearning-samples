@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+    <Compile Include="..\..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
+    <Compile Include="..\..\..\..\common\Web.fs" Link="Common\Web.fs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -18,8 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.2.2" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="SharpZipLib" Version="1.3.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +34,10 @@
     <None Update="datasets\wikipedia-detox-250-line-test.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="6.0.3" />
   </ItemGroup>
 
 
