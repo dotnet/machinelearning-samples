@@ -5,6 +5,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Transforms;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -16,13 +17,41 @@ using System.Linq;
 namespace DatabaseLoaderConsoleApp
 {
     public class Program
-    {  
+    {
+
+        private const string databaseName = "Criteo-100k-rows";
+        private const string databaseFile = databaseName + ".mdf";
+        private const string databaseFile2 = databaseName + "_log.ldf";
+        private const string datasetZip = "DatabaseLoaderSqlLocalDb.zip";
+        private const string datasetUrl = "https://bit.ly/3qISgov";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+
         public static void Main()
         {
+            string databaseRelativePath = @"../../../SqlLocalDb";
+            string databaseFolder = GetAbsolutePath(databaseRelativePath);
+            string databasePath = Path.Combine(databaseFolder, databaseFile);
+            string databasePath2 = Path.Combine(databaseFolder, databaseFile2);
+            List<string> destFiles = new List<string>() { databasePath, databasePath2 };
+            Web.DownloadBigFile(databaseFolder, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
+            string databasePathBin = GetAbsolutePath("SqlLocalDb");
+            string databasePathDest = Path.Combine(databasePathBin, Path.GetFileName(databasePath));
+            string databasePathDest2 = Path.Combine(databasePathBin, Path.GetFileName(databasePath2));
+            if (!Directory.Exists(databasePathBin) ||
+                !File.Exists(databasePathDest) ||
+                !File.Exists(databasePathDest2))
+            {
+                Directory.CreateDirectory(databasePathBin);
+                File.Copy(databasePath, databasePathDest);
+                File.Copy(databasePath2, databasePathDest2);
+            }
+
             var mlContext = new MLContext();
 
             // localdb SQL database connection string using a filepath to attach the database file into localdb
-            string dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlLocalDb", "Criteo-100k-rows.mdf");
+            string dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlLocalDb", databaseFile);
             string connectionString = $"Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Database=Criteo-100k-rows;Integrated Security = True";
 
             // ConnString Example: localdb SQL database connection string for 'localdb default location' (usually files located at /Users/YourUser/)
@@ -190,6 +219,16 @@ namespace DatabaseLoaderConsoleApp
                 sqlDetachCommand.Parameters.AddWithValue("@dbname", dbName);
                 sqlDetachCommand.ExecuteNonQuery();
             }
+        }
+
+        public static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }

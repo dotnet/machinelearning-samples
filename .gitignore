@@ -337,6 +337,7 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 MSLRWeb10K*Rows.tsv
 
 /datasets/creditcardfraud-dataset.zip
+/datasets/DatabaseLoaderSqlLocalDb.zip
 /datasets/flower_photos.tgz
 /datasets/flower_photos_small_set.zip
 /datasets/flower_photos_very_small_set.zip
@@ -378,6 +379,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/input/creditcardfraud-dataset.zip
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/DatabaseLoaderSqlLocalDb.zip
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
 /samples/csharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
