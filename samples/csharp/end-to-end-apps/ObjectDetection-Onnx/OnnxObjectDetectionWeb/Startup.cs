@@ -9,6 +9,8 @@ using OnnxObjectDetectionWeb.Infrastructure;
 using OnnxObjectDetectionWeb.Services;
 using OnnxObjectDetectionWeb.Utilities;
 using OnnxObjectDetection;
+using System.IO;
+using Common;
 
 namespace OnnxObjectDetectionWeb
 {
@@ -23,6 +25,19 @@ namespace OnnxObjectDetectionWeb
 
             _onnxModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
             _mlnetModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
+            
+            if (!System.IO.File.Exists(_onnxModelFilePath))
+            {
+                var graphZip = "TinyYolo2_model.onnx";
+                var graphUrl = "https://bit.ly/3rdrfKe";
+                var commonGraphsRelativePath = @"../../../../../../../../graphs";
+                var commonGraphsPath = CommonHelpers.GetAbsolutePath(commonGraphsRelativePath);
+                var modelRelativePath = @"../../../../OnnxObjectDetection/ML/OnnxModels";
+                string modelPath = CommonHelpers.GetAbsolutePath(modelRelativePath);
+                Web.DownloadBigFile(modelPath, graphUrl, graphZip, commonGraphsPath);
+                // Restart to copy TinyYolo2_model.onnx to bin\Debug\net6.0\ML\OnnxModels
+                System.Environment.Exit(0);
+            }
 
             var onnxModelConfigurator = new OnnxModelConfigurator(new TinyYoloModel(_onnxModelFilePath));
 

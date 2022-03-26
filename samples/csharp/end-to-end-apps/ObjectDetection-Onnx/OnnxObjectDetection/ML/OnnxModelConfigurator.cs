@@ -22,9 +22,18 @@ namespace OnnxObjectDetection
         {
             var dataView = mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
 
-            var pipeline = mlContext.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: onnxModel.ModelInput, imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(ImageInputData.Image))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: onnxModel.ModelInput))
-                            .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: onnxModel.ModelPath, outputColumnName: onnxModel.ModelOutput, inputColumnName: onnxModel.ModelInput));
+            var pipeline = mlContext.Transforms.ResizeImages(
+                resizing: ImageResizingEstimator.ResizingKind.Fill, 
+                outputColumnName: onnxModel.ModelInput, 
+                imageWidth: ImageSettings.imageWidth, 
+                imageHeight: ImageSettings.imageHeight, 
+                inputColumnName: nameof(ImageInputData.Image))
+                .Append(mlContext.Transforms.ExtractPixels(
+                    outputColumnName: onnxModel.ModelInput))
+                .Append(mlContext.Transforms.ApplyOnnxModel(
+                    modelFile: onnxModel.ModelPath, 
+                    outputColumnName: onnxModel.ModelOutput, 
+                    inputColumnName: onnxModel.ModelInput));
 
             var mlNetModel = pipeline.Fit(dataView);
 

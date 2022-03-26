@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Rectangle = System.Windows.Shapes.Rectangle;
+using Common;
 
 namespace OnnxObjectDetectionApp
 {
@@ -61,12 +62,36 @@ namespace OnnxObjectDetectionApp
             }
             else // Otherwise default to Tiny Yolo Onnx model
             {
-                var tinyYoloModel = new TinyYoloModel(Path.Combine(modelsDirectory, "TinyYolo2_model.onnx"));
+                var onnxModelFilePath = Path.Combine(modelsDirectory, "TinyYolo2_model.onnx");
+
+                if (!System.IO.File.Exists(onnxModelFilePath))
+                {
+                    var graphZip = "TinyYolo2_model.onnx";
+                    var graphUrl = "https://bit.ly/3rdrfKe";
+                    var commonGraphsRelativePath = @"../../../../../../../../graphs";
+                    var commonGraphsPath = GetAbsolutePath(commonGraphsRelativePath);
+                    var modelRelativePath = @"../../../../OnnxObjectDetection/ML/OnnxModels";
+                    string modelPath = GetAbsolutePath(modelRelativePath);
+                    Web.DownloadBigFile(modelPath, graphUrl, graphZip, commonGraphsPath);
+                    // Restart to copy TinyYolo2_model.onnx to bin\Debug\net6.0\ML\OnnxModels
+                    System.Environment.Exit(0);
+                }
+
+                var tinyYoloModel = new TinyYoloModel(onnxModelFilePath);
+
                 var modelConfigurator = new OnnxModelConfigurator(tinyYoloModel);
 
                 outputParser = new OnnxOutputParser(tinyYoloModel);
                 tinyYoloPredictionEngine = modelConfigurator.GetMlNetPredictionEngine<TinyYoloPrediction>();
             }
+        }
+        
+        private string GetAbsolutePath(string relativePath)
+        {
+            string assemblyFolderPath = Path.GetFullPath(".");
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+            fullPath = Path.GetFullPath(fullPath); // Resolve the path to simplify debugging
+            return fullPath;
         }
 
         private void StartCameraCapture()
