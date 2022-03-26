@@ -16,6 +16,9 @@ namespace SentimentAnalysisConsoleApp
         private const string datasetUrl = "https://bit.ly/3tiuGls";
         private static string commonDatasetsRelativePath = @"../../../../../../../../../datasets";
         private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+        private static string commonCLIRelativePath = @"../../../../../../../../CLI/BinaryClassification_CLI";
+        private static string commonCLIPath = GetAbsolutePath(commonCLIRelativePath);
+        private static string commonCLIFilePath = $"{commonCLIPath}/wikiDetoxAnnotated40kRows.tsv";
 
         private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
         private static readonly string DataRelativePath = $"{BaseDatasetsRelativePath}/wikiDetoxAnnotated40kRows.tsv";
@@ -30,10 +33,11 @@ namespace SentimentAnalysisConsoleApp
         static void Main(string[] args)
         {
 
-            List<string> destFiles = new List<string>() { DataRelativePath};
+            List<string> destFiles = new List<string>() { DataRelativePath };
             Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip,
                 commonDatasetsPath, destFiles);
-
+            if (!File.Exists(commonCLIFilePath)) File.Copy(DataRelativePath, commonCLIFilePath);
+            
             // Create MLContext to be shared across the model creation workflow objects 
             // Set a random seed for repeatable/deterministic results across multiple trainings.
             var mlContext = new MLContext(seed: 1);
