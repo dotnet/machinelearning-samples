@@ -357,6 +357,9 @@ MSLRWeb10K*Rows.tsv
 /graphs/TinyYolo2_model.onnx
 
 /samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
+/samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/MLModels/SentimentModel.zip
+/samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
+/samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
