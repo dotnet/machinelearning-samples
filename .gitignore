@@ -343,6 +343,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/flower_photos_small_set.zip
 /datasets/flower_photos_very_small_set.zip
 /datasets/flower_photos_prediction_set.zip
+/datasets/GitHubLabeler.zip
 /datasets/ImagesClassification.zip
 /datasets/LandUsePhotosSet.zip
 /datasets/MovieRecommendation.zip
@@ -429,6 +430,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
 
+/samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/GitHubLabeler.zip
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ImagesTemp/*.Jpeg
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetection/ML/OnnxModels/TinyYolo2_model.onnx
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ML/MLNETModel/TinyYoloModel.zip
@@ -436,4 +438,3 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
-
