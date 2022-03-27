@@ -344,6 +344,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/flower_photos_prediction_set.zip
 /datasets/ImagesClassification.zip
 /datasets/LandUsePhotosSet.zip
+/datasets/MovieRecommendation.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
 /datasets/WebRanking.zip
@@ -416,6 +417,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight.tar.gz
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/PreparedUrlData/url_svmlight
+/samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/MovieRecommendation.zip
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Output/RankingModel.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
