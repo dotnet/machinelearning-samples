@@ -36,7 +36,7 @@ let assemblyFolderPath = Path.GetDirectoryName(Reflection.Assembly.GetExecutingA
 
 let baseDatasetsRelativePath = @"../../../Data"
 let trianDataRealtivePath = Path.Combine(baseDatasetsRelativePath, "optdigits-train.csv")
-let testDataRealtivePath = Path.Combine(baseDatasetsRelativePath, "optdigits-val.csv")
+let testDataRealtivePath = Path.Combine(baseDatasetsRelativePath, "optdigits-test.csv")
 let trainDataPath = Path.Combine(assemblyFolderPath, trianDataRealtivePath)
 let testDataPath = Path.Combine(assemblyFolderPath, testDataRealtivePath)
 

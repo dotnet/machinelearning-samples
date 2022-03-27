@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\..\datasets\optdigits-val.csv" Link="..\..\..\Data\optdigits-val.csv">
+    <None Include="..\..\..\..\..\datasets\optdigits-test.csv" Link="..\..\..\Data\optdigits-test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\..\..\..\..\datasets\optdigits-train.csv" Link="..\..\..\Data\optdigits-train.csv">

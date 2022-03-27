@@ -401,6 +401,8 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.txt
 /samples/fsharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.zip
 /samples/fsharp/getting-started/MulticlassClassification_Iris/IrisClassification/MLModels/IrisClassificationModel.zip
+/samples/fsharp/getting-started/MulticlassClassification_mnist/mnist/Data/optdigits-*.csv
+/samples/fsharp/getting-started/MulticlassClassification_mnist/mnist/MLModels/Model.zip
 /samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare*.csv
 /samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare.zip
 /samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/MLModels/TaxiFareModel.zip
@@ -461,4 +463,5 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
+
 
