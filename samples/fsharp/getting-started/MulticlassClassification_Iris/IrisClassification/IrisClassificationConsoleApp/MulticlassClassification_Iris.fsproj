@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="DataStructures\DataStructures.fs" />
     <Compile Include="..\..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+    <Compile Include="..\..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
+    <Compile Include="DataStructures\DataStructures.fs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -21,6 +22,10 @@
   <ItemGroup>
     <Content Include="..\Data\iris-test.txt" Link="Data\iris-test.txt" />
     <Content Include="..\Data\iris-train.txt" Link="Data\iris-train.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="6.0.3" />
   </ItemGroup>
 
 </Project>
