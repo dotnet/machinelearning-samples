@@ -390,6 +390,9 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/Model/TinyYolo2_model.onnx
 /samples/fsharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.txt
 /samples/fsharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.zip
+/samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare*.csv
+/samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare.zip
+/samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/MLModels/TaxiFareModel.zip
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare*.csv
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare.zip
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/MLModels/TaxiFareModel.zip
@@ -447,4 +450,3 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
-/samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare.zip
