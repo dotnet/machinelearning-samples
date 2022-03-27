@@ -362,7 +362,9 @@ MSLRWeb10K*Rows.tsv
 
 /samples/CLI/BinaryClassification_CLI/wikiDetoxAnnotated40kRows.tsv
 
+/samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/Data/taxi-fare*.csv
 /samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/Data/taxi-fare.zip
+/samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/MLModels/TaxiFareModel.zip
 /samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
@@ -442,3 +444,4 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
+
