@@ -3,6 +3,7 @@ open Microsoft.ML.Data
 open System
 open System.IO
 open Microsoft.ML.Trainers
+open Common
 
 [<CLIMutable>]
 type ProductEntry = 
@@ -21,12 +22,24 @@ type Prediction = {Score : float32}
 let assemblyFolderPath = Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location)
 
 let baseDatasetsRelativePath = @"../../../Data"
-let trianDataRealtivePath = Path.Combine(baseDatasetsRelativePath, "Amazon0302.txt")
-let trainDataPath = Path.Combine(assemblyFolderPath, trianDataRealtivePath)
+let trainDataRelativePath = Path.Combine(baseDatasetsRelativePath, "Amazon0302.txt")
+let trainDataPath = Path.Combine(assemblyFolderPath, trainDataRelativePath)
 
 let baseModelsRelativePath = @"../../../Model";
 let modelRelativePath = Path.Combine(baseModelsRelativePath, "model.zip")
 let modelPath = Path.Combine(assemblyFolderPath, modelRelativePath)
+
+let assetsRelativePath = baseDatasetsRelativePath
+let commonDatasetsRelativePath = @"../../../../../../../../datasets" 
+let fileName = "Amazon0302"
+let zipFileName = fileName + ".zip"
+let downloadUrl = "https://bit.ly/3qnEpVz"
+let destFolder = baseDatasetsRelativePath
+let destFiles: string list = [trainDataRelativePath]
+
+let datasetPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
 
 //STEP 1: Create MLContext to be shared across the model creation workflow objects 
 let mlContext = new MLContext()
