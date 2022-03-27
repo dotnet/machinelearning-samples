@@ -367,6 +367,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/MLModels/TaxiFareModel.zip
 /samples/fsharp/getting-started/BinaryClassification_CreditCardFraudDetection/Data/
 /samples/fsharp/getting-started/BinaryClassification_AutoML/SentimentAnalysis/MLModels/SentimentModel.zip
+/samples/fsharp/getting-started/BinaryClassification_HeartDiseaseDetection/HeartDiseaseDetection/MLModels/HeartClassification.zip
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
