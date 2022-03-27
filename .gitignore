@@ -374,6 +374,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/fsharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder/SMSSpamCollection
 /samples/fsharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder/SMSSpamCollection.zip
+/samples/fsharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/outputs/retailClustering.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
