@@ -7,6 +7,7 @@ open TaxiFarePrediction.DataStructures.DataStructures
 open Microsoft.ML
 open Microsoft.ML.Data
 open Microsoft.ML.Transforms
+open Common
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -16,6 +17,18 @@ let testDataPath = sprintf @"%s/taxi-fare-test.csv" baseDatasetsLocation
 
 let baseModelsPath = @"../../../../MLModels"
 let modelPath = sprintf @"%s/TaxiFareModel.zip" baseModelsPath
+
+let assetsRelativePath = baseDatasetsLocation 
+let commonDatasetsRelativePath = @"../../../../../../../../../datasets" 
+let fileName = "taxi-fare"
+let zipFileName = fileName + ".zip"
+let downloadUrl = "https://bit.ly/3qISgov"
+let destFolder = baseDatasetsLocation
+let destFiles: string list = [trainDataPath; testDataPath]
+
+let datasetPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
 
 let downcastPipeline (x : IEstimator<_>) = 
     match x with 
@@ -72,6 +85,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 
     // STEP 6: Save/persist the trained model to a .ZIP file
     printfn "=============== Saving the model to a file ==============="
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
     mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 
