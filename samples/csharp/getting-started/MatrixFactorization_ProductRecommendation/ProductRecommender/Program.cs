@@ -1,7 +1,9 @@
-﻿using Microsoft.ML;
+﻿using Common;
+using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ProductRecommender
@@ -13,6 +15,12 @@ namespace ProductRecommender
         //   ProductID	CoPurchaseProductID
         //   0	1
         //   0  2
+        private const string datasetFile = "Amazon0302";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://bit.ly/3qnEpVz";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+
         private static string BaseDataSetRelativePath = @"../../../Data";
         private static string TrainingDataRelativePath = $"{BaseDataSetRelativePath}/Amazon0302.txt";
         private static string TrainingDataLocation = GetAbsolutePath(TrainingDataRelativePath);
@@ -23,6 +31,10 @@ namespace ProductRecommender
 
         static void Main(string[] args)
         {
+            List<string> destFiles = new List<string>() { TrainingDataRelativePath };
+            Web.DownloadBigFile(BaseDataSetRelativePath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
+
             //STEP 1: Create MLContext to be shared across the model creation workflow objects 
             MLContext mlContext = new MLContext();
 
