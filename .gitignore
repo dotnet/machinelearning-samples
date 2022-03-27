@@ -349,6 +349,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/MovieRecommendation.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
+/datasets/SMSSpamCollection.zip
 /datasets/taxi-fare.zip
 /datasets/url_svmlight.tar.gz
 /datasets/WebRanking.zip
@@ -371,6 +372,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
 /samples/fsharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
+/samples/fsharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder/SMSSpamCollection.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
