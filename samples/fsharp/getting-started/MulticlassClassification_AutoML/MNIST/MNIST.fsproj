@@ -2,23 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\..\common\AutoML\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Data\optdigits-train.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\optdigits-val.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="MLModels\Readme.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Compile Include="..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
   </ItemGroup>
 
   <ItemGroup>
