@@ -409,6 +409,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare.zip
 /samples/fsharp/getting-started/Regression_AutoML/TaxiFarePrediction/MLModels/TaxiFareModel.zip
 /samples/fsharp/getting-started/Regression_BikeSharingDemand/BikeSharingDemand/Data/hour_*.csv
+/samples/fsharp/getting-started/Regression_BikeSharingDemand/BikeSharingDemand/MLModels/*.zip
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare*.csv
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare.zip
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/MLModels/TaxiFareModel.zip
