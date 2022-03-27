@@ -430,7 +430,9 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
 
+/samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/corefx-issues-train.tsv
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/GitHubLabeler.zip
+/samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/MLModels/GitHubLabelerModel.zip
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ImagesTemp/*.Jpeg
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetection/ML/OnnxModels/TinyYolo2_model.onnx
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ML/MLNETModel/TinyYoloModel.zip
