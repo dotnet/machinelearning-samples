@@ -420,6 +420,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight.tar.gz
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/PreparedUrlData/url_svmlight
+/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.txt
 /samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/recommendation-*.csv
 /samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/MovieRecommendation.zip
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Input/WebRanking.zip
