@@ -420,6 +420,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/OriginalUrlData/url_svmlight.tar.gz
 /samples/csharp/getting-started/LargeDatasets/LargeDatasets/Data/PreparedUrlData/url_svmlight
+/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.zip
 /samples/csharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/Amazon0302.txt
 /samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/recommendation-*.csv
 /samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/MovieRecommendation.zip
@@ -435,3 +436,4 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
+
