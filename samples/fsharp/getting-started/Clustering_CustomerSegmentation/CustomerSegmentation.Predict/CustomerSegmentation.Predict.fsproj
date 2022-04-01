@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

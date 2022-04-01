@@ -5,6 +5,7 @@ open Microsoft.ML.Data
 open OxyPlot.Series
 open OxyPlot
 open System.Diagnostics
+open Common
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -134,6 +135,7 @@ let main _argv =
 
         //Generate data files with customer data grouped by clusters
         printHeader ["CSV Customer Segmentation"]
+        FileUtil.CreateParentDirectoryIfNotExists plotCsv
         File.WriteAllLines(plotCsv,
             seq {
                 yield "LastName,SelectedClusterId"
