@@ -363,6 +363,8 @@ MSLRWeb10K*Rows.tsv
 
 /samples/CLI/BinaryClassification_CLI/wikiDetoxAnnotated40kRows.tsv
 
+/samples/fsharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/MLModels/GitHubLabelerModel.zip
+
 /samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/Data/taxi-fare*.csv
 /samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/Data/taxi-fare.zip
 /samples/fsharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/MLModels/TaxiFareModel.zip

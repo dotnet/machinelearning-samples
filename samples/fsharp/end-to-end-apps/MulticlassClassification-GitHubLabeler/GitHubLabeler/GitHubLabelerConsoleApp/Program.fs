@@ -133,6 +133,7 @@ let buildAndTrainModel dataSetLocation modelPath selectedStrategy =
     // STEP 6: Save/persist the trained model to a .ZIP file
     printfn "=============== Saving the model to a file ==============="
     do 
+        FileUtil.CreateParentDirectoryIfNotExists modelPath
         use f = File.Open(modelPath,FileMode.Create)
         mlContext.Model.Save(trainedModel, trainingDataView.Schema, f)
 
