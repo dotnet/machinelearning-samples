@@ -381,6 +381,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/imagenet.?sv
+/samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/imagenet_comp_graph_label_strings.txt
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/inception5h.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/tensorflow_inception_graph.pb
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_Training/ImageClassification.Train/flower_photos
@@ -470,3 +471,4 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
+
