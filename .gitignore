@@ -380,6 +380,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/ImagesClassification.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.jpg
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/images/*.png
+/samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/imagenet.?sv
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/inception5h.zip
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_TensorFlow/ImageClassification/assets/inputs/inception/tensorflow_inception_graph.pb
 /samples/fsharp/getting-started/DeepLearning_ImageClassification_Training/ImageClassification.Train/flower_photos
@@ -387,6 +388,7 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/*.jpg
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/*.png
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/data/flower_photos_very_small_set.zip
+/samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/inception/imagenet.?sv
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/inception/inception5h.zip
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/inception/tensorflow_inception_graph.pb
 /samples/fsharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/outputs/imageClassifier.zip
