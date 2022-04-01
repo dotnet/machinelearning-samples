@@ -24,5 +24,14 @@
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.1'" Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\..\..\datasets\imagenet.csv" Link="..\..\..\assets\inputs\inception\imagenet.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\datasets\imagenet.tsv" Link="..\..\..\assets\inputs\inception\imagenet.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
 
