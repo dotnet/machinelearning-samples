@@ -5,9 +5,7 @@ using WeatherRecognition;
 
 var context = new MLContext();
 
-var emptyData = new List<WeatherRecognitionInput>();
-
-var data = context.Data.LoadFromEnumerable(emptyData);
+var data = context.Data.LoadFromEnumerable(new List<WeatherRecognitionInput>(););
 
 var pipeline = context.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "data", imageWidth: 300, imageHeight: 300, inputColumnName: nameof(WeatherRecognitionInput.Image))
                 .Append(context.Transforms.ExtractPixels(outputColumnName: "data"))
