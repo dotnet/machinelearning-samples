@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\common\Web.cs" Link="Web.cs" />
+    <Compile Include="..\..\..\common\Web.cs" Link="Common\Web.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,5 +29,14 @@
   <ItemGroup>
     <ProjectReference Include="..\ImageClassification.Shared\ImageClassification.Shared.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <None Include="..\..\..\..\..\datasets\RareThreeSpiralledRose.png" Link="..\..\..\assets\inputs\test-images\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\datasets\BlackRose.png" Link="..\..\..\assets\inputs\test-images\BlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
