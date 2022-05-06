@@ -452,6 +452,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/tensorflow-pretrained-models/inception-v3/inception-v3.zip
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/inputs/tensorflow-pretrained-models/inception-v3/inception_v3_2016_08_28_frozen.pb
 /samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Train/assets/outputs/imageClassifier.zip
+/samples/csharp/getting-started/DeepLearning_TensorFlowEstimator/ImageClassification.Predict/assets/inputs/images-for-predictions/*.png
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/ObjectDetectionPhotosSet.zip
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/output/
 /samples/csharp/getting-started/DeepLearning_ObjectDetection_Onnx/ObjectDetectionConsoleApp/assets/images/image1.jpg
@@ -481,5 +482,3 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
-
-

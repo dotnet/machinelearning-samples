@@ -25,5 +25,14 @@
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.1'" Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <None Include="..\..\..\..\..\datasets\RareThreeSpiralledRose.png" Link="..\..\..\assets\inputs\images-for-predictions\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\datasets\BlackRose.png" Link="..\..\..\assets\inputs\images-for-predictions\BlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
