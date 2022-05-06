@@ -27,5 +27,14 @@
   <ItemGroup>
     <ProjectReference Include="..\ImageClassification.Shared\ImageClassification.Shared.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <None Include="..\..\..\..\..\datasets\RareThreeSpiralledRose.png" Link="..\..\..\assets\inputs\images-for-predictions\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\datasets\BlackRose.png" Link="..\..\..\assets\inputs\images-for-predictions\BlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
