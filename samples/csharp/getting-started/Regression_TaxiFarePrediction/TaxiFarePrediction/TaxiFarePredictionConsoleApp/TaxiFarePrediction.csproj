@@ -26,10 +26,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\datasets\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv">
+    <None Include="..\..\..\..\..\..\datasets\taxi-fare-test.csv" Link="..\..\..\..\Data\taxi-fare-test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\..\..\..\datasets\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv">
+    <None Include="..\..\..\..\..\..\datasets\taxi-fare-train.csv" Link="..\..\..\..\Data\taxi-fare-train.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
