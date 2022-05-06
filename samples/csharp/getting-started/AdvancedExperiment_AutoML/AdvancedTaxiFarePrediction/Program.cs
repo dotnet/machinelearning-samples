@@ -154,7 +154,7 @@ namespace AdvancedTaxiFarePrediction
             // (Please note: for an experiment on a large dataset, opting to keep all 
             // models trained by AutoML in memory could cause your system to run out 
             // of memory.)
-            experimentSettings.CacheDirectory = null;
+            //experimentSettings.CacheDirectory = null; // CS1061
 
             // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
             // (These trainers sometimes underperform on this dataset.)

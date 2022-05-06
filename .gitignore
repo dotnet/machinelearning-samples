@@ -420,11 +420,14 @@ MSLRWeb10K*Rows.tsv
 /samples/fsharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/MLModels/TaxiFareModel.zip
 /samples/fsharp/getting-started/TimeSeries_PowerAnomalyDetection/PowerAnomalyDetection/MLModels/PowerAnomalyDetectionModel.zip
 
+/samples/csharp/getting-started/AdvancedExperiment_AutoML/AdvancedTaxiFarePrediction/MLModels/TaxiFareModel.zip
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/input/creditcardfraud-dataset.zip
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/BinaryClassification_AutoML/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
+/samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/outputs/retailClustering.zip
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows.mdf
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows_log.ldf
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/DatabaseLoaderSqlLocalDb.zip
