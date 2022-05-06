@@ -28,40 +28,4 @@
     <ProjectReference Include="..\ImageClassification.Shared\ImageClassification.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="assets\inputs\images-for-predictions\BlackRose.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\gamer_chair_01.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\green-office-chair-test.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair_leaked.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\north_west_us_green_chair.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\north_west_us_wooden_chair.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\plain_black_chair.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\plain_white_chair.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\RareThreeSpiralledRose.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\inputs\images-for-predictions\usa_flag_game_watching_chair.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
