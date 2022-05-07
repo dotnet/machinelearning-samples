@@ -482,6 +482,10 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/MLModels/TaxiFareModel.zip
 
 /samples/csharp/end-to-end-apps/AnomalyDetection-Sales/SpikeDetectionE2EApp/MLModels/*.zip
+/samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopDashboard/Infrastructure/Setup/DataFiles/*.csv
+/samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopDashboard/Infrastructure/Setup/DataFiles/*.txt
+/samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopForecastModelsTrainer/Data/Datasets-Citation.txt
+/samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopForecastModelsTrainer/Data/products.stats.csv
 /samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopDashboard/Infrastructure/Setup/DataFiles/ForecastingSalesEShopDashboardOrderDataset.zip
 /samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopForecastModelsTrainer/Data/ForecastingSalesOnlineRetailDataset.zip
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/corefx-issues-train.tsv
