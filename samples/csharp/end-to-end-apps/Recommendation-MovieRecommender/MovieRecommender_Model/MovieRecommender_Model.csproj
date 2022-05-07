@@ -7,27 +7,19 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\common\ConsoleHelper.cs" Link="Common\ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\Web.cs" Link="Common\Web.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.9" />
+    <PackageReference Include="Flurl.Http" Version="3.2.3" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Data\ratings_test.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\ratings_train.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\ratings.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="SharpZipLib" Version="1.3.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Common\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

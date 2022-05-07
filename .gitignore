@@ -484,6 +484,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ImagesTemp/*.Jpeg
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetection/ML/OnnxModels/TinyYolo2_model.onnx
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ML/MLNETModel/TinyYoloModel.zip
+/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Model/model.zip
 
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx

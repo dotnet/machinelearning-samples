@@ -6,6 +6,8 @@ using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
 using System.Diagnostics;
+using System.Collections.Generic;
+using Common;
 
 namespace MovieRecommenderModel
 {
@@ -14,6 +16,12 @@ namespace MovieRecommenderModel
 
     class Program
     {
+        private const string datasetFile = "MovieRecommendation2";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://bit.ly/3MUAfgr";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+
         private static string BaseModelRelativePath = @"../../../Model";
         private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
 
@@ -27,6 +35,11 @@ namespace MovieRecommenderModel
         
         static void Main(string[] args)
         {
+            List<string> destFiles = new List<string>()
+                { TrainingDataRelativePath, TestDataRelativePath };
+            Web.DownloadBigFile(BaseDataSetRelativepath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
+
             Color color = Color.FromArgb(130,150,115);
 
             //Call the following piece of code for splitting the ratings.csv into ratings_train.csv and ratings.test.csv.
