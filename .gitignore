@@ -350,6 +350,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/MovieRecommendation2.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
+/datasets/ObjectDetectionPhotosSet3.zip
 /datasets/SMSSpamCollection.zip
 /datasets/taxi-fare.zip
 /datasets/url_svmlight.tar.gz
@@ -482,7 +483,9 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/corefx-issues-train.tsv
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/GitHubLabeler.zip
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/MLModels/GitHubLabelerModel.zip
+/samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/Assets/imagesList/ObjectDetectionPhotosSet.zip
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ImagesTemp/*.Jpeg
+/samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ImagesTemp/ObjectDetectionPhotosSet3.zip
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetection/ML/OnnxModels/TinyYolo2_model.onnx
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ML/MLNETModel/TinyYoloModel.zip
 /samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Data/ratings*.csv
