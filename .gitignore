@@ -343,6 +343,8 @@ MSLRWeb10K*Rows.tsv
 /datasets/flower_photos_small_set.zip
 /datasets/flower_photos_very_small_set.zip
 /datasets/flower_photos_prediction_set.zip
+/datasets/ForecastingSalesEShopDashboardOrderDataset.zip
+/datasets/ForecastingSalesOnlineRetailDataset.zip
 /datasets/GitHubLabeler.zip
 /datasets/ImagesClassification.zip
 /datasets/LandUsePhotosSet.zip
@@ -480,6 +482,8 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/MLModels/TaxiFareModel.zip
 
 /samples/csharp/end-to-end-apps/AnomalyDetection-Sales/SpikeDetectionE2EApp/MLModels/*.zip
+/samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopDashboard/Infrastructure/Setup/DataFiles/ForecastingSalesEShopDashboardOrderDataset.zip
+/samples/csharp/end-to-end-apps/Forecasting-Sales/src/eShopForecastModelsTrainer/Data/ForecastingSalesOnlineRetailDataset.zip
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/corefx-issues-train.tsv
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/Data/GitHubLabeler.zip
 /samples/csharp/end-to-end-apps/MulticlassClassification-GitHubLabeler/GitHubLabeler/MLModels/GitHubLabelerModel.zip
