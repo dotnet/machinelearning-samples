@@ -347,6 +347,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/ImagesClassification.zip
 /datasets/LandUsePhotosSet.zip
 /datasets/MovieRecommendation.zip
+/datasets/MovieRecommendation2.zip
 /datasets/ObjectDetectionPhotosSet.zip
 /datasets/ObjectDetectionPhotosSet2.zip
 /datasets/SMSSpamCollection.zip
@@ -484,6 +485,8 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ImagesTemp/*.Jpeg
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetection/ML/OnnxModels/TinyYolo2_model.onnx
 /samples/csharp/end-to-end-apps/ObjectDetection-Onnx/OnnxObjectDetectionWeb/ML/MLNETModel/TinyYoloModel.zip
+/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Data/ratings*.csv
+/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Data/MovieRecommendation2.zip
 /samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Model/model.zip
 
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
