@@ -23,6 +23,8 @@ namespace TaxiFareRegression
         private static string TestDataPath = Path.Combine(BaseDataPath, "taxi-fare-test.csv");
 
         private static string ModelPath = Path.Combine(BaseRelativePath, "outputs", "TaxiFareModel.zip");
+        private static string OutputModelPath = Path.Combine(BaseRelativePath, 
+            "outputs", "TaxiFareModel.zip");
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
@@ -202,6 +204,9 @@ namespace TaxiFareRegression
             var predFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePredictionWithContribution>(trainedModel);
 
             string chartFileName = "";
+            // https://github.com/surban/PLplotNet/issues/2#issuecomment-1006874961
+            // .Net6: InvalidOperationException : Cannot find support PLplot support files in System.String[].
+            // Fix: <Target Name="CopyFiles" AfterTargets="Build"> in .csproj
             using (var pl = new PLStream())
             {
                 if (args.Length == 1 && args[0] == "svg")
