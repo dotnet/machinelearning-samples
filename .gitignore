@@ -432,6 +432,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/BinaryClassification_AutoML/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
+/samples/csharp/getting-started/Forecasting_BikeSharingDemand/BikeDemandForecasting/Data/DailyDemand.mdf
 /samples/csharp/getting-started/Forecasting_BikeSharingDemand/BikeDemandForecasting/Data/ForecastingBikeSharingDemand.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/outputs/retailClustering.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Predict/assets/outputs/customerSegmentation.*
