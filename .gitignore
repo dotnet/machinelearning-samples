@@ -343,6 +343,7 @@ MSLRWeb10K*Rows.tsv
 /datasets/flower_photos_small_set.zip
 /datasets/flower_photos_very_small_set.zip
 /datasets/flower_photos_prediction_set.zip
+/datasets/ForecastingBikeSharingDemand.zip
 /datasets/ForecastingSalesEShopDashboardOrderDataset.zip
 /datasets/ForecastingSalesOnlineRetailDataset.zip
 /datasets/GitHubLabeler.zip
@@ -431,6 +432,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/BinaryClassification_AutoML/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
+/samples/csharp/getting-started/Forecasting_BikeSharingDemand/BikeDemandForecasting/Data/ForecastingBikeSharingDemand.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/outputs/retailClustering.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Predict/assets/outputs/customerSegmentation.*
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows.mdf
