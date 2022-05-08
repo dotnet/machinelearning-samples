@@ -23,7 +23,7 @@ namespace CreditCardFraudDetection.Trainer
             // File paths
             string AssetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(AssetsRelativePath);
-            string datassetPath = Path.Combine(assetsPath, "input");
+            string datasetPath = Path.Combine(assetsPath, "input");
             string zipDataSet = Path.Combine(assetsPath, "input", "creditcardfraud-dataset.zip");
             string fullDataSetFilePath = Path.Combine(assetsPath, "input", "creditcard.csv");
             string trainDataSetFilePath = Path.Combine(assetsPath, "output", "trainData.csv");
@@ -36,7 +36,7 @@ namespace CreditCardFraudDetection.Trainer
             var commonDatasetsRelativePath = @"../../../../../../../../datasets";
             var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
             List<string> destFiles = new List<string>() { fullDataSetFilePath };
-            Web.DownloadBigFile(datassetPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+            Web.DownloadBigFile(datasetPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
 
             // Unzip the original dataset as it is too large for GitHub repo if not zipped
             UnZipDataSet(zipDataSet, fullDataSetFilePath);
