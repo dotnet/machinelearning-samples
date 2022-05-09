@@ -39,7 +39,7 @@ namespace Regression_TaxiFarePrediction
             var datasetFile = "taxi-fare";
             var datasetZip = datasetFile + ".zip";
             var datasetUrl = "https://bit.ly/3qISgov";
-            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsRelativePath = @"../../../../../../../../../datasets";
             var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
             List<string> destFiles = new List<string>() { TrainDataPath, TestDataPath };
             Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);

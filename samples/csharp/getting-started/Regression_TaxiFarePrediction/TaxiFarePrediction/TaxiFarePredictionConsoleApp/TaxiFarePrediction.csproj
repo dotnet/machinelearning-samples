@@ -27,16 +27,7 @@
   <ItemGroup>
     <Folder Include="Data\" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="..\..\..\..\..\..\datasets\taxi-fare-test.csv" Link="..\..\..\..\Data\taxi-fare-test.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\..\..\..\..\datasets\taxi-fare-train.csv" Link="..\..\..\..\Data\taxi-fare-train.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  
+    
   <Target Name="CopyFiles" AfterTargets="Build">
     <ItemGroup>
       <PlotFiles Include="$(TargetDir)runtimes\win-x64\native\**\*.*" />
