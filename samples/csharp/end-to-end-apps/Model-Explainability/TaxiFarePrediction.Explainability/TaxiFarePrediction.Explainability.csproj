@@ -140,7 +140,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="..\..\..\common\ConsoleHelper.cs">
+      <Link>Common\ConsoleHelper.cs</Link>
+    </Compile>
     <Compile Include="Data\TaxiTrip.cs" />
     <Compile Include="Data\TaxiTripFarePrediction.cs" />
     <Compile Include="Data\TestTaxiTrips.cs" />

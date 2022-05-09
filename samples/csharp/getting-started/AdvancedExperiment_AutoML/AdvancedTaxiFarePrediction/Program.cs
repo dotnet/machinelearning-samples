@@ -16,7 +16,7 @@ namespace AdvancedTaxiFarePrediction
 {
     internal static class Program
     {
-        private static string BaseDatasetsRelativePath = "Data";
+        private static string BaseDatasetsRelativePath = @"../../../Data";
 
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
@@ -34,6 +34,14 @@ namespace AdvancedTaxiFarePrediction
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
+            var datasetFile = "taxi-fare";
+            var datasetZip = datasetFile + ".zip";
+            var datasetUrl = "https://bit.ly/3qISgov";
+            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+            List<string> destFiles = new List<string>() { TrainDataPath, TestDataPath };
+            Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+
             var mlContext = new MLContext();
 
             // Infer columns in the dataset with AutoML.
@@ -274,6 +282,9 @@ namespace AdvancedTaxiFarePrediction
             var predFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
 
             string chartFileName = "";
+            // https://github.com/surban/PLplotNet/issues/2#issuecomment-1006874961
+            // .Net6: InvalidOperationException : Cannot find support PLplot support files in System.String[].
+            // Fix: <Target Name="CopyFiles" AfterTargets="Build"> in .csproj
             using (var pl = new PLStream())
             {
                 // use SVG backend and write to SineWaves.svg in current directory.

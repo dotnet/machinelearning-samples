@@ -28,6 +28,14 @@ namespace TaxiFareRegression
 
         static void Main(string[] args) //If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
+            var datasetFile = "taxi-fare";
+            var datasetZip = datasetFile + ".zip";
+            var datasetUrl = "https://bit.ly/3qISgov";
+            var commonDatasetsRelativePath = @"../../../../../../../../../datasets";
+            var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+            List<string> destFiles = new List<string>() { TrainDataPath, TestDataPath };
+            Web.DownloadBigFile(BaseDataPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+
             // Create ML Context with seed for repeteable/deterministic results.
             var mlContext = new MLContext(seed: 0);
 
