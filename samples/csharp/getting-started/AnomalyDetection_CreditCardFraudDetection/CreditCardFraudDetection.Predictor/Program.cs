@@ -52,8 +52,15 @@ namespace CreditCardFraudDetection.Predictor
                 }
 
                 //Only copy the files we need for the scoring project
-                if ((Path.GetFileName(file) == "testData.csv") || (Path.GetFileName(file) == "randomizedPca.zip"))
-                    File.Copy(file, Path.Combine(Path.Combine(assetsPath, "input"), Path.GetFileName(file)));
+                if ((Path.GetFileName(file) == "testData.csv") ||
+                    (Path.GetFileName(file) == "randomizedPca.zip"))
+                {
+                    string destPath = Path.GetFullPath(
+                        Path.Combine(assetsPath, "input", Path.GetFileName(file)));
+                    string parentDir = Path.GetDirectoryName(destPath);
+                    if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
+                    File.Copy(file, destPath);
+                }
             }
         }
 
