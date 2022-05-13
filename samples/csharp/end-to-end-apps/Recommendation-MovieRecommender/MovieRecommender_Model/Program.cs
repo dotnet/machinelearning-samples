@@ -98,6 +98,8 @@ namespace MovieRecommenderModel
 
             //STEP 8:  Save model to disk
             Console.WriteLine("=============== Writing model to the disk ===============", color);
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             Console.WriteLine();mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("=============== Re-Loading model from the disk ===============", color);
