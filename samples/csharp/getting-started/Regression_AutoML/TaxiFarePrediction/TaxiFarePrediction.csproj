@@ -20,13 +20,13 @@
     <Folder Include="Common\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\..\..\datasets\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\..\..\..\datasets\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <ItemGroup>
+      <PlotFiles Include="$(TargetDir)runtimes\win-x64\native\**\*.*" />
+    </ItemGroup>
+    <Message Text="Executing AfterBuild copy files task" Importance="High" />
+    <Copy SourceFiles="@(PlotFiles)" DestinationFolder="$(TargetDir)%(RecursiveDir)" ContinueOnError="true" />
+    <Message Text="AfterBuild copy files task completed" Importance="High" />
+  </Target>
 
 </Project>
