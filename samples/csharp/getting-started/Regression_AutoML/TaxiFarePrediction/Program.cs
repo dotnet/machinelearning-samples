@@ -31,6 +31,14 @@ namespace TaxiFarePrediction
 
         static void Main(string[] args) // If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
+            var datasetFile = "taxi-fare";
+            var datasetZip = datasetFile + ".zip";
+            var datasetUrl = "https://bit.ly/3qISgov";
+            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+            List<string> destFiles = new List<string>() { TrainDataPath, TestDataPath };
+            Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+
             MLContext mlContext = new MLContext();
 
             // Create, train, evaluate and save a model

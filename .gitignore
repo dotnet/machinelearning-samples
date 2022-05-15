@@ -484,6 +484,8 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Output/RankingModel.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Input/WebRanking.zip
 /samples/csharp/getting-started/Ranking_Web/WebRanking/Assets/Output/RankingModel.zip
+/samples/csharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/DataSets-Citation.txt
+/samples/csharp/getting-started/Regression_AutoML/TaxiFarePrediction/Data/taxi-fare.zip
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/DataSets-Citation.txt
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare*.csv
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare.zip
