@@ -444,6 +444,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Forecasting_BikeSharingDemand/BikeDemandForecasting/Data/ForecastingBikeSharingDemand.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/outputs/retailClustering.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Predict/assets/outputs/customerSegmentation.*
+/samples/csharp/getting-started/Clustering_Iris/IrisClustering/MLModels/IrisModel.zip
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows.mdf
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/Criteo-100k-rows_log.ldf
 /samples/csharp/getting-started/DatabaseLoader/DatabaseLoaderConsoleApp/SqlLocalDb/DatabaseLoaderSqlLocalDb.zip
