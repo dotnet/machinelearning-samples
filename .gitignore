@@ -432,6 +432,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/input/creditcardfraud-dataset.zip
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Trainer/assets/output/
 /samples/csharp/getting-started/AnomalyDetection_CreditCardFraudDetection/CreditCardFraudDetection.Predictor/assets/input/
+/samples/csharp/getting-started/AnomalyDetection_PowerMeterReadings/PowerAnomalyDetection/MLModels/PowerAnomalyDetectionModel.zip
 /samples/csharp/getting-started/BinaryClassification_AutoML/SentimentAnalysis/MLModels/SentimentModel.zip
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
