@@ -437,6 +437,9 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/BinaryClassification_HeartDiseaseDetection/HeartDiseaseDetection/MLModels/HeartClassification.zip
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.tsv
 /samples/csharp/getting-started/BinaryClassification_SentimentAnalysis/SentimentAnalysis/Data/wikiDetoxAnnotated40kRows.zip
+/samples/csharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder/readme
+/samples/csharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder/SMSSpamCollection
+/samples/csharp/getting-started/BinaryClassification_SpamDetection/SpamDetectionConsoleApp/Data/spamfolder/SMSSpamCollection.zip
 /samples/csharp/getting-started/Forecasting_BikeSharingDemand/BikeDemandForecasting/Data/DailyDemand.mdf
 /samples/csharp/getting-started/Forecasting_BikeSharingDemand/BikeDemandForecasting/Data/ForecastingBikeSharingDemand.zip
 /samples/csharp/getting-started/Clustering_CustomerSegmentation/CustomerSegmentation.Train/assets/outputs/retailClustering.zip
@@ -522,4 +525,3 @@ MSLRWeb10K*Rows.tsv
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.zip
-
