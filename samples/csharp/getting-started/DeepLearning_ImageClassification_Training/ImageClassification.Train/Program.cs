@@ -109,6 +109,9 @@ namespace ImageClassification.Train
             var watch = Stopwatch.StartNew();
 
             //Train
+            // System.EntryPointNotFoundException HResult=0x80131523
+            // Unable to find an entry point named 'TF_StringEncodedSize' in DLL 'tensorflow':
+            // Max compatible version for SciSharp.TensorFlow.Redist: 2.3.1 < 2.7.0
             ITransformer trainedModel = pipeline.Fit(trainDataView);
 
             watch.Stop();
