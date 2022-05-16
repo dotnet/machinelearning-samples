@@ -484,6 +484,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/recommendation-*.csv
 /samples/csharp/getting-started/MatrixFactorization_MovieRecommendation/Data/MovieRecommendation.zip
 /samples/csharp/getting-started/MulticlassClassification_AutoML/MNIST/MLModels/Model.zip
+/samples/csharp/getting-started/MulticlassClassification_Iris/IrisClassification/MLModels/IrisClassificationModel.zip
 /samples/csharp/getting-started/MulticlassClassification_MNIST/MNIST/Data/optdigits*.csv
 /samples/csharp/getting-started/MulticlassClassification_MNIST/MNIST/MLModels/Model.zip
 /samples/csharp/getting-started/Ranking_AutoML/Ranking/Ranking/Assets/Input/WebRanking.zip
