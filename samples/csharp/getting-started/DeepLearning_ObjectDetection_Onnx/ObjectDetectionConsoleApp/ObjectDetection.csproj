@@ -18,10 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="3.2.2" />
+    <PackageReference Include="Flurl.Http" Version="3.2.3" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.10.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.11.0" />
     <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
   </ItemGroup>
