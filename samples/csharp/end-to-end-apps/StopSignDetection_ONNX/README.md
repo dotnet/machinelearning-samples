@@ -157,3 +157,9 @@ foreach (var image in testFiles)
     testImage.Save(predictedImage);
 }
 ```
+
+## Output
+
+For this object detection scenario, we will output a new photo where the bounding boxes and label are drawn onto it. If one already exists when running the console application, it will delete it and save a new photo.
+
+![Multiple bounding boxes output](./assets/object-detection-output.jpg)
