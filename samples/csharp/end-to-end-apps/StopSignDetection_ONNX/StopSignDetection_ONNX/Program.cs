@@ -41,18 +41,18 @@ foreach (var image in testFiles)
     // Predict on test image
     var prediction = predictionEngine.Predict(new StopSignInput { Image = testImage });
 
-    var chunks = prediction.BoundingBoxes.Chunk(prediction.BoundingBoxes.Count() / prediction.PredictedLabels.Count());
+    // Calculate bounding boxes
+    var boundingBoxes = prediction.BoundingBoxes.Chunk(prediction.BoundingBoxes.Count() / prediction.PredictedLabels.Count());
 
-    for (int i = 0; i < chunks.Count(); i++)
+    // Draw boxes and predicted label
+    for (int i = 0; i < boundingBoxes.Count(); i++)
     {
-        var confidence = prediction.Scores[i];
+        var boundingBox = boundingBoxes.ElementAt(i);
 
-        var boundingBoxes = chunks.ElementAt(i);
-
-        var left = boundingBoxes[0] * originalWidth;
-        var top = boundingBoxes[1] * originalHeight;
-        var right = boundingBoxes[2] * originalWidth;
-        var bottom = boundingBoxes[3] * originalHeight;
+        var left = boundingBox[0] * originalWidth;
+        var top = boundingBox[1] * originalHeight;
+        var right = boundingBox[2] * originalWidth;
+        var bottom = boundingBox[3] * originalHeight;
 
         var x = left;
         var y = top;
@@ -63,11 +63,10 @@ foreach (var image in testFiles)
         var label = labels[prediction.PredictedLabels[i]];
 
         // Draw bounding box and add label to image
-        using (var graphics = Graphics.FromImage(testImage))
-        {
-            graphics.DrawRectangle(new Pen(Color.Red, 3), x, y, width, height);
-            graphics.DrawString(label, new Font(FontFamily.Families[0], 32f), Brushes.Red, x + 5, y + 5);
-        }
+        using var graphics = Graphics.FromImage(testImage);
+
+        graphics.DrawRectangle(new Pen(Color.Red, 3), x, y, width, height);
+        graphics.DrawString(label, new Font(FontFamily.Families[0], 32f), Brushes.Red, x + 5, y + 5);
     }
 
     // Save the prediction image, but delete it if it already exists before saving
