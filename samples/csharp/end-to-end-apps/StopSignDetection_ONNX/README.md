@@ -6,7 +6,7 @@
 
 ## Problem
 
-Objection is one of the main applicatinos of deep learning by being able to not only classify part of an image, but also show where in the image the object is with a bounding box. For deep learning scenarios, you can either use a pre-trained model or train your own model. This sample uses an object detection model exported from [Custom Vision](https://www.customvision.ai).
+Object detection is one of the main applicatinos of deep learning by being able to not only classify part of an image, but also show where in the image the object is with a bounding box. For deep learning scenarios, you can either use a pre-trained model or train your own model. This sample uses an object detection model exported from [Custom Vision](https://www.customvision.ai).
 
 ## How the sample works
 
@@ -26,7 +26,7 @@ Below is an example of what we'd see upon opening this sample's model with Netro
 
 From the output above, we can see the ONNX model has the following input/output formats:
 
-### Input: 'data' 3x320x320
+### Input: 'image_tensor' 3x320x320
 
 The first thing to notice is that the **input tensor's name** is **'image_tensor'**.  We'll need this name later when we define **input** parameter of the estimation pipeline.
 
@@ -36,14 +36,14 @@ We can also see that the or **shape of the input tensor** is **3x320x320**.  Thi
 
 We can see that the ONNX model has three outputs:
 - **detected_classes**: An array of indexes that corresponds to the **labels.txt** file of what classes have been detected in the image. The labels are the tags that are added when uploading images to the Custom Vision service.
-- **detected_boxes**: An array of 
+- **detected_boxes**: An array of floats that are normalized to the input image. There will be a set of four items in the array for each bounding box.
 - **detected_scores**: An array of scores for each detected class.
 
 ## Solution
 
 **The projects in this solution uses .NET 6. In order to run this sample, you must install the .NET 6.0. To do this either:**
 
-1. Manually install the SDK by going to [.NET Core 3.0 download page](https://aka.ms/netcore3download) and download the latest **.NET Core Installer** in the **SDK** column.
+1. Manually install the SDK by going to [.NET Core 6.0 download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and download the latest **.NET Core Installer** in the **SDK** column.
 2. Or, if you're using Visual Studio 2019, go to: _**Tools > Options > Environment > Preview Features**_ and check the box next to: _**Use previews of the .NET Core SDK**_
 
 ## Code Walkthrough
@@ -102,7 +102,9 @@ var predictionEngine = context.Model.CreatePredictionEngine<StopSignInput, StopS
 
 ## Detect objects in an image
 
-When obtaining the prediction, we get a `float` array in the `PredictedLabels` property. This is the 125x13x13 output of the model [discussed earlier](#output-data-125x13x13). For each test image we get the max value of the predicted label and its corresponding index. We use that index to get the label based on the **labels.txt** file.
+When obtaining the prediction from images in the `test` directory, we get a `long` array in the `PredictedLabels` property, a `float` array in the `BoundingBoxes` property, and a `float` array in the `Scores` property. For each test image load it into a `FileStream` and parse it into a `Bitmap` object, then we use the `Bitmap` object to send into our input to make a prediction.
+
+We use the `Chunk` method to determine how many bounding boxes were predicted and use that to draw the bounding boxes on the image. To get the labels, we use the `labels.txt` file and use the `PredictedLabels` property to look up the label.
 
 ```csharp
 var labels = File.ReadAllLines("./model/labels.txt");
@@ -118,12 +120,40 @@ foreach (var image in testFiles)
         testImage = (Bitmap)Image.FromStream(stream);
     }
 
-    var prediction = predictionEngine.Predict(new WeatherRecognitionInput { Image = testImage });
+    var prediction = predictionEngine.Predict(new StopSignInput { Image = testImage });
 
-    var maxValue = prediction.PredictedLabels.Max();
-    var maxIndex = prediction.PredictedLabels.ToList().IndexOf(maxValue);
+    var boundingBoxes = prediction.BoundingBoxes.Chunk(prediction.BoundingBoxes.Count() / prediction.PredictedLabels.Count());
 
-    var predictedLabel = labels[maxIndex];
+    var originalWidth = testImage.Width;
+    var originalHeight = testImage.Height;
 
-    Console.WriteLine($"Prediction for file {image}: {predictedLabel}");
-}```
+    for (int i = 0; i < boundingBoxes.Count(); i++)
+    {
+        var boundingBox = boundingBoxes.ElementAt(i);
+
+        var left = boundingBox[0] * originalWidth;
+        var top = boundingBox[1] * originalHeight;
+        var right = boundingBox[2] * originalWidth;
+        var bottom = boundingBox[3] * originalHeight;
+
+        var x = left;
+        var y = top;
+        var width = Math.Abs(right - left);
+        var height = Math.Abs(top - bottom);
+
+        var label = labels[prediction.PredictedLabels[i]];
+
+        using var graphics = Graphics.FromImage(testImage);
+
+        graphics.DrawRectangle(new Pen(Color.Red, 3), x, y, width, height);
+        graphics.DrawString(label, new Font(FontFamily.Families[0], 32f), Brushes.Red, x + 5, y + 5);
+    }
+
+    if (File.Exists(predictedImage))
+    {
+        File.Delete(predictedImage);
+    }
+
+    testImage.Save(predictedImage);
+}
+```

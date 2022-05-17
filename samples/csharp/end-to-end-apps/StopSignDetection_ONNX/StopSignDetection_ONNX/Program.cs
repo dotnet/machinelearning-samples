@@ -3,8 +3,6 @@ using Microsoft.ML.Transforms.Image;
 using StopSignDetection_ONNX;
 using System.Drawing;
 
-string[] testFiles = new[] { "./test/stop-sign-multiple-test.jpg" };
-
 var context = new MLContext();
 
 var data = context.Data.LoadFromEnumerable(new List<StopSignInput>());
@@ -22,6 +20,8 @@ var predictionEngine = context.Model.CreatePredictionEngine<StopSignInput, StopS
 
 var labels = File.ReadAllLines("./Model/labels.txt");
 
+var testFiles = Directory.GetFiles("./test");
+
 Bitmap testImage;
 
 foreach (var image in testFiles)
@@ -34,15 +34,14 @@ foreach (var image in testFiles)
         testImage = (Bitmap)Image.FromStream(stream);
     }
 
-    // Calculate bounding boxes based on prediction
-    var originalWidth = testImage.Width;
-    var originalHeight = testImage.Height;
-
     // Predict on test image
     var prediction = predictionEngine.Predict(new StopSignInput { Image = testImage });
 
-    // Calculate bounding boxes
+    // Calculate how many sets of bounding boxes we get from the prediction
     var boundingBoxes = prediction.BoundingBoxes.Chunk(prediction.BoundingBoxes.Count() / prediction.PredictedLabels.Count());
+
+    var originalWidth = testImage.Width;
+    var originalHeight = testImage.Height;
 
     // Draw boxes and predicted label
     for (int i = 0; i < boundingBoxes.Count(); i++)
