@@ -365,6 +365,7 @@ MSLRWeb10K*Rows.tsv
 /graphs/LandUse.onnx
 /graphs/LandUse.zip
 /graphs/TinyYolo2_model.onnx
+/graphs/model.pb
 
 /samples/CLI/BinaryClassification_CLI/wikiDetoxAnnotated40kRows.tsv
 
