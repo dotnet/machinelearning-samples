@@ -16,7 +16,7 @@ namespace CustomerSegmentation
 
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
             //var modelPath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
-            // Take rather the trained outpout one:
+            // Take rather the trained output one:
             var modelPath = Path.Combine(assetsPath, 
                 "../../CustomerSegmentation.Train/assets/outputs", "retailClustering.zip");
             modelPath = Path.GetFullPath(modelPath);
