@@ -24,6 +24,10 @@ namespace MovieRecommenderModel
 
         private static string BaseModelRelativePath = @"../../../Model";
         private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
+        private static string PredictModelRelativePath = 
+            @"../../../../MovieRecommender/movierecommender/Models";
+        private static string PredictModelPath = Path.GetFullPath(
+            $"{PredictModelRelativePath}/model.zip");
 
         private static string BaseDataSetRelativepath = @"../../../Data";
         private static string TrainingDataRelativePath = $"{BaseDataSetRelativepath}/ratings_train.csv";
@@ -100,7 +104,10 @@ namespace MovieRecommenderModel
             Console.WriteLine("=============== Writing model to the disk ===============", color);
             string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
             if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
-            Console.WriteLine();mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
+            Console.WriteLine();
+            mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
+            // Copy the model to the prediction directory, if it does not exist
+            if (!File.Exists(PredictModelPath)) File.Copy(ModelPath, PredictModelPath);
 
             Console.WriteLine("=============== Re-Loading model from the disk ===============", color);
             Console.WriteLine();
