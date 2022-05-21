@@ -524,6 +524,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Data/ratings*.csv
 /samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Data/MovieRecommendation2.zip
 /samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender_Model/Model/model.zip
+/samples/csharp/end-to-end-apps/Recommendation-MovieRecommender/MovieRecommender/movierecommender/Models/model.zip
 
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUsePhotosSet.zip
 /samples/modelbuilder/ImageClassification_Azure_LandUse/LandUse/LandUse.onnx
