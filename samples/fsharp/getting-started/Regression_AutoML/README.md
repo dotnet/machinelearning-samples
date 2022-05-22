@@ -83,4 +83,4 @@ printfn "**********************************************************************"
 
 Finally, you can plot in a chart how the tested predictions are distributed and how the regression is performing with the implemented function `plotRegressionChart` as in the following screenshot:
 
-![Regression plot-chart](images/Sample-Regression-Chart.png)
+![Regression plot-chart](../../../../images/Sample-Regression-Chart.png)
