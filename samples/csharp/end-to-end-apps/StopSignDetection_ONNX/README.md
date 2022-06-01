@@ -41,11 +41,6 @@ We can see that the ONNX model has three outputs:
 
 ## Solution
 
-**The projects in this solution uses .NET 6. In order to run this sample, you must install the .NET 6.0. To do this either:**
-
-1. Manually install the SDK by going to [.NET Core 6.0 download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and download the latest **.NET Core Installer** in the **SDK** column.
-2. Or, if you're using Visual Studio 2019, go to: _**Tools > Options > Environment > Preview Features**_ and check the box next to: _**Use previews of the .NET Core SDK**_
-
 ## Code Walkthrough
 
 Create a class that defines the data schema to use while loading data into an `IDataView`. ML.NET supports the `Bitmap` type for images, so we'll specify `Bitmap` property decorated with the `ImageTypeAttribute` and pass in the height and width dimensions we got by [inspecting the model](#model-input-and-output), as shown below.
@@ -93,8 +88,6 @@ var model = pipeline.Fit(data);
 ## Create a PredictionEngine
 
 After the model is configured, create a `PredictionEngine`, and then pass the image to the engine to classify images using the model.
-
-The **Console** app uses the `CreatePredictionEngine` to make predictions. Internally, it is optimized so the object dependencies are cached and shared across Http requests with minimum overhead when creating those objects.
 
 ```csharp
 var predictionEngine = context.Model.CreatePredictionEngine<StopSignInput, StopSignPrediction>(model);
