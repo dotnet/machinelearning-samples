@@ -6,6 +6,8 @@ using System.Drawing;
 var context = new MLContext();
 
 var data = context.Data.LoadFromEnumerable(new List<StopSignInput>());
+var root = new FileInfo(typeof(Program).Assembly.Location);
+var assemblyFolderPath = root.Directory.FullName;
 
 // Create pipeline
 var pipeline = context.Transforms.ResizeImages(resizing: ImageResizingEstimator.ResizingKind.Fill, outputColumnName: "image_tensor", imageWidth: ImageSettings.imageWidth, imageHeight: ImageSettings.imageHeight, inputColumnName: nameof(StopSignInput.Image))
@@ -27,7 +29,7 @@ Bitmap testImage;
 foreach (var image in testFiles)
 {
     // Load test image into memory
-    var predictedImage = $"{image}-predicted.jpg";
+    var predictedImage = $"{Path.GetFileName(image)}-predicted.jpg";
 
     using (var stream = new FileStream(image, FileMode.Open))
     {
@@ -64,8 +66,8 @@ foreach (var image in testFiles)
         // Draw bounding box and add label to image
         using var graphics = Graphics.FromImage(testImage);
 
-        graphics.DrawRectangle(new Pen(Color.Red, 3), x, y, width, height);
-        graphics.DrawString(label, new Font(FontFamily.Families[0], 32f), Brushes.Red, x + 5, y + 5);
+        graphics.DrawRectangle(new Pen(Color.NavajoWhite, 8), x, y, width, height);
+        graphics.DrawString(label, new Font(FontFamily.Families[0], 18f), Brushes.NavajoWhite, x + 5, y + 5);
     }
 
     // Save the prediction image, but delete it if it already exists before saving
@@ -74,5 +76,5 @@ foreach (var image in testFiles)
         File.Delete(predictedImage);
     }
 
-    testImage.Save(predictedImage);
+    testImage.Save(Path.Combine(assemblyFolderPath, predictedImage));
 }
