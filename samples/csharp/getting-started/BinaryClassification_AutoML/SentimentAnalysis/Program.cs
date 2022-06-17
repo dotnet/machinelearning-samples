@@ -33,7 +33,7 @@ namespace SentimentAnalysis
             // Make a single test prediction loading the model from .ZIP file
             TestSinglePrediction(mlContext);
 
-            ConsoleHelper.ConsoleWriteHeader("=============== End of process, hit any key to finish ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
         }
 
@@ -44,14 +44,14 @@ namespace SentimentAnalysis
             IDataView testDataView = mlContext.Data.LoadFromTextFile<SentimentIssue>(TestDataPath, hasHeader: true);
 
             // STEP 2: Display first few rows of training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
+            ConsoleHelperAutoML.ShowDataViewInConsole(mlContext, trainingDataView);
 
             // STEP 3: Initialize our user-defined progress handler that AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new BinaryExperimentProgressHandler();
 
             // STEP 4: Run AutoML binary classification experiment
-            ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML binary classification experiment for {ExperimentTime} seconds...");
             ExperimentResult<BinaryClassificationMetrics> experimentResult = mlContext.Auto()
                 .CreateBinaryClassificationExperiment(ExperimentTime)
@@ -62,12 +62,12 @@ namespace SentimentAnalysis
             PrintTopModels(experimentResult);
 
             // STEP 5: Evaluate the model and print metrics
-            ConsoleHelper.ConsoleWriteHeader("=============== Evaluating model's accuracy with test data ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Evaluating model's accuracy with test data ===============");
             RunDetail<BinaryClassificationMetrics> bestRun = experimentResult.BestRun;
             ITransformer trainedModel = bestRun.Model;
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data:predictions, scoreColumnName: "Score");
-            ConsoleHelper.PrintBinaryClassificationMetrics(bestRun.TrainerName, metrics);
+            ConsoleHelperAutoML.PrintBinaryClassificationMetrics(bestRun.TrainerName, metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
@@ -82,7 +82,7 @@ namespace SentimentAnalysis
         // (OPTIONAL) Try/test a single prediction by loading the model from the file, first.
         private static void TestSinglePrediction(MLContext mlContext)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Testing prediction engine ===============");
             SentimentIssue sampleStatement = new SentimentIssue { Text = "This is a very rude movie" };
             
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);       
@@ -120,11 +120,11 @@ namespace SentimentAnalysis
                 .OrderByDescending(r => r.ValidationMetrics.Accuracy).Take(3);
 
             Console.WriteLine("Top models ranked by accuracy --");
-            ConsoleHelper.PrintBinaryClassificationMetricsHeader();
+            ConsoleHelperAutoML.PrintBinaryClassificationMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelperAutoML.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
         }
     }

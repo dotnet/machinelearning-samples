@@ -86,14 +86,14 @@ namespace Ranking
             IDataView testDataView = textLoader.Load(TestDatasetPath);
 
             // STEP 2: Display first few rows of training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
+            ConsoleHelperAutoML.ShowDataViewInConsole(mlContext, trainDataView);
 
             // STEP 3: Initialize our user-defined progress handler that AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new RankingExperimentProgressHandler();
 
             // STEP 4: Run AutoML ranking experiment
-            ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML ranking experiment for {ExperimentTime} seconds...");
 
             var experimentSettings = new RankingExperimentSettings
@@ -122,7 +122,7 @@ namespace Ranking
             Console.WriteLine("\n===== Evaluating model's NDCG (on test data) =====");
             IDataView predictions = experimentResult.BestRun.Model.Transform(testDataView);
             var metrics = mlContext.Ranking.Evaluate(predictions, rankingEvaluatorOptions);
-            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metrics, experimentSettings.OptimizationMetricTruncationLevel);
+            ConsoleHelperAutoML.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metrics, experimentSettings.OptimizationMetricTruncationLevel);
 
             // STEP 5: Refit the model and get final metrics
             // Re-fit best pipeline on train and validation data, to produce 
@@ -134,7 +134,7 @@ namespace Ranking
             var refitModel = experimentResult.BestRun.Estimator.Fit(trainPlusValidationDataView);
             IDataView predictionsRefitOnTrainPlusValidation = refitModel.Transform(testDataView);
             var metricsRefitOnTrainPlusValidation = mlContext.Ranking.Evaluate(predictionsRefitOnTrainPlusValidation, rankingEvaluatorOptions);
-            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainPlusValidation, experimentSettings.OptimizationMetricTruncationLevel);
+            ConsoleHelperAutoML.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainPlusValidation, experimentSettings.OptimizationMetricTruncationLevel);
 
             // STEP 6: Refit the model with all available data
             // Re-fit best pipeline again on train, validation, and test data, to 
@@ -158,7 +158,7 @@ namespace Ranking
 
         private static void TestSinglePrediction(MLContext mlContext, IDataView predictions, IDataView testDataView)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
             Console.WriteLine($"=============== Loaded Model OK  ===============");
@@ -234,11 +234,11 @@ namespace Ranking
                 .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[(int)optimizationMetricTruncationLevel - 1]).Take(5);
 
             Console.WriteLine($"Top models ordered by NDCG@{optimizationMetricTruncationLevel}");
-            ConsoleHelper.PrintRankingMetricsHeader();
+            ConsoleHelperAutoML.PrintRankingMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelperAutoML.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
         }
 

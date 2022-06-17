@@ -82,9 +82,9 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static ColumnInferenceResults InferColumns(MLContext mlContext)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Inferring columns in dataset ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Inferring columns in dataset ===============");
             ColumnInferenceResults columnInference = mlContext.Auto().InferColumns(TrainDataPath, LabelColumnName, groupColumns: false);
-            ConsoleHelper.Print(columnInference);
+            ConsoleHelperAutoML.Print(columnInference);
             return columnInference;
         }
 
@@ -102,7 +102,7 @@ namespace AdvancedTaxiFarePrediction
             ColumnInferenceResults columnInference)
         {
             // STEP 1: Display first few rows of the training data.
-            ConsoleHelper.ShowDataViewInConsole(mlContext, TrainDataView);
+            ConsoleHelperAutoML.ShowDataViewInConsole(mlContext, TrainDataView);
 
             // STEP 2: Build a pre-featurizer for use in the AutoML experiment.
             // (Internally, AutoML uses one or more train/validation data splits to 
@@ -129,7 +129,7 @@ namespace AdvancedTaxiFarePrediction
 
             // STEP 7: Run AutoML regression experiment.
             var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
-            ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML regression experiment...");
             var stopwatch = Stopwatch.StartNew();
             // Cancel experiment after the user presses any key.
@@ -183,11 +183,11 @@ namespace AdvancedTaxiFarePrediction
                 .OrderBy(r => r.ValidationMetrics.RootMeanSquaredError).Take(3);
 
             Console.WriteLine("Top models ranked by root mean squared error --");
-            ConsoleHelper.PrintRegressionMetricsHeader();
+            ConsoleHelperAutoML.PrintRegressionMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelperAutoML.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
         }
 
@@ -197,7 +197,7 @@ namespace AdvancedTaxiFarePrediction
         private static ITransformer RefitBestPipeline(MLContext mlContext, ExperimentResult<RegressionMetrics> experimentResult,
             ColumnInferenceResults columnInference)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Re-fitting best pipeline ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Re-fitting best pipeline ===============");
             var textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions);
             var combinedDataView = textLoader.Load(new MultiFileSource(TrainDataPath, TestDataPath));
             RunDetail<RegressionMetrics> bestRun = experimentResult.BestRun;
@@ -209,10 +209,10 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static void EvaluateModel(MLContext mlContext, ITransformer model, string trainerName)
         {
-            ConsoleHelper.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
+            ConsoleHelperAutoML.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
             IDataView predictions = model.Transform(TestDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
-            ConsoleHelper.PrintRegressionMetrics(trainerName, metrics);
+            ConsoleHelperAutoML.PrintRegressionMetrics(trainerName, metrics);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace AdvancedTaxiFarePrediction
         /// </summary>
         private static void SaveModel(MLContext mlContext, ITransformer model)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Saving the model ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Saving the model ===============");
             string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
             if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(model, TrainDataView.Schema, ModelPath);
@@ -239,7 +239,7 @@ namespace AdvancedTaxiFarePrediction
 
         private static void TestSinglePrediction(MLContext mlContext)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
             // Sample: 
             // vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount

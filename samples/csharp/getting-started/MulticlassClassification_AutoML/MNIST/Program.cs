@@ -63,7 +63,7 @@ namespace MNIST
                 var progressHandler = new MulticlassExperimentProgressHandler();
 
                 // STEP 3: Run an AutoML multiclass classification experiment
-                ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
+                ConsoleHelperAutoML.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
                 Console.WriteLine($"Running AutoML multiclass classification experiment for {ExperimentTime} seconds...");
                 ExperimentResult<MulticlassClassificationMetrics> experimentResult = mlContext.Auto()
                     .CreateMulticlassClassificationExperiment(ExperimentTime)
@@ -74,12 +74,12 @@ namespace MNIST
                 PrintTopModels(experimentResult);
 
                 // STEP 4: Evaluate the model and print metrics
-                ConsoleHelper.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
+                ConsoleHelperAutoML.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
                 RunDetail<MulticlassClassificationMetrics> bestRun = experimentResult.BestRun;
                 ITransformer trainedModel = bestRun.Model;
                 var predictions = trainedModel.Transform(testData);
                 var metrics = mlContext.MulticlassClassification.Evaluate(data:predictions, labelColumnName: "Number", scoreColumnName: "Score");
-                ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
+                ConsoleHelperAutoML.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
 
                 // STEP 5: Save/persist the trained model to a .ZIP file
                 string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
@@ -115,17 +115,17 @@ namespace MNIST
                 .OrderByDescending(r => r.ValidationMetrics.MicroAccuracy).Take(3);
 
             Console.WriteLine("Top models ranked by accuracy --");
-            ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
+            ConsoleHelperAutoML.PrintMulticlassClassificationMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelperAutoML.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
         }
 
         private static void TestSomePredictions(MLContext mlContext)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
