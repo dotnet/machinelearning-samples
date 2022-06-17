@@ -65,6 +65,8 @@ namespace Clustering_Iris
             ConsoleHelper.PrintClusteringMetrics(trainer.ToString(), metrics);
 
             // STEP5: Save/persist the model as a .ZIP file
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("=============== End of training process ===============");

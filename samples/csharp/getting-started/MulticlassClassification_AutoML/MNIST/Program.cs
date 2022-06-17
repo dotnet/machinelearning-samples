@@ -82,6 +82,8 @@ namespace MNIST
                 ConsoleHelper.PrintMulticlassClassificationMetrics(bestRun.TrainerName, metrics);
 
                 // STEP 5: Save/persist the trained model to a .ZIP file
+                string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+                if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);

@@ -221,6 +221,8 @@ namespace AdvancedTaxiFarePrediction
         private static void SaveModel(MLContext mlContext, ITransformer model)
         {
             ConsoleHelper.ConsoleWriteHeader("=============== Saving the model ===============");
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(model, TrainDataView.Schema, ModelPath);
             Console.WriteLine($"The model is saved to {ModelPath}");
         }

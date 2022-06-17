@@ -77,6 +77,8 @@ namespace mnist
 
                 Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
+                string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+                if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);

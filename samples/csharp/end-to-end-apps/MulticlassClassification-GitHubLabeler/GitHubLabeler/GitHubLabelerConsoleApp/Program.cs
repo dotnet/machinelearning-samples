@@ -128,6 +128,8 @@ namespace GitHubLabeler
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");
