@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="3.2.2" />
+    <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="PLplot" Version="5.13.7" />
   </ItemGroup>
@@ -45,6 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="6.0.3" />
+    <PackageReference Update="FSharp.Core" Version="6.0.5" />
   </ItemGroup>
 </Project>
