@@ -502,6 +502,7 @@ MSLRWeb10K*Rows.tsv
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare*.csv
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/Data/taxi-fare.zip
 /samples/csharp/getting-started/Regression_TaxiFarePrediction/TaxiFarePrediction/MLModels/TaxiFareModel.zip
+/samples/csharp/getting-started/XOR/XOR/MLModels/XORModel*.zip
 
 /samples/csharp/end-to-end-apps/AnomalyDetection-Sales/SpikeDetectionE2EApp/MLModels/*.zip
 /samples/csharp/end-to-end-apps/DeepLearning_ImageClassification_TF/TFImageClassification/ML/TensorFlowModel/model.pb
