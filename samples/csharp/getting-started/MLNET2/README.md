@@ -29,5 +29,5 @@ The samples in this directory use the following datasets:
 
 ### NLP
 
-- **TextClassification** - C# console app that shows how to use the [Text Classification API](https://devblogs.microsoft.com/dotnet/introducing-the-ml-dotnet-text-classification-api-preview/)
+- **TextClassification** - C# console app that shows how to use the [Text Classification API](https://devblogs.microsoft.com/dotnet/introducing-the-ml-dotnet-text-classification-api-preview/). Model trained using [Model Builder](https://dotnet.microsoft.com/apps/machinelearning-ai/ml-dotnet/model-builder).
 - **SentenceSimilarity** - C# console app that shows how to use the Sentence Similarity API. Like the Text Classification API, the Sentence Similarity API uses a NAS-BERT transformer-based deep learning model built with TorchSharp to compare how similar two pieces of text are.

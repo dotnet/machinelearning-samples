@@ -5,11 +5,13 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMLQuickStart", "AutoMLQuickStart\AutoMLQuickStart.csproj", "{FF7822C0-A8B0-4281-A39A-1B87D41B28B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMLAdvanced", "AutoMLAdvanced\AutoMLAdvanced.csproj", "{41526444-3620-4D75-ACD6-622B3D7A7A6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMLAdvanced", "AutoMLAdvanced\AutoMLAdvanced.csproj", "{41526444-3620-4D75-ACD6-622B3D7A7A6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMLEstimators", "AutoMLEstimators\AutoMLEstimators.csproj", "{AFE8463A-9A7C-4352-B961-9AC249FF66DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMLEstimators", "AutoMLEstimators\AutoMLEstimators.csproj", "{AFE8463A-9A7C-4352-B961-9AC249FF66DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMLTrialRunner", "AutoMLTrialRunner\AutoMLTrialRunner.csproj", "{1733B19F-A77D-4221-B107-96DCBFDAA725}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMLTrialRunner", "AutoMLTrialRunner\AutoMLTrialRunner.csproj", "{1733B19F-A77D-4221-B107-96DCBFDAA725}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClassification", "TextClassification\TextClassification.csproj", "{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1733B19F-A77D-4221-B107-96DCBFDAA725}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1733B19F-A77D-4221-B107-96DCBFDAA725}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1733B19F-A77D-4221-B107-96DCBFDAA725}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

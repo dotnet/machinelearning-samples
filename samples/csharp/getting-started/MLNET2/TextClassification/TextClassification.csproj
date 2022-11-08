@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="2.0.0" />
+    <PackageReference Include="Microsoft.ML.TorchSharp" Version="0.20.0" />
+    <!--<PackageReference Include="TorchSharp-cpu" Version="0.98.1" />-->
+    <PackageReference Include="TorchSharp-cuda-windows" Version="0.98.1" />
+  </ItemGroup>
+  <ItemGroup Label="ReviewSentiment">
+    <None Include="ReviewSentiment.consumption.cs">
+      <DependentUpon>ReviewSentiment.mbconfig</DependentUpon>
+    </None>
+    <None Include="ReviewSentiment.training.cs">
+      <DependentUpon>ReviewSentiment.mbconfig</DependentUpon>
+    </None>
+    <None Include="ReviewSentiment.zip">
+      <DependentUpon>ReviewSentiment.mbconfig</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

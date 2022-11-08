@@ -10,11 +10,15 @@ namespace AutoMLTrialRunner
     public class AutoMLMonitor : IMonitor
     {
         private readonly SweepablePipeline _pipeline;
+        private readonly List<TrialResult> _completedTrials;
 
         public AutoMLMonitor(SweepablePipeline pipeline)
         {
             _pipeline = pipeline;
+            _completedTrials = new List<TrialResult>();
         }
+
+        public IEnumerable<TrialResult> GetCompletedTrials() => _completedTrials;
 
         public void ReportBestTrial(TrialResult result)
         {
@@ -27,6 +31,7 @@ namespace AutoMLTrialRunner
             var timeToTrain = result.DurationInMilliseconds;
             var pipeline = _pipeline.ToString(result.TrialSettings.Parameter);
             Console.WriteLine($"Trial {trialId} finished training in {timeToTrain}ms with pipeline {pipeline}");
+            _completedTrials.Add(result);
         }
 
         public void ReportFailTrial(TrialSettings settings, Exception exception = null)

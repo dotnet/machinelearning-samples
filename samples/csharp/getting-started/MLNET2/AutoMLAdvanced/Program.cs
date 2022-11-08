@@ -55,3 +55,6 @@ TrialResult experimentResults = await experiment.RunAsync(cts.Token);
 
 // Get best model
 var model = experimentResults.Model;
+
+// Get all completed trials
+var completedTrials = monitor.GetCompletedTrials();
