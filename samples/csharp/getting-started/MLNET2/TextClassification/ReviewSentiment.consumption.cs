@@ -68,7 +68,7 @@ namespace TextClassification
         {
             var mlContext = new MLContext();
 
-            // Uncomment code to use GPU for inference
+            // (Optional) Use GPU
             //mlContext.GpuDeviceId = 0;
             //mlContext.FallbackToCpu = false;
 

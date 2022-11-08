@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMLEstimators", "AutoMLE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMLTrialRunner", "AutoMLTrialRunner\AutoMLTrialRunner.csproj", "{1733B19F-A77D-4221-B107-96DCBFDAA725}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClassification", "TextClassification\TextClassification.csproj", "{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextClassification", "TextClassification\TextClassification.csproj", "{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentenceSimilarity", "SentenceSimilarity\SentenceSimilarity.csproj", "{2875388A-F02F-4AB0-A03D-B917ABA44A30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AE6732F-F414-4323-B73B-E4DDB0E2AC37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2875388A-F02F-4AB0-A03D-B917ABA44A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2875388A-F02F-4AB0-A03D-B917ABA44A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2875388A-F02F-4AB0-A03D-B917ABA44A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2875388A-F02F-4AB0-A03D-B917ABA44A30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
