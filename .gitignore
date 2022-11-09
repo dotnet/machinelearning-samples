@@ -331,3 +331,6 @@ ASALocalRun/
 samples/modelbuilder/ObjectDetection_StopSigns/StopSignDetectionML.Model/MLModel.zip
 samples/modelbuilder/ObjectDetection_StopSigns/StopSignDetectionML.Model/bestModel.onnx
 samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
+samples/csharp/getting-started/MLNET2/Data/*.csv
+samples/csharp/getting-started/MLNET2/Data/*.txt
+samples/csharp/getting-started/MLNET2/**/*.mbconfig

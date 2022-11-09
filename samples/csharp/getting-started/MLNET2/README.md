@@ -27,7 +27,7 @@ The samples in this directory use the following datasets:
   - Create sweepable estimators
 - **AutoMLTrialRunner** - C# console application that shows how to create your own trial runner.
 
-### NLP
+### Natural Language Processing (NLP)
 
-- **TextClassification** - C# console app that shows how to use the [Text Classification API](https://devblogs.microsoft.com/dotnet/introducing-the-ml-dotnet-text-classification-api-preview/). Model trained using [Model Builder](https://dotnet.microsoft.com/apps/machinelearning-ai/ml-dotnet/model-builder).
-- **SentenceSimilarity** - C# console app that shows how to use the Sentence Similarity API. Like the Text Classification API, the Sentence Similarity API uses a NAS-BERT transformer-based deep learning model built with TorchSharp to compare how similar two pieces of text are.
+- **TextClassification** - C# console app that shows how to use the [Text Classification API](https://devblogs.microsoft.com/dotnet/introducing-the-ml-dotnet-text-classification-api-preview/). Model is trained using [Model Builder](https://dotnet.microsoft.com/apps/machinelearning-ai/ml-dotnet/model-builder).
+- **SentenceSimilarity** - C# console app that shows how to use the Sentence Similarity API. Like the Text Classification API, the Sentence Similarity API uses a NAS-BERT transformer-based deep learning model built with [TorchSharp](https://github.com/dotnet/torchsharp) to compare how similar two pieces of text are.

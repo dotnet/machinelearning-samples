@@ -8,9 +8,11 @@ using static Microsoft.ML.DataOperationsCatalog;
 // Initialize MLContext
 MLContext ctx = new MLContext();
 
+var dataPath = Path.GetFullPath(@"..\..\..\..\Data\taxi-fare-train.csv");
+
 // Infer column information
 ColumnInferenceResults columnInference =
-    ctx.Auto().InferColumns("taxi-fare.csv", labelColumnName: "fare_amount", groupColumns: false);
+    ctx.Auto().InferColumns(dataPath, labelColumnName: "fare_amount", groupColumns: false);
 
 // Modify column inference results
 columnInference.ColumnInformation.NumericColumnNames.Remove("rate_code");
@@ -20,7 +22,7 @@ columnInference.ColumnInformation.CategoricalColumnNames.Add("rate_code");
 TextLoader loader = ctx.Data.CreateTextLoader(columnInference.TextLoaderOptions);
 
 // Load data into IDataView
-IDataView data = loader.Load("taxi-fare.csv");
+IDataView data = loader.Load(dataPath);
 
 // Split into train (80%), validation (20%) sets
 TrainTestData trainValidationData = ctx.Data.TrainTestSplit(data, testFraction: 0.2);

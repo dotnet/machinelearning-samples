@@ -1,57 +1,84 @@
 ﻿using AutoMLTrialRunner;
+using AutoMLTrialRunner.AutoMLTrialRunner;
 using Microsoft.ML;
 using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
 using Microsoft.ML.SearchSpace;
+using Microsoft.ML.Recommender;
 using static Microsoft.ML.DataOperationsCatalog;
+using Microsoft.ML.Trainers;
+using System.Reflection.Emit;
+using Microsoft.ML.TorchSharp;
 
 // Initialize MLContext
 MLContext ctx = new MLContext();
 
+// (Recommended) Use GPU
+ctx.GpuDeviceId = 0;
+ctx.FallbackToCpu = false;
+
+var dataPath = Path.GetFullPath(@"..\..\..\..\Data\yelp_labelled.txt");
+
+var textColumnName = "col0";
+
 // Infer column information
 ColumnInferenceResults columnInference =
-    ctx.Auto().InferColumns("taxi-fare.csv", labelColumnName: "fare_amount", groupColumns: false);
+    ctx.Auto().InferColumns(dataPath, labelColumnIndex: 1, groupColumns: false);
 
 // Create text loader
 TextLoader loader = ctx.Data.CreateTextLoader(columnInference.TextLoaderOptions);
 
 // Load data into IDataView
-IDataView data = loader.Load("taxi-fare.csv");
+IDataView data = loader.Load(dataPath);
 
 // Split into train (80%), validation (20%) sets
 TrainTestData trainValidationData = ctx.Data.TrainTestSplit(data, testFraction: 0.2);
 
-var ssaSearchSpace = new SearchSpace<SSAOption>();
+// Initialize serach space
+var tcSearchSpace = new SearchSpace<TCOption>();
 
-var ssaFactory = (MLContext ctx, SSAOption param) =>
+// Create factory for Text Classification trainer
+var tcFactory = (MLContext ctx, TCOption param) =>
 {
-    return ctx.Forecasting.ForecastBySsa(
-        outputColumnName: "prediction",
-        inputColumnName: "load",
-        windowSize: param.WindowSize,
-        seriesLength: param.SeriesLength,
-        trainSize: param.TrainSize,
-        horizon: param.Horizon);
+    return ctx.MulticlassClassification.Trainers.TextClassification(
+        sentence1ColumnName: textColumnName,
+        batchSize:param.BatchSize);
 };
 
-var ssaSweepableEstimator = ctx.Auto().CreateSweepableEstimator(ssaFactory, ssaSearchSpace);
+// Create text classification sweepable estimator
+var mfEstimator = 
+    ctx.Auto().CreateSweepableEstimator(tcFactory, tcSearchSpace);
 
-var ssaPipeline =
-    new EstimatorChain<ITransformer>()
-        .Append(ssaSweepableEstimator);
+// Define text classification pipeline
+var pipeline =
+    ctx.Transforms.Conversion.MapValueToKey(columnInference.ColumnInformation.LabelColumnName)
+        .Append(mfEstimator);
 
-var ssaRunner = new SSARunner(ctx, trainValidationData, labelColumnName: "load", pipeline: ssaPipeline);
+// Initialize custom text classification runner
+var mfRunner = 
+    new TCRunner(
+        context: ctx, 
+        data: trainValidationData, 
+        pipeline: pipeline);
 
-AutoMLExperiment ssaExperiment = ctx.Auto().CreateExperiment();
+// Create AutoML experiment
+AutoMLExperiment experiment = ctx.Auto().CreateExperiment();
 
-ssaExperiment
-    .SetPipeline(ssaPipeline)
-    .SetRegressionMetric(RegressionMetric.RootMeanSquaredError, labelColumn: "load", scoreColumn: "prediction")
-    .SetTrainingTimeInSeconds(60)
+// Configure AutoML experiment
+experiment
+    .SetPipeline(pipeline)
+    .SetMulticlassClassificationMetric(MulticlassClassificationMetric.MicroAccuracy, labelColumn: columnInference.ColumnInformation.LabelColumnName)
+    .SetTrainingTimeInSeconds(120)
     .SetDataset(trainValidationData)
-    .SetTrialRunner(ssaRunner);
+    .SetTrialRunner(mfRunner);
 
-var ssaCts = new CancellationTokenSource();
-TrialResult ssaExperimentResults = await ssaExperiment.RunAsync(ssaCts.Token);
+// Log experiment trials
+var monitor = new AutoMLMonitor(pipeline);
+experiment.SetMonitor(monitor);
 
-var model = ssaExperimentResults.Model;
+// Run experiment
+var mfCts = new CancellationTokenSource();
+TrialResult textClassificationExperimentResults = await experiment.RunAsync(mfCts.Token);
+
+// Get model
+var model = textClassificationExperimentResults.Model;

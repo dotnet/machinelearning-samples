@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML.AutoML" Version="0.20.0" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="0.20.0" />
+    <PackageReference Include="TorchSharp-cuda-windows" Version="0.98.3" />
   </ItemGroup>
 
 </Project>
