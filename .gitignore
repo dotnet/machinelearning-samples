@@ -334,3 +334,4 @@ samples/modelbuilder/ObjectDetection_StopSigns/assets.zip
 samples/csharp/getting-started/MLNET2/Data/*.csv
 samples/csharp/getting-started/MLNET2/Data/*.txt
 samples/csharp/getting-started/MLNET2/**/*.mbconfig
+samples/modelbuilder/TextClassification_Sentiment_Razor/SentimentRazor/**/*.mbconfig
