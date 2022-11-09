@@ -46,20 +46,16 @@ var tcFactory = (MLContext ctx, TCOption param) =>
 };
 
 // Create text classification sweepable estimator
-var mfEstimator = 
+var tcEstimator = 
     ctx.Auto().CreateSweepableEstimator(tcFactory, tcSearchSpace);
 
 // Define text classification pipeline
 var pipeline =
     ctx.Transforms.Conversion.MapValueToKey(columnInference.ColumnInformation.LabelColumnName)
-        .Append(mfEstimator);
+        .Append(tcEstimator);
 
 // Initialize custom text classification runner
-var mfRunner = 
-    new TCRunner(
-        context: ctx, 
-        data: trainValidationData, 
-        pipeline: pipeline);
+var tcRunner = new TCRunner(context: ctx, data: trainValidationData, pipeline: pipeline);
 
 // Create AutoML experiment
 AutoMLExperiment experiment = ctx.Auto().CreateExperiment();
@@ -70,15 +66,15 @@ experiment
     .SetMulticlassClassificationMetric(MulticlassClassificationMetric.MicroAccuracy, labelColumn: columnInference.ColumnInformation.LabelColumnName)
     .SetTrainingTimeInSeconds(120)
     .SetDataset(trainValidationData)
-    .SetTrialRunner(mfRunner);
+    .SetTrialRunner(tcRunner);
 
 // Log experiment trials
 var monitor = new AutoMLMonitor(pipeline);
 experiment.SetMonitor(monitor);
 
 // Run experiment
-var mfCts = new CancellationTokenSource();
-TrialResult textClassificationExperimentResults = await experiment.RunAsync(mfCts.Token);
+var tcCts = new CancellationTokenSource();
+TrialResult textClassificationExperimentResults = await experiment.RunAsync(tcCts.Token);
 
 // Get model
 var model = textClassificationExperimentResults.Model;

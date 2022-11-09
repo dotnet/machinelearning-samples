@@ -7,6 +7,7 @@ using static Microsoft.ML.DataOperationsCatalog;
 // Initialize MLContext
 MLContext ctx = new MLContext();
 
+// Define data path
 var dataPath = Path.GetFullPath(@"..\..\..\..\Data\taxi-fare-train.csv");
 
 // Infer column information

@@ -81,7 +81,7 @@ namespace AutoMLTrialRunner
                     // Get pipeline parameters
                     var parameter = settings.Parameter["_pipeline_"];
 
-                    // Build pipeline from parameters
+                    // Use parameters to build pipeline
                     var pipeline = _pipeline.BuildFromOption(_context, parameter);
 
                     // Train model
@@ -93,6 +93,7 @@ namespace AutoMLTrialRunner
                     // Get metrics
                     var evaluationMetrics = _context.MulticlassClassification.Evaluate(predictions, labelColumnName: _labelColumnName);
                     var chosenMetric = GetMetric(evaluationMetrics);
+
                     return new TrialResult()
                     {
                         Metric = chosenMetric,
@@ -113,6 +114,7 @@ namespace AutoMLTrialRunner
                 }
             }
 
+            // Helper function to choose metric used by experiment
             private double GetMetric(MulticlassClassificationMetrics metric)
             {
                 return _metric switch
