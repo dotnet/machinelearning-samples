@@ -33,8 +33,9 @@ var loaderOptions = new TextLoader.Options()
     MaxRows = 1000 // Dataset has 75k rows. Only load 1k for quicker training
 };
 
+var dataPath = Path.GetFullPath(@"..\..\..\..\Data\home-depot-sentence-similarity.csv");
 var textLoader = ctx.Data.CreateTextLoader(loaderOptions);
-var data = textLoader.Load(@"C:\Datasets\home-depot-sentence-similarity.csv");
+var data = textLoader.Load(dataPath);
 
 // Split data into 80% training, 20% testing
 var dataSplit = ctx.Data.TrainTestSplit(data, testFraction: 0.2);

@@ -40,7 +40,7 @@ experiment
     .SetPipeline(pipeline)
     .SetRegressionMetric(RegressionMetric.RSquared, labelColumn: columnInference.ColumnInformation.LabelColumnName)
     .SetTrainingTimeInSeconds(60)
-    .SetCostFrugalTuner()
+    .SetGridSearchTuner()
     .SetDataset(trainValidationData);
 
 // Log experiment trials

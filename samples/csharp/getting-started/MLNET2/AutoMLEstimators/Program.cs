@@ -40,6 +40,8 @@ var sdcaFactory = (MLContext ctx, SdcaOption param) =>
     sdcaOption.L1Regularization = param.L1Regularization;
     sdcaOption.L2Regularization = 0.02f;
 
+    sdcaOption.LabelColumnName = columnInference.ColumnInformation.LabelColumnName;
+
     return ctx.Regression.Trainers.Sdca(sdcaOption);
 };
 
