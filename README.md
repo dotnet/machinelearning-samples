@@ -151,6 +151,8 @@ The ML.NET CLI (command-line interface) is a tool you can run on any command-pro
 
 ## AutoML API samples: (Preview state)
 
+**THESE SAMPLES USE THE 0.1.x VERSION OF THE AUTOML API. WHILE THESE APIS STILL WORK IN VERSION 0.2.x WE RECOMMEND USING THE NEW APIS INTRODUCED IN 0.2.x AND LATER. FOR 0.2.x SAMPLES, SEE [ML.NET 2.0 Samples](samples/csharp/getting-started/MLNET2/README.md)**. 
+
 ML.NET AutoML API is basically a set of libraries packaged as a NuGet package you can use from your .NET code. AutoML eliminates the task of selecting different algorithms, hyperparameters. AutoML will intelligently generate many combinations of algorithms and hyperparameters and will find high quality models for you.
 
 | AutoML API samples                    |
