@@ -14,7 +14,6 @@ namespace SentimentAnalysisFunctionsApp
 {
     public class AnalyzeSentiment
     {
-
         private readonly PredictionEnginePool<SentimentData, SentimentPrediction> _predictionEnginePool;
 
         // AnalyzeSentiment class constructor
@@ -25,12 +24,12 @@ namespace SentimentAnalysisFunctionsApp
 
         [FunctionName("AnalyzeSentiment")]
         public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
-        ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            //Parse HTTP Request Body
+            // Parse HTTP Request Body
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             SentimentData data = JsonConvert.DeserializeObject<SentimentData>(requestBody);
 
@@ -41,7 +40,7 @@ namespace SentimentAnalysisFunctionsApp
             string sentiment = Convert.ToBoolean(prediction.Prediction) ? "Positive" : "Negative";
 
             //Return Prediction
-            return (ActionResult)new OkObjectResult(sentiment);
+            return new OkObjectResult(sentiment);
         }
     }
 }

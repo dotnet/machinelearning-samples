@@ -1,9 +1,10 @@
-﻿using System;
-using System.IO;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
 using SentimentAnalysisFunctionsApp;
 using SentimentAnalysisFunctionsApp.DataModels;
+using System.IO;
+using System;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace SentimentAnalysisFunctionsApp
