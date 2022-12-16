@@ -65,7 +65,7 @@ A challenge when making a single prediction with an ML.NET model in multi-thread
 
 #### Solutions
 
-For improved performance and thread safety, use the `PredictionEnginePool` service, which creates an `ObjectPool` of `PredictionEngine` objects for application use. To use it within your application, add the `Microsoft.Extensions.ML` NuGet package to your project and register the `PredictionEnginPool` as you would any other dependency inside the `Startup` class of the *SentimentRazorML* project. 
+For improved performance and thread safety, use the `PredictionEnginePool` service, which creates an `ObjectPool` of `PredictionEngine` objects for application use. To use it within your application, add the `Microsoft.Extensions.ML` NuGet package to your project and register the `PredictionEnginePool` as you would any other dependency inside the `Startup` class of the *SentimentRazorML* project. 
 
 ```csharp
 services.AddPredictionEnginePool<ModelInput, ModelOutput>()
