@@ -125,7 +125,7 @@ _Note, if the model were trained to detect a different number of classes this va
 **The projects in this solution use .NET Core 3.0.  In order to run this sample, you must install the .NET Core SDK 3.0.  To do this either:**
 
 1. Manually install the SDK by going to [.NET Core 3.0 download page](https://aka.ms/netcore3download) and download the latest **.NET Core Installer** in the **SDK** column.
-2. Or, if you're using Visual Studio 2019, go to: _**Tools > Options > Environment > Preview Features**_ and check the box next to: _**Use previews of the .NET Core SDK**_
+2. Or, if you're using Visual Studio 2019 or subsequent versions, go to: _**Tools > Options > Environment > Preview Features**_ and check the box next to: _**Use previews of the .NET Core SDK**_
 
 ### The solution contains three projects
 
