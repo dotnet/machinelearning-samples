@@ -218,7 +218,7 @@ ITransformer trainedModel = pipeline.Fit(trainDataView);
 
 After the training, we evaluate the model's quality by using the test dataset.
 
-The `Evaluate` function needs an `IDataView` with the predictions generated from the test dataset by calling Transfor().
+The `Evaluate` function needs an `IDataView` with the predictions generated from the test dataset by calling Transform().
 
 ```csharp
 // 5. Get the quality metrics (accuracy, etc.)
