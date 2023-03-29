@@ -1,0 +1,28 @@
+.control-container {
+    background-color: #fff;
+    color: #222;
+    padding: 1em;
+    box-shadow: 0 8px 10px 10px rgba(0,0,0,.15);
+    display: grid;
+    grid-gap: .5em;
+    max-width: 600px;
+    height: 610px;
+    margin: 2em;
+}
+
+.control-container .button {
+    align-self: center;
+    justify-self: center;
+}
+
+@media (min-width: 1050px){
+    .control-container {
+        width: calc(100% - 2em);
+    }
+    .control-container:first-child {
+        justify-self: end;
+    }
+    .control-container:last-child {
+        justify-self: start;
+    }
+}
