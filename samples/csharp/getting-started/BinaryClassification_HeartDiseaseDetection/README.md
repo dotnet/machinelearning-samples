@@ -54,7 +54,7 @@ To solve this problem, first we will build an ML model. Then we will train the m
 
 Building a model includes: 
 
-* Define the data's schema maped to the datasets to load (`HeartTraining.tsv` and `HeartTest.csv`) with a TextLoader.
+* Define the data's schema maped to the datasets to load (`HeartTraining.csv` and `HeartTest.csv`) with a TextLoader.
 
 * Create an Estimator by concatenateing the features into single 'features' column
 
