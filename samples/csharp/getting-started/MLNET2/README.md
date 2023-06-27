@@ -7,15 +7,11 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
 - aspnet-core
-- vs
-- vs-ide
 - mlnet
 ---
 
 # ML.NET 2.0 Samples
-
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
@@ -35,11 +31,11 @@ The samples in this directory use the following datasets:
 
 To use these samples, download the datasets above and place them in the *Data* directory.
 
-In Visual Studio, set any of the projects as the [Startup project and run the application](https://learn.microsoft.com/visualstudio/get-started/csharp/run-program?view=vs-2022). 
+In Visual Studio, set any of the projects as the [Startup project and run the application](https://learn.microsoft.com/visualstudio/get-started/csharp/run-program?view=vs-2022).
 
 **dotnet CLI**
 
-You may have to update the `dataPath` in the console apps. Then, in the terminal, navigate to the project directory and enter `dotnet run`. 
+You may have to update the `dataPath` in the console apps. Then, in the terminal, navigate to the project directory and enter `dotnet run`.
 
 ## Samples
 

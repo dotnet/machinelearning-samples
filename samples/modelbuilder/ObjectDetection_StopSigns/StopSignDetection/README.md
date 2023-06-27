@@ -7,7 +7,6 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
 - vs
 ---
 

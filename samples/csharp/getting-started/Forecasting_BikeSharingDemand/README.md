@@ -7,8 +7,6 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
-- vs
 - mlnet
 ---
 
@@ -18,7 +16,7 @@ products:
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
 | v1.6.0 | Dynamic API | Up-to-date | Console app | SQL Server | Demand prediction | Forecasting | Single Spectrum Analysis |
 
-In this sample, you can see how to load data from a relational database using the Database Loader to train a forecasting model that predicts bike rental demand. 
+In this sample, you can see how to load data from a relational database using the Database Loader to train a forecasting model that predicts bike rental demand.
 
 For a detailed explanation of how to build this application, see the accompanying [tutorial](https://docs.microsoft.com/dotnet/machine-learning/tutorials/time-series-demand-forecasting) on the Microsoft Docs site.
 
@@ -31,7 +29,7 @@ Bike Sharing Demand competition from Kaggle](https://www.kaggle.com/c/bike-shari
 
 The data used in this sample comes from the [UCI Bike Sharing Dataset](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset). Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg, [Web Link](https://link.springer.com/article/10.1007%2Fs13748-013-0040-3).
 
-The original dataset contains several columns corresponding to seasonality and weather. For brevity and because the technique used in this sample only requires the values from a single numerical column, the original dataset has been enhanced to include only the following columns:  
+The original dataset contains several columns corresponding to seasonality and weather. For brevity and because the technique used in this sample only requires the values from a single numerical column, the original dataset has been enhanced to include only the following columns:
 
 - **dteday**: The date of the observation.
 - **year**: The encoded year of the observation (0=2011, 1=2012).
