@@ -7,15 +7,11 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
 - aspnet-core
-- vs
-- vs-ide
 - mlnet
 ---
 
 # Restaurant Violation Inspections
-
 
 | ML.NET version | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
