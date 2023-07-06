@@ -6,6 +6,8 @@ open Microsoft.ML
 open Microsoft.ML.Data
 open Microsoft.ML.Transforms
 
+open Common
+
 // Data models
 [<CLIMutable>]
 type TransactionObservation = {
@@ -71,15 +73,27 @@ let main _ =
 
     let modelFile = Path.Combine (dataDirectory, "fastTree.zip")
 
+    let assetsPath = dataDirectory
+    let assetsRelativePath = assetsPath 
+    let commonDatasetsRelativePath = @"../../../../../../../../datasets" 
+    let fileName = "creditcardfraud-dataset"
+    let zipFileName = fileName + ".zip"
+    let downloadUrl = "https://bit.ly/3GtwH1S"
+    let destFolder = assetsPath
+    let destFiles: string list = [inputFile]
+
     (*
     Prepare input file from original zipped dataset
     *)
 
-    if not (File.Exists (inputFile))
-    then
-        printfn "Extracting dataset"
-        ZipFile.ExtractToDirectory (zippedDatasetFile, dataDirectory)
+    //if not (File.Exists (inputFile))
+    //then
+    //    printfn "Extracting dataset"
+    //    ZipFile.ExtractToDirectory (zippedDatasetFile, dataDirectory)
 
+    let datasetPath = 
+        __SOURCE_DIRECTORY__ 
+        |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
     
     let seed = Nullable 1
     let mlContext = MLContext seed

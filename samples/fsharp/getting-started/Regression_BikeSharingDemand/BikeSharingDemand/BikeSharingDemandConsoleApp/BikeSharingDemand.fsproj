@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="DataStructures\DataStructures.fs" />
     <Compile Include="..\..\..\..\common\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+    <Compile Include="..\..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
+    <Compile Include="DataStructures\DataStructures.fs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ML.DataView" Version="$(MicrosoftMLVersion)" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\datasets\hour_test.csv" Link="..\..\..\..\Data\hour_test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\..\datasets\hour_train.csv" Link="..\..\..\..\Data\hour_train.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="6.0.5" />
   </ItemGroup>
 
 </Project>

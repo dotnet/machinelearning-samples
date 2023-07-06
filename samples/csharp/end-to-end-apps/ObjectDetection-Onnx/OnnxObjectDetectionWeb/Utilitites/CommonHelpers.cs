@@ -10,6 +10,7 @@ namespace OnnxObjectDetectionWeb.Utilities
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+            fullPath = Path.GetFullPath(fullPath); // Resolve the path to simplify debugging
             return fullPath;
         }
     }

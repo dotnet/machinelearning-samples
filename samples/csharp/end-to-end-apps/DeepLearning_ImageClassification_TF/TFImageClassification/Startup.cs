@@ -25,6 +25,9 @@ namespace TFImageClassification
 
             _tensorFlowModelFilePath = GetAbsolutePath(Configuration["MLModel:TensorFlowModelFilePath"]);
 
+            // Restart to copy the downloaded model graph to the runtime directory
+            if (!File.Exists(_tensorFlowModelFilePath)) System.Environment.Exit(0);
+
             /////////////////////////////////////////////////////////////////
             //Configure the ML.NET model for the pre-trained TensorFlow model.
             var tensorFlowModelConfigurator = new TensorFlowModelConfigurator(_tensorFlowModelFilePath);

@@ -2,7 +2,8 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-
+open Common.FileUtil
+open Common
 
 [<CLIMutable>]
 type HeartData = 
@@ -107,6 +108,7 @@ printfn "************************************************************"
 printfn ""
 printfn ""
 printfn "=============== Saving the model to a file ==============="
+FileUtil.CreateParentDirectoryIfNotExists modelPath
 mlContext.Model.Save(trainedModel, trainingDataView.Schema, modelPath)
 printfn ""
 printfn ""

@@ -83,9 +83,9 @@ namespace OnnxObjectDetectionWeb.Infrastructure
             {
                 File.Delete(filePathName);
             }
-            catch (Exception e)
+            catch (Exception) //(Exception e)
             {
-                throw e;
+                //throw e;
             }
         }
 

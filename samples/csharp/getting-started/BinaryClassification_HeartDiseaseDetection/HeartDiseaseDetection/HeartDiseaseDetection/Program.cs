@@ -73,6 +73,8 @@ namespace HeartDiseasePredictionConsoleApp
             Console.WriteLine("");
 
             Console.WriteLine("=============== Saving the model to a file ===============");
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
             Console.WriteLine("");
             Console.WriteLine("");

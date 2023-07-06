@@ -3,13 +3,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
 using Microsoft.OpenApi.Models;
+using System.IO;
 using System.Threading.Tasks;
 
 // Configure app
 var builder = WebApplication.CreateBuilder(args);
 
+string MLNetModelPath = Path.GetFullPath(
+    Path.Combine("..\\..\\..\\..\\LandUse", "LandUse.zip"));
+
 builder.Services.AddPredictionEnginePool<LandUse.ModelInput, LandUse.ModelOutput>()
-    .FromFile("LandUse.zip");
+    .FromFile(MLNetModelPath);
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>

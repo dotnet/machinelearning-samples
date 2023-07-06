@@ -6,6 +6,8 @@ using Microsoft.ML.Data;
 using Console = Colorful.Console;
 using System.Drawing;
 using System.Diagnostics;
+using System.Collections.Generic;
+using Common;
 
 namespace MovieRecommenderModel
 {
@@ -14,8 +16,18 @@ namespace MovieRecommenderModel
 
     class Program
     {
+        private const string datasetFile = "MovieRecommendation2";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://bit.ly/3MUAfgr";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+
         private static string BaseModelRelativePath = @"../../../Model";
         private static string ModelRelativePath = $"{BaseModelRelativePath}/model.zip";
+        private static string PredictModelRelativePath = 
+            @"../../../../MovieRecommender/movierecommender/Models";
+        private static string PredictModelPath = Path.GetFullPath(
+            $"{PredictModelRelativePath}/model.zip");
 
         private static string BaseDataSetRelativepath = @"../../../Data";
         private static string TrainingDataRelativePath = $"{BaseDataSetRelativepath}/ratings_train.csv";
@@ -27,6 +39,11 @@ namespace MovieRecommenderModel
         
         static void Main(string[] args)
         {
+            List<string> destFiles = new List<string>()
+                { TrainingDataRelativePath, TestDataRelativePath };
+            Web.DownloadBigFile(BaseDataSetRelativepath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
+
             Color color = Color.FromArgb(130,150,115);
 
             //Call the following piece of code for splitting the ratings.csv into ratings_train.csv and ratings.test.csv.
@@ -85,7 +102,12 @@ namespace MovieRecommenderModel
 
             //STEP 8:  Save model to disk
             Console.WriteLine("=============== Writing model to the disk ===============", color);
-            Console.WriteLine();mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
+            Console.WriteLine();
+            mlContext.Model.Save(model, trainingDataView.Schema, ModelPath);
+            // Copy the model to the prediction directory, if it does not exist
+            if (!File.Exists(PredictModelPath)) File.Copy(ModelPath, PredictModelPath);
 
             Console.WriteLine("=============== Re-Loading model from the disk ===============", color);
             Console.WriteLine();

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ImageClassification.Train", "ImageClassification.Train\ImageClassification.Train.fsproj", "{85F30786-C364-4498-8CB9-208575B9A1AC}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Train", "ImageClassification.Train\ImageClassification.Train.fsproj", "{85F30786-C364-4498-8CB9-208575B9A1AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85F30786-C364-4498-8CB9-208575B9A1AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +27,11 @@ Global
 		{85F30786-C364-4498-8CB9-208575B9A1AC}.Release|x64.Build.0 = Release|Any CPU
 		{85F30786-C364-4498-8CB9-208575B9A1AC}.Release|x86.ActiveCfg = Release|Any CPU
 		{85F30786-C364-4498-8CB9-208575B9A1AC}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD8A8D9A-968A-4765-9A85-1AAA7924D711}
 	EndGlobalSection
 EndGlobal

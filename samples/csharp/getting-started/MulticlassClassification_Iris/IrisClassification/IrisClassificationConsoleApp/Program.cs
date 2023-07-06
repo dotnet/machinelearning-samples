@@ -75,6 +75,8 @@ namespace MulticlassClassification_Iris
             Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
         }

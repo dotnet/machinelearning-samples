@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SpamDetectionConsoleApp", "SpamDetectionConsoleApp\SpamDetectionConsoleApp.fsproj", "{1A8ED628-6D3B-4595-B498-FCCB105A9571}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A8ED628-6D3B-4595-B498-FCCB105A9571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A8ED628-6D3B-4595-B498-FCCB105A9571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A8ED628-6D3B-4595-B498-FCCB105A9571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A8ED628-6D3B-4595-B498-FCCB105A9571}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63A24600-925B-473E-AA2F-3AA9AEFB68F7}
+	EndGlobalSection
+EndGlobal

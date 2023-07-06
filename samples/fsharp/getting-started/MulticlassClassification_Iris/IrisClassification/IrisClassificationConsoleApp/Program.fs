@@ -6,6 +6,7 @@ open Microsoft.ML
 open MulticlassClassification_Iris
 open MulticlassClassification_Iris.DataStructures
 open Microsoft.ML.Data
+open Common
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -49,6 +50,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.printMultiClassClassificationMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
     mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs);
 

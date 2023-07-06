@@ -2,12 +2,13 @@
 
 open System
 open System.IO
-open System.IO.Compression
-open System.Net
+//open System.IO.Compression
+//open System.Net
 open Microsoft.ML
 open Microsoft.ML.Data
-open Microsoft.ML.Transforms
+//open Microsoft.ML.Transforms
 open Microsoft.ML.Vision
+open Common
 
 // Define input and output schema
 [<CLIMutable>]
@@ -24,24 +25,24 @@ type ImagePrediction = {
 }
 
 // Helper functions
-let downloadZippedImageSetAsync (fileName:string) (downloadUrl:string) (imageDownloadFolder:string) = 
-    async {
-        let zippedPath = Path.Join(imageDownloadFolder, fileName)
-        let unzippedPath = Path.Join(imageDownloadFolder,Path.GetFileNameWithoutExtension(zippedPath));
+//let downloadZippedImageSetAsync (fileName:string) (downloadUrl:string) (imageDownloadFolder:string) = 
+//    async {
+//        let zippedPath = Path.Join(imageDownloadFolder, fileName)
+//        let unzippedPath = Path.Join(imageDownloadFolder, Path.GetFileNameWithoutExtension(zippedPath));
 
-        if not (File.Exists zippedPath) then
-            let client = new WebClient()
-            client.DownloadFile(Uri(downloadUrl), zippedPath)
+//        if not (File.Exists zippedPath) then
+//            let client = new WebClient()
+//            client.DownloadFile(Uri(downloadUrl), zippedPath)
 
-        if not (Directory.Exists unzippedPath) then
-            ZipFile.ExtractToDirectory(zippedPath, unzippedPath)
+//        if not (Directory.Exists unzippedPath) then
+//            ZipFile.ExtractToDirectory(zippedPath, unzippedPath)
 
-        return Path.Join(unzippedPath,Path.GetFileNameWithoutExtension(fileName))
-    }
+//        return Path.Join(unzippedPath, Path.GetFileNameWithoutExtension(fileName))
+//    }
 
 let loadImagesFromDirectory (path:string) (useDirectoryAsLabel:bool) = 
 
-    let files = Directory.GetFiles(path, "*",searchOption=SearchOption.AllDirectories)
+    let files = Directory.GetFiles(path, "*", searchOption=SearchOption.AllDirectories)
 
     files
     |> Array.filter(fun file -> 
@@ -65,16 +66,42 @@ let loadImagesFromDirectory (path:string) (useDirectoryAsLabel:bool) =
 
 [<EntryPoint>]
 let main argv =
+
+    //let assetsPath = ""
+    //let assetsPath = @"ImageClassification.Train/Data" 
+    let assetsPath = @"ImageClassification.Train" 
+    //let modelsLocation = @"../../../MLModels"
+    let assetsRelativePath = Path.Combine(@"../../../../", assetsPath)
+    let commonDatasetsRelativePath = @"../../../../../../../../datasets"
     
-    let fileName = "flower_photos_small_set.zip"
-    let downloadUrl = "https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D"
- 
+    // Broken link:
+    //let downloadUrl = "https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D"
+
+    let fileName = "flower_photos_small_set"
+    let zipFileName = fileName + ".zip"
+    let downloadUrl = "https://bit.ly/3fkRKYy" // flower_photos_small_set.zip
+    //let fileName = "flower_photos"
+    //let zipFileName = fileName + ".tgz"
+    //let downloadUrl = "https://bit.ly/3HZmnz1" // flower_photos.tgz 
+    
+    let datasetPath =  Path.GetFullPath(Path.Combine(assetsRelativePath, fileName))
+    let destFolder = assetsRelativePath 
+    let destFiles: string list = []
+
     // Download Data
-    let datasetPath = 
-        __SOURCE_DIRECTORY__ 
-        |> downloadZippedImageSetAsync fileName downloadUrl
-        |> Async.RunSynchronously 
+    //let datasetPath = 
+    //    __SOURCE_DIRECTORY__ 
+    //    |> Web.downloadZippedImageSetAsync zipFileName downloadUrl
+    //    |> Async.RunSynchronously 
     
+    //let datasetPath = 
+    //    __SOURCE_DIRECTORY__ 
+    //    |> Web.downloadZippedImageSet zipFileName downloadUrl
+    
+    let datasetPath2 = 
+        __SOURCE_DIRECTORY__ 
+        |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
+
     // Initialize MLContext
     let mlContext = MLContext()
 
@@ -92,6 +119,10 @@ let main argv =
         EstimatorChain()
             .Append(mlContext.Transforms.Conversion.MapValueToKey("LabelAsKey","Label"))
             .Append(mlContext.Transforms.LoadRawImageBytes("Image", null, "ImagePath"))    
+
+    // System.EntryPointNotFoundException HResult=0x80131523
+    // Unable to find an entry point named 'TF_StringEncodedSize' in DLL 'tensorflow':
+    // Max compatible version for SciSharp.TensorFlow.Redist: 2.3.1 < 2.7.0
 
     // Preprocess the data
     let preprocessedData = 
@@ -121,6 +152,9 @@ let main argv =
             .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel","LabelAsKey"))
 
     // Train the model
+    // System.EntryPointNotFoundException HResult=0x80131523
+    // Unable to find an entry point named 'TF_StringEncodedSize' in DLL 'tensorflow':
+    // Max compatible version for SciSharp.TensorFlow.Redist: 2.3.1 < 2.7.0
     let trainedModel = 
         train 
         |> trainingPipeline.Fit

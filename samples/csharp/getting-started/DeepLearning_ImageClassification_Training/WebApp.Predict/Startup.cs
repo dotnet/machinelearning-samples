@@ -45,8 +45,20 @@ namespace ImageClassification.WebApp
             /////////////////////////////////////////////////////////////////////////////
             // Register the PredictionEnginePool as a service in the IoC container for DI.
             //
+            var modelPath = Configuration["MLModel:MLModelFilePath"];
+            if (!File.Exists(modelPath))
+            {
+                // Use directly the last saved:
+                var modelFileName = Path.GetFileName(modelPath);
+                var modelFolder = Path.GetDirectoryName(modelPath);
+                var trainRelativePath = @"..\..\..\ImageClassification.Train\assets\outputs\";
+                var imageClassifierModelZipFilePath = Path.GetFullPath (
+                    Path.Combine(modelFolder, "inputs", trainRelativePath, modelFileName));
+                modelPath = imageClassifierModelZipFilePath;
+                if (!File.Exists(modelPath)) Environment.Exit(0);
+            }
             services.AddPredictionEnginePool<InMemoryImageData, ImagePrediction>()
-                    .FromFile(Configuration["MLModel:MLModelFilePath"]);
+                    .FromFile(modelPath);
 
             // (Optional) Get the pool to initialize it and warm it up.       
             //WarmUpPredictionEnginePool(services);

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PowerAnomalyDetection", "PowerAnomalyDetection\PowerAnomalyDetection.fsproj", "{DA2AAF28-3053-4BC4-998E-D53BC0CD9659}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA2AAF28-3053-4BC4-998E-D53BC0CD9659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA2AAF28-3053-4BC4-998E-D53BC0CD9659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA2AAF28-3053-4BC4-998E-D53BC0CD9659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA2AAF28-3053-4BC4-998E-D53BC0CD9659}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BC0E946-B2ED-4530-99E2-A38FD432FD43}
+	EndGlobalSection
+EndGlobal

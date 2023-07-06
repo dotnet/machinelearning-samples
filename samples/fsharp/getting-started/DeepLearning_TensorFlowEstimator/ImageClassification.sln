@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Train", "ImageClassification.Train\ImageClassification.Train.fsproj", "{E0566D6C-4C16-452E-AE00-6DA78AB3B889}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ImageClassification.Predict", "ImageClassification.Predict\ImageClassification.Predict.fsproj", "{9C43BCEE-4AEC-43EC-91FA-92DE9A23EBCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0566D6C-4C16-452E-AE00-6DA78AB3B889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0566D6C-4C16-452E-AE00-6DA78AB3B889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0566D6C-4C16-452E-AE00-6DA78AB3B889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0566D6C-4C16-452E-AE00-6DA78AB3B889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C43BCEE-4AEC-43EC-91FA-92DE9A23EBCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C43BCEE-4AEC-43EC-91FA-92DE9A23EBCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C43BCEE-4AEC-43EC-91FA-92DE9A23EBCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C43BCEE-4AEC-43EC-91FA-92DE9A23EBCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D12BB44A-29A2-40D0-8D72-16879880B6AB}
+	EndGlobalSection
+EndGlobal

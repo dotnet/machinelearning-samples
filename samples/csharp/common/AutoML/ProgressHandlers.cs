@@ -15,16 +15,16 @@ namespace Common
         {
             if (_iterationIndex++ == 0)
             {
-                ConsoleHelper.PrintBinaryClassificationMetricsHeader();
+                ConsoleHelperAutoML.PrintBinaryClassificationMetricsHeader();
             }
 
             if (iterationResult.Exception != null)
             {
-                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+                ConsoleHelperAutoML.PrintIterationException(iterationResult.Exception);
             }
             else
             {
-                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                ConsoleHelperAutoML.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
                     iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
             }
         }
@@ -41,16 +41,16 @@ namespace Common
         {
             if (_iterationIndex++ == 0)
             {
-                ConsoleHelper.PrintMulticlassClassificationMetricsHeader();
+                ConsoleHelperAutoML.PrintMulticlassClassificationMetricsHeader();
             }
 
             if (iterationResult.Exception != null)
             {
-                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+                ConsoleHelperAutoML.PrintIterationException(iterationResult.Exception);
             }
             else
             {
-                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                ConsoleHelperAutoML.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
                     iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
             }
         }
@@ -67,16 +67,16 @@ namespace Common
         {
             if (_iterationIndex++ == 0)
             {
-                ConsoleHelper.PrintRegressionMetricsHeader();
+                ConsoleHelperAutoML.PrintRegressionMetricsHeader();
             }
 
             if (iterationResult.Exception != null)
             {
-                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+                ConsoleHelperAutoML.PrintIterationException(iterationResult.Exception);
             }
             else
             {
-                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                ConsoleHelperAutoML.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
                     iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
             }
         }
@@ -90,16 +90,16 @@ namespace Common
         {
             if (_iterationIndex++ == 0)
             {
-                ConsoleHelper.PrintRankingMetricsHeader();
+                ConsoleHelperAutoML.PrintRankingMetricsHeader();
             }
 
             if (iterationResult.Exception != null)
             {
-                ConsoleHelper.PrintIterationException(iterationResult.Exception);
+                ConsoleHelperAutoML.PrintIterationException(iterationResult.Exception);
             }
             else
             {
-                ConsoleHelper.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
+                ConsoleHelperAutoML.PrintIterationMetrics(_iterationIndex, iterationResult.TrainerName,
                     iterationResult.ValidationMetrics, iterationResult.RuntimeInSeconds);
             }
         }

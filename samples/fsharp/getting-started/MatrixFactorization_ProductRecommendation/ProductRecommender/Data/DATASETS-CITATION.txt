@@ -1,0 +1,21 @@
+Citing SNAP
+
+We encourage you to cite our work if you have used our libraries, tools or datasets.
+
+<text redacted here for clarity purposes>
+
+Use the following BibTeX citation for the SNAP network datasets:
+
+@misc{snapnets,
+  author       = {Jure Leskovec and Andrej Krevl},
+  title        = {{SNAP Datasets}: {Stanford} Large Network Dataset Collection},
+  howpublished = {\url{http://snap.stanford.edu/data}},
+  month        = jun,
+  year         = 2014
+}
+
+https://snap.stanford.edu/data/amazon0302.html states in part that:
+
+Source (citation)
+
+J. Leskovec, L. Adamic and B. Adamic. The Dynamics of Viral Marketing. ACM Transactions on the Web (ACM TWEB), 1(1), 2007.

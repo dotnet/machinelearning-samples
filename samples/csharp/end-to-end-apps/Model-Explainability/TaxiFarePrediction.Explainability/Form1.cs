@@ -76,10 +76,13 @@ namespace TaxiFareRegression.Explainability
         }
         internal static class GetTaxiFare
         {
-            private static string BaseRelativePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "TaxiFarePrediction", "TaxiFarePredictionConsoleApp");
-            private static string BaseDataPath = Path.Combine(Path.GetFullPath(BaseRelativePath), "inputs");
+            private static string BaseRelativePath = Path.GetFullPath(Path.Combine(
+                Directory.GetCurrentDirectory(), "..", "..", "..",  
+                "TaxiFarePrediction", "TaxiFarePredictionConsoleApp"));
+            private static string BaseDataPath = Path.Combine(BaseRelativePath, "inputs");
             private static string TestDataPath = Path.Combine(BaseDataPath, "taxi-fare-test.csv");
-            private static string ModelPath = Path.Combine(BaseRelativePath, "outputs", "TaxiFareModel.zip");
+            private static string ModelPath = Path.Combine(BaseRelativePath, "outputs", 
+                "TaxiFareModel.zip");
 
             public static List<DataStructures.TaxiFarePrediction> Predictions()
             {

@@ -15,9 +15,20 @@ namespace Ranking
     class Program
     {
         const string AssetsPath = @"../../../Assets";
-        const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
-        const string ValidationDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
-        const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
+        // broken links:
+        //const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
+        //const string ValidationDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
+        //const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
+
+        private const string datasetFile = "WebRanking";
+
+        private const string datasetZip = datasetFile + ".zip"; // MSLR-WEB10K.zip
+        private const string datasetUrl = "https://bit.ly/3tp3dyv";
+        // From https://github.com/dotnet/machinelearning-samples/pull/533#discussion_r297458274
+        // broken link: "https://express-tlcresources.azureedge.net/datasets/MSLR-WEB10K/MSLR-WEB10K.zip"
+
+        private static string commonDatasetsRelativePath = @"../../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
 
         readonly static string InputPath = Path.Combine(AssetsPath, "Input");
         readonly static string OutputPath = Path.Combine(AssetsPath, "Output");
@@ -31,6 +42,11 @@ namespace Ranking
 
         static void Main(string[] args)
         {
+            // STEP 1: Download the data
+            List<string> destFiles = new List<string>()
+                { TrainDatasetPath, ValidationDatasetPath, TestDatasetPath };
+            Web.DownloadBigFile(InputPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+
             var mlContext = new MLContext(seed: 0);
 
             // Create, train, evaluate and save a model
@@ -46,8 +62,8 @@ namespace Ranking
         private static (IDataView, IDataView) BuildTrainEvaluateAndSaveModel(MLContext mlContext)
         {
             // STEP 1: Download and load the data
-            GetData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath,
-                ValidationDatasetUrl, ValidationDatasetPath);
+            //GetData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath,
+            //    ValidationDatasetUrl, ValidationDatasetPath);
 
             //ColumnInferenceResults columnInference = mlContext.Auto().InferColumns(TrainDatasetPath, labelColumnIndex: 0, 
             //    separatorChar: '\t', hasHeader: true, groupColumns: false, allowSparse: true);
@@ -70,14 +86,14 @@ namespace Ranking
             IDataView testDataView = textLoader.Load(TestDatasetPath);
 
             // STEP 2: Display first few rows of training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainDataView);
+            ConsoleHelperAutoML.ShowDataViewInConsole(mlContext, trainDataView);
 
             // STEP 3: Initialize our user-defined progress handler that AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new RankingExperimentProgressHandler();
 
             // STEP 4: Run AutoML ranking experiment
-            ConsoleHelper.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Running AutoML experiment ===============");
             Console.WriteLine($"Running AutoML ranking experiment for {ExperimentTime} seconds...");
 
             var experimentSettings = new RankingExperimentSettings
@@ -106,7 +122,7 @@ namespace Ranking
             Console.WriteLine("\n===== Evaluating model's NDCG (on test data) =====");
             IDataView predictions = experimentResult.BestRun.Model.Transform(testDataView);
             var metrics = mlContext.Ranking.Evaluate(predictions, rankingEvaluatorOptions);
-            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metrics, experimentSettings.OptimizationMetricTruncationLevel);
+            ConsoleHelperAutoML.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metrics, experimentSettings.OptimizationMetricTruncationLevel);
 
             // STEP 5: Refit the model and get final metrics
             // Re-fit best pipeline on train and validation data, to produce 
@@ -118,7 +134,7 @@ namespace Ranking
             var refitModel = experimentResult.BestRun.Estimator.Fit(trainPlusValidationDataView);
             IDataView predictionsRefitOnTrainPlusValidation = refitModel.Transform(testDataView);
             var metricsRefitOnTrainPlusValidation = mlContext.Ranking.Evaluate(predictionsRefitOnTrainPlusValidation, rankingEvaluatorOptions);
-            ConsoleHelper.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainPlusValidation, experimentSettings.OptimizationMetricTruncationLevel);
+            ConsoleHelperAutoML.PrintRankingMetrics(experimentResult.BestRun.TrainerName, metricsRefitOnTrainPlusValidation, experimentSettings.OptimizationMetricTruncationLevel);
 
             // STEP 6: Refit the model with all available data
             // Re-fit best pipeline again on train, validation, and test data, to 
@@ -129,8 +145,10 @@ namespace Ranking
             Console.WriteLine("\n===== Refitting on train+valid+test to get the final model to launch to production =====");
             var trainPlusValidationPlusTestDataView = textLoader.Load(new MultiFileSource(TrainDatasetPath, ValidationDatasetPath, TestDatasetPath));
             var refitModelOnTrainValidTest = experimentResult.BestRun.Estimator.Fit(trainPlusValidationPlusTestDataView);
-            
+
             // STEP 7: Save/persist the trained model to a .ZIP file
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(refitModelOnTrainValidTest, trainDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -140,7 +158,7 @@ namespace Ranking
 
         private static void TestSinglePrediction(MLContext mlContext, IDataView predictions, IDataView testDataView)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
             Console.WriteLine($"=============== Loaded Model OK  ===============");
@@ -163,50 +181,50 @@ namespace Ranking
             }
         }
 
-        private static void GetData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl,
-            string testDatasetUrl, string testDatasetPath, string validationDatasetUrl, string validationDatasetPath)
-        {
-            Console.WriteLine("===== Prepare data =====\n");
+        //private static void GetData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl,
+        //    string testDatasetUrl, string testDatasetPath, string validationDatasetUrl, string validationDatasetPath)
+        //{
+        //    Console.WriteLine("===== Prepare data =====\n");
 
-            if (!Directory.Exists(outputPath))
-            {
-                Directory.CreateDirectory(outputPath);
-            }
+        //    if (!Directory.Exists(outputPath))
+        //    {
+        //        Directory.CreateDirectory(outputPath);
+        //    }
 
-            if (!Directory.Exists(inputPath))
-            {
-                Directory.CreateDirectory(inputPath);
-            }
+        //    if (!Directory.Exists(inputPath))
+        //    {
+        //        Directory.CreateDirectory(inputPath);
+        //    }
 
-            if (!File.Exists(trainDatasetPath))
-            {
-                Console.WriteLine("===== Downloading the train dataset - this may take several minutes =====\n");
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
-                }
-            }
+        //    if (!File.Exists(trainDatasetPath))
+        //    {
+        //        Console.WriteLine("===== Downloading the train dataset - this may take several minutes =====\n");
+        //        using (var client = new WebClient())
+        //        {
+        //            client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
+        //        }
+        //    }
 
-            if (!File.Exists(validationDatasetPath))
-            {
-                Console.WriteLine("===== Downloading the validation dataset - this may take several minutes =====\n");
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(validationDatasetUrl, validationDatasetPath);
-                }
-            }
+        //    if (!File.Exists(validationDatasetPath))
+        //    {
+        //        Console.WriteLine("===== Downloading the validation dataset - this may take several minutes =====\n");
+        //        using (var client = new WebClient())
+        //        {
+        //            client.DownloadFile(validationDatasetUrl, validationDatasetPath);
+        //        }
+        //    }
 
-            if (!File.Exists(testDatasetPath))
-            {
-                Console.WriteLine("===== Downloading the test dataset - this may take several minutes =====\n");
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(testDatasetUrl, testDatasetPath);
-                }
-            }
+        //    if (!File.Exists(testDatasetPath))
+        //    {
+        //        Console.WriteLine("===== Downloading the test dataset - this may take several minutes =====\n");
+        //        using (var client = new WebClient())
+        //        {
+        //            client.DownloadFile(testDatasetUrl, testDatasetPath);
+        //        }
+        //    }
 
-            Console.WriteLine("===== Download is finished =====\n");
-        }
+        //    Console.WriteLine("===== Download is finished =====\n");
+        //}
 
         private static void PrintTopModels(ExperimentResult<RankingMetrics> experimentResult, uint optimizationMetricTruncationLevel)
         {
@@ -216,12 +234,22 @@ namespace Ranking
                 .OrderByDescending(r => r.ValidationMetrics.NormalizedDiscountedCumulativeGains[(int)optimizationMetricTruncationLevel - 1]).Take(5);
 
             Console.WriteLine($"Top models ordered by NDCG@{optimizationMetricTruncationLevel}");
-            ConsoleHelper.PrintRankingMetricsHeader();
+            ConsoleHelperAutoML.PrintRankingMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelperAutoML.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
+        }
+
+        private static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }

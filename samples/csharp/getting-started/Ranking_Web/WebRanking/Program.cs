@@ -6,15 +6,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Common;
 
 namespace WebRanking
 {
     class Program
     {
         const string AssetsPath = @"../../../Assets";
-        const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
-        const string ValidationDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
-        const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
+        // broken links:
+        //const string TrainDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTrain720kRows.tsv";
+        //const string ValidationDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KValidate240kRows.tsv";
+        //const string TestDatasetUrl = "https://aka.ms/mlnet-resources/benchmarks/MSLRWeb10KTest240kRows.tsv";
+
+        private const string datasetFile = "WebRanking"; 
+
+        private const string datasetZip = datasetFile + ".zip"; // MSLR-WEB10K.zip
+        private const string datasetUrl = "https://bit.ly/3tp3dyv";
+        // From https://github.com/dotnet/machinelearning-samples/pull/533#discussion_r297458274
+        // broken link: "https://express-tlcresources.azureedge.net/datasets/MSLR-WEB10K/MSLR-WEB10K.zip"
+
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
 
         readonly static string InputPath = Path.Combine(AssetsPath, "Input");
         readonly static string OutputPath = Path.Combine(AssetsPath, "Output");
@@ -31,7 +43,10 @@ namespace WebRanking
 
             try
             {
-                PrepareData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath, ValidationDatasetUrl, ValidationDatasetPath);
+                //PrepareData(InputPath, OutputPath, TrainDatasetPath, TrainDatasetUrl, TestDatasetUrl, TestDatasetPath, ValidationDatasetUrl, ValidationDatasetPath);
+                List<string> destFiles = new List<string>()
+                { TrainDatasetPath, ValidationDatasetPath, TestDatasetPath };
+                Web.DownloadBigFile(InputPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
 
                 // Create the pipeline using the training data's schema; the validation and testing data have the same schema.
                 IDataView trainData = mlContext.Data.LoadFromTextFile<SearchResultData>(TrainDatasetPath, separatorChar: '\t', hasHeader: true);
@@ -83,50 +98,50 @@ namespace WebRanking
             Console.ReadLine();
         }
 
-        static void PrepareData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl, 
-            string testDatasetUrl, string testDatasetPath, string validationDatasetUrl, string validationDatasetPath)
-        {
-            Console.WriteLine("===== Prepare data =====\n");
+        //static void PrepareData(string inputPath, string outputPath, string trainDatasetPath, string trainDatasetUrl, 
+        //    string testDatasetUrl, string testDatasetPath, string validationDatasetUrl, string validationDatasetPath)
+        //{
+        //    Console.WriteLine("===== Prepare data =====\n");
 
-            if (!Directory.Exists(outputPath))
-            {
-                Directory.CreateDirectory(outputPath);
-            }
+        //    if (!Directory.Exists(outputPath))
+        //    {
+        //        Directory.CreateDirectory(outputPath);
+        //    }
 
-            if (!Directory.Exists(inputPath))
-            {
-                Directory.CreateDirectory(inputPath);
-            }
+        //    if (!Directory.Exists(inputPath))
+        //    {
+        //        Directory.CreateDirectory(inputPath);
+        //    }
 
-            if (!File.Exists(trainDatasetPath))
-            {
-                Console.WriteLine("===== Download the train dataset - this may take several minutes =====\n");
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
-                }
-            }
+        //    if (!File.Exists(trainDatasetPath))
+        //    {
+        //        Console.WriteLine("===== Download the train dataset - this may take several minutes =====\n");
+        //        using (var client = new WebClient())
+        //        {
+        //            client.DownloadFile(trainDatasetUrl, TrainDatasetPath);
+        //        }
+        //    }
 
-            if (!File.Exists(validationDatasetPath))
-            {
-                Console.WriteLine("===== Download the validation dataset - this may take several minutes =====\n");
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(validationDatasetUrl, validationDatasetPath);
-                }
-            }
+        //    if (!File.Exists(validationDatasetPath))
+        //    {
+        //        Console.WriteLine("===== Download the validation dataset - this may take several minutes =====\n");
+        //        using (var client = new WebClient())
+        //        {
+        //            client.DownloadFile(validationDatasetUrl, validationDatasetPath);
+        //        }
+        //    }
 
-            if (!File.Exists(testDatasetPath))
-            {
-                Console.WriteLine("===== Download the test dataset - this may take several minutes =====\n");
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(testDatasetUrl, testDatasetPath);
-                }
-            }
+        //    if (!File.Exists(testDatasetPath))
+        //    {
+        //        Console.WriteLine("===== Download the test dataset - this may take several minutes =====\n");
+        //        using (var client = new WebClient())
+        //        {
+        //            client.DownloadFile(testDatasetUrl, testDatasetPath);
+        //        }
+        //    }
 
-            Console.WriteLine("===== Download is finished =====\n");
-        }
+        //    Console.WriteLine("===== Download is finished =====\n");
+        //}
 
         static IEstimator<ITransformer> CreatePipeline(MLContext mlContext, IDataView dataView)
         {
@@ -178,6 +193,8 @@ namespace WebRanking
             Console.WriteLine("===== Save the model =====\n");
 
             // Save the model
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(model, null, modelPath);
 
             Console.WriteLine("===== Consume the model =====\n");
@@ -197,6 +214,16 @@ namespace WebRanking
             // The individual scores themselves are NOT a useful measure of result quality; instead, they are only useful as a relative measure to other scores in the group. 
             // The scores are used to determine the ranking where a higher score indicates a higher ranking versus another candidate result.
             ConsoleHelper.PrintScores(firstGroupPredictions);
+        }
+
+        private static string GetAbsolutePath(string relativePath)
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+
+            return fullPath;
         }
     }
 }
