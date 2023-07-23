@@ -175,6 +175,8 @@ Console.WriteLine($"ImageFile : [{Path.GetFileName(imageToPredict.ImagePath)}], 
 
 ```
 The prediction engine receives as parameter an object of type `ImageData` (containing 2 properties: `ImagePath` and `Label`). Then returns and object of type `ImagePrediction`, which holds the `PredictedLabel` and `Score` (*probability* value between 0 and 1) properties.
+![image](https://user-images.githubusercontent.com/111002142/227371993-e412cab9-8e33-4b65-973e-c1c90dd8670e.png)
+
 
 #### Model testing: making classifications
 1) Copy the model produced by the training model (located at [ImageClassification.Train](./ImageClassification.Train/)/[assets](./ImageClassification.Train/assets/)/[outputs](./ImageClassification.Train/assets/outputs/)/[imageClassifier.zip](./ImageClassification.Train/assets/outputs/imageClassifier.zip) ) to the prediction project (at [ImageClassification.Predict](./ImageClassification.Predict/)/[assets](./ImageClassification.Predict/assets/)/[inputs](./ImageClassification.Predict/assets/inputs/)/[MLNETModel](./ImageClassification.Predict/assets/inputs/MLNETModel)/[imageClassifier.zip](./ImageClassification.Predict/assets/inputs/imageClassifier.zip) ).
