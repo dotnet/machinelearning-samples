@@ -199,11 +199,3 @@ For more information, see the [.NET Foundation Code of Conduct](https://dotnetfo
 # License
 
 [ML.NET Samples](https://github.com/dotnet/machinelearning-samples) are licensed under the [MIT license](LICENSE).
-
-# Mac configuration for mlnet
-When you have mlnet installed
-```zsh
-  nano ~/.zshrc
-  export PATH=~/.dotnet/tools/:$PATH #Add theis to zshrc file, then ctrl + o, enter, ctrl + x
-  source ~/.zhrc #Then reload
-```
