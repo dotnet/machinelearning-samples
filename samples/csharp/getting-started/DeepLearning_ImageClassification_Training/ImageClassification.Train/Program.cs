@@ -162,7 +162,7 @@ namespace ImageClassification.Train
 
             //SINGLE SMALL FLOWERS IMAGESET (200 files)
             const string fileName = "flower_photos_small_set.zip";
-            var url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+            var url = $"https://aka.ms/mlnet-resources/datasets/flower_photos_small_set.zip";
             Web.Download(url, imagesDownloadFolder, fileName);
             Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
