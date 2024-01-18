@@ -37,7 +37,7 @@ let printMultiClassClassificationMetrics name (metrics : MulticlassClassificatio
     printfn "*    Metrics for %s multi-class classification model   " name
     printfn "*-----------------------------------------------------------"
     printfn "    AccuracyMacro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.MacroAccuracy
-    printfn "    AccuracyMicro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.MacroAccuracy
+    printfn "    AccuracyMicro = %.4f, a value between 0 and 1, the closer to 1, the better" metrics.MicroAccuracy
     printfn "    LogLoss = %.4f, the closer to 0, the better" metrics.LogLoss
     printfn "    LogLoss for class 1 = %.4f, the closer to 0, the better" metrics.PerClassLogLoss.[0]
     printfn "    LogLoss for class 2 = %.4f, the closer to 0, the better" metrics.PerClassLogLoss.[1]
