@@ -16,7 +16,7 @@ namespace SpikeDetection.WinForms
         private string filePath = "";
         Tuple<string, string> tup = null;
         Dictionary<int, Tuple<string, string>> dict = new Dictionary<int, Tuple<string, string>>();
-        private static string BaseModelsRelativePath = @"../../../../MLModels";
+        private static string BaseModelsRelativePath = @"../../../MLModels";
         private static string ModelRelativePath1 = $"{BaseModelsRelativePath}/ProductSalesSpikeModel.zip";
         private static string ModelRelativePath2 = $"{BaseModelsRelativePath}/ProductSalesChangePointModel.zip";
 
@@ -112,8 +112,8 @@ namespace SpikeDetection.WinForms
 
             // Update y axis min and max values.
             double yMax = Convert.ToDouble(dataTable.Compute($"max([{yAxis}])", string.Empty));
-            double yMin = Convert.ToDouble(dataTable.Compute($"min([{yAxis}])", string.Empty));
-
+            //double yMin = Convert.ToDouble(dataTable.Compute($"min([{yAxis}])", string.Empty));
+            double yMin = Convert.ToDouble(0);
             // Set graph source.
             graph.DataSource = dataTable;
 
