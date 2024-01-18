@@ -17,7 +17,7 @@ This ML model is using multi-class classification algorithm (`SdcaMultiClassTrai
 ## Enter your GitHub configuration data
 1. **Provide your GitHub data** in the `appsettings.json` file:
 
-    To allow the app to label issues in your GitHub repository you need to provide the folloving data into the appsettings.json file.
+    To allow the app to label issues in your GitHub repository you need to provide the following data into the appsettings.json file.
     ```csharp
         {
           "GitHubToken": "YOUR-GUID-GITHUB-TOKEN",
