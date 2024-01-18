@@ -17,7 +17,7 @@ MLContext mlContext = new MLContext();
 try
 {
     // Load Data
-    IEnumerable<ImageNetData> images = ImageNetData.ReadFromFile(imagesFolder);
+    ImageNetData[] images = ImageNetData.ReadFromFile(imagesFolder).ToArray();
     IDataView imageDataView = mlContext.Data.LoadFromEnumerable(images);
 
     // Create instance of model scorer
@@ -32,13 +32,14 @@ try
     var boundingBoxes =
         probabilities
         .Select(probability => parser.ParseOutputs(probability))
-        .Select(boxes => parser.FilterBoundingBoxes(boxes, 5, .5F));
+        .Select(boxes => parser.FilterBoundingBoxes(boxes, 5, .5F))
+        .ToArray();
 
     // Draw bounding boxes for detected objects in each of the images
-    for (var i = 0; i < images.Count(); i++)
+    for (var i = 0; i < images.Length; i++)
     {
-        string imageFileName = images.ElementAt(i).Label;
-        IList<YoloBoundingBox> detectedObjects = boundingBoxes.ElementAt(i);
+        string imageFileName = images[i].Label;
+        IList<YoloBoundingBox> detectedObjects = boundingBoxes[i];
 
         DrawBoundingBox(imagesFolder, outputFolder, imageFileName, detectedObjects);
 
