@@ -15,7 +15,7 @@ This is an end-end sample on how you can enhance your existing ASP.NET apps with
 The sample takes insipiration from the popular Netflix application and even though this sample focuses on movie recommendations, learnings can be easily applied to any style of product recommendations.
 
 ## Features
-* Wep app
+* Web app
     * This is an end-end ASP.NET app which presents three user profiles 'Ankit', 'Cesar', 'Amy'. It then provides these three users
       recommendations using a ML.NET recommendation model.
 
