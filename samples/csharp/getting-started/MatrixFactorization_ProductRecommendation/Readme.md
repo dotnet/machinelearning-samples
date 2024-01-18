@@ -7,7 +7,7 @@
 In this sample, you can see how to use ML.NET to build a product recommendation scenario.
 
 The style of recommendation in this sample is based upon the co-purchase scenario or products frequently
-bought together which means it will recommend customers a set of products based upon their purchase order
+bought together, which means it will recommend customers a set of products based upon their purchase order
 history.
 
 ![Alt Text](https://github.com/dotnet/machinelearning-samples/blob/main/samples/csharp/getting-started/MatrixFactorization_ProductRecommendation/ProductRecommender/Data/frequentlyboughttogether.png)
@@ -18,10 +18,10 @@ In this example, the highlighted products are being recommended based upon a fre
 ## Problem
 For this tutorial we will use the Amazon product co-purchasing network dataset.
 
-In terms of an approach for building our product recommender we will use One-Class Factorization Machines which uses a collaborative filtering approach.
+In terms of an approach for building our product recommender, we will use One-Class Factorization Machines, which uses a collaborative filtering approach.
 
 
-The difference between one-class and other Factorization Machines approach we covered is that in this dataset we only have information on purchase order history.
+The difference between one-class and other Factorization Machines approach we covered is that in this dataset, we only have information on purchase order history.
 
 We do not have ratings or other details like product description etc. available to us.
 
@@ -51,7 +51,7 @@ Building a model includes:
 
 * Replace the column names with only these instead:  ProductID	ProductID_Copurchased
 
-* Given in the reader we already provide a KeyRange and product ID's are already encoded all we need to do is
+* Given in the reader, we already provide a KeyRange, and product ID's are already encoded; all we need to do is
   call the MatrixFactorizationTrainer with a few extra parameters.
 
 Here's the code which will be used to build the model:
@@ -73,7 +73,7 @@ Here's the code which will be used to build the model:
                                                       separatorChar: '\t');
 
     //STEP 3: Your data is already encoded so all you need to do is specify options for MatrxiFactorizationTrainer with a few extra hyperparameters
-            //        LossFunction, Alpa, Lambda and a few others like K and C as shown below and call the trainer.
+    //        LossFunction, Alpa, Lambda and a few others like K and C as shown below and call the trainer.
             MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
             options.MatrixColumnIndexColumnName = nameof(ProductEntry.ProductID);
             options.MatrixRowIndexColumnName = nameof(ProductEntry.CoPurchaseProductID);
