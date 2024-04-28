@@ -97,7 +97,7 @@ namespace eShopDashboard
             app.UseSwagger();
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwaggerUI(c =>
+                app.UseSwaggerUI(c => // UseSwaggerUI Protected by if (env.IsDevelopment())
                 {
                     c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "eShopDashboard.API V1");
                 });
