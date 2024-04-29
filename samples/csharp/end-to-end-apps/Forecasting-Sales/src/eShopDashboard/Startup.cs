@@ -95,7 +95,7 @@ namespace eShopDashboard
             var pathBase = Configuration["PATH_BASE"];
 
             app.UseSwagger();
-            if (app.Environment.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseSwaggerUI(c => // UseSwaggerUI is called only in Development.
                 {
