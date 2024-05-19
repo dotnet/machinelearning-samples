@@ -7,8 +7,6 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
-- vs
 - mlnet
 ---
 
@@ -68,7 +66,7 @@ class ImageData
 class ModelInput
 {
     public byte[] Image { get; set; }
-    
+
     public UInt32 LabelAsKey { get; set; }
 
     public string ImagePath { get; set; }
@@ -92,7 +90,7 @@ class ModelOutput
 
 ## Load the data
 
-1.  Before loading the data, it needs to be formatted into a list of `ImageInput` objects. To do so, create a data loading utility method `LoadImagesFromDirectory`.
+1. Before loading the data, it needs to be formatted into a list of `ImageInput` objects. To do so, create a data loading utility method `LoadImagesFromDirectory`.
 
 ```csharp
 public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder, bool useFolderNameAsLabel = true)
@@ -198,13 +196,14 @@ var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassifi
 
 ## Train the model
 
-Apply the data to the training pipeline. 
+Apply the data to the training pipeline.
 
 ```
 ITransformer trainedModel = trainingPipeline.Fit(trainSet);
 ```
 
 ## Use the model
+
 1. Create a utility method to display predictions.
 
 ```csharp
@@ -217,7 +216,7 @@ private static void OutputPrediction(ModelOutput prediction)
 
 ### Classify a single image
 
-1. Make predictions on the test set using the trained model. Create a utility method called `ClassifySingleImage`. 
+1. Make predictions on the test set using the trained model. Create a utility method called `ClassifySingleImage`.
 
 ```csharp
 public static void ClassifySingleImage(MLContext mlContext, IDataView data, ITransformer trainedModel)
@@ -241,7 +240,7 @@ ClassifySingleImage(mlContext, testSet, trainedModel);
 
 ### Classify multiple images
 
-1. Make predictions on the test set using the trained model. Create a utility method called `ClassifyImages`. 
+1. Make predictions on the test set using the trained model. Create a utility method called `ClassifyImages`.
 
 ```csharp
 public static void ClassifyImages(MLContext mlContext, IDataView data, ITransformer trainedModel)
@@ -302,7 +301,7 @@ Image: 7001-77.jpg | Actual Value: UD | Predicted Value: UD
 
 ## Improve the model
 
-- More Data: The more examples a model learns from, the better it performs. Download the full [SDNET2018 dataset](https://digitalcommons.usu.edu/cgi/viewcontent.cgi?filename=2&article=1047&context=all_datasets&type=additional) and use it to train. 
+- More Data: The more examples a model learns from, the better it performs. Download the full [SDNET2018 dataset](https://digitalcommons.usu.edu/cgi/viewcontent.cgi?filename=2&article=1047&context=all_datasets&type=additional) and use it to train.
 - Augment the data: A common technique to add variety to the data is to augment the data by taking an image and applying different transforms (rotate, flip, shift, crop). This adds more varied examples for the model to learn from.
 - Train for a longer time: The longer you train, the more tuned the model will be. Increasing the number of epochs may improve the performance of your model.
 - Experiment with the hyper-parameters: In addition to the parameters used in this tutorial, other parameters can be tuned to potentially improve performance. Changing the learning rate, which determines the magnitude of updates made to the model after each epoch may improve performance.

@@ -7,8 +7,6 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
-- vs
 - mlnet
 ---
 
@@ -21,15 +19,18 @@ products:
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect **anomalies** in a series of number of calls data. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
 
 ## Problem
+
 We are having data on number of calls over 10 weeks with daily granularity. The data itself has a periodical pattern as the volumn of calls is large is weekdays and small in weekends. We want to find those points that fall out of the regular pattern of the series. In the world of machine learning, this type of task is called Time-Series anomaly detection.
 
 To solve this problem, we will build an ML model that takes as inputs:
+
 * Date
 * Number of calls.
 
 and outputs the anomalies in the number of calls.
 
 ## Dataset
+
 We have created sample dataset for number of calls. The dataset `phone_calls.csv` can be found [here](./SrCnnEntireDetection/Data/phone_calls.csv)
 
 Format of **Phone Calls DataSet** looks like below.
@@ -47,9 +48,11 @@ Format of **Phone Calls DataSet** looks like below.
 The data in Phone Calls dataset is collected in real world transactions with normalization and rescale transformation.
 
 ## ML task - Time Series Anomaly Detection
+
 Anomaly detection is the process of detecting outliers in the data. Anomaly detection in time-series refers to detecting time stamps, or points on a given input time-series, at which the time-series behaves differently from what was expected. These deviations are typically indicative of some events of interest in the problem domain: a cyber-attack on user accounts, power outage, bursting RPS on a server, memory leak, etc.
 
 ## Solution
+
 To solve this problem, first, we should determine the period of the series. Second, we can extract the periodical component of the series and apply anomaly detection on the residual part of the series. In ML.net, we could use the detect seasonality function to find the period of a given series. Given the period, the STL algorithm decompose the time-series into three components as `Y = T + S + R`, where `Y` is the original series, `T` is the trend component, `S` is the seasonal componnent and `R` is the residual component of the series(Refer to [this](http://www.nniiem.ru/file/news/2016/stl-statistical-model.pdf) paper for more details on this algorithm). Then, SR-CNN detector is applied to detect anomaly on `R` to capture the anomalies(Refer to [this](https://arxiv.org/pdf/1906.03821.pdf) paper for more details on this algorithm).
 
 ![Detect-Anomaly-Pipeline](docs/images/detect-anomaly-pipeline.png)
@@ -67,6 +70,7 @@ int period = mlContext.AnomalyDetection.DetectSeasonality(dataView, inputColumnN
 ### 2. Detect Anomaly
 
 First, we need to specify the parameters used for SrCnnEntire detector(Please refer to [here](https://docs.microsoft.com/en-us/dotnet/api/microsoft.ml.timeseriescatalog.detectentireanomalybysrcnn?view=ml-dotnet#Microsoft_ML_TimeSeriesCatalog_DetectEntireAnomalyBySrCnn_Microsoft_ML_AnomalyDetectionCatalog_Microsoft_ML_IDataView_System_String_System_String_System_Double_System_Int32_System_Double_Microsoft_ML_TimeSeries_SrCnnDetectMode_) for the details on the parameters). Then, we invoke the detector and obtain a view of the output data.
+
 ```CSharp
 var options = new SrCnnEntireAnomalyDetectorOptions()
 {
@@ -79,7 +83,8 @@ var outputDataView = mlContext.AnomalyDetection.DetectEntireAnomalyBySrCnn(dataV
 ```
 
 ### 3. Consume results
-The result can be retrived by simply enumerate the result. `Anomaly`, `ExpectedValue`, `UpperBoundary` and `LowerBoundary` are some of the useful output columns.
+
+The result can be retrieved by simply enumerate the result. `Anomaly`, `ExpectedValue`, `UpperBoundary` and `LowerBoundary` are some of the useful output columns.
 
 ```CSharp
 //STEP 5: Get the detection results as an IEnumerable
@@ -135,5 +140,5 @@ foreach (var p in predictions)
 //25,0,0,0.018746201354033914,29.381125690882463,32.92296779138513,33.681408258162854,25.080843123602072
 //26,0,0,0.0141022037992637,5.261543539820418,32.92296779138513,9.561826107100808,0.9612609725400283
 //27,0,0,0.013396001938040617,5.4873712582971805,32.92296779138513,9.787653825577571,1.1870886910167897
-//28,1,0.4971326063712256,0.3521692757832201,36.504694001629254,32.92296779138513,40.804976568909645,32.20441143434886 < --alert is on, detecte anomaly
+//28,1,0.4971326063712256,0.3521692757832201,36.504694001629254,32.92296779138513,40.804976568909645,32.20441143434886 < --alert is on, detected anomaly
 ```

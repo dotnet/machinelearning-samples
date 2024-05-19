@@ -7,10 +7,7 @@ languages:
 - csharp
 products:
 - dotnet
-- dotnet-core
 - aspnet-core
-- vs
-- vs-ide
 - mlnet
 ---
 
