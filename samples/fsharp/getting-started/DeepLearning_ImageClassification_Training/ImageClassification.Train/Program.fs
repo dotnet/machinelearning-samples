@@ -73,13 +73,12 @@ let main argv =
     //let modelsLocation = @"../../../MLModels"
     let assetsRelativePath = Path.Combine(@"../../../../", assetsPath)
     let commonDatasetsRelativePath = @"../../../../../../../../datasets"
-    
-    // Broken link:
-    //let downloadUrl = "https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D"
 
     let fileName = "flower_photos_small_set"
     let zipFileName = fileName + ".zip"
-    let downloadUrl = "https://bit.ly/3fkRKYy" // flower_photos_small_set.zip
+    //let downloadUrl = "https://bit.ly/3fkRKYy" // flower_photos_small_set.zip
+    let downloadUrl = "https://aka.ms/mlnet-resources/datasets/flower_photos_small_set.zip"
+
     //let fileName = "flower_photos"
     //let zipFileName = fileName + ".tgz"
     //let downloadUrl = "https://bit.ly/3HZmnz1" // flower_photos.tgz 
