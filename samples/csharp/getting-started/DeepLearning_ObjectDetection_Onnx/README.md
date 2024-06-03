@@ -142,7 +142,6 @@ Finally, we return the trained model after *fitting* the estimator pipeline.
   var model = pipeline.Fit(data);
   return model;
 ```
-When obtaining the prediction, we get an array of floats in the property `PredictedLabels`. The array is a float array of size **21125**. This is the output of model i,e 125x13x13 as discussed earlier. This output is interpreted by `YoloOutputParser` class and returns a number of bounding boxes for each image. Again these boxes are filtered so that we retrieve only 5 bounding boxes which have better confidence(how much certain that a box contains the obejct) for each object of the image. On console we display the label value of each bounding box.
 
 # Detect objects in the image:
 
