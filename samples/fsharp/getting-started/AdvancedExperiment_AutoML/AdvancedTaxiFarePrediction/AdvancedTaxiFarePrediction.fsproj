@@ -12,10 +12,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="3.2.4" />
+    <PackageReference Include="Flurl.Http" Version="4.0.2" />
     <PackageReference Include="Microsoft.ML.AutoML" Version="$(MicrosoftMLPreviewVersion)" />
     <PackageReference Include="PLplot" Version="5.13.7" />
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
 
   <ItemGroup>
