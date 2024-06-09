@@ -4,6 +4,7 @@ open Microsoft.ML
 open System.IO
 open DataStructures
 open Microsoft.ML.Data
+open Common
 
 let modelsLocation = @"../../../../MLModels"
 
@@ -78,6 +79,7 @@ let main argv =
 
         //Save the model file that can be used by any application
         let modelPath = sprintf "%s/%sModel.zip" modelsLocation learnerName
+        FileUtil.CreateParentDirectoryIfNotExists modelPath
         use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
         mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 

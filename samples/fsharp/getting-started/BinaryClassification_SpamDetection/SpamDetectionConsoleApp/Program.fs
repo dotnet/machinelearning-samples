@@ -2,8 +2,8 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
-open System.Net
-open System.IO.Compression
+//open System.Net
+//open System.IO.Compression
 open Microsoft.ML.Transforms.Text
 open Common
 
@@ -34,15 +34,32 @@ let classifyWithThreshold threshold (p : PredictionEngine<_,_>) x =
 [<EntryPoint>]
 let main _argv =
     let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
-    let dataDirectoryPath = Path.Combine(appPath,"../../../","Data","spamfolder")
-    let trainDataPath  = Path.Combine(appPath,"../../../","Data","spamfolder","SMSSpamCollection")
+    //let dataDirectoryPath = Path.Combine(appPath,"../../../", "Data", "spamfolder")
+    //let trainDataPath  = Path.Combine(appPath,"../../../", "Data", "spamfolder", "SMSSpamCollection")
+    //let dataDirectoryPath = Path.Combine(appPath,"../../../", "Data")
+    // Note: This is a file, not a directory
+    //let trainDataPath  = Path.Combine(appPath,"../../../", "Data", "SMSSpamCollection")
+    let trainDataPath  = Path.Combine(appPath,"../../../", "Data", "spamfolder", "SMSSpamCollection")
 
     // Download the dataset if it doesn't exist.
-    if not (File.Exists trainDataPath) then 
-        printfn "%A" (File.Exists trainDataPath)
-        use wc = new WebClient()
-        wc.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip", "spam.zip")
-        ZipFile.ExtractToDirectory("spam.zip", dataDirectoryPath)
+    //if not (File.Exists trainDataPath) then 
+    //    printfn "%A" (File.Exists trainDataPath)
+    //    use wc = new WebClient()
+    //    wc.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip", "spam.zip")
+    //    ZipFile.ExtractToDirectory("spam.zip", dataDirectoryPath)
+
+    let assetsPath = Path.Combine(appPath,"../../../", "Data", "spamfolder")
+    let assetsRelativePath = assetsPath 
+    let commonDatasetsRelativePath = @"../../../../../../../../datasets" 
+    let fileName = "SMSSpamCollection"
+    let zipFileName = fileName + ".zip"
+    let downloadUrl = "https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip"
+    let destFolder = "" 
+    let destFiles: string list = [trainDataPath]
+
+    let datasetPath = 
+        __SOURCE_DIRECTORY__ 
+        |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
 
     // Set up the MLContext, which is a catalog of components in ML.NET.
     let mlContext = MLContext(seed = Nullable 1)

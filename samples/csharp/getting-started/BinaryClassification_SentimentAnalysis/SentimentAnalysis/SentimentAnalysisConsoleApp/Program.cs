@@ -4,11 +4,22 @@ using Microsoft.ML;
 using SentimentAnalysisConsoleApp.DataStructures;
 using Common;
 using static Microsoft.ML.DataOperationsCatalog;
+using System.Collections.Generic;
 
 namespace SentimentAnalysisConsoleApp
 {
     internal static class Program
     {
+
+        private const string datasetFile = "wikiDetoxAnnotated40kRows";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://bit.ly/3tiuGls";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+        private static string commonCLIRelativePath = @"../../../../../../../../CLI/BinaryClassification_CLI";
+        private static string commonCLIPath = GetAbsolutePath(commonCLIRelativePath);
+        private static string commonCLIFilePath = $"{commonCLIPath}/wikiDetoxAnnotated40kRows.tsv";
+
         private static readonly string BaseDatasetsRelativePath = @"../../../../Data";
         private static readonly string DataRelativePath = $"{BaseDatasetsRelativePath}/wikiDetoxAnnotated40kRows.tsv";
 
@@ -21,6 +32,13 @@ namespace SentimentAnalysisConsoleApp
 
         static void Main(string[] args)
         {
+
+            List<string> destFiles = new List<string>() { DataRelativePath };
+            Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
+            // First create these 2 parent directories: CLI\BinaryClassification_CLI
+            //if (!File.Exists(commonCLIFilePath)) File.Copy(DataRelativePath, commonCLIFilePath);
+
             // Create MLContext to be shared across the model creation workflow objects 
             // Set a random seed for repeatable/deterministic results across multiple trainings.
             var mlContext = new MLContext(seed: 1);
@@ -49,6 +67,8 @@ namespace SentimentAnalysisConsoleApp
             ConsoleHelper.PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingData.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);

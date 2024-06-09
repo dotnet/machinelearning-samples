@@ -5,6 +5,7 @@ open Microsoft.ML.Data
 open OxyPlot.Series
 open OxyPlot
 open System.Diagnostics
+open Common
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -99,7 +100,15 @@ let savePlot (predictions : ClusteringPrediction []) (plotSvg : string) =
 let main _argv =
     let assetsPath = Path.Combine(dataRoot.Directory.FullName, @"..\..\..\assets")
     let pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv")
-    let modelZipFilePath = Path.Combine(assetsPath, "inputs", "retailClustering.zip")
+    
+    // Use directly the last saved:
+    //let modelZipFilePath = Path.Combine(assetsPath, "inputs", "retailClustering.zip")
+    let modelZipFilePath = Path.Combine(dataRoot.Directory.FullName, @"..\..\..\..\CustomerSegmentation.Train\assets\outputs", "retailClustering.zip")
+    if not (File.Exists(modelZipFilePath)) then
+        Console.WriteLine("Please run the model training first.")
+        Environment.Exit(0)
+
+    let modelZipFilePath = Path.GetFullPath(modelZipFilePath)
     let plotSvg = Path.Combine(assetsPath, "outputs", "customerSegmentation.svg")
     let plotCsv = Path.Combine(assetsPath, "outputs", "customerSegmentation.csv")
     try
@@ -126,6 +135,7 @@ let main _argv =
 
         //Generate data files with customer data grouped by clusters
         printHeader ["CSV Customer Segmentation"]
+        FileUtil.CreateParentDirectoryIfNotExists plotCsv
         File.WriteAllLines(plotCsv,
             seq {
                 yield "LastName,SelectedClusterId"

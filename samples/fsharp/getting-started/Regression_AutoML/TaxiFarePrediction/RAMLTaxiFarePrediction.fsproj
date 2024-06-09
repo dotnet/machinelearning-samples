@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
+    <Compile Include="..\..\..\common\Web.fs" Link="Common\Web.fs" />
+    <Compile Include="..\..\..\common\AutoML\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="4.0.2" />
+    <PackageReference Include="Microsoft.ML.AutoML" Version="$(MicrosoftMLPreviewVersion)" />
+    <PackageReference Include="PLplot" Version="5.13.7" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <ItemGroup>
+      <PlotFiles Include="$(TargetDir)runtimes\win-x64\native\**\*.*" />
+    </ItemGroup>
+    <Message Text="Executing AfterBuild copy files task" Importance="High" />
+    <Copy SourceFiles="@(PlotFiles)" DestinationFolder="$(TargetDir)%(RecursiveDir)" ContinueOnError="true" />
+    <Message Text="AfterBuild copy files task completed" Importance="High" />
+  </Target>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Compile Include="Program.fs" />
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+</Project>

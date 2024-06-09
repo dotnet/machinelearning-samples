@@ -4,12 +4,22 @@ using MovieRecommendationConsoleApp.DataStructures;
 using MovieRecommendation.DataStructures;
 using System.IO;
 using Microsoft.ML.Trainers;
+using System.Collections.Generic;
+using Common;
 
 namespace MovieRecommendation
 {
     class Program
     {
-        // Using the ml-latest-small.zip as dataset from https://grouplens.org/datasets/movielens/. 
+
+        // Using the ml-latest-small.zip as dataset from https://grouplens.org/datasets/movielens/ 
+        // https://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+        private const string datasetFile = "MovieRecommendation";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://bit.ly/3nvLf9U";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+        
         private static string ModelsRelativePath = @"../../../../MLModels";
         public static string DatasetsRelativePath = @"../../../../Data";
 
@@ -27,6 +37,11 @@ namespace MovieRecommendation
 
         static void Main(string[] args)
         {
+            List<string> destFiles = new List<string>()
+                { TrainingDataRelativePath, TestDataRelativePath };
+            Web.DownloadBigFile(DatasetsRelativePath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
+
             //STEP 1: Create MLContext to be shared across the model creation workflow objects 
             MLContext mlcontext = new MLContext();
 
