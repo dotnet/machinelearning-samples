@@ -259,7 +259,7 @@ let main argv =
             // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
             // (These trainers sometimes underperform on this dataset.)
             experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression) |> ignore
-            experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent) |> ignore
+            //experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent) |> ignore
 
             experimentSettings
 
