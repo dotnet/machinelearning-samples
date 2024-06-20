@@ -24,7 +24,7 @@ From command-prompt (either PowerShell, Bash or CMD) move to the 'BinaryClassifi
 Now run the following ML.NET CLI command:
 
 ```console
-> mlnet auto-train --task binary-classification --dataset wikiDetoxAnnotated40kRows.tsv --label-column-name Label --max-exploration-time 180
+> mlnet classification  --dataset wikiDetoxAnnotated40kRows.tsv --label-col Label --train-time 180
 ```
 
 You will get a similar command execution like the following:
