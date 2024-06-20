@@ -14,7 +14,7 @@ products:
 
 | ML.NET version | API type          | Status                        | App Type    | Data type | Scenario            | ML Task                   | Algorithms                  |
 |----------------|-------------------|-------------------------------|-------------|-----------|---------------------|---------------------------|-----------------------------|
-| v5.2         | Dynamic API | Up-to-date | Console app | .csv files | Call Numbers Anomaly Detection| Time Series - Anomaly Detection | Sr Entire Anomaly Detection, Period Detection |
+| v1.6         | Dynamic API | Up-to-date | Console app | .csv files | Call Numbers Anomaly Detection| Time Series - Anomaly Detection | Sr Entire Anomaly Detection, Period Detection |
 
 In this introductory sample, you'll see how to use [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) to detect **anomalies** in a series of number of calls data. In the world of machine learning, this type of task is called TimeSeries Anomaly Detection.
 
