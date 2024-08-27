@@ -6,7 +6,7 @@
     "bootstrap": "4.3.1",
     "jquery": "3.4.0",
     "lodash": "4.17.13",
-    "plotly.js": "1.36.1",
+    "plotly.js": "1.58.5",
     "popper.js": "1.14.3",
     "typeahead.js": "0.11.1"
   },
