@@ -1,3 +1,4 @@
+
 # Community Samples
 
 This is an ever-evolving page where samples and content from the ML.NET community are highlighted, so anyone in the community can also take advantage of these additional samples.
@@ -33,7 +34,7 @@ However, note that Microsoft does not maintain the samples in the list below.
 | [Taco vs Burrito Image Classifier](https://github.com/sethjuarez/TacosML) | Taco vs Burrito Image Classifier  | Image Classification using TensorFlow -Transfer Learning | 1.0.0  | Seth Juarez,sethjuarez  | 
 | [Multiple ML.NET samples and demos](https://github.com/jeffprosise/ML.NET) | Multiple ML.NET samples and demos  | TensorFlow, AutoML, classification, Digit classification, etc. | 1.0.0  | by jeffprosise  | 
 | [Mushroom Classifier Using C# and ML.Net](https://github.com/deepak21188/Mushroom-Classification-using-C-Sharp-and-ML.Net) | App to classify the mushrooms whether they are edible or poisonouss  | Binary Classification | 1.3.1  | by deepak21188  | 
-
+| [ML.NET.Classifier](https://github.com/Bgajski/ML.NET.Classifier) | Windows Forms application built with ML.NET. It demonstrates binary and multi-class classification using real-world datasets, machine learning algorithms, and visual performance metrics | Binary Classification, Multi-Class Classification | ML.NET 4.0.2 and .NET 8 | Bgajski |
 
 
 **Chinese Samples**
