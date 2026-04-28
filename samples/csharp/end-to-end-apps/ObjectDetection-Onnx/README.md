@@ -6,7 +6,7 @@
 
 ## Problem
 
-Object detection is one of the classic problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain.  This sample uses a pre-trained model by default, but you can also add your own model exported from [Custom Vision](https://www.customvision.a).
+Object detection is one of the classic problems in computer vision: Recognize what objects are inside a given image and also where they are in the image. For these cases, you can either use pre-trained models or train your own model to classify images specific to your custom domain. This sample uses a pre-trained model by default, but you can also add your own model exported from [Custom Vision](https://www.customvision.ai).
 
 ## How the sample works
 
@@ -29,7 +29,7 @@ The Open Neural Network eXchange i.e [ONNX](http://onnx.ai/) is an open format t
 
 ## Pre-trained models
 
-There are multiple pre-trained models for identifying multiple objects in the images. Both the **WPF app** and the **Web app** default to use the pre-trained model, **Tiny YOLOv2**, downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2); a collection of pre-trained, state-of-the-art models in the ONNX format. **Tiny YOLOv2** is a real-time neural network for object detection that detects [20 different classes](./OnnxObjectDetection/ML/DataModels/TinyYoloModel.cs#L10-L6) and was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
+There are multiple pre-trained models for identifying multiple objects in the images. Both the **WPF app** and the **Web app** default to use the pre-trained model, **Tiny YOLOv2**, downloaded from the [ONNX Model Zoo](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2); a collection of pre-trained, state-of-the-art models in the ONNX format. **Tiny YOLOv2** is a real-time neural network for object detection that detects [20 different classes](./OnnxObjectDetection/ML/DataModels/TinyYoloModel.cs#L10-L15) and was trained on the [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/) dataset. It is made up of 9 convolutional layers and 6 max-pooling layers and is a smaller version of the more complex full [YOLOv2](https://pjreddie.com/darknet/yolov2/) network.
 
 ## Custom Vision models
 
@@ -37,19 +37,19 @@ This sample defaults to use the pre-trained Tiny YOLOv2 model described above.  
 
 ### To use your own model, use the following steps
 
-1. [Create and train](https://docs.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/get-started-build-detector) an object detector with the Custom Vision. To export the model, make sure to select a **compact** domain such as **General (compact)**. To export an existing object detector, convert the domain to compact by selecting the gear icon at the top right. In _**Settings**_, choose a compact model, save, and train your project.
-2. [Export your model](https://docs.microsoft.com/azure/cognitive-services/custom-vision-service/export-your-model) by going to the _**Performance**_ tab. Select an iteration trained with a compact domain, an "Export" button will appear. Select _Export_, _ONNX_, _ONNX1.2_, and then _Export_. Once the file is ready, select the *Download* button.
-3. The export will a zip file containing several files, including some sample code, a list of labels, and the ONNX model.  Drop the .zip file into the [**OnnxModels**](./OnnxObjectDetection/ML/OnnxModels) folder in the [OnnxObjectDetection](./OnnxObjectDetection) project.
+1. [Create and train](https://learn.microsoft.com/azure/ai-services/custom-vision-service/get-started-build-detector) an object detector with Custom Vision. To export the model, make sure to select a **compact** domain such as **General (compact)**. To export an existing object detector, convert the domain to compact by selecting the gear icon at the top right. In _**Settings**_, choose a compact model, save, and train your project.
+2. [Export your model](https://learn.microsoft.com/azure/ai-services/custom-vision-service/export-your-model) by going to the _**Performance**_ tab. Select an iteration trained with a compact domain, and an "Export" button will appear. Select _Export_, _ONNX_, _ONNX1.2_, and then _Export_. Once the file is ready, select the *Download* button.
+3. The export will be a zip file containing several files, including some sample code, a list of labels, and the ONNX model. Drop the .zip file into the [**OnnxModels**](./OnnxObjectDetection/ML/OnnxModels) folder in the [OnnxObjectDetection](./OnnxObjectDetection) project.
 4. In Solutions Explorer, right-click the [OnnxModels](./OnnxObjectDetection/ML/OnnxModels) folder and select _Add Existing Item_. Select the .zip file you just added.
 5. In Solutions Explorer, select the .zip file from the [OnnxModels](./OnnxObjectDetection/ML/OnnxModels) folder. Change the following properties for the file:
     - _Build Action -> Content_
     - _Copy to Output Directory -> Copy if newer_
 
-Now when you build and run the app, it will used your model instead of the Tiny YOLOv2 model.
+Now when you build and run the app, it will use your model instead of the Tiny YOLOv2 model.
 
 ## Model input and output
 
-In order to parse the prediction output of the ONNL model, we need to understand the format (or shape) of the input and output tensors.  To do this, we'll start by using [Netron](https://lutzroeder.github.io/netron/), a GUI visualizer for neural networks and machine learning models, to inspect the model.
+In order to parse the prediction output of the ONNX model, we need to understand the format (or shape) of the input and output tensors. To do this, we'll start by using [Netron](https://lutzroeder.github.io/netron/), a GUI visualizer for neural networks and machine learning models, to inspect the model.
 
 Below is an example of what we'd see upon opening this sample's Tiny YOLOv2 model with Netron:
 
@@ -63,9 +63,9 @@ The first thing to notice is that the **input tensor's name** is **'image'**.  W
 
 We can also see that the or **shape of the input tensor** is **3x416x416**.  This tells that the bitmap image passed into the model should be 416 high x 416 wide. The '3' indicates the image(s) should be in BGR format; the first 3 'channels' are blue, green, and red, respectively.
 
-### Output: 'data' 125x13x13
+### Output: 'grid' 125x13x13
 
-As with the input tensor, we can see **output's name** is **'data'**.  Again, we'll make note of that for when we define the **output** parameter of the estimation pipeline.
+As with the input tensor, we can see **output's name** is **'grid'**. Again, we'll make note of that for when we define the **output** parameter of the estimation pipeline.
 
 We can also see that the **shape of the output tensor** is **125x13x13**.
 
@@ -122,10 +122,7 @@ _Note, if the model were trained to detect a different number of classes this va
 
 ## Solution
 
-**The projects in this solution use .NET Core 3.0.  In order to run this sample, you must install the .NET Core SDK 3.0.  To do this either:**
-
-1. Manually install the SDK by going to [.NET Core 3.0 download page](https://aka.ms/netcore3download) and download the latest **.NET Core Installer** in the **SDK** column.
-2. Or, if you're using Visual Studio 2019, go to: _**Tools > Options > Environment > Preview Features**_ and check the box next to: _**Use previews of the .NET Core SDK**_
+**The web and WPF projects in this solution target .NET Core 3.1.** You can build them with a current .NET SDK, but the build will emit warnings because .NET Core 3.1 is out of support. If you plan to deploy or actively maintain this sample, consider retargeting it to a supported .NET release first.
 
 ### The solution contains three projects
 
@@ -238,7 +235,7 @@ using (MemoryStream m = new MemoryStream())
 }
 ```
 
-Alternatively, the **WPF** app draws the bounding boxes on a [`Canvas`](https://docs.microsoft.com/en-us/dotnet/api/system.windows.controls.canvas?view=netcore-3.0) element that overlaps the streaming video playback.
+Alternatively, the **WPF** app draws the bounding boxes on a [`Canvas`](https://learn.microsoft.com/dotnet/api/system.windows.controls.canvas) element that overlaps the streaming video playback.
 
 ```csharp
 DrawOverlays(filteredBoxes, WebCamImage.ActualHeight, WebCamImage.ActualWidth);
@@ -271,10 +268,7 @@ When deploying this application on Azure via App Service, you may encounter some
 
     1. One reason why you may get a 5xx code after deploying the application is the platform. The web application only runs on 64-bit architectures. In Azure, change the **Platform** setting in the your respective App Service located in the **Settings > Configuration > General Settings** menu.
 
-    1. Another reason for a 5xx code after deploying the application is the target framework for the web application is .NET Core 3.0, which is currently in preview. You can either revert the application and the referenced project to .NET Core 2.x or add an extension to your App Service.
-
-        - To add .NET Core 3.0 support in the Azure Portal, select the **Add** button in the **Development Tools > Extensions** section of your respective App Service.
-        - Then, select **Choose Extension** and select **ASP.NET Core 3.0 (x64) Runtime** from the list of extensions and accept the Legal Terms to proceed with adding the extension to your App Service.
+    1. Another reason for a 5xx code after deploying the application is the target framework for the web application is .NET Core 3.1, which is out of support. If your App Service image does not include the .NET Core 3.1 runtime, either retarget the application and the referenced project to a supported .NET release or deploy to an environment where the 3.1 runtime is still available.
 
 1. Relative paths
 
