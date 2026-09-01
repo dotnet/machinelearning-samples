@@ -1,0 +1,34 @@
+.header {
+    height: 58px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fff;
+    color: #fff;
+    padding: 0 1em
+}
+
+@media (min-width: 1050px) {
+    .header {
+        padding: 0 5em;
+    }
+}
+
+.header a {
+    height: 25px;
+}
+
+.header img {
+    height: inherit;
+    width: inherit;
+}
+
+.header img.logo {
+    border-right: 1px #000 solid;
+    padding-right: 1em;
+}
+
+.header img.ai-logo {
+    height: 15px;
+    padding-left: 1em;
+}

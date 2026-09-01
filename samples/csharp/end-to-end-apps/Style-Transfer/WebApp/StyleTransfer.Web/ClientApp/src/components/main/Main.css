@@ -1,0 +1,24 @@
+.main {
+    align-self: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+    margin: 1em;
+}
+
+.step {
+    transition: opacity 251ms linear;
+}
+
+@media (min-width: 1050px) {
+    .main {
+        padding: 2em;
+        margin: 0;
+    }
+    .step {
+        opacity: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}

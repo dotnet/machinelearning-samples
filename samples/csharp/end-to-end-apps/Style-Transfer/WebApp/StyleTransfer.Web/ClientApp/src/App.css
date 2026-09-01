@@ -1,0 +1,104 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: calc(9px + 6 * ((100vw - 320px)/ 680));
+    overflow-x: hidden;
+}
+
+@media screen and (min-width: 768px) {
+    html {
+        font-size: 80%;
+    }
+}
+
+body {
+    font: 1.5em/1.34 base, "Segoe UI", Segoe, "Segoe WP", "Lucida Grande", "Lucida Sans", Verdana, sans-serif!important;
+}
+
+li, p {
+    max-width: 64rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+label {
+    cursor: pointer;
+}
+
+img {
+    border: 0;
+}
+
+input, select {
+    min-width: 15em;
+    max-width: 64rem;
+    height: 3.6rem;
+    border: 1px solid #d3d3d3;
+    padding: .7rem 1rem;
+    color: #d0021b;
+    font-weight: 700;
+}
+
+input[type=file] {
+    height: auto;
+    border: 0;
+    outline: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+input[type=checkbox], input[type=radio] {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+}
+
+input[type=radio] {
+    display: inline;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+.hidden {
+    display: none!important;
+}
+
+.invisible {
+    opacity: 0;
+}
+
+.alert {
+    color: #d0021b;
+    font-weight: 600;
+}
+
+.button {
+    min-width: 12rem;
+    max-width: 100%;
+    border: 1px solid transparent;
+    padding: .7rem 1.2rem;
+    background-color: #d0021b;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button:disabled {
+    background: #f2f2f2;
+    color: #bbb;
+    pointer-events: none;
+}

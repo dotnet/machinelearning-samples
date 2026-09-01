@@ -1,0 +1,59 @@
+.control-container select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    background: url('../../../assets/images/select-arrow-eb00ffc7f3.svg') no-repeat right 1rem center/1.4rem .8rem;
+    text-indent: .01px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.mode-selector .active {
+    color: #d0021b;
+    padding-bottom: 3px;
+    border-bottom: 2px solid #d0021b;
+}
+
+.mode-selector a {
+    color: #222;
+    text-decoration: none;
+    margin-right: 25px;
+    cursor: pointer;
+}
+
+.upload-container {
+    float: left;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+
+.upload-container label[for=button-upload] {
+    font-size: .8em;
+    color: #d0021b;
+    padding: 6px 27px;
+    border: 1px solid #ddd;
+    margin: 13px 2px;
+}
+
+.upload-container label[for=file] {
+    float: right;
+    margin: 13px 2px;
+    font-size: .7em;
+    color: #373737;
+    padding: 6px 0;
+    font-weight: 600;
+}
+
+.upload-container_image canvas,
+.upload-container_image img {
+    width: 100%;
+}
+
+.stream, .screenshot {
+    width: 100%;
+    height: auto;
+}
+

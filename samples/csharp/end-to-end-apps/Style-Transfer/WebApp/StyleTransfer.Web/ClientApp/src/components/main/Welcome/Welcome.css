@@ -1,0 +1,39 @@
+.welcome {
+    align-self: flex-start;
+}
+
+.welcome .intro {
+    justify-self: end;
+    max-width: 600px;
+    width: calc(100% - 2em);
+}
+
+.welcome .subtitle, 
+.welcome h1 {
+    margin-bottom: 1em;
+    color: #d0021b;
+}
+
+.welcome h1 {
+    font-size: 3.4rem;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.welcome .subtitle {
+    font-weight: 400;
+    font-size: 1.8rem;
+}
+
+@media (min-width: 48em){
+    .welcome .h1 {
+        font-size: 4.6rem;
+    }
+    .welcome  .subtitle {
+        font-size: 2rem;
+    }
+}
+
+.welcome .button {
+    margin-top: 1em;
+}

@@ -1,0 +1,8 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    background: url('./assets/images/background-st.jpg') top no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    min-height: 100vh;
+}
