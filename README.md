@@ -1,5 +1,3 @@
-> Note: We'd love to hear your thoughts about MLOps. Let us know in [this survey](https://www.research.net/r/mlops-samples).
-
 # ML.NET Samples
 
 [ML.NET](https://www.microsoft.com/net/learn/apps/machine-learning-and-ai/ml-dotnet) is a cross-platform open-source machine learning framework that makes machine learning accessible to .NET developers.
