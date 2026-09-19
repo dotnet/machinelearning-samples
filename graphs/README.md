@@ -1,0 +1,1 @@
+Directory for sharing pre-trained graphs among .net language samples (they will be downloaded and copied there once).

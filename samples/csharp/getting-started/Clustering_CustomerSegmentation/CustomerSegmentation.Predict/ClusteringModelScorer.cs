@@ -63,6 +63,9 @@ namespace CustomerSegmentation.Model
         private static void SaveCustomerSegmentationCSV(IEnumerable<ClusteringPrediction> predictions, string csvlocation)
         {
             ConsoleHelper.ConsoleWriteHeader("CSV Customer Segmentation");
+            csvlocation = Path.GetFullPath(csvlocation);
+            string parentDir = System.IO.Path.GetDirectoryName(csvlocation);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             using (var w = new System.IO.StreamWriter(csvlocation))
             {
                 w.WriteLine($"LastName,SelectedClusterId");

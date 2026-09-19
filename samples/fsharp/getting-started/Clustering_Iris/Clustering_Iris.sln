@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Clustering_Iris", "IrisClustering\IrisClusteringConsoleApp\Clustering_Iris.fsproj", "{20A1A0DB-A515-4EF9-891B-C57A4D66AC49}"
 EndProject

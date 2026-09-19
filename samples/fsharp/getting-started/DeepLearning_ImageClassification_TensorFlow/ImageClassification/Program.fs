@@ -2,6 +2,7 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
+open Common
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -162,8 +163,36 @@ let main _argv =
     let assetsPath = Path.Combine(dataRoot.Directory.FullName, @"..\..\..\assets")
     let tagsTsv = Path.Combine(assetsPath, "inputs", "images", "tags.tsv")
     let imagesFolder = Path.Combine(assetsPath, "inputs", "images")
-    let inceptionPb = Path.Combine(assetsPath, "inputs", "inception", "tensorflow_inception_graph.pb")
+    let inceptionFolder = Path.Combine(assetsPath, "inputs", "inception")
+    let inceptionPb = Path.Combine(inceptionFolder, "tensorflow_inception_graph.pb")
     let labelsTxt = Path.Combine(assetsPath, "inputs", "inception", "imagenet_comp_graph_label_strings.txt")
+
+    let tensorflowInceptionGraphZip = "inception5h.zip"
+    let tensorflowInceptionGraphUrl =Path.Combine("https://storage.googleapis.com/download.tensorflow.org/models", tensorflowInceptionGraphZip)
+    let commonGraphsRelativePath = @"../../../../../../../../graphs" 
+    let destFiles: string list = [inceptionPb]
+    let destFolder = ""
+
+    let datasetPath1 = 
+        __SOURCE_DIRECTORY__ 
+        |> Web.DownloadBigFile inceptionFolder tensorflowInceptionGraphUrl tensorflowInceptionGraphZip commonGraphsRelativePath destFiles destFolder
+
+    //let assetsRelativePath = inceptionFolder 
+    let commonDatasetsRelativePath = @"../../../../../../../../datasets" 
+    let fileName = "ImagesClassification"
+    let zipFileName = fileName + ".zip"
+    let imagesDatasetUrl = "https://bit.ly/3qmkaYo"
+    let imagePath1 = Path.Combine (imagesFolder, "teddy1.jpg")
+    let imagePath2 = Path.Combine (imagesFolder, "teddy2.jpg")
+    let imagePath3 = Path.Combine (imagesFolder, "teddy3.jpg")
+    let imagePath4 = Path.Combine (imagesFolder, "teddy4.jpg")
+    // ...
+    let destFiles: string list = [imagePath1;imagePath2;imagePath3;imagePath4]
+    //let destFiles: string list = []
+
+    let datasetPath = 
+        __SOURCE_DIRECTORY__ 
+        |> Web.DownloadBigFile imagesFolder imagesDatasetUrl zipFileName commonDatasetsRelativePath destFiles destFolder
 
     try
         score tagsTsv imagesFolder inceptionPb labelsTxt

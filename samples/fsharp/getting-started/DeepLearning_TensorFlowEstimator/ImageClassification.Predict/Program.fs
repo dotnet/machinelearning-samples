@@ -2,6 +2,7 @@
 open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
+open Common
 
 let dataRoot = FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -127,7 +128,27 @@ let main _argv =
     let assetsPath = Path.Combine(dataRoot.Directory.FullName, @"..\..\..\assets")
     let tagsTsv = Path.Combine(assetsPath, "inputs", "data", "tags.tsv")
     let imagesFolder = Path.Combine(assetsPath, "inputs", "data")
-    let imageClassifierZip = Path.Combine(assetsPath, "inputs", "imageClassifier.zip")
+    //let imageClassifierZip = Path.Combine(assetsPath, "inputs", "imageClassifier.zip")
+    // Use directly the last saved:
+    let imageClassifierZip = Path.Combine(dataRoot.Directory.FullName, @"..\..\..\..\ImageClassification.Train\assets\outputs\imageClassifier.zip")
+    //let imageClassifierZip = Path.GetFullPath(imageClassifierZip)
+    if not (File.Exists(imageClassifierZip)) then
+        Console.WriteLine("Please run the model training first.")
+        Environment.Exit(0)
+
+    let commonDatasetsRelativePath = @"../../../../../../../../datasets"
+    let imagesDatasetName = "flower_photos_prediction_set"
+    let imagesDatasetZip = imagesDatasetName + ".zip"
+    let imagesDatasetUrl = "https://bit.ly/3gGDev2"
+    let destFolder = imagesFolder
+    let imagePath1 = Path.GetFullPath(Path.Combine(imagesFolder, "broccoli.png"))
+    let imagePath2 = Path.GetFullPath(Path.Combine(imagesFolder, "pizza3.jpg"))
+    let imagePath3 = Path.GetFullPath(Path.Combine(imagesFolder, "teddy6.jpg"))
+    let imagePath4 = Path.GetFullPath(Path.Combine(imagesFolder, "toaster3.jpg"))
+    let destFiles: string list = [imagePath1;imagePath2;imagePath3;imagePath4]
+    let datasetPath = 
+        __SOURCE_DIRECTORY__ 
+        |> Web.DownloadBigFile imagesFolder imagesDatasetUrl imagesDatasetZip commonDatasetsRelativePath destFiles destFolder
 
     try
         classifyImages tagsTsv imagesFolder imageClassifierZip

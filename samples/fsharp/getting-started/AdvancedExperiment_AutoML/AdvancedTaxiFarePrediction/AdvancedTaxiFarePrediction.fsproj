@@ -2,16 +2,20 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\..\common\AutoML\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
+    <Compile Include="..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
+    <Compile Include="..\..\..\common\Web.fs" Link="Common\Web.fs" />
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="4.0.2" />
     <PackageReference Include="Microsoft.ML.AutoML" Version="$(MicrosoftMLPreviewVersion)" />
     <PackageReference Include="PLplot" Version="5.13.7" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,12 +25,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\..\datasets\taxi-fare-test.csv" Link="Data\taxi-fare-test.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\..\..\..\datasets\taxi-fare-train.csv" Link="Data\taxi-fare-train.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Update="FSharp.Core" Version="6.0.5" />
   </ItemGroup>
 
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <ItemGroup>
+      <PlotFiles Include="$(TargetDir)runtimes\win-x64\native\**\*.*" />
+    </ItemGroup>
+    <Message Text="Executing AfterBuild copy files task" Importance="High" />
+    <Copy SourceFiles="@(PlotFiles)" DestinationFolder="$(TargetDir)%(RecursiveDir)" ContinueOnError="true" />
+    <Message Text="AfterBuild copy files task completed" Importance="High" />
+  </Target>
+  
 </Project>

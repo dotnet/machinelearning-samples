@@ -1,4 +1,9 @@
-﻿open System
+﻿
+//namespace AdvancedTaxiFarePrediction
+
+//module Main
+
+open System
 open System.Collections.Generic
 open System.Diagnostics
 open System.IO
@@ -11,11 +16,11 @@ open Microsoft.ML.Data
 open PLplot
 open Common
 
-
 let assemblyFolderPath = Reflection.Assembly.GetExecutingAssembly().Location |> Path.GetDirectoryName
 let absolutePath x = Path.Combine(assemblyFolderPath, x)
 
-let baseDatasetsRelativePath = @"Data"
+//let baseDatasetsRelativePath = @"Data"
+let baseDatasetsRelativePath = @"../../../Data"
 
 let trainDataRelativePath = Path.Combine(baseDatasetsRelativePath, "taxi-fare-train.csv")
 let trainDataPath = absolutePath trainDataRelativePath
@@ -23,11 +28,22 @@ let trainDataPath = absolutePath trainDataRelativePath
 let testDataRelativePath = Path.Combine(baseDatasetsRelativePath, "taxi-fare-test.csv")
 let testDataPath = absolutePath testDataRelativePath
 
+let assetsPath = baseDatasetsRelativePath
+let assetsRelativePath = assetsPath
+let commonDatasetsRelativePath = @"../../../../../../../../datasets"
+let fileName = "taxi-fare"
+let zipFileName = fileName + ".zip"
+let downloadUrl = "https://bit.ly/3qISgov"
+let destFolder = assetsPath 
+let destFiles: string list = [trainDataPath; testDataPath]
+
+let datasetPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
+
 let baseModelsRelativePath = @"../../../MLModels"
 let modelRelativePath = Path.Combine(baseModelsRelativePath, "TaxiFareModel.zip")
 let modelPath = absolutePath modelRelativePath
-
-let labelColumnName = "fare_amount"
 
 [<CLIMutable>]
 type TaxiTrip = 
@@ -78,7 +94,7 @@ let readTaxiTripCsv filename =
         )
 
 let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead = 
-    
+
     let args = Environment.GetCommandLineArgs()
 
     let trainedModel,_ = 
@@ -87,7 +103,7 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
 
     // Create prediction engine related to the loaded trained model
     let predFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel)
-    
+
     let chartFileName = 
         use pl = new PLStream()
         let chartFileName = 
@@ -150,7 +166,7 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
                     printfn "-------------------------------------------------"
                     xTotal + x, yTotal + y,  xyMultiTotal + x*y, xSquareTotal + x*x
                 )
-     
+ 
         // Regression Line calculation explanation:
         // https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/more-on-regression/v/regression-line-example
         let minY = yTotal / totalNumber
@@ -161,7 +177,7 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
         let m = ((minX * minY) - minXY) / ((minX * minX) - minXsquare)
         let b = minY - (m * minX)
         let y x = m*x + b
-        
+    
         pl.col0(4)
         let xs = [|1.0; 39.0|]
         pl.line(xs, xs |> Array.map y)
@@ -179,157 +195,163 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
     let pinfo = new ProcessStartInfo(chartFileNamePath, UseShellExecute = true)
     Process.Start pinfo |> ignore
 
+[<EntryPoint>]
+let main argv =
 
+    let labelColumnName = "fare_amount"
 
-let mlContext = new MLContext()
+    let mlContext = new MLContext()
 
-// Infer columns in the dataset with AutoML
-let columnInference = 
-    ConsoleHelper.consoleWriteHeader "=============== Inferring columns in dataset ==============="
-    let columnInference = mlContext.Auto().InferColumns(trainDataPath, labelColumnName, groupColumns=false)
-    ConsoleHelper.print columnInference
-    columnInference
+    // Infer columns in the dataset with AutoML
+    let columnInference = 
+        ConsoleHelper.consoleWriteHeader "=============== Inferring columns in dataset ==============="
+        let columnInference = mlContext.Auto().InferColumns(trainDataPath, labelColumnName, groupColumns=false)
+        ConsoleHelper.print columnInference
+        columnInference
 
-// Load data from files using inferred columns
-let textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions)
-let trainDataView = textLoader.Load(trainDataPath)
-let testDataView = textLoader.Load(testDataPath)
-
-// Run an AutoML experiment on the dataset
-let experimentResult = 
-
-    // STEP 1: Display first few rows of the training data 
-    ConsoleHelper.showDataViewInConsole mlContext trainDataView 4
-
-    // STEP 2: Build a pre-featurizer for use in the AutoML experiment.
-    // (Internally, AutoML uses one or more train/validation data splits to 
-    // evaluate the models it produces. The pre-featurizer is fit only on the 
-    // training data split to produce a trained transform. Then, the trained transform 
-    // is applied to both the train and validation data splits.)
-    let preFeaturizer = mlContext.Transforms.Conversion.MapValue("is_cash", [| KeyValuePair("CSH", true) |], "payment_type") |> downcastPipeline
-
-    // STEP 3: Customize column information returned by InferColumns API
-    let columnInformation = columnInference.ColumnInformation
-    columnInformation.CategoricalColumnNames.Remove("payment_type") |> ignore
-    columnInformation.IgnoredColumnNames.Add("payment_type")
-
-    // STEP 4: Initialize a cancellation token source to stop the experiment.
-    let cts = new CancellationTokenSource()
-
-    // STEP 5: Initialize our user-defined progress handler that AutoML will 
-    // invoke after each model it produces and evaluates.
-    let progressHandler = ConsoleHelper.regressionExperimentProgressHandler()
-
-    // STEP 6: Create experiment settings
-    let experimentSettings = 
-        let experimentSettings = new RegressionExperimentSettings()
-        experimentSettings.MaxExperimentTimeInSeconds <- 3600u
-        experimentSettings.CancellationToken <- cts.Token
-
-        // Set the metric that AutoML will try to optimize over the course of the experiment.
-        experimentSettings.OptimizingMetric <- RegressionMetric.RootMeanSquaredError
-
-        // Set the cache directory to null.
-        // This will cause all models produced by AutoML to be kept in memory 
-        // instead of written to disk after each run, as AutoML is training.
-        // (Please note: for an experiment on a large dataset, opting to keep all 
-        // models trained by AutoML in memory could cause your system to run out 
-        // of memory.)
-        //experimentSettings.CacheDirectory <- null
-
-        // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
-        // (These trainers sometimes underperform on this dataset.)
-        experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression) |> ignore
-        experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent) |> ignore
-
-        experimentSettings
-
-    // STEP 7: Run AutoML regression experiment
-    let experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings)
-    ConsoleHelper.consoleWriteHeader "=============== Running AutoML experiment ==============="
-    printfn "Running AutoML regression experiment..."
-    let stopwatch = Stopwatch.StartNew()
-    // Cancel experiment after the user presses any key
-    async {
-        printfn "Press any key to stop the experiment run..."
-        Console.ReadKey() |> ignore
-        cts.Cancel()
-    } |> Async.Start
-
-    let experimentResult = experiment.Execute(trainDataView, columnInformation, preFeaturizer, progressHandler)
-    printfn "%d models were returned after %0.2f seconds%s" (experimentResult.RunDetails.Count()) stopwatch.Elapsed.TotalSeconds Environment.NewLine
-
-    // Print top models found by AutoML
-    experimentResult.RunDetails
-    |> Seq.filter (fun r -> not (isNull r.ValidationMetrics) && not (Double.IsNaN r.ValidationMetrics.RootMeanSquaredError))
-    |> Seq.sortBy (fun x -> x.ValidationMetrics.RootMeanSquaredError)
-    |> Seq.truncate 3
-    |> Seq.iteri
-        (fun i x ->
-            ConsoleHelper.printRegressionIterationMetrics (i + 1) x.TrainerName x.ValidationMetrics x.RuntimeInSeconds
-        )
-
-    experimentResult
-
-// Evaluate the model and print metrics
-ConsoleHelper.consoleWriteHeader "===== Evaluating model's accuracy with test data ====="
-let predictions = experimentResult.BestRun.Model.Transform(testDataView)
-let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = labelColumnName, scoreColumnName = "Score")
-ConsoleHelper.printRegressionMetrics experimentResult.BestRun.TrainerName metrics
-
-// Save / persist the best model to a.ZIP file
-ConsoleHelper.consoleWriteHeader "=============== Saving the model ==============="
-mlContext.Model.Save(experimentResult.BestRun.Model, trainDataView.Schema, modelPath)
-printfn "The model is saved to %s" modelPath
-
-// Make a single test prediction loading the model from .ZIP file
-ConsoleHelper.consoleWriteHeader "=============== Testing prediction engine ==============="
-
-// Sample: 
-// vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
-// VTS,1,1,1140,3.75,CRD,15.5
-
-let taxiTripSample = 
-    {
-        VendorId = "VTS"
-        RateCode = 1.f
-        PassengerCount = 1.f
-        TripTime = 1140.f
-        TripDistance = 3.75f
-        PaymentType = "CRD"
-        FareAmount = 0.f // To predict. Actual/Observed = 15.5
-    }
-
-let trainedModel, modelInputSchema = mlContext.Model.Load(modelPath)
-
-// Create prediction engine related to the loaded trained model
-let predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel)
-
-// Score
-let predictedResult = predEngine.Predict(taxiTripSample)
-
-printfn "**********************************************************************"
-printfn "Predicted fare: %0.4f, actual fare: 15.5" predictedResult.FareAmount
-printfn "**********************************************************************"
-
-// Paint regression distribution chart for a number of elements read from a Test DataSet file
-plotRegressionChart mlContext 100
-
-// Re-fit best pipeline on train and test data, to produce 
-// a model that is trained on as much data as is available.
-// This is the final model that can be deployed to production.
-ConsoleHelper.consoleWriteHeader "=============== Re-fitting best pipeline ==============="
-let refitModel = 
+    // Load data from files using inferred columns
     let textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions)
-    MultiFileSource(trainDataPath, testDataPath)
-    |> textLoader.Load
-    |> experimentResult.BestRun.Estimator.Fit
+    let trainDataView = textLoader.Load(trainDataPath)
+    let testDataView = textLoader.Load(testDataPath)
 
-// Save the re-fit model to a.ZIP file
-ConsoleHelper.consoleWriteHeader "=============== Saving the model ==============="
-mlContext.Model.Save(refitModel, trainDataView.Schema, modelPath)
-printfn "The model is saved to %s" modelPath
+    // Run an AutoML experiment on the dataset
+    let experimentResult = 
 
-printfn "Press any key to exit.."
-Console.ReadLine() |> ignore
+        // STEP 1: Display first few rows of the training data 
+        ConsoleHelper.showDataViewInConsole mlContext trainDataView 4
+
+        // STEP 2: Build a pre-featurizer for use in the AutoML experiment.
+        // (Internally, AutoML uses one or more train/validation data splits to 
+        // evaluate the models it produces. The pre-featurizer is fit only on the 
+        // training data split to produce a trained transform. Then, the trained transform 
+        // is applied to both the train and validation data splits.)
+        let preFeaturizer = mlContext.Transforms.Conversion.MapValue("is_cash", [| KeyValuePair("CSH", true) |], "payment_type") |> downcastPipeline
+
+        // STEP 3: Customize column information returned by InferColumns API
+        let columnInformation = columnInference.ColumnInformation
+        columnInformation.CategoricalColumnNames.Remove("payment_type") |> ignore
+        columnInformation.IgnoredColumnNames.Add("payment_type")
+
+        // STEP 4: Initialize a cancellation token source to stop the experiment.
+        let cts = new CancellationTokenSource()
+
+        // STEP 5: Initialize our user-defined progress handler that AutoML will 
+        // invoke after each model it produces and evaluates.
+        let progressHandler = ConsoleHelper.regressionExperimentProgressHandler()
+
+        // STEP 6: Create experiment settings
+        let experimentSettings = 
+            let experimentSettings = new RegressionExperimentSettings()
+            experimentSettings.MaxExperimentTimeInSeconds <- 3600u
+            experimentSettings.CancellationToken <- cts.Token
+
+            // Set the metric that AutoML will try to optimize over the course of the experiment.
+            experimentSettings.OptimizingMetric <- RegressionMetric.RootMeanSquaredError
+
+            // Set the cache directory to null.
+            // This will cause all models produced by AutoML to be kept in memory 
+            // instead of written to disk after each run, as AutoML is training.
+            // (Please note: for an experiment on a large dataset, opting to keep all 
+            // models trained by AutoML in memory could cause your system to run out 
+            // of memory.)
+            //experimentSettings.CacheDirectory <- null
+
+            // Don't use LbfgsPoissonRegression and OnlineGradientDescent trainers during this experiment.
+            // (These trainers sometimes underperform on this dataset.)
+            experimentSettings.Trainers.Remove(RegressionTrainer.LbfgsPoissonRegression) |> ignore
+            //experimentSettings.Trainers.Remove(RegressionTrainer.OnlineGradientDescent) |> ignore
+
+            experimentSettings
+
+        // STEP 7: Run AutoML regression experiment
+        let experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings)
+        ConsoleHelper.consoleWriteHeader "=============== Running AutoML experiment ==============="
+        printfn "Running AutoML regression experiment..."
+        let stopwatch = Stopwatch.StartNew()
+        // Cancel experiment after the user presses any key
+        async {
+            printfn "Press any key to stop the experiment run..."
+            Console.ReadKey() |> ignore
+            cts.Cancel()
+        } |> Async.Start
+
+        let experimentResult = experiment.Execute(trainDataView, columnInformation, preFeaturizer, progressHandler)
+        printfn "%d models were returned after %0.2f seconds%s" (experimentResult.RunDetails.Count()) stopwatch.Elapsed.TotalSeconds Environment.NewLine
+
+        // Print top models found by AutoML
+        experimentResult.RunDetails
+        |> Seq.filter (fun r -> not (isNull r.ValidationMetrics) && not (Double.IsNaN r.ValidationMetrics.RootMeanSquaredError))
+        |> Seq.sortBy (fun x -> x.ValidationMetrics.RootMeanSquaredError)
+        |> Seq.truncate 3
+        |> Seq.iteri
+            (fun i x ->
+                ConsoleHelper.printRegressionIterationMetrics (i + 1) x.TrainerName x.ValidationMetrics x.RuntimeInSeconds
+            )
+
+        experimentResult
+
+    // Evaluate the model and print metrics
+    ConsoleHelper.consoleWriteHeader "===== Evaluating model's accuracy with test data ====="
+    let predictions = experimentResult.BestRun.Model.Transform(testDataView)
+    let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = labelColumnName, scoreColumnName = "Score")
+    ConsoleHelper.printRegressionMetrics experimentResult.BestRun.TrainerName metrics
+
+    // Save / persist the best model to a.ZIP file
+    ConsoleHelper.consoleWriteHeader "=============== Saving the model ==============="
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
+    mlContext.Model.Save(experimentResult.BestRun.Model, trainDataView.Schema, modelPath)
+    printfn "The model is saved to %s" modelPath
+
+    // Make a single test prediction loading the model from .ZIP file
+    ConsoleHelper.consoleWriteHeader "=============== Testing prediction engine ==============="
+
+    // Sample: 
+    // vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
+    // VTS,1,1,1140,3.75,CRD,15.5
+
+    let taxiTripSample = 
+        {
+            VendorId = "VTS"
+            RateCode = 1.f
+            PassengerCount = 1.f
+            TripTime = 1140.f
+            TripDistance = 3.75f
+            PaymentType = "CRD"
+            FareAmount = 0.f // To predict. Actual/Observed = 15.5
+        }
+
+    let trainedModel, modelInputSchema = mlContext.Model.Load(modelPath)
+
+    // Create prediction engine related to the loaded trained model
+    let predEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel)
+
+    // Score
+    let predictedResult = predEngine.Predict(taxiTripSample)
+
+    printfn "**********************************************************************"
+    printfn "Predicted fare: %0.4f, actual fare: 15.5" predictedResult.FareAmount
+    printfn "**********************************************************************"
+
+    // Paint regression distribution chart for a number of elements read from a Test DataSet file
+    plotRegressionChart mlContext 100
+
+    // Re-fit best pipeline on train and test data, to produce 
+    // a model that is trained on as much data as is available.
+    // This is the final model that can be deployed to production.
+    ConsoleHelper.consoleWriteHeader "=============== Re-fitting best pipeline ==============="
+    let refitModel = 
+        let textLoader = mlContext.Data.CreateTextLoader(columnInference.TextLoaderOptions)
+        MultiFileSource(trainDataPath, testDataPath)
+        |> textLoader.Load
+        |> experimentResult.BestRun.Estimator.Fit
+
+    // Save the re-fit model to a.ZIP file
+    ConsoleHelper.consoleWriteHeader "=============== Saving the model ==============="
+    mlContext.Model.Save(refitModel, trainDataView.Schema, modelPath)
+    printfn "The model is saved to %s" modelPath
+
+    printfn "Press any key to exit.."
+    Console.ReadLine() |> ignore
+    
+    0 // return an integer exit code
 

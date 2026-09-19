@@ -10,11 +10,18 @@ using Common;
 using GitHubLabeler.DataStructures;
 using Microsoft.ML.Data;
 using static Microsoft.ML.TrainCatalogBase;
+using System.Collections.Generic;
 
 namespace GitHubLabeler
 {
     internal static class Program
     {
+        private const string datasetFile = "GitHubLabeler";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://bit.ly/3wI1HcA";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
         private static string BaseDatasetsRelativePath = @"../../../../Data";
@@ -32,6 +39,10 @@ namespace GitHubLabeler
         private static async Task Main(string[] args)
         {
             SetupAppConfiguration();
+
+            List<string> destFiles = new List<string>() { DataSetRelativePath };
+            Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
 
             //1. ChainedBuilderExtensions and Train the model
             BuildAndTrainModel(DataSetLocation, ModelPath, MyTrainerStrategy.OVAAveragedPerceptronTrainer);
@@ -117,6 +128,8 @@ namespace GitHubLabeler
 
             // STEP 6: Save/persist the trained model to a .ZIP file
             Console.WriteLine("=============== Saving the model to a file ===============");
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Common.ConsoleHelper.ConsoleWriteHeader("Training process finalized");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -11,24 +12,34 @@ namespace SpamDetectionConsoleApp
 {
     class Program
     {
+        private const string datasetFile = "SMSSpamCollection";
+        private const string datasetZip = datasetFile + ".zip";
+        private const string datasetUrl = "https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip";
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = Path.GetFullPath(commonDatasetsRelativePath);
+
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         private static string DataDirectoryPath => Path.Combine(AppPath, "..", "..", "..", "Data", "spamfolder");
-        private static string TrainDataPath => Path.Combine(AppPath, "..", "..", "..", "Data", "spamfolder", "SMSSpamCollection");
+        private static string TrainDataPath => Path.Combine(DataDirectoryPath, "SMSSpamCollection");
 
         static void Main(string[] args)
         {
             // Download the dataset if it doesn't exist.
-            if (!File.Exists(TrainDataPath))
-            {
-                using (var client = new WebClient())
-                {
-                    //The code below will download a dataset from a third-party, UCI (link), and may be governed by separate third-party terms. 
-                    //By proceeding, you agree to those separate terms.
-                    client.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip", "spam.zip");
-                }
+            //if (!File.Exists(TrainDataPath))
+            //{
+            //    using (var client = new WebClient())
+            //    {
+            //        //The code below will download a dataset from a third-party, UCI (link), and may be governed by separate third-party terms. 
+            //        //By proceeding, you agree to those separate terms.
+            //        client.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip", "spam.zip");
+            //    }
 
-                ZipFile.ExtractToDirectory("spam.zip", DataDirectoryPath);
-            }
+            //    ZipFile.ExtractToDirectory("spam.zip", DataDirectoryPath);
+            //}
+            
+            List<string> destFiles = new List<string>() { TrainDataPath };
+            Web.DownloadBigFile(DataDirectoryPath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
 
             // Set up the MLContext, which is a catalog of components in ML.NET.
             MLContext mlContext = new MLContext();

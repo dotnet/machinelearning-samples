@@ -18,15 +18,7 @@
     <None Include="LandUse.training.cs">
       <DependentUpon>LandUse.mbconfig</DependentUpon>
     </None>
-    <None Include="LandUse.zip">
-      <DependentUpon>LandUse.mbconfig</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="LandUse.map.json">
-      <DependentUpon>LandUse.mbconfig</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="LandUse.onnx">
       <DependentUpon>LandUse.mbconfig</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

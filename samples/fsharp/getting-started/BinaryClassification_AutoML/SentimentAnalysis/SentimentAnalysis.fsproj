@@ -2,26 +2,17 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\..\common\AutoML\ConsoleHelper.fs" Link="Common\ConsoleHelper.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="datasets\wikipedia-detox-250-line-data.tsv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="datasets\wikipedia-detox-250-line-test.tsv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
+    <Compile Include="..\..\..\common\FileUtil.fs" Link="Common\FileUtil.fs" />
     <Compile Include="Program.fs" />
-    <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.AutoML" Version="0.19.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,8 +24,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ML.AutoML" Version="MicrosoftMLPreviewVersion" />
-  </ItemGroup>
-  
 </Project>

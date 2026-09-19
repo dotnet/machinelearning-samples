@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +31,15 @@
   <ItemGroup>
     <None Include="..\Data\hour_test.csv" Link="Data\hour_test.csv" />
     <None Include="..\Data\hour_train.csv" Link="Data\hour_train.csv" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\datasets\hour_test.csv" Link="..\..\..\..\Data\hour_test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\..\..\..\datasets\hour_train.csv" Link="..\..\..\..\Data\hour_train.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -16,7 +16,11 @@ namespace ImageClassification.Predict
 
             var imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions");
 
-            var imageClassifierModelZipFilePath = Path.Combine(assetsPath, "inputs", "MLNETModel", "imageClassifier.zip");
+            //var imageClassifierModelZipFilePath = Path.Combine(assetsPath, "inputs", "MLNETModel", "imageClassifier.zip");
+            // Use directly the last saved:
+            var trainRelativePath = @"..\..\..\ImageClassification.Train\assets\outputs\";
+            var imageClassifierModelZipFilePath = Path.Combine(assetsPath, "inputs", trainRelativePath,
+                "imageClassifier.zip");
 
             try
             {

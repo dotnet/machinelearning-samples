@@ -4,6 +4,7 @@ open System.IO
 open System.Linq
 open Microsoft.ML
 open Microsoft.ML.Data
+open Common
 
 [<CLIMutable>]
 type MeterData =
@@ -40,6 +41,7 @@ let trainigPipeLine = mlContext.Transforms.DetectSpikeBySsa("Prediction", "Consu
 
 let trainedModel = trainigPipeLine.Fit(dataView)
 
+FileUtil.CreateParentDirectoryIfNotExists modelPath
 mlContext.Model.Save(trainedModel, dataView.Schema, modelPath)
 
 printfn "The model is saved to %s" modelPath

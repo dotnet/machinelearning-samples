@@ -4,12 +4,34 @@ using ObjectDetection.YoloParser;
 using ObjectDetection.DataStructures;
 using ObjectDetection;
 using Microsoft.ML;
+using Common;
 
 var assetsRelativePath = @"../../../assets";
 string assetsPath = GetAbsolutePath(assetsRelativePath);
-var modelFilePath = Path.Combine(assetsPath, "Model", "TinyYolo2_model.onnx");
+var modelFileFolder = Path.Combine(assetsPath, "Model");
+var modelFilePath = Path.Combine(modelFileFolder, "TinyYolo2_model.onnx");
 var imagesFolder = Path.Combine(assetsPath, "images");
 var outputFolder = Path.Combine(assetsPath, "images", "output");
+
+var imagesDatasetFile = "ObjectDetectionPhotosSet";
+var imagesDatasetZip = imagesDatasetFile + ".zip";
+var imagesDatasetUrl = "https://bit.ly/34M7MbT";
+var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+var imagePath1 = Path.Combine(imagesFolder, "image1.jpg");
+var imagePath2 = Path.Combine(imagesFolder, "image2.jpg");
+var imagePath3 = Path.Combine(imagesFolder, "image3.jpg");
+var imagePath4 = Path.Combine(imagesFolder, "image4.jpg");
+List<string> destFiles = new List<string>()
+    { imagePath1, imagePath2, imagePath3, imagePath4 };
+Web.DownloadBigFile(imagesFolder, imagesDatasetUrl, imagesDatasetZip, commonDatasetsPath, destFiles);
+
+var graphZip = "TinyYolo2_model.onnx";
+var graphUrl = "https://bit.ly/3rdrfKe";
+var commonGraphsRelativePath = @"../../../../../../../../graphs";
+var commonGraphsPath = GetAbsolutePath(commonGraphsRelativePath);
+
+Web.DownloadBigFile(modelFileFolder, graphUrl, graphZip, commonGraphsPath);
 
 // Initialize MLContext
 MLContext mlContext = new MLContext();

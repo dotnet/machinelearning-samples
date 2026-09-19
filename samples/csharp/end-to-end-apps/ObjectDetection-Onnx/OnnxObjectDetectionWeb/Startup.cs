@@ -9,6 +9,9 @@ using OnnxObjectDetectionWeb.Infrastructure;
 using OnnxObjectDetectionWeb.Services;
 using OnnxObjectDetectionWeb.Utilities;
 using OnnxObjectDetection;
+using System.IO;
+using Common;
+using System.Collections.Generic;
 
 namespace OnnxObjectDetectionWeb
 {
@@ -21,8 +24,45 @@ namespace OnnxObjectDetectionWeb
         {
             Configuration = configuration;
 
+            string imagesTmpFolder = CommonHelpers.GetAbsolutePath(@"../../../ImagesTemp");
+            var imagesDataset3File = "ObjectDetectionPhotosSet3";
+            var imagesDataset3Zip = imagesDataset3File + ".zip";
+            var imagesDataset3Url = "https://bit.ly/3vNLuS5";
+            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsPath = CommonHelpers.GetAbsolutePath(commonDatasetsRelativePath);
+            var imagePath5 = Path.Combine(imagesTmpFolder, "29990837.Jpeg");
+            List<string> destFiles3 = new List<string>() { imagePath5 };
+            Web.DownloadBigFile(imagesTmpFolder, imagesDataset3Url, imagesDataset3Zip, commonDatasetsPath, destFiles3);
+
+            string imagesListFolder = CommonHelpers.GetAbsolutePath(@"../../../Assets/imagesList");
+            var imagesDatasetFile = "ObjectDetectionPhotosSet";
+            var imagesDatasetZip = imagesDatasetFile + ".zip";
+            var imagesDatasetUrl = "https://bit.ly/3vNLuS5";
+            var imagePath1 = Path.Combine(imagesListFolder, "image1.jpg");
+            var imagePath2 = Path.Combine(imagesListFolder, "image2.jpg");
+            var imagePath3 = Path.Combine(imagesListFolder, "image3.jpg");
+            var imagePath4 = Path.Combine(imagesListFolder, "image4.jpg");
+            List<string> destFiles = new List<string>()
+            { imagePath1, imagePath2, imagePath3, imagePath4 };
+            Web.DownloadBigFile(imagesListFolder, imagesDatasetUrl, imagesDatasetZip, commonDatasetsPath, destFiles);
+
+            //"OnnxModelFilePath": "ML/OnnxModels/TinyYolo2_model.onnx"
+            //"MLNETModelFilePath": "ML/MLNETModel/TinyYoloModel.zip"
             _onnxModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:OnnxModelFilePath"]);
             _mlnetModelFilePath = CommonHelpers.GetAbsolutePath(Configuration["MLModel:MLNETModelFilePath"]);
+            
+            if (!System.IO.File.Exists(_onnxModelFilePath))
+            {
+                var graphZip = "TinyYolo2_model.onnx";
+                var graphUrl = "https://bit.ly/3rdrfKe";
+                var commonGraphsRelativePath = @"../../../../../../../../graphs";
+                var commonGraphsPath = CommonHelpers.GetAbsolutePath(commonGraphsRelativePath);
+                var modelRelativePath = @"../../../../OnnxObjectDetection/ML/OnnxModels";
+                string modelPath = CommonHelpers.GetAbsolutePath(modelRelativePath);
+                Web.DownloadBigFile(modelPath, graphUrl, graphZip, commonGraphsPath);
+                // Restart to copy TinyYolo2_model.onnx to bin\Debug\net6.0\ML\OnnxModels
+                System.Environment.Exit(0);
+            }
 
             var onnxModelConfigurator = new OnnxModelConfigurator(new TinyYoloModel(_onnxModelFilePath));
 

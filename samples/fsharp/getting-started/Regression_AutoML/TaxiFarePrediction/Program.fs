@@ -16,7 +16,8 @@ open Common
 let assemblyFolderPath = Reflection.Assembly.GetExecutingAssembly().Location |> Path.GetDirectoryName
 let absolutePath x = Path.Combine(assemblyFolderPath, x)
 
-let baseDatasetsRelativePath = @"Data"
+//let baseDatasetsRelativePath = @"Data"
+let baseDatasetsRelativePath = @"../../../Data"
 
 let trainDataRelativePath = Path.Combine(baseDatasetsRelativePath, "taxi-fare-train.csv")
 let trainDataPath = absolutePath trainDataRelativePath
@@ -27,6 +28,19 @@ let testDataPath = absolutePath testDataRelativePath
 let baseModelsRelativePath = @"../../../MLModels"
 let modelRelativePath = Path.Combine(baseModelsRelativePath, "TaxiFareModel.zip")
 let modelPath = absolutePath modelRelativePath
+
+let assetsPath = baseDatasetsRelativePath
+let assetsRelativePath = assetsPath
+let commonDatasetsRelativePath = @"../../../../../../../../datasets"
+let fileName = "taxi-fare"
+let zipFileName = fileName + ".zip"
+let downloadUrl = "https://bit.ly/3qISgov"
+let destFolder = Path.Combine(assetsRelativePath, assetsPath, zipFileName)
+let destFiles: string list = []
+
+let datasetPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
 
 let labelColumnName = "FareAmount"
 
@@ -176,7 +190,6 @@ let plotRegressionChart (mlContext : MLContext) numberOfRecordsToRead =
     let pinfo = new ProcessStartInfo(chartFileNamePath, UseShellExecute = true)
     Process.Start pinfo |> ignore
 
-
 let experimentTimeInSeconds = 60u
 
 let mlContext = MLContext()
@@ -222,6 +235,7 @@ let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = label
 ConsoleHelper.printRegressionMetrics best.TrainerName metrics
 
 // STEP 6: Save/persist the trained model to a .ZIP file
+FileUtil.CreateParentDirectoryIfNotExists modelPath
 mlContext.Model.Save(trainedModel, trainingDataView.Schema, modelPath)
 
 printfn "The model is saved to %s" modelPath

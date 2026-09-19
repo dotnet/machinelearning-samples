@@ -15,7 +15,11 @@ namespace CustomerSegmentation
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
             var pivotCsv = Path.Combine(assetsPath, "inputs", "pivot.csv");
-            var modelPath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
+            //var modelPath = Path.Combine(assetsPath, "inputs", "retailClustering.zip");
+            // Take rather the trained output one:
+            var modelPath = Path.Combine(assetsPath, 
+                "../../CustomerSegmentation.Train/assets/outputs", "retailClustering.zip");
+            modelPath = Path.GetFullPath(modelPath);
             var plotSvg = Path.Combine(assetsPath, "outputs", "customerSegmentation.svg");
             var plotCsv = Path.Combine(assetsPath, "outputs", "customerSegmentation.csv");
 
@@ -28,7 +32,8 @@ namespace CustomerSegmentation
                 clusteringModelScorer.LoadModel(modelPath);
 
                 clusteringModelScorer.CreateCustomerClusters();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Common.ConsoleHelper.ConsoleWriteException(ex.ToString());
             }

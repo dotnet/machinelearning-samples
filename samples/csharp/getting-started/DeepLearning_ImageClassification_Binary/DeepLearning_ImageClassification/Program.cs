@@ -59,6 +59,9 @@ namespace DeepLearning_ImageClassification
             var trainingPipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(classifierOptions)
                 .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
+            // Bug: ArgumentOutOfRangeException: 0x80131502
+            // Only one class found in the LabelAsKey column. To build a multiclass classification
+            //  model, the number of classes needs to be 2 or greater Arg_ParamName_Name
             ITransformer trainedModel = trainingPipeline.Fit(trainSet);
 
             ClassifySingleImage(mlContext, testSet, trainedModel);

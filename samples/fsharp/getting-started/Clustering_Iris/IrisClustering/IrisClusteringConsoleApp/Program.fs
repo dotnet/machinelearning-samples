@@ -6,6 +6,7 @@ open Microsoft.ML
 open Microsoft.ML.Data
 open Clustering_Iris.DataStructures
 open DataStructures
+open Common
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -63,6 +64,7 @@ let main argv =
 
 
     // STEP5: Save/persist the model as a .ZIP file
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
     mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
     fs.Close()

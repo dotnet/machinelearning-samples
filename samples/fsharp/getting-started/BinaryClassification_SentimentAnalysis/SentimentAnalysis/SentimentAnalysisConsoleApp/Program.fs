@@ -5,7 +5,7 @@ open System.IO
 open Microsoft.ML
 open Microsoft.ML.Data
 open SentimentAnalysis.DataStructures.Model
-
+open Common
 
 let appPath = Path.GetDirectoryName(Environment.GetCommandLineArgs().[0])
 
@@ -14,6 +14,19 @@ let dataPath = sprintf @"%s/wikiDetoxAnnotated40kRows.tsv" baseDatasetsLocation
 
 let baseModelsPath = @"../../../../MLModels";
 let modelPath = sprintf @"%s/SentimentModel.zip" baseModelsPath
+
+let assetsPath = baseDatasetsLocation
+let assetsRelativePath = assetsPath 
+let commonDatasetsRelativePath = @"../../../../../../../../../datasets" 
+let fileName = "wikiDetoxAnnotated40kRows"
+let zipFileName = fileName + ".zip"
+let downloadUrl = "https://bit.ly/3tiuGls"
+let destFolder = assetsPath //Path.Combine(assetsRelativePath, assetsPath, zipFileName)
+let destFiles: string list = [dataPath]
+
+let datasetPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile assetsRelativePath downloadUrl zipFileName commonDatasetsRelativePath destFiles destFolder
 
 let absolutePath relativePath = 
     let dataRoot = FileInfo(Reflection.Assembly.GetExecutingAssembly().Location)
@@ -51,6 +64,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
     Common.ConsoleHelper.printBinaryClassificationMetrics (trainer.ToString()) metrics
 
     // STEP 6: Save/persist the trained model to a .ZIP file
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
     use fs = new FileStream(modelPath, FileMode.Create, FileAccess.Write, FileShare.Write)
     mlContext.Model.Save(trainedModel, trainingDataView.Schema, fs)
 
@@ -61,6 +75,7 @@ let buildTrainEvaluateAndSaveModel (mlContext : MLContext) =
 let testSinglePrediction (mlContext : MLContext) =
     let sampleStatement = { Label = false; Text = "This is a very rude movie" }
     
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
     use stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read)
     let trainedModel,inputSchema = mlContext.Model.Load(stream)
     

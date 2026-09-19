@@ -1,6 +1,6 @@
 ﻿open System
 open System.IO
-open System.Linq
+//open System.Linq
 open Common
 open Microsoft.ML
 open Microsoft.ML.AutoML
@@ -77,6 +77,7 @@ let metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(data = predic
 ConsoleHelper.printBinaryClassificationMetrics bestRun.TrainerName metrics
 
 // STEP 6: Save/persist the trained model to a .ZIP file
+FileUtil.CreateParentDirectoryIfNotExists modelPath
 mlContext.Model.Save(trainedModel, trainingDataView.Schema, modelPath)
 
 printfn "The model is saved to %s" modelPath

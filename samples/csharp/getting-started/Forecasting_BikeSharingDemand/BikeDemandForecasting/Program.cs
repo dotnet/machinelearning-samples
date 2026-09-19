@@ -1,10 +1,22 @@
-﻿using Microsoft.ML;
+﻿using Common;
+using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.TimeSeries;
 using System.Data.SqlClient;
 
-string rootDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../"));
-string dbFilePath = Path.Combine(rootDir, "Data", "DailyDemand.mdf");
+string rootDir = Path.GetFullPath(Path.Combine(
+    AppDomain.CurrentDomain.BaseDirectory, "../../../"));
+string datasetPath = Path.Combine(rootDir, "Data");
+string dbFilePath = Path.Combine(datasetPath, "DailyDemand.mdf");
+
+var datasetFile = "ForecastingBikeSharingDemand";
+var datasetZip = datasetFile + ".zip";
+var datasetUrl = "https://bit.ly/3kRE0Hn";
+var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+var commonDatasetsPath = Path.GetFullPath(commonDatasetsRelativePath);
+List<string> destFiles = new List<string>() { dbFilePath };
+Web.DownloadBigFile(datasetPath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+
 string modelPath = Path.Combine(rootDir, "MLModel.zip");
 var connectionString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={dbFilePath};Integrated Security=True;Connect Timeout=30;";
 

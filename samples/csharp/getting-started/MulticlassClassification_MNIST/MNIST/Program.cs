@@ -11,7 +11,7 @@ namespace mnist
     {
         private static string BaseDatasetsRelativePath = @"../../../Data";
         private static string TrianDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-train.csv";
-        private static string TestDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-val.csv";
+        private static string TestDataRealtivePath = $"{BaseDatasetsRelativePath}/optdigits-test.csv";
 
         private static string TrainDataPath = GetAbsolutePath(TrianDataRealtivePath);
         private static string TestDataPath = GetAbsolutePath(TestDataRealtivePath);
@@ -77,6 +77,8 @@ namespace mnist
 
                 Common.ConsoleHelper.PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
 
+                string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+                if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
                 mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
 
                 Console.WriteLine("The model is saved to {0}", ModelPath);

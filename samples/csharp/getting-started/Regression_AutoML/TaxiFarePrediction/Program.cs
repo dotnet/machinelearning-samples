@@ -16,7 +16,7 @@ namespace TaxiFarePrediction
     {
         private static string AppPath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
-        private static string BaseDatasetsRelativePath = @"Data";
+        private static string BaseDatasetsRelativePath = @"../../../Data";
         private static string TrainDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-train.csv";
         private static string TestDataRelativePath = $"{BaseDatasetsRelativePath}/taxi-fare-test.csv";
         private static string TrainDataPath = GetAbsolutePath(TrainDataRelativePath);
@@ -31,6 +31,14 @@ namespace TaxiFarePrediction
 
         static void Main(string[] args) // If args[0] == "svg" a vector-based chart will be created instead a .png chart
         {
+            var datasetFile = "taxi-fare";
+            var datasetZip = datasetFile + ".zip";
+            var datasetUrl = "https://bit.ly/3qISgov";
+            var commonDatasetsRelativePath = @"../../../../../../../../datasets";
+            var commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+            List<string> destFiles = new List<string>() { TrainDataPath, TestDataPath };
+            Web.DownloadBigFile(BaseDatasetsRelativePath, datasetUrl, datasetZip, commonDatasetsPath, destFiles);
+
             MLContext mlContext = new MLContext();
 
             // Create, train, evaluate and save a model
@@ -53,14 +61,14 @@ namespace TaxiFarePrediction
             IDataView testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>(TestDataPath, hasHeader: true, separatorChar: ',');
 
             // STEP 2: Display first few rows of the training data
-            ConsoleHelper.ShowDataViewInConsole(mlContext, trainingDataView);
+            ConsoleHelperAutoML.ShowDataViewInConsole(mlContext, trainingDataView);
 
             // STEP 3: Initialize our user-defined progress handler that AutoML will 
             // invoke after each model it produces and evaluates.
             var progressHandler = new RegressionExperimentProgressHandler();
 
             // STEP 4: Run AutoML regression experiment
-            ConsoleHelper.ConsoleWriteHeader("=============== Training the model ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Training the model ===============");
             Console.WriteLine($"Running AutoML regression experiment for {ExperimentTime} seconds...");
             ExperimentResult<RegressionMetrics> experimentResult = mlContext.Auto()
                 .CreateRegressionExperiment(ExperimentTime)
@@ -71,15 +79,17 @@ namespace TaxiFarePrediction
             PrintTopModels(experimentResult);
 
             // STEP 5: Evaluate the model and print metrics
-            ConsoleHelper.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
+            ConsoleHelperAutoML.ConsoleWriteHeader("===== Evaluating model's accuracy with test data =====");
             RunDetail<RegressionMetrics> best = experimentResult.BestRun;
             ITransformer trainedModel = best.Model;
             IDataView predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: LabelColumnName, scoreColumnName: "Score");
             // Print metrics from top model
-            ConsoleHelper.PrintRegressionMetrics(best.TrainerName, metrics);
+            ConsoleHelperAutoML.PrintRegressionMetrics(best.TrainerName, metrics);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -89,7 +99,7 @@ namespace TaxiFarePrediction
 
         private static void TestSinglePrediction(MLContext mlContext)
         {
-            ConsoleHelper.ConsoleWriteHeader("=============== Testing prediction engine ===============");
+            ConsoleHelperAutoML.ConsoleWriteHeader("=============== Testing prediction engine ===============");
 
             // Sample: 
             // vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
@@ -134,6 +144,9 @@ namespace TaxiFarePrediction
             var predFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(trainedModel);
 
             string chartFileName = "";
+            // https://github.com/surban/PLplotNet/issues/2#issuecomment-1006874961
+            // .Net6: InvalidOperationException : Cannot find support PLplot support files in System.String[].
+            // Fix: <Target Name="CopyFiles" AfterTargets="Build"> in .csproj
             using (var pl = new PLStream())
             {
                 // use SVG backend and write to SineWaves.svg in current directory
@@ -297,11 +310,11 @@ namespace TaxiFarePrediction
                 .OrderByDescending(r => r.ValidationMetrics.RSquared).Take(3);
 
             Console.WriteLine("Top models ranked by R-Squared --");
-            ConsoleHelper.PrintRegressionMetricsHeader();
+            ConsoleHelperAutoML.PrintRegressionMetricsHeader();
             for (var i = 0; i < topRuns.Count(); i++)
             {
                 var run = topRuns.ElementAt(i);
-                ConsoleHelper.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
+                ConsoleHelperAutoML.PrintIterationMetrics(i + 1, run.TrainerName, run.ValidationMetrics, run.RuntimeInSeconds);
             }
         }
     }

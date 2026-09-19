@@ -102,6 +102,7 @@ namespace eShopDashboard
                     c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "eShopDashboard.API V1");
                 });
             }
+
         }
     }
 }

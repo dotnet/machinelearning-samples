@@ -37,7 +37,7 @@ namespace SpikeDetection.WinFormsTrainer
 
             // Detect persistent change in the pattern.
             ITransformer trainedChangePointModel = DetectChangepoint(size, dataView);
-            
+                        
             SaveModel(mlContext, trainedSpikeModel, SpikeModelPath, dataView);
             SaveModel(mlContext, trainedChangePointModel, ChangePointModelPath, dataView);
 
@@ -117,6 +117,8 @@ namespace SpikeDetection.WinFormsTrainer
         private static void SaveModel(MLContext mlcontext, ITransformer trainedModel, string modelPath, IDataView dataView)
         {
             Console.WriteLine("=============== Saving model ===============");
+            string parentDir = System.IO.Path.GetDirectoryName(modelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlcontext.Model.Save(trainedModel,dataView.Schema, modelPath);
 
             Console.WriteLine($"The model is saved to {modelPath}");

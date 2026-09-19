@@ -14,17 +14,30 @@ namespace LargeDatasets
 {
     class Program
     {
+        private const string datasetFile = "url_svmlight";
+        
+        private const string datasetZip = datasetFile + ".tar.gz";
+        private const string datasetUrl =
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz";
+        
+        private static string commonDatasetsRelativePath = @"../../../../../../../../datasets";
+        private static string commonDatasetsPath = GetAbsolutePath(commonDatasetsRelativePath);
+
         static string originalDataDirectoryRelativePath = @"../../../Data/OriginalUrlData";
-        static string originalDataReltivePath = @"../../../Data/OriginalUrlData/url_svmlight";
-        static string preparedDataReltivePath = @"../../../Data/PreparedUrlData/url_svmlight";
+        static string originalDataRelativePath = @"../../../Data/OriginalUrlData/url_svmlight";
+        static string preparedDataRelativePath = @"../../../Data/PreparedUrlData/url_svmlight";
 
         static string originalDataDirectoryPath = GetAbsolutePath(originalDataDirectoryRelativePath);
-        static string originalDataPath = GetAbsolutePath(originalDataReltivePath);
-        static string preparedDataPath = GetAbsolutePath(preparedDataReltivePath);
+        static string originalDataPath = GetAbsolutePath(originalDataRelativePath);
+        static string preparedDataPath = GetAbsolutePath(preparedDataRelativePath);
         static void Main(string[] args)
         {
             //STEP 1: Download dataset
-            DownloadDataset(originalDataDirectoryPath);
+            //DownloadDataset(originalDataDirectoryPath);
+            string testFilePath = Path.Combine(originalDataRelativePath, "Day0.svm");
+            List<string> destFiles = new List<string>() { testFilePath };
+            Web.DownloadBigFile(originalDataDirectoryRelativePath, datasetUrl, datasetZip,
+                commonDatasetsPath, destFiles);
 
             //Step 2: Prepare data by adding second column with value total number of features.
             PrepareDataset(originalDataPath, preparedDataPath);
@@ -78,29 +91,29 @@ namespace LargeDatasets
             Console.ReadLine();
         }
 
-        public static void DownloadDataset(string originalDataDirectoryPath)
-        {
-            if (!Directory.Exists(originalDataDirectoryPath))
-            {
-                Console.WriteLine("====Downloading and extracting data====");
-                using (var client = new WebClient())
-                {
-                    //The code below will download a dataset from a third-party, UCI (link), and may be governed by separate third-party terms. 
-                    //By proceeding, you agree to those separate terms.
-                    client.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz", "url_svmlight.zip");
-                }
+        //public static void DownloadDataset(string originalDataDirectoryPath)
+        //{
+        //    if (!Directory.Exists(originalDataDirectoryPath))
+        //    {
+        //        Console.WriteLine("====Downloading and extracting data====");
+        //        using (var client = new WebClient())
+        //        {
+        //            //The code below will download a dataset from a third-party, UCI (link), and may be governed by separate third-party terms. 
+        //            //By proceeding, you agree to those separate terms.
+        //            client.DownloadFile("https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz", "url_svmlight.zip");
+        //        }
 
-                Stream inputStream = File.OpenRead("url_svmlight.zip");
-                Stream gzipStream = new GZipInputStream(inputStream);
-                TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
-                tarArchive.ExtractContents(originalDataDirectoryPath);
+        //        Stream inputStream = File.OpenRead("url_svmlight.zip");
+        //        Stream gzipStream = new GZipInputStream(inputStream);
+        //        TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
+        //        tarArchive.ExtractContents(originalDataDirectoryPath);
 
-                tarArchive.Close();
-                gzipStream.Close();
-                inputStream.Close();
-                Console.WriteLine("====Downloading and extracting is completed====");
-            }
-        }
+        //        tarArchive.Close();
+        //        gzipStream.Close();
+        //        inputStream.Close();
+        //        Console.WriteLine("====Downloading and extracting is completed====");
+        //    }
+        //}
 
         private static void PrepareDataset(string originalDataPath,string preparedDataPath)
         {

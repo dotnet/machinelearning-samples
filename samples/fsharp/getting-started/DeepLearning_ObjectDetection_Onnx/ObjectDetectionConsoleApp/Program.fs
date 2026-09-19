@@ -3,7 +3,7 @@ open System.IO
 open Microsoft.ML.Data
 open Microsoft.ML
 open System.Drawing
-
+open Common
 
 let imageHeight = 416
 let imageWidth = 416
@@ -44,10 +44,33 @@ let assemblyFolderPath = Path.GetDirectoryName(Reflection.Assembly.GetExecutingA
 
 let assetsRelativePath = @"../../../assets"
 let assetsPath = Path.Combine(assemblyFolderPath, assetsRelativePath)
+let modelFolderPath = Path.Combine(assetsPath, "Model")
 let modelFilePath = Path.Combine(assetsPath, "Model", "TinyYolo2_model.onnx")
 let imagesFolder = Path.Combine(assetsPath,"images")
 let tagsTsv = Path.Combine(assetsPath,"images", "tags.tsv")
 
+let commonDatasetsRelativePath = @"../../../../../../../../datasets"
+let imagesDatasetZip = "ObjectDetectionPhotosSet2.zip"
+let imagesDatasetUrl = "https://bit.ly/3LvmZPu"
+let imagesDatasetDestFolder = ""
+let imagePath1 = Path.Combine(imagesFolder, "dog2.jpg")
+let imagePath2 = Path.Combine(imagesFolder, "Intersection-Counts.jpg")
+let imagePath3 = Path.Combine(imagesFolder, "ManyPets.jpg")
+let imagesDatasetDestFiles: string list = [imagePath1;imagePath2;imagePath3]
+
+let datasetPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile imagesFolder imagesDatasetUrl imagesDatasetZip commonDatasetsRelativePath imagesDatasetDestFiles imagesDatasetDestFolder
+
+let commonGraphsPath = @"../../../../../../../../graphs"
+let zipFileName = "TinyYolo2_model.onnx"
+let downloadUrl = "https://bit.ly/3rdrfKe"
+let destFolder = assetsPath 
+let destFiles: string list = [modelFilePath]
+
+let graphPath = 
+    __SOURCE_DIRECTORY__ 
+    |> Web.DownloadBigFile modelFolderPath downloadUrl zipFileName commonGraphsPath destFiles destFolder
 
 [<Literal>]
 let ROW_COUNT = 13

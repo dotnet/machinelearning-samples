@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Common
 {
-    public static class ConsoleHelper
+    public static class ConsoleHelperAutoML
     {
         private const int Width = 114;
 
@@ -245,7 +245,7 @@ namespace Common
                 AppendTableRows(tableRows, info.TextColumnNames, "Text");
                 AppendTableRows(tableRows, info.IgnoredColumnNames, "Ignored");
 
-                Console.WriteLine(ConsoleHelper.BuildStringTable(tableRows));
+                Console.WriteLine(ConsoleHelperAutoML.BuildStringTable(tableRows));
             }
 
             private void AppendTableRow(ICollection<string[]> tableRows,

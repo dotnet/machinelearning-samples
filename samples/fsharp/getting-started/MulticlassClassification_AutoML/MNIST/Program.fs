@@ -39,7 +39,8 @@ let sampleData =
 let assemblyFolderPath = Reflection.Assembly.GetExecutingAssembly().Location |> Path.GetDirectoryName
 let absolutePath x = Path.Combine(assemblyFolderPath, x)
 
-let baseDatasetsRelativePath = @"Data"
+//let baseDatasetsRelativePath = @"Data"
+let baseDatasetsRelativePath = @"../../../Data"
 
 let trainDataRelativePath = Path.Combine(baseDatasetsRelativePath, "optdigits-train.csv")
 let trainDataPath = absolutePath trainDataRelativePath
@@ -96,6 +97,7 @@ try
     ConsoleHelper.printMultiClassClassificationMetrics bestRun.TrainerName metrics
 
     // STEP 5: Save/persist the trained model to a .ZIP file
+    FileUtil.CreateParentDirectoryIfNotExists modelPath
     mlContext.Model.Save(trainedModel, trainData.Schema, modelPath);
 
     printfn "The model is saved to %s" modelPath

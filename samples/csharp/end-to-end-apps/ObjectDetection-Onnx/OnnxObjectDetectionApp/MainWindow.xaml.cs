@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Rectangle = System.Windows.Shapes.Rectangle;
+using Common;
 
 namespace OnnxObjectDetectionApp
 {
@@ -25,7 +26,8 @@ namespace OnnxObjectDetectionApp
         private PredictionEngine<ImageInputData, TinyYoloPrediction> tinyYoloPredictionEngine;
         private PredictionEngine<ImageInputData, CustomVisionPrediction> customVisionPredictionEngine;
 
-        private static readonly string modelsDirectory = Path.Combine(Environment.CurrentDirectory, @"ML\OnnxModels");
+        private static readonly string modelsDirectory = Path.Combine(
+            Environment.CurrentDirectory, @"ML\OnnxModels");
 
         public MainWindow()
         {
@@ -48,6 +50,9 @@ namespace OnnxObjectDetectionApp
         private void LoadModel()
         {
             // Check for an Onnx model exported from Custom Vision
+            string parentDir = System.IO.Path.GetDirectoryName(modelsDirectory);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
+            if (!Directory.Exists(modelsDirectory)) Directory.CreateDirectory(modelsDirectory);
             var customVisionExport = Directory.GetFiles(modelsDirectory, "*.zip").FirstOrDefault();
 
             // If there is one, use it.
@@ -61,12 +66,38 @@ namespace OnnxObjectDetectionApp
             }
             else // Otherwise default to Tiny Yolo Onnx model
             {
-                var tinyYoloModel = new TinyYoloModel(Path.Combine(modelsDirectory, "TinyYolo2_model.onnx"));
+                string onnxModelFilePath = Path.Combine(modelsDirectory, "TinyYolo2_model.onnx");
+
+                if (!System.IO.File.Exists(onnxModelFilePath))
+                {
+                    var graphZip = "TinyYolo2_model.onnx";
+                    var graphUrl = "https://bit.ly/3rdrfKe";
+                    var commonGraphsRelativePath = @"../../../../../../../../graphs";
+                    var commonGraphsPath = GetAbsolutePath(commonGraphsRelativePath);
+                    var modelRelativePath = @"../../../../OnnxObjectDetection/ML/OnnxModels";
+                    string modelPath = GetAbsolutePath(modelRelativePath);
+                    Web.DownloadBigFile(modelPath, graphUrl, graphZip, commonGraphsPath);
+                    // Restart and rebuild the solution to copy TinyYolo2_model.onnx to bin\Debug\net6.0\ML\OnnxModels
+                    System.Environment.Exit(0);
+                    // Or just copy to the destination directory: Denied!
+                    // File.Copy(modelPath, onnxModelFilePath);
+                }
+
+                var tinyYoloModel = new TinyYoloModel(onnxModelFilePath);
+
                 var modelConfigurator = new OnnxModelConfigurator(tinyYoloModel);
 
                 outputParser = new OnnxOutputParser(tinyYoloModel);
                 tinyYoloPredictionEngine = modelConfigurator.GetMlNetPredictionEngine<TinyYoloPrediction>();
             }
+        }
+        
+        private string GetAbsolutePath(string relativePath)
+        {
+            string assemblyFolderPath = Path.GetFullPath(".");
+            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+            fullPath = Path.GetFullPath(fullPath); // Resolve the path to simplify debugging
+            return fullPath;
         }
 
         private void StartCameraCapture()

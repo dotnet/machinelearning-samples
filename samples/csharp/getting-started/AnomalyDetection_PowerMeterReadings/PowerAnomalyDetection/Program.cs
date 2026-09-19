@@ -62,6 +62,8 @@ namespace myApp
             ITransformer trainedModel = trainigPipeLine.Fit(dataView);
 
             // STEP 6: Save/persist the trained model to a .ZIP file
+            string parentDir = System.IO.Path.GetDirectoryName(ModelPath);
+            if (!Directory.Exists(parentDir)) Directory.CreateDirectory(parentDir);
             mlContext.Model.Save(trainedModel, dataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
