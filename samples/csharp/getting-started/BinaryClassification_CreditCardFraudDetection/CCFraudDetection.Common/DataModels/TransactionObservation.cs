@@ -11,7 +11,7 @@ namespace CCFraudDetection.Common.DataModels
 
     public class TransactionObservation : IModelEntity
     {
-        // Note we're not loading the 'Time' column, since que don't need it as a feature
+        // Note we're not loading the 'Time' column, since we don't need it as a feature
         [LoadColumn(0)]
         public float Time;
 
